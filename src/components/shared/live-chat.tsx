@@ -149,8 +149,8 @@ const LiveChat = () => {
           {chatHistory.map((chat, key) => (
             <HistoryItem
               key={key}
-              name={chat.user.username}
-              avatar={chat.user.avatar}
+              name={chat.user?.username}
+              avatar={chat.user?.avatar}
               time={formatTime(chat.sentAt.toString())}
               message={chat.message}
             />

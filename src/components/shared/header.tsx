@@ -7,10 +7,13 @@ import { Button } from '../ui/button';
 import authBtn from '@/assets/auth-btn.svg'
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
+import { usePersistStore } from '@/store/persist';
+import { truncateString } from '@/lib/truncate';
 
 export default function Header() {
 
   const modal = useModal()
+  const userData = usePersistStore((store) => store.app.userData)
 
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN)
@@ -36,12 +39,20 @@ export default function Header() {
           <Separator orientation={'vertical'} className="h-6" />
           <UserNav />
         </div>
-        <Button className='bg-[#049DD9] hover:bg-[#049DD9] rounded-lg gap-2 text-white' onClick={handleSignIn}>
-          <img src={authBtn} />
-          <span className='uppercase'>
-            Sign In
-          </span>
-        </Button>
+        {
+          userData.username !== "" ? (
+            <div className="text-gray50">
+              {truncateString(userData.username)}
+            </div>
+          ) : (
+            <Button className='bg-[#049DD9] hover:bg-[#049DD9] rounded-lg gap-2 text-white' onClick={handleSignIn}>
+              <img src={authBtn} />
+              <span className='uppercase'>
+                Sign In
+              </span>
+            </Button>
+          )
+        }
       </div>
     </div>
   );
