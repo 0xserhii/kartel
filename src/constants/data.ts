@@ -19,19 +19,19 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Crash',
         href: '/crash',
-        icon: "/src/assets/icons/crash.svg",
+        icon: "/assets/icons/crash.svg",
         label: 'Crash'
       },
       {
         title: 'Coin Flip',
         href: '/coin-flip',
-        icon: "/src/assets/icons/coins.svg",
+        icon: "/assets/icons/coins.svg",
         label: 'coin flip'
       },
       {
         title: 'Mines',
         href: '/mines',
-        icon: "/src/assets/icons/mines.svg",
+        icon: "/assets/icons/mines.svg",
         label: 'mines'
       }
     ]
@@ -42,25 +42,25 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Slots',
         href: '/slots',
-        icon: "/src/assets/icons/slots.svg",
+        icon: "/assets/icons/slots.svg",
         label: 'slots'
       },
       {
         title: 'Black Jack',
         href: '/black-jack',
-        icon: "/src/assets/icons/blackjack.svg",
+        icon: "/assets/icons/blackjack.svg",
         label: 'coin flip'
       },
       {
         title: 'Roulette',
         href: '/roulette',
-        icon: "/src/assets/icons/roulette.svg",
+        icon: "/assets/icons/roulette.svg",
         label: 'roulette'
       },
       {
         title: 'Horse Racing Game',
         href: '/hourse-racing',
-        icon: "/src/assets/icons/horserace.svg",
+        icon: "/assets/icons/horserace.svg",
         label: 'horse racing game'
       }
     ]
@@ -71,13 +71,13 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Settings',
         href: '/settings',
-        icon: "/src/assets/icons/setting.svg",
+        icon: "/assets/icons/setting.svg",
         label: 'settings'
       },
       {
         title: 'Help & Support',
         href: '/help-support',
-        icon: "/src/assets/icons/setting.svg",
+        icon: "/assets/icons/setting.svg",
         label: 'Help & Support'
       }
     ]
@@ -94,111 +94,111 @@ export const chatsMock: HistoryItemProps[] = [
   {
     name: 'John Doe',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '02:05'
   },
   {
     name: 'Alice Johnson',
     message:
       'I came across your profile and I would like to know more about your services.',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '05:18'
   },
   {
     name: 'David Smith',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '23:45'
   },
   {
     name: 'Emma Wilson',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '02:05'
   },
   {
     name: 'James Brown',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '05:18'
   },
   {
     name: 'Laura White',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '23:45'
   },
   {
     name: 'Michael Lee',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '02:05'
   },
   {
     name: 'Olivia Green',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '05:18'
   },
   {
     name: 'Robert Taylor',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '23:45'
   },
   {
     name: 'John Doe',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '02:05'
   },
   {
     name: 'Alice Johnson',
     message:
       'I came across your profile and I would like to know more about your services.',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '05:18'
   },
   {
     name: 'David Smith',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '23:45'
   },
   {
     name: 'Emma Wilson',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '02:05'
   },
   {
     name: 'James Brown',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '05:18'
   },
   {
     name: 'Laura White',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '23:45'
   },
   {
     name: 'Michael Lee',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '02:05'
   },
   {
     name: 'Olivia Green',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '05:18'
   },
   {
     name: 'Robert Taylor',
     message: 'Hello, how can I help you today?',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     time: '23:45'
   }
 ];
@@ -207,7 +207,7 @@ export const scores = [
   {
     rank: 1,
     name: 'Kristin Watson',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     score: 2373,
     betAmount: 183,
     time: '12:00:23'
@@ -215,7 +215,7 @@ export const scores = [
   {
     rank: 2,
     name: 'Alice Johnson',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     score: 2373,
     betAmount: 183,
     time: '12:00:23'
@@ -223,7 +223,7 @@ export const scores = [
   {
     rank: 3,
     name: 'David Smith',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     score: 2373,
     betAmount: 183,
     time: '12:00:23'
@@ -231,7 +231,7 @@ export const scores = [
   {
     rank: 4,
     name: 'Emma Wilson',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     score: 2373,
     betAmount: 183,
     time: '12:00:23'
@@ -239,7 +239,7 @@ export const scores = [
   {
     rank: 5,
     name: 'James Brown',
-    avatar: 'src/assets/avatar-mock.png',
+    avatar: '/assets/avatar-mock.png',
     score: 2373,
     betAmount: 183,
     time: '12:00:23'
