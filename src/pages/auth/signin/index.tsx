@@ -1,8 +1,3 @@
-import UserAuthForm from './components/user-auth-form';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
-
 export default function SignInPage() {
   return (
     <div className="from-dark-0.7 flex bg-opacity-90 h-screen bg-gradient-to-b to-dark bg-blend-multiply">

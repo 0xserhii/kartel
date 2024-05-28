@@ -1,4 +1,3 @@
-import { ICoinflipGameDocument } from '../models/CoinflipGame';
 import VIPLevelType from './vipLevel';
 
 export interface ICoinPlayer {
@@ -8,9 +7,4 @@ export interface ICoinPlayer {
   color: string;
   level: VIPLevelType;
   isBot?: boolean;
-}
-
-export interface IParsedGame extends ICoinflipGameDocument {
-  ownPrivateGame: boolean;
-  inviteLink: string;
 }

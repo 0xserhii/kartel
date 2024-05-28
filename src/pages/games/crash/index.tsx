@@ -1,9 +1,4 @@
 import setting from '@/assets/auth-btn.svg'
-import InvitedFriends from '@/assets/invited-friends.png';
-import BlackJack from '@/assets/blackjack.png';
-import HorseRacing from '@/assets/horseracing.png';
-import Roulette from '@/assets/roulette.png';
-import Slots from '@/assets/slots.png';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { multiPlayers } from '@/constants/data';
 import { Button } from '@/components/ui/button';

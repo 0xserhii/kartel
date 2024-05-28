@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
-import { Search, Smile, SendHorizonal } from 'lucide-react';
+import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import { useEffect, useState } from 'react';
 
