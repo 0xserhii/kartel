@@ -1,8 +1,8 @@
 import { navItems } from '@/constants/data';
 import DashboardNav from './dashboard-nav';
 import { Link } from 'react-router-dom';
-import Logo from '@/assets/logo.svg';
-import Deposit from '@/assets/deposit-icon.svg';
+import Logo from '/assets/logo.svg';
+import Deposit from '/assets/deposit-icon.svg';
 import { ScrollArea } from '../ui/scroll-area';
 
 export default function Sidebar() {

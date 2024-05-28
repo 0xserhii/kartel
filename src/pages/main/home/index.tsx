@@ -1,11 +1,11 @@
-import CrashBanner from '@/assets/crash-banner.png';
-import InvitedFriends from '@/assets/invited-friends.png';
-import CoinflipBanner from '@/assets/coinflip-banner.png';
-import MineBanner from '@/assets/mines-banner.png';
-import BlackJack from '@/assets/blackjack.png';
-import HorseRacing from '@/assets/horseracing.png';
-import Roulette from '@/assets/roulette.png';
-import Slots from '@/assets/slots.png';
+import CrashBanner from '/assets/crash-banner.png';
+import InvitedFriends from '/assets/invited-friends.png';
+import CoinflipBanner from '/assets/coinflip-banner.png';
+import MineBanner from '/assets/mines-banner.png';
+import BlackJack from '/assets/blackjack.png';
+import HorseRacing from '/assets/horseracing.png';
+import Roulette from '/assets/roulette.png';
+import Slots from '/assets/slots.png';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Home() {

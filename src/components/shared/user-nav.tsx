@@ -1,6 +1,6 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import AvatarMock from '@/assets/avatar-mock.png';
+import AvatarMock from '/assets/avatar-mock.png';
 import {
   DropdownMenu,
   DropdownMenuContent,

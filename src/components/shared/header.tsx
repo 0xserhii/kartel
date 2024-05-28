@@ -1,10 +1,10 @@
 import Heading from './heading';
 import UserNav from './user-nav';
-import Coin from '@/assets/coin-icon.svg';
+import Coin from '/assets/coin-icon.svg';
 import { Plus, Bell } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
-import authBtn from '@/assets/auth-btn.svg'
+import authBtn from '/assets/auth-btn.svg'
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 import { usePersistStore } from '@/store/persist';

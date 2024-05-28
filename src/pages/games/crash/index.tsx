@@ -1,4 +1,4 @@
-import setting from '@/assets/auth-btn.svg'
+import setting from '/assets/auth-btn.svg'
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { multiPlayers } from '@/constants/data';
 import { Button } from '@/components/ui/button';
@@ -20,7 +20,7 @@ export default function CrashGames() {
                 <div className="flex flex-col items-stretch gap-6">
                     <div className='flex flex-row w-full h-full gap-6 justify-between'>
                         <div className='w-full h-full'>
-                            <div className='relative rounded-md bg-[url("src/assets/crash-game.png")] h-[596px]'>
+                            <div className='relative rounded-md bg-[url("/assets/crash-game.png")] h-[596px]'>
                                 <div className='flex flex-row justify-around items-center py-5'>
                                     <div className='flex flex-row items-center justify-center gap-2'>
                                         <span className="inline-flex items-center justify-center w-3 h-3 ms-2 text-xs font-semibold text-blue-800 bg-[#0BA544] rounded-full" />

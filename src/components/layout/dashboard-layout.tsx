@@ -16,7 +16,7 @@ export default function DashboardLayout({
 
   return (
     <div className="from-dark-0.7 flex bg-opacity-90 h-screen bg-gradient-to-b to-dark bg-blend-multiply">
-      <div className='absolute left-0 top-0 -z-10 h-full w-full bg-[url("src/assets/bg-01.png")] bg-cover bg-top bg-no-repeat bg-blend-multiply' />
+      <div className='absolute left-0 top-0 -z-10 h-full w-full bg-[url("/assets/bg-01.png")] bg-cover bg-top bg-no-repeat bg-blend-multiply' />
       <MobileSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}

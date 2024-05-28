@@ -1,9 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CrashBanner from '@/assets/crash-banner.png';
-import CrashTitle from '@/assets/crash-title.png';
-import CoinflipBanner from '@/assets/banner-bg.png';
-import CoinflipTitle from '@/assets/coinflip-title.png';
-import PlayText from '@/assets/play-text.svg';
+import CrashBanner from '/assets/crash-banner.png';
+import CrashTitle from '/assets/crash-title.png';
+import CoinflipBanner from '/assets/banner-bg.png';
+import CoinflipTitle from '/assets/coinflip-title.png';
+import PlayText from '/assets/play-text.svg';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
@@ -57,7 +57,7 @@ export default function Leaderboard() {
                                             <TableCell className="w-1/12 text-center">
                                                 <div className="flex items-center justify-center gap-2">
                                                     {score.rank <= 3 && (
-                                                        <img src="src/assets/win-icon.svg" />
+                                                        <img src="/assets/win-icon.svg" />
                                                     )}
                                                     {score.rank}
                                                 </div>
@@ -80,7 +80,7 @@ export default function Leaderboard() {
                                             </TableCell>
                                             <TableCell className="w-1/6">
                                                 <div className="flex items-center justify-center gap-1">
-                                                    <img src="src/assets/score-icon.svg" alt="score flag" />
+                                                    <img src="/assets/score-icon.svg" alt="score flag" />
                                                     {score.score}
                                                 </div>
                                             </TableCell>
