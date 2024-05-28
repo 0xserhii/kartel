@@ -41,6 +41,38 @@ export default function AppRouter() {
           path: '/crash',
           element: <CrashGames />
         },
+        {
+          path: '/coin-flip',
+          element: <CrashGames />
+        },
+        {
+          path: '/mines',
+          element: <CrashGames />
+        },
+        {
+          path: '/slots',
+          element: <CrashGames />
+        },
+        {
+          path: '/coin-flip-mini',
+          element: <CrashGames />
+        },
+        {
+          path: '/roulette',
+          element: <CrashGames />
+        },
+        {
+          path: '/hourse-racing',
+          element: <CrashGames />
+        },
+        {
+          path: '/settings',
+          element: <CrashGames />
+        },
+        {
+          path: '/help-support',
+          element: <CrashGames />
+        },
 
       ]
     }

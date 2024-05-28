@@ -47,7 +47,7 @@ export const navItems: NavItemGroup[] = [
       },
       {
         title: 'Black Jack',
-        href: '/black-jack',
+        href: '/coin-flip-mini',
         icon: "/assets/icons/blackjack.svg",
         label: 'coin flip'
       },
