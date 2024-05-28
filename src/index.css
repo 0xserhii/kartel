@@ -72,6 +72,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -82,6 +83,77 @@
     font-family: 'Poppins', sans-serif;
   }
 }
+
+
+/* react-toast custom style */
+
+.Toastify__toast {
+  border-radius: 10px;
+  min-height: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  margin-top: 4.5rem;
+}
+
+.Toastify__toast--error {
+  background: #040e27 !important;
+}
+
+.Toastify__toast--error::before {
+  content: url("/assets/toast/close.svg");
+  padding-left: .5rem;
+  height: 21px;
+  width: 2rem;
+}
+
+.Toastify__toast--error::after {
+  content: var(--toast-close-icon);
+  left: 265px;
+}
+
+.Toastify__toast--success {
+  background: #040e27 !important;
+}
+
+.Toastify__toast--success::before {
+  content: url("/assets/toast/check.svg");
+  height: 27px;
+  width: 1.8rem;
+}
+
+.Toastify__toast--success::after {
+  content: var(--toast-close-icon);
+  left: 265px;
+}
+
+.Toastify__toast-body {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0;
+  width: 100%;
+  font-weight: 400;
+  color: black;
+}
+
+.Toastify__toast-container {
+  width: auto;
+}
+
+@media screen and (min-width: var(--md)) {
+  .Toastify__toast-container {
+    min-width: 450px;
+  }
+}
+
+.Toastify__toast-icon {
+  display: none;
+}
+
+.Toastify__toast>button>svg {
+  display: none;
+}
+
 
 App {
   font-family: sans-serif;

@@ -3,6 +3,7 @@ export * from './chat';
 export * from './vipLevel';
 export * from './crashGame';
 
+import { Icons } from '@/components/ui/icons';
 
 export interface NavItem {
   title: string;

@@ -6,10 +6,12 @@ const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
 );
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
-const Home = lazy(() => import('@/pages/main/home'));
-const Leaderboard = lazy(() => import('@/pages/main/leader-board'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
-const CrashGames = lazy(() => import('@/pages/games/crash'));
+const DashboardPage = lazy(() => import('@/pages/dashboard'));
+const StudentPage = lazy(() => import('@/pages/students'));
+const StudentDetailPage = lazy(
+  () => import('@/pages/students/StudentDetailPage')
+);
 
 // ----------------------------------------------------------------------
 
@@ -26,22 +28,17 @@ export default function AppRouter() {
       ),
       children: [
         {
-          path: '/',
-          element: <Home />
+          element: <DashboardPage />,
+          index: true
         },
         {
-          path: '/leader-board',
-          element: <Leaderboard />
+          path: 'student',
+          element: <StudentPage />
         },
         {
-          path: '/dashboard',
-          element: ""
-        },
-        {
-          path: '/crash',
-          element: <CrashGames />
-        },
-
+          path: 'student/details',
+          element: <StudentDetailPage />
+        }
       ]
     }
   ];

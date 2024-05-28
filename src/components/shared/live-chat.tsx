@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarImage } from '../ui/avatar';
 import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
-import { Smile, SendHorizonal } from 'lucide-react';
+import { Search, Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import { useEffect, useState } from 'react';
 
@@ -149,8 +149,8 @@ const LiveChat = () => {
           {chatHistory.map((chat, key) => (
             <HistoryItem
               key={key}
-              name={chat.user.username}
-              avatar={chat.user.avatar}
+              name={chat.user?.username}
+              avatar={chat.user?.avatar}
               time={formatTime(chat.sentAt.toString())}
               message={chat.message}
             />
@@ -158,47 +158,70 @@ const LiveChat = () => {
         </ScrollArea>
       </div>
       <div className="flex items-center gap-2 bg-purple-0.15 p-4 text-gray400">
-        <div className="flex items-center gap-2 bg-purple-0.15 px-2 text-gray400 transition-all delay-75 duration-75 ease-in w-full">
-          <div className="flex flex-1 flex-col transition-all delay-75 duration-75 ease-in">
-            <div className="flex flex-1 items-center gap-2 w-full">
-              <Smile
-                className={`cursor-pointer ${emojiIsOpened ? 'text-yellow' : ''}`}
-                onClick={() => {
-                  toggleIsOpened(emojiIsOpened);
-                }}
-              />
-              <Input
-                placeholder="Type here"
-                className="!focus:ring-0 !focus:ring-offset-0 !focus:ring min-h-10 resize-none overflow-hidden rounded-none !border-none !bg-transparent p-0 text-gray400 !outline-none !ring-0 !ring-offset-0"
-                value={inputStr}
-                onChange={(e) => {
-                  setInputStr(e.target.value);
-                }}
-              />
-              <SendHorizonal
-                className="hover: cursor-pointer text-blue2"
-                onClick={sendMessage}
-              />
-            </div>
-            <div className="flex flex-1 items-center transition-all delay-75 duration-75 ease-in">
-              <EmojiPicker
-                height={'300px'}
-                width={'100%'}
-                theme={Theme.DARK}
-                emojiStyle={EmojiStyle.GOOGLE}
-                previewConfig={{
-                  defaultEmoji: '',
-                  defaultCaption: '',
-                  showPreview: false
-                }}
-                skinTonesDisabled={true}
-                open={emojiIsOpened}
-                onEmojiClick={onEmojiClick}
-              />
+        <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 items-center gap-2">
+            <Smile
+              className={`cursor-pointer ${emojiIsOpened ? 'text-yellow' : ''}`}
+              onClick={() => {
+                toggleIsOpened(emojiIsOpened);
+              }}
+            />
+            <Input
+              placeholder="Type here"
+              className="!focus:ring-0 !focus:ring-offset-0 !focus:ring min-h-10 resize-none overflow-hidden rounded-none !border-none !bg-transparent p-0 text-gray400 !outline-none !ring-0 !ring-offset-0"
+              value={inputStr}
+              onChange={(e) => {
+                setInputStr(e.target.value);
+              }}
+            />
+            <SendHorizonal
+              className="hover: cursor-pointer text-blue2"
+              onClick={sendMessage}
+            />
+          </div>
+        </div>
+        <div className="flex h-full">
+          <div className="flex items-center gap-2 bg-purple-0.15 p-4 text-gray400 transition-all delay-75 duration-75 ease-in">
+            <div className="flex flex-1 flex-col transition-all delay-75 duration-75 ease-in">
+              <div className="flex flex-1 items-center gap-2">
+                <Smile
+                  className={`cursor-pointer ${emojiIsOpened ? 'text-yellow' : ''}`}
+                  onClick={() => {
+                    toggleIsOpened(emojiIsOpened);
+                  }}
+                />
+                <Input
+                  placeholder="Type here"
+                  className="!focus:ring-0 !focus:ring-offset-0 !focus:ring min-h-10 resize-none overflow-hidden rounded-none !border-none !bg-transparent p-0 text-gray400 !outline-none !ring-0 !ring-offset-0"
+                  value={inputStr}
+                  onChange={(e) => {
+                    setInputStr(e.target.value);
+                  }}
+                />
+                <SendHorizonal
+                  className="hover: cursor-pointer text-blue2"
+                  onClick={sendMessage}
+                />
+              </div>
+              <div className="flex flex-1 items-center transition-all delay-75 duration-75 ease-in">
+                <EmojiPicker
+                  height={'300px'}
+                  width={'100%'}
+                  theme={Theme.DARK}
+                  emojiStyle={EmojiStyle.GOOGLE}
+                  previewConfig={{
+                    defaultEmoji: '',
+                    defaultCaption: '',
+                    showPreview: false
+                  }}
+                  skinTonesDisabled={true}
+                  open={emojiIsOpened}
+                  onEmojiClick={onEmojiClick}
+                />
+              </div>
             </div>
           </div>
         </div>
-        {/* </div> */}
       </div>
     </div>
   );

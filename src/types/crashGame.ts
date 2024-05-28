@@ -57,4 +57,4 @@ export interface FormattedGameHistoryType
     | 'publicSeed'
     | 'crashPoint'
     | 'createdAt'
-  > { }
+  > {}

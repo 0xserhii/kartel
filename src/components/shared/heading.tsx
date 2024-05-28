@@ -1,28 +1,28 @@
 import { tabItems } from '@/constants/data';
+import { Button } from '../ui/button';
+import { useTab } from '@/providers/tab-provider';
 import { cn } from '@/lib/utils';
-import { usePathname } from '@/routes/hooks';
-import { Link } from 'react-router-dom';
 
 type THeadingProps = {
   className?: string;
 };
 
 export default function Heading({ className }: THeadingProps) {
-  const pathname = usePathname();
-  console.log(pathname)
+  const { tab, setTab } = useTab();
   return (
     <div className={className}>
-      {tabItems.map((item, index) => (
-        <Link
-          key={index}
-          to={item.path}
+      {tabItems.map((item) => (
+        <Button
+          key={item}
+          variant={'ghost'}
           className={cn(
-            'min-h-full rounded-none border-b-2 border-b-transparent px-6 py-5 uppercase text-gray500 font-semibold hover:bg-transparent hover:text-white',
-            pathname === item.path && 'text-white'
+            'min-h-full rounded-none border-b-2 border-b-transparent px-6 py-5 uppercase text-gray500 font-semibold hover:bg-transparent hover:text-purple',
+            tab === item && 'border-b-purple text-purple'
           )}
+          onClick={() => setTab(item)}
         >
-          {item.name}
-        </Link>
+          {item}
+        </Button>
       ))}
     </div>
   );

@@ -1,17 +1,6 @@
 import { HistoryItemProps } from '@/components/shared/live-chat';
 import { NavItemGroup } from '@/types';
 
-
-export const multiPlayers = [
-  "3.01",
-  "3.02",
-  "1.00",
-  "3.03",
-  "1.00.05",
-  "3.04",
-  "3.05",
-]
-
 export const navItems: NavItemGroup[] = [
   {
     title: 'Casino',
@@ -84,11 +73,7 @@ export const navItems: NavItemGroup[] = [
   }
 ];
 
-export const tabItems = [
-  { name: 'home', path: "/" },
-  { name: 'leader-board', path: "/leader-board" },
-  { name: 'dashboard', path: "/dashboard" }
-];
+export const tabItems = ['home', 'leader board', 'dashboard'];
 
 export const chatsMock: HistoryItemProps[] = [
   {

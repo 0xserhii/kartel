@@ -7,10 +7,13 @@ import { Button } from '../ui/button';
 import authBtn from '@/assets/auth-btn.svg'
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
+import { usePersistStore } from '@/store/persist';
+import { truncateString } from '@/lib/truncate';
 
 export default function Header() {
 
   const modal = useModal()
+  const userData = usePersistStore((store) => store.app.userData)
 
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN)
@@ -18,7 +21,7 @@ export default function Header() {
 
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
-      <Heading />
+      <Heading className="h-full" />
       <div className="ml-4 mr-8 flex items-center md:ml-6 gap-10">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-4">
@@ -36,12 +39,20 @@ export default function Header() {
           <Separator orientation={'vertical'} className="h-6" />
           <UserNav />
         </div>
-        <Button className='bg-[#049DD9] hover:bg-[#049DD9] rounded-lg gap-2 text-white' onClick={handleSignIn}>
-          <img src={authBtn} />
-          <span className='uppercase'>
-            Sign In
-          </span>
-        </Button>
+        {
+          userData.username !== "" ? (
+            <div className="text-gray50">
+              {truncateString(userData.username)}
+            </div>
+          ) : (
+            <Button className='bg-[#049DD9] hover:bg-[#049DD9] rounded-lg gap-2 text-white' onClick={handleSignIn}>
+              <img src={authBtn} />
+              <span className='uppercase'>
+                Sign In
+              </span>
+            </Button>
+          )
+        }
       </div>
     </div>
   );

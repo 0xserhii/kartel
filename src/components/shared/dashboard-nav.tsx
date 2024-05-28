@@ -1,14 +1,14 @@
 import { cn } from '@/lib/utils';
 import { NavItem, NavItemGroup } from '@/types';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import { Icons } from '../ui/icons';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger
 } from '../ui/collapsible';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { usePathname } from '@/routes/hooks';
 
 type DashboardNavProps = {
   items: NavItemGroup[];
@@ -25,8 +25,7 @@ type DashboardNavGroupProps = {
 };
 
 const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
-  const pathname = usePathname();
-  const isActive = pathname === item.href;
+
   return (
     <div
       key={item.href}
@@ -36,16 +35,19 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
         }
       }}
     >
-      <Link
-        className={cn(
-          'flex transform items-center rounded-[6px] bg-[#151245] px-6 py-[10.5px] text-gray300 transition-colors duration-300 hover:bg-purple hover:text-gray100',
-          isActive && 'bg-purple text-gray100 text-primary'
-        )}
+      <NavLink
+        className={({ isActive }) =>
+          cn(
+            'flex transform items-center rounded-[6px] bg-[#151245] px-6 py-[10.5px] text-gray300 transition-colors duration-300  hover:bg-purple hover:text-gray100',
+            isActive && 'bg-purple text-gray100 text-primary'
+          )
+        }
         to={item.href}
+        end
       >
-        <img src={item.icon} className="h-5 w-5" aria-hidden="true" alt="" />
+        <img src={item.icon} className="h-5 w-5" aria-hidden="true" />
         <span className="ml-3 text-sm font-medium uppercase">{item.label}</span>
-      </Link>
+      </NavLink>
     </div>
   );
 };
