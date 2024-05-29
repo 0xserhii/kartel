@@ -2,6 +2,7 @@ import CrashBanner from '/assets/crash-banner.svg';
 import CrashTitle from '/assets/crash-title.png';
 import MinesTitle from '/assets/mines-title.svg';
 import CoinFlipCoin from '/assets/coinflip-coin.svg';
+import CoinFlipTitle from '/assets/coinflip-title.png';
 import Bommbs from '/assets/bommb.svg';
 import InvitedFriends from '/assets/invited-friends.svg';
 import CoinflipBanner from '/assets/coinflip-banner.svg';
@@ -27,7 +28,7 @@ export default function Home() {
                                     alt="Crash Banner"
                                     className="aspect-auto w-full rounded-lg"
                                 />
-                                <img src={CrashTitle} alt="title" className="w-24 absolute left-5 top-5 rounded-md" />
+                                <img src={CrashTitle} alt="Crash Title" className="w-24 absolute left-5 top-5 rounded-md" />
                                 <img src={Playnow} alt="Play Now" className="w-24 absolute left-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
                             </div>
                         </div>
@@ -38,7 +39,7 @@ export default function Home() {
                                     alt="Crash Banner"
                                     className="aspect-auto w-full rounded-lg"
                                 />
-                                <img src={CrashTitle} alt="title" className="w-24 absolute right-2 top-2 rounded-md" />
+                                <img src={CoinFlipTitle} alt="title" className="w-24 absolute right-2 top-2 rounded-md" />
                                 <img src={CoinFlipCoin} alt="Play Now" className="w-16 absolute left-6 bottom-6" />
                                 <img src={Playnow} alt="Play Now" className="w-24 absolute right-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
                             </div>

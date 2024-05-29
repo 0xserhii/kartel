@@ -91,7 +91,17 @@ export default function Leaderboard() {
                         <img
                             src={CrashBanner}
                             alt="Crash Banner"
-                            className="aspect-auto w-full"
+                            className="aspect-auto w-full rounded-md"
+                        />
+                        <img
+                            src={CoinflipTitle}
+                            alt="Crash Title"
+                            className="absolute right-2 top-2 mt-auto"
+                        />
+                        <img
+                            src={PlayText}
+                            alt="Play Text"
+                            className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 hover:shadow-lg ease-in-out md:hover:scale-[1.3] hover:transition-all"
                         />
                     </div>
                 </TabsContent>
@@ -111,7 +121,7 @@ export default function Leaderboard() {
                         <img
                             src={PlayText}
                             alt="Play Text"
-                            className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 hover:shadow-lg"
+                            className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 hover:shadow-lg ease-in-out md:hover:scale-[1.3] hover:transition-all"
                         />
                     </div>
                 </TabsContent>
