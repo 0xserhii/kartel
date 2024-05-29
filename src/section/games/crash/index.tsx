@@ -60,10 +60,9 @@ export default function CrashGameSection() {
 
     const handleStartBet = async () => {
         if (betAmount > 0) {
-            console.log(betAmount)
             const joinParams = {
                 target: 100000,
-                betAmount
+                betAmount: Number(betAmount).valueOf()
             }
             socket?.emit("join-crash-game", joinParams)
         } else if (avaliableBet) {
