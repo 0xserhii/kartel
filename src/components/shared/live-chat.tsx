@@ -76,6 +76,7 @@ const LiveChat = () => {
     });
 
     newSocket.emit('auth', getAccessToken());
+
     newSocket.on('previous-chat-history', (data) => {
       console.log('receive_previous_chat', data);
       if (!data.chatHistories.length) {
@@ -121,7 +122,6 @@ const LiveChat = () => {
     }
 
     const message = {
-      _id: '6654c17632c3ce235eac3795',
       message: inputStr
     };
     console.log(message);
