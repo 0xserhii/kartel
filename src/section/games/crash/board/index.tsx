@@ -6,13 +6,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { useSpring, animated } from '@react-spring/web';
 import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
+import { ECrashStatus } from '@/constants/status';
 
-enum ECrashStatus {
-    PREPARE = "PREPARE",
-    START = "START",
-    END = "END",
-    PROGRESS = "PROGRESS",
-}
+
 
 const formatMillisecondsShort = (ms: number): string => {
     const totalSeconds = Math.floor(ms / 1000);
@@ -22,7 +18,6 @@ const formatMillisecondsShort = (ms: number): string => {
 }
 
 const GrowingNumber = ({ start, end }) => {
-    console.log(start, end)
     const { number: numberValue } = useSpring({
         from: { number: start },
         number: end,
@@ -60,8 +55,6 @@ const CrashBoard = () => {
     const stopCrashBgVideo = () => {
         crashBgVideoPlayer?.current?.pause()
     }
-    console.log(socket)
-
 
     useEffect(() => {
         const crashSocket: Socket<
@@ -80,6 +73,7 @@ const CrashBoard = () => {
         crashSocket.on("game-starting", (data) => {
             setCrashStatus(ECrashStatus.PREPARE)
             setPrepareTime(data.timeUntilStart ?? 0)
+            stopCrashBgVideo()
         })
 
         crashSocket.on("game-start", (data) => {
@@ -112,7 +106,7 @@ const CrashBoard = () => {
     return (
         <div className='relative rounded-md w-full h-[596px]'>
             <video
-                className='crash-moving-bg-video rounded-xl object-cover'
+                className='crash-moving-bg-video rounded-xl object-fill'
 
                 autoPlay
                 muted

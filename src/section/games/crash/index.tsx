@@ -2,13 +2,17 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { players } from '@/constants/data';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import CrashBoard from './board';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
+import { Socket, io } from 'socket.io-client';
+import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
+import { ECrashStatus } from '@/constants/status';
+import { FormattedPlayerBetType } from '@/types';
 
 
 type Ttoken = {
@@ -22,22 +26,86 @@ const token: Ttoken = [
 ]
 
 const betMode = ["manual", "auto"];
-const betAmount = [2, 4, 8]
+const MultiplerArray = [2, 4, 8]
 export default function CrashGameSection() {
+
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectMode, setSelectMode] = useState(betMode[0]);
-    const [originalInputValue, setOriginalInputValue] = useState('');
-    const [inputValue, setInputValue] = useState('');
 
-    const handleInputChange = (event) => {
-        setOriginalInputValue(event.target.value);
-        setInputValue(event.target.value);
+    const [betAmount, setBetAmount] = useState(0);
+    const [socket, setSocket] = useState<Socket | null>(null);
+    const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
+    const [checkOut, setCheckOut] = useState(0)
+    const [avaliableBet, setAvaliableBet] = useState(false)
+
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+    const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
+
+    const handleBetAmountChange = (event) => {
+        const inputValue = event.target.value;
+        const reqTest = new RegExp(`^\\d*\\.?\\d{0,2}$`);
+        if (reqTest.test(inputValue) && inputValue !== "") {
+            const updateValue = parseFloat(inputValue) >= 1 ? inputValue.replace(/^0+/, "") : inputValue
+            setBetAmount(updateValue);
+        } else if (inputValue === "") {
+            setBetAmount(0);
+        }
     };
 
     const handleMultiplierClick = (multiplier) => {
-        const newValue = parseFloat(originalInputValue) * multiplier;
-        setInputValue(newValue.toString());
+        const newValue = betAmount * multiplier;
+        setBetAmount(newValue);
     };
+
+    const handleStartBet = async () => {
+        if (betAmount > 0) {
+            console.log(betAmount)
+            const joinParams = {
+                target: 100000,
+                betAmount
+            }
+            socket?.emit("join-crash-game", joinParams)
+        } else if (avaliableBet) {
+            socket?.emit('bet-cashout')
+        }
+    }
+
+    useEffect(() => {
+        const crashSocket: Socket<
+            ICrashClientToServerEvents,
+            ICrashServerToClientEvents
+        > = io(`${SERVER_URL}/crash`);
+
+        crashSocket.on('game-tick', (tick) => {
+            setCrashStatus(ECrashStatus.PROGRESS)
+        })
+
+        crashSocket.on("game-starting", (data) => {
+            setCrashStatus(ECrashStatus.PREPARE)
+        })
+
+        crashSocket.on("game-start", (data) => {
+            setCrashStatus(ECrashStatus.PROGRESS)
+        })
+
+        crashSocket.on("game-end", (data) => {
+            setCrashStatus(ECrashStatus.END)
+            setBetPlayer(null)
+            setAvaliableBet(false)
+        })
+
+        crashSocket.on("crashgame-join-success", (data) => {
+            setBetPlayer(data)
+            setAvaliableBet(true)
+        })
+
+        setSocket(crashSocket);
+
+        return () => {
+            crashSocket.disconnect();
+        };
+    }, []);
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -72,7 +140,7 @@ export default function CrashGameSection() {
                                                     bet amount
                                                 </p>
                                                 <div className='relative'>
-                                                    <Input type="number" value={inputValue} onChange={handleInputChange} className='text-white border border-purple-0.5 placeholder:text-gray-700' />
+                                                    <Input value={betAmount} onChange={handleBetAmountChange} className='text-white border border-purple-0.5 placeholder:text-gray-700' />
                                                     <span className='absolute top-0 flex items-center justify-center h-full right-4 text-gray500' >
                                                         <DropdownMenu>
                                                             <DropdownMenuTrigger asChild>
@@ -101,7 +169,7 @@ export default function CrashGameSection() {
                                                 </div>
                                                 <div className='grid grid-cols-3 space-x-3'>
                                                     {
-                                                        betAmount.map((item, index) => (
+                                                        MultiplerArray.map((item, index) => (
                                                             <Button
                                                                 className='rounded-lg border border-[#1D1776] bg-[#151245] uppercase text-gray500 font-semibold hover:text-white hover:bg-[#151245]'
                                                                 key={index}
@@ -119,7 +187,7 @@ export default function CrashGameSection() {
                                                 </div>
 
                                             </div>
-                                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase'>Start bet</Button>
+                                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase' disabled={(crashStatus !== ECrashStatus.PREPARE) && !avaliableBet} onClick={handleStartBet}>{avaliableBet ? 'Cashout' : 'Place bet'}</Button>
                                         </div>
                                     </Card>
                                 </div>
