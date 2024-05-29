@@ -1,4 +1,3 @@
-import { multiPlayers } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import MovingBackgroundVideo from '../../../../../public/assets/games/crash/moving_background.mp4'
 import { useEffect, useRef, useState } from 'react';
@@ -6,6 +5,7 @@ import { Socket, io } from 'socket.io-client';
 import { useSpring, animated } from '@react-spring/web';
 import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
+import { CrashHistoryData } from "@/types";
 
 
 
@@ -28,9 +28,6 @@ const GrowingNumber = ({ start, end }) => {
 
 
 const CrashBoard = () => {
-
-    const selected = multiPlayers[3];
-
     const crashBgVideoPlayer = useRef<HTMLVideoElement>(null)
     // const [socket, setSocket] = useState<Socket | null>(null);
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
@@ -38,6 +35,7 @@ const CrashBoard = () => {
     const [prepareTime, setPrepareTime] = useState(0)
     const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
     const [downIntervalId, setDownIntervalId] = useState(0)
+    const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>([]);
 
     const updatePrepareCountDown = () => {
         setPrepareTime((prev) => prev - 100)
@@ -82,7 +80,15 @@ const CrashBoard = () => {
             playCrashBgVideo()
         })
 
+        crashSocket.on('previous-crashgame-history', (historyData: any) => {
+            setCrashHistoryData(historyData);
+            console.log(historyData)
+        });
+
+        crashSocket.emit('previous-crashgame-history', 10 as any);
+
         crashSocket.on("game-end", (data) => {
+
             setCrashStatus(ECrashStatus.END)
             stopCrashBgVideo()
         })
@@ -151,17 +157,17 @@ const CrashBoard = () => {
                     <p className='text-gray-300 text-sm'>Network status</p>
                 </div>
                 <div className='flex gap-2'>
-                    {multiPlayers.map((item, index) => (
+                    {crashHistoryData?.map((item, index) => (
                         <span
                             key={index}
                             className={cn(
-                                'rounded-lg border border-[#1D1776] px-2 text-xs py-1 bg-[#151245] text-gray-300 text-center',
-                                selected === item && 'text-white bg-[#A326D4] border-[#A326D4]'
+                                'rounded-lg border border-[#1D1776] px-2 text-xs py-1 bg-[#151245] text-gray-300 text-center'
                             )}
                         >
-                            x{item}
+                            x{(item.crashPoint / 100).toFixed(2)}
                         </span>
                     ))}
+
                 </div>
             </div>
         </div>

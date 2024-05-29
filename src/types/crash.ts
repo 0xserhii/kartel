@@ -1,7 +1,8 @@
 import {
     FormattedGameHistoryType,
     FormattedPlayerBetType,
-    BetType
+    BetType,
+    CrashHistoryData
 } from './crashGame';
 
 export interface ICrashClientToServerEvents {
@@ -26,8 +27,10 @@ export interface ICrashClientToServerEvents {
     'previous-crashgame-history': (count: number) => void;
 }
 
+
 export interface ICrashServerToClientEvents {
     auth: (token: string) => void;
     'join-crash-game': (target: number, betAmount: number) => void;
     'bet-cashout': () => void;
+    'previous-crashgame-history': (historyData: CrashHistoryData[]) => void;
 }

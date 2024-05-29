@@ -18,7 +18,7 @@ const DepositModal = () => {
     }
 
     return (
-        <Dialog open={false} onOpenChange={hanndleOpenChange}>
+        <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
             <DialogContent className="sm:max-w-md bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10">
                 <DialogHeader>
                     <DialogTitle className='text-white text-center text-3xl'>Deposit</DialogTitle>

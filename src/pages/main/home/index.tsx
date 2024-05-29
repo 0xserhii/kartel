@@ -13,6 +13,7 @@ import Roulette from '/assets/roulette.svg';
 import Slots from '/assets/slots.svg';
 import Playnow from '/assets/playnow.svg'
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
     return (
@@ -29,7 +30,9 @@ export default function Home() {
                                     className="aspect-auto w-full rounded-lg"
                                 />
                                 <img src={CrashTitle} alt="Crash Title" className="w-24 absolute left-5 top-5 rounded-md" />
-                                <img src={Playnow} alt="Play Now" className="cursor-pointer w-24 absolute left-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
+                                <Link to="/crash">
+                                    <img src={Playnow} alt="Play Now" className="cursor-pointer w-24 absolute left-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
+                                </Link>
                             </div>
                         </div>
                         <div className='w-6/12 flex flex-row h-full gap-6'>

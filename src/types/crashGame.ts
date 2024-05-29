@@ -58,3 +58,31 @@ export interface FormattedGameHistoryType
     | 'crashPoint'
     | 'createdAt'
   > { }
+
+interface LevelInfo {
+  name: string;
+  wagerNeeded: number;
+  rakebackPercentage: number;
+  levelName: string;
+  levelColor: string;
+}
+
+interface PlayerInfo {
+  autoCashOut: number;
+  betAmount: number;
+  createdAt: string;
+  playerID: string;
+  username: string;
+  avatar: string;
+  level: LevelInfo;
+  status: number;
+  forcedCashout: boolean;
+  stoppedAt?: number;
+  winningAmount?: number;
+}
+
+export interface CrashHistoryData {
+  _id: string;
+  players: { [key: string]: PlayerInfo };
+  crashPoint: number;
+}
