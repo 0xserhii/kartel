@@ -1,13 +1,11 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import AvatarMock from '/assets/avatar-mock.png';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { removeAllTokens } from '@/lib/axios';
@@ -26,12 +24,15 @@ export default function UserNav(user) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
-          className="relative h-10 w-10 rounded-full !border-none !p-0 !outline-none !ring-0 !ring-offset-0"
+          variant="outline"
+          className="flex gap-2 p-2 bg-transparent hover:bg-transparent !outline-none !ring-0 !ring-offset-0 border-2 border-[#4a278da1]"
         >
-          <Avatar className="h-full w-full">
-            <AvatarImage src={AvatarMock} alt={''} />
+          <Avatar className="h-7 w-7">
+            <AvatarImage src={"/assets/icons/gold-avatar.png"} alt={''} />
           </Avatar>
+          <p className='text-white'>
+            {userData.username}
+          </p>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -49,25 +50,19 @@ export default function UserNav(user) {
             </p>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
             Profile
           </DropdownMenuItem>
           <DropdownMenuItem>
             Billing
-            {/* <DropdownMenuShortcut>⌘B</DropdownMenuShortcut> */}
           </DropdownMenuItem>
           <DropdownMenuItem>
             Settings
-            {/* <DropdownMenuShortcut>⌘S</DropdownMenuShortcut> */}
           </DropdownMenuItem>
-          {/* <DropdownMenuItem>New Team</DropdownMenuItem> */}
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           Log out
-          {/* <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut> */}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

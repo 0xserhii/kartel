@@ -18,6 +18,10 @@ export default function Header() {
     modal.open(ModalType.LOGIN)
   }
 
+  const handleAddGold = async () => {
+    modal.open(ModalType.ADDGOLD)
+  }
+
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
       <Heading />
@@ -26,12 +30,12 @@ export default function Header() {
           userData.username !== "" ? (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-4">
-                <div className="flex h-10 w-40 items-center justify-end rounded-full border-[1.5px] border-blue2 px-[5px]">
-                  <div className="flex flex-grow items-center gap-2 pl-[15px] text-blue2">
+                <div className="flex h-10 w-36 items-center justify-end rounded-full border-[1.5px] border-blue2 px-[5px]">
+                  <div className="flex flex-grow items-center gap-1 pl-[15px] text-blue2">
                     <img src={Coin} alt="Coin-icon" />
                     <span>12,000</span>
                   </div>
-                  <Button className="h-[30px] max-h-[30px] min-h-[30px] w-[30px] min-w-[30px] max-w-[30px] rounded-full border-none !bg-blue2 p-0 text-gray50 outline-none">
+                  <Button className="h-[30px] max-h-[30px] min-h-[30px] w-[30px] min-w-[30px] max-w-[30px] rounded-full border-none !bg-blue2 p-0 text-gray50 outline-none" onClick={handleAddGold}>
                     <Plus />
                   </Button>
                 </div>

@@ -7,14 +7,24 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { Slider } from '@/components/ui/slider';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
+type Ttoken = {
+    name: string;
+    src: string;
+}[]
 
+const token: Ttoken = [
+    { name: "kuji", src: "/assets/tokens/kuji.png" },
+    { name: "usk", src: "/assets/tokens/usk.png" },
+]
 const betMode = ["manual", "auto"];
 const betAmount = [2, 4, 8]
 export default function CrashGames() {
     const selected = multiPlayers[3];
+    const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectMode, setSelectMode] = useState(betMode[0]);
-    const [selectAmount, setSelectAmount] = useState(betAmount[0]);
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -53,15 +63,15 @@ export default function CrashGames() {
                                 </div>
                             </div>
                             <div className='flex md:flex-row flex-col gap-7 w-full p-8'>
-                                <div className='flex flex-col md:w-5/12 w-full gap-5 h-full'>
+                                <div className='flex flex-col md:w-4/12 w-full gap-5 h-full'>
                                     <div className='flex flex-row justify-between items-center'>
-                                        <h5 className='uppercase text-gray-400 text-xl font-semibold'>bet mode</h5>
+                                        <h5 className='uppercase text-gray-400 text-base font-semibold'>bet mode</h5>
                                         <div className='flex flex-row items-center gap-3'>
                                             {
                                                 betMode.map((item, index) => (
                                                     <Button
                                                         className={cn(
-                                                            'min-h-full rounded-lg border border-[#1D1776] px-6 py-5 bg-[#151245] uppercase text-gray500 font-semibold hover:text-white hover:bg-[#151245]',
+                                                            'min-h-full rounded-lg border border-[#1D1776] px-6 py-4 bg-[#151245] uppercase text-gray500 font-semibold hover:text-white hover:bg-[#151245]',
                                                             selectMode === item && 'text-white bg-[#A326D4] hover:bg-[#A326D4] border-[#A326D4]'
                                                         )}
                                                         key={index} onClick={() => setSelectMode(item)}>
@@ -72,34 +82,65 @@ export default function CrashGames() {
                                         </div>
                                     </div>
                                     <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-                                        <div className='flex flex-col rounded-lg h-full w-full p-8 gap-4 bg-[#0D0B32CC]'>
+                                        <div className='flex flex-col rounded-lg h-full w-full p-8 gap-8 bg-[#0D0B32CC]'>
                                             <div className='flex flex-col gap-6'>
                                                 <p className='uppercase text-md text-[#556987] font-semibold'>
                                                     bet amount
                                                 </p>
-                                                <Input type="text" className='text-white border border-gray-700 placeholder:text-gray-700' />
+                                                <div className='relative'>
+                                                    <Input type="text" className='text-white border border-purple-0.5 placeholder:text-gray-700' />
+                                                    <span className='absolute top-0 flex items-center justify-center h-full right-4 text-gray500' >
+                                                        <DropdownMenu>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <div className="flex items-center gap-2 cursor-pointer uppercase">
+                                                                    <img src={selectedToken.src} className='w-4 h-4' />
+                                                                    {selectedToken.name}
+                                                                </div>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent className="w-12 bg-[#0D0B32CC] border-purple-0.5">
+                                                                <DropdownMenuRadioGroup value={selectedToken.name} onValueChange={(value) => {
+                                                                    const newToken = token.find(t => t.name === value);
+                                                                    if (newToken) {
+                                                                        setSelectedToken(newToken);
+                                                                    }
+                                                                }}>
+                                                                    {token.map((t, index) => (
+                                                                        <DropdownMenuRadioItem key={index} value={t.name} className='text-white hover:bg-transparent gap-5 uppercase'>
+                                                                            <img src={t.src} className='w-4 h-4' />
+                                                                            {t.name}
+                                                                        </DropdownMenuRadioItem>
+                                                                    ))}
+                                                                </DropdownMenuRadioGroup>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </span>
+                                                </div>
                                                 <div className='grid grid-cols-3 space-x-3'>
                                                     {
                                                         betAmount.map((item, index) => (
                                                             <Button
-                                                                className={cn(
-                                                                    'rounded-lg border border-[#1D1776] bg-[#151245] uppercase text-gray500 font-semibold hover:text-white hover:bg-[#151245]',
-                                                                    selectAmount === item && 'text-white bg-[#A326D4] hover:bg-[#A326D4] border-[#A326D4]'
-                                                                )}
-                                                                key={index} onClick={() => setSelectAmount(item)}>
+                                                                className='rounded-lg border border-[#1D1776] bg-[#151245] uppercase text-gray500 font-semibold hover:text-white hover:bg-[#151245]'
+                                                                key={index}>
                                                                 {item + "x"}
                                                             </Button>
                                                         ))
                                                     }
                                                 </div>
+                                                <div className='flex flex-row justify-between gap-2'>
+                                                    <span className='text-white w-4/12'>
+                                                        Auto Cashout
+                                                    </span>
+                                                    <Slider className='w-8/12' step={1} max={10} min={1} defaultValue={[8]} />
+                                                </div>
+
                                             </div>
                                             <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase'>Start bet</Button>
                                         </div>
                                     </Card>
                                 </div>
-                                <div className='flex flex-col md:w-7/12 w-full gap-5 h-full'>
+                                <div className='flex flex-col md:w-8/12 w-full gap-5 h-full'>
                                     <div className='flex flex-row justify-between items-center py-1.5'>
-                                        <h5 className='uppercase text-gray-400 text-xl font-semibold'>124 players</h5>
+                                        <h5 className='uppercase text-gray-400 text-base font-semibold'>124 players</h5>
                                         <span className='flex flex-row items-center gap-2'>
                                             <img src='/assets/icons/coin.svg' />
                                             <p className='text-[#049DD9] text-xl font-semibold'>8.097</p>
@@ -133,7 +174,7 @@ export default function CrashGames() {
                                                                         <img
                                                                             src={player.avatar}
                                                                             alt="User"
-                                                                            className="h-8 w-8 rounded-full"
+                                                                            className="h-6 w-6 rounded-full"
                                                                         />
                                                                         <span>{player.user}</span>
                                                                     </div>

@@ -250,16 +250,16 @@ export const scores = [
 ];
 
 export const players = [
-  { user: "Kristin Watson", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 123, payout: 183, status: "success" },
-  { user: "Alice Johnson", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 153, payout: 183, status: "failed" },
-  { user: "David Smith", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 163, payout: 183, status: "success" },
-  { user: "Emma Wilson", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 152, payout: 183, status: "failed" },
-  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "Kristin Watson", avatar: '/assets/icons/silver-avatar.png', time: "08:27:15", betAmount: 183, multipler: 123, payout: 183, status: "success" },
+  { user: "Alice Johnson", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 153, payout: 183, status: "failed" },
+  { user: "David Smith", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 163, payout: 183, status: "success" },
+  { user: "Emma Wilson", avatar: '/assets/icons/gold-avatar.png', time: "08:27:15", betAmount: 183, multipler: 152, payout: 183, status: "failed" },
+  { user: "James Brown", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/icons/silver-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/icons/gold-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/icons/silver-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/icons/gold-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
 ]
 
 

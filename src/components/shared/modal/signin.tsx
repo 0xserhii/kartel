@@ -74,13 +74,13 @@ const SignInModal = () => {
     }
     return (
         <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
-            <DialogContent className="sm:max-w-md bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10">
+            <DialogContent className="sm:max-w-sm bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10">
                 <DialogHeader>
                     <DialogTitle className='text-white text-center text-3xl'>Log In</DialogTitle>
                 </DialogHeader>
                 <Form {...signInForm}>
                     <form onSubmit={signInForm.handleSubmit(handleSubmit)}>
-                        <div className="flex flex-col items-center gap-7 mt-9">
+                        <div className="flex flex-col items-center gap-7 mt-3">
                             <div className='flex flex-col w-full gap-5'>
                                 <div className="grid flex-1 gap-3 w-full">
                                     <p className='text-gray-300'>
@@ -142,8 +142,8 @@ const SignInModal = () => {
                                 </a>
                             </div>
                             <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full' type="submit">login</Button>
-                            <p className='text-gray-300'>
-                                Don’t have an account ?{' '}<button className='text-[#049DD9] font-semibold' onClick={handleSignUp}>Register</button>{' '}now
+                            <p className='text-gray-300 text-sm flex'>
+                                Don’t have an account ?&nbsp;<div className='text-[#049DD9] font-semibold cursor-pointer' onClick={handleSignUp}>Register</div>&nbsp;now
                             </p>
                         </div>
                     </form>

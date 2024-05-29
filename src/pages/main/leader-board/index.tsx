@@ -29,7 +29,6 @@ export default function Leaderboard() {
                         </TabsTrigger>
                     </TabsList>
                 </div>
-
                 <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
                         <Table className="w-full table-fixed">
