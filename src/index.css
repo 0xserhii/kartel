@@ -155,6 +155,53 @@
 }
 
 
-App {
-  font-family: sans-serif;
+/* crash style */
+.crash-moving-bg-video {
+  width: 100%;
+  height: 100%;
+}
+
+.crash-status-shadow {
+  text-shadow: rgba(14, 12, 50, 0.6) 0px 3px 0px;
+  font-family: 'Omar', sans-serif;
+}
+
+.car-moving {
+  animation-name: car-moving-animation;
+  animation-duration: 100s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-direction: alternate;
+}
+
+@keyframes car-moving-animation {
+  0% {
+    left: 0%;
+  }
+
+  10% {
+    left: 35%;
+  }
+
+  30% {
+    left: 55%;
+  }
+
+  100% {
+    left: unset;
+    right: 0%;
+  }
+}
+
+@keyframes blinkred {
+  50% {
+    -webkit-text-stroke: 4px rgb(255, 255, 255);
+    text-shadow: rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px;
+  }
+}
+
+.crashed-value {
+  color: rgb(255, 47, 81);
+  -webkit-text-stroke: 2px rgb(255, 47, 81);
+  animation: 500ms ease 0s 5 normal none running blinkred;
 }
