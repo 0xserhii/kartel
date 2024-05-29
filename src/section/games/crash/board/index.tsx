@@ -40,7 +40,7 @@ const CrashBoard = () => {
     const [downIntervalId, setDownIntervalId] = useState(0)
 
     const updatePrepareCountDown = () => {
-        setPrepareTime((prev) => prev - 50)
+        setPrepareTime((prev) => prev - 100)
     }
 
     // const updateCountDown = () => {
