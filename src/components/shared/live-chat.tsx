@@ -16,6 +16,8 @@ import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
 import { getAccessToken } from '@/lib/axios';
+import { usePersistStore } from '@/store/persist';
+import useToast from "@/routes/hooks/use-toast"
 
 export type HistoryItemProps = {
   name: string;
@@ -57,7 +59,8 @@ const LiveChat = () => {
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<Ichat[]>([]);
   const ref = useRef<HTMLDivElement>(null);
-
+  const userData = usePersistStore((store) => store.app.userData)
+  const toast = useToast()
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
   useEffect(() => {
@@ -113,6 +116,11 @@ const LiveChat = () => {
 
   const sendMessage = () => {
     if (!inputStr) return;
+    if (userData.username === "") {
+      toast.error("Please login to chat")
+      return;
+    }
+
     const message = {
       message: inputStr
     };

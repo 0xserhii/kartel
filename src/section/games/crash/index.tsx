@@ -1,5 +1,4 @@
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { players } from '@/constants/data';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
@@ -7,12 +6,12 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import CrashBoard from './board';
+import { Socket, io } from 'socket.io-client';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
-import { Socket, io } from 'socket.io-client';
+import { BetType, FormattedPlayerBetType } from '@/types';
 import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
-import { FormattedPlayerBetType } from '@/types';
 import { getAccessToken } from '@/lib/axios';
 
 
@@ -32,14 +31,14 @@ export default function CrashGameSection() {
 
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectMode, setSelectMode] = useState(betMode[0]);
-
+    const [betData, setBetData] = useState<BetType[]>([]);
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
     const [betAmount, setBetAmount] = useState(0);
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
-    const [checkOut, setCheckOut] = useState(0)
+    const [betCashout, setBetCashout] = useState<BetType | null>(null);
+    // const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
     const [avaliableBet, setAvaliableBet] = useState(false)
 
-    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
     const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
 
@@ -79,28 +78,44 @@ export default function CrashGameSection() {
             ICrashServerToClientEvents
         > = io(`${SERVER_URL}/crash`);
 
+        crashSocket.on('game-bets', (bets: FormattedPlayerBetType[]) => {
+            setBetData((prev: BetType[]) => [...bets, ...prev]);
+        });
+
+        crashSocket.on("game-starting", (data) => {
+            setBetData([]);
+        });
+
+
         crashSocket.on('game-tick', (tick) => {
             setCrashStatus(ECrashStatus.PROGRESS)
-        })
+        });
 
         crashSocket.on("game-starting", (data) => {
             setCrashStatus(ECrashStatus.PREPARE)
-        })
+        });
 
         crashSocket.on("game-start", (data) => {
             setCrashStatus(ECrashStatus.PROGRESS)
-        })
+        });
 
         crashSocket.on("game-end", (data) => {
             setCrashStatus(ECrashStatus.END)
-            setBetPlayer(null)
+            // setBetPlayer(null)
             setAvaliableBet(false)
-        })
+        });
 
         crashSocket.on("crashgame-join-success", (data) => {
-            setBetPlayer(data)
+            // setBetPlayer(data)
             setAvaliableBet(true)
-        })
+        });
+
+        crashSocket.on("bet-cashout", (data) => {
+            setBetCashout(data?.userdata);
+            console.log(data?.userdata?.playerID);
+        });
+
+
 
         setSocket(crashSocket);
 
@@ -208,10 +223,10 @@ export default function CrashGameSection() {
                                                 <TableBody>
                                                     <TableRow className="!bg-transparent">
                                                         <TableCell className="w-6/12 text-start">User</TableCell>
-                                                        <TableCell className="w-1/6">Time</TableCell>
+                                                        <TableCell className="w-1/6">Cash Out</TableCell>
                                                         <TableCell className="w-1/6 text-center">Bet</TableCell>
-                                                        <TableCell className="w-1/6 text-center">Multipler</TableCell>
-                                                        <TableCell className="w-1/6 text-center">Payout</TableCell>
+                                                        {/* <TableCell className="w-1/6 text-center">Multipler</TableCell> */}
+                                                        {/* <TableCell className="w-1/6 text-center">Payout</TableCell> */}
                                                     </TableRow>
                                                 </TableBody>
                                             </Table>
@@ -220,7 +235,7 @@ export default function CrashGameSection() {
                                             <ScrollArea className="h-[280px] px-5 py-3">
                                                 <Table className="relative table-fixed border-separate border-spacing-y-3">
                                                     <TableBody>
-                                                        {players.map((player, index) => (
+                                                        {betData?.sort((a, b) => b.betAmount - a.betAmount).map((player, index) => (
                                                             <TableRow
                                                                 key={index}
                                                                 className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
@@ -228,31 +243,29 @@ export default function CrashGameSection() {
                                                                 <TableCell className="w-1/2">
                                                                     <div className="flex items-center gap-2">
                                                                         <img
-                                                                            src={player.avatar}
+                                                                            src="/assets/icons/avatar.png"
                                                                             alt="User"
                                                                             className="h-8 w-8 rounded-full"
                                                                         />
-                                                                        <span>{player.user}</span>
+                                                                        <span>{player.username}</span>
                                                                     </div>
                                                                 </TableCell>
                                                                 <TableCell className="w-1/6 text-center">
-                                                                    {player.time}
+                                                                    {betCashout?.playerID === player.playerID ? betCashout?.stoppedAt : "betting"}
                                                                 </TableCell>
                                                                 <TableCell className="w-1/6 text-center">
                                                                     ${player.betAmount}
                                                                 </TableCell>
-                                                                <TableCell className="w-1/6 text-center">
-                                                                    <span className={`rounded-lg border border-[#1D1776] px-0.5 py-0.5 text-white font-semibold text-center ${player.status === "success" ? "bg-[#0BA544]" : "bg-[#D31900]"}`}>
-                                                                        ${player.multipler}
+                                                                {/* <TableCell className="w-1/6 text-center">
+                                                                    <span className={`rounded-lg border border-[#1D1776] px-0.5 py-0.5 text-white font-semibold text-center ${player.status == 1 ? "bg-[#0BA544]" : "bg-[#D31900]"}`}>
+                                                                        ${player.playerID}
                                                                     </span>
-
-
-                                                                </TableCell>
-                                                                <TableCell className="w-1/6">
+                                                                </TableCell> */}
+                                                                {/* <TableCell className="w-1/6">
                                                                     <div className="flex items-center justify-center gap-1">
-                                                                        ${player.payout}
+                                                                        ${player.winningAmount}
                                                                     </div>
-                                                                </TableCell>
+                                                                </TableCell> */}
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
