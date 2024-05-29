@@ -5,7 +5,8 @@ import { produce } from "immer";
 
 export type TPersistState = {
     userData: {
-        username: string
+        username: string;
+        userEmail: string;
     };
 };
 
@@ -18,7 +19,7 @@ export type TPersistStore = {
 };
 
 const initialState: TPersistState = {
-    userData: { username: "" },
+    userData: { username: "", userEmail: "" },
 };
 
 export const usePersistStore = create<TPersistStore>()(

@@ -13,14 +13,15 @@ import {
 import { removeAllTokens } from '@/lib/axios';
 import { usePersistStore } from '@/store/persist';
 
-export default function UserNav() {
-
+export default function UserNav(user) {
+  const userData = usePersistStore((store) => store.app.userData)
   const initUserData = usePersistStore((store) => store.actions.init)
 
   const handleLogout = async () => {
     await initUserData()
     removeAllTokens()
   }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -40,9 +41,11 @@ export default function UserNav() {
       >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{'Admin'}</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {'admin@gmail.com'}
+            <p className="text-lg leading-none text-white">
+              {userData.username}
+            </p>
+            <p className="text-xs leading-none text-white">
+              {userData.userEmail}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -50,7 +53,6 @@ export default function UserNav() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             Profile
-            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
           </DropdownMenuItem>
           <DropdownMenuItem>
             Billing

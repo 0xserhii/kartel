@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import CrashBanner from '/assets/crash-banner.png';
-import CrashTitle from '/assets/crash-title.png';
+import CrashBanner from '/assets/crash-banner.svg';
 import CoinflipBanner from '/assets/banner-bg.png';
 import CoinflipTitle from '/assets/coinflip-title.png';
 import PlayText from '/assets/play-text.svg';
@@ -99,16 +98,6 @@ export default function Leaderboard() {
                             src={CrashBanner}
                             alt="Crash Banner"
                             className="aspect-auto w-full"
-                        />
-                        <img
-                            src={CrashTitle}
-                            alt="Crash Title"
-                            className="absolute left-7 top-4 mt-auto"
-                        />
-                        <img
-                            src={PlayText}
-                            alt="Play Text"
-                            className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 hover:shadow-lg"
                         />
                     </div>
                 </TabsContent>

@@ -8,8 +8,11 @@ export const multiPlayers = [
   "1.00",
   "3.03",
   "1.00.05",
+  "1.00",
+  "2.00",
   "3.04",
   "3.05",
+  "3.06",
 ]
 
 export const navItems: NavItemGroup[] = [
@@ -245,6 +248,22 @@ export const scores = [
     time: '12:00:23'
   }
 ];
+
+export const players = [
+  { user: "Kristin Watson", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 123, payout: 183, status: "success" },
+  { user: "Alice Johnson", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 153, payout: 183, status: "failed" },
+  { user: "David Smith", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 163, payout: 183, status: "success" },
+  { user: "Emma Wilson", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 152, payout: 183, status: "failed" },
+  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+  { user: "James Brown", avatar: '/assets/avatar-mock.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
+]
+
+
+
 
 export const users = [
   {
