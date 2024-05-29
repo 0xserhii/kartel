@@ -72,7 +72,6 @@ export default function CrashGameSection() {
             socket?.emit('bet-cashout')
         }
     }
-    console.log({ avaliableBet, crashStatus })
     useEffect(() => {
         const crashSocket: Socket<
             ICrashClientToServerEvents,
@@ -81,7 +80,6 @@ export default function CrashGameSection() {
 
         crashSocket.on('game-bets', (bets: FormattedPlayerBetType[]) => {
             setBetData((prev: BetType[]) => [...bets, ...prev]);
-            setAvaliableBet(true)
         });
 
         crashSocket.on("game-starting", (data) => {
@@ -114,16 +112,13 @@ export default function CrashGameSection() {
             setBetCashout(data?.userdata);
         });
 
-
-
         setSocket(crashSocket);
-
         return () => {
             crashSocket.disconnect();
         };
     }, []);
 
-
+    console.log({ avaliableBet, crashStatus })
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
             <div className="flex flex-col items-stretch gap-8">
@@ -204,7 +199,7 @@ export default function CrashGameSection() {
                                                 </div>
 
                                             </div>
-                                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase' disabled={(crashStatus !== ECrashStatus.PREPARE) && !avaliableBet} onClick={handleStartBet}>{avaliableBet ? 'Cash Out' : 'Place bet'}</Button>
+                                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase' disabled={((crashStatus !== ECrashStatus.PREPARE) && !avaliableBet) || ((crashStatus !== ECrashStatus.PROGRESS) && avaliableBet)} onClick={handleStartBet}>{avaliableBet ? 'Cash Out' : 'Place bet'}</Button>
                                         </div>
                                     </Card>
                                 </div>
