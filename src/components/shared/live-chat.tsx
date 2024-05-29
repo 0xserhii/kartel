@@ -15,6 +15,7 @@ import { Separator } from '../ui/separator';
 import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
+import { getAccessToken } from '@/lib/axios';
 
 export type HistoryItemProps = {
   name: string;
@@ -70,6 +71,8 @@ const LiveChat = () => {
       // Update chat history state to include the new message
       setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
     });
+
+    newSocket.emit('auth', getAccessToken());
 
     newSocket.on('previous-chat-history', (data) => {
       console.log('receive_previous_chat', data);

@@ -13,6 +13,7 @@ import { Socket, io } from 'socket.io-client';
 import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { FormattedPlayerBetType } from '@/types';
+import { getAccessToken } from '@/lib/axios';
 
 
 type Ttoken = {
@@ -64,6 +65,8 @@ export default function CrashGameSection() {
                 target: 100000,
                 betAmount: Number(betAmount).valueOf()
             }
+            console.log(getAccessToken())
+            socket?.emit('auth', getAccessToken())
             socket?.emit("join-crash-game", joinParams)
         } else if (avaliableBet) {
             socket?.emit('bet-cashout')
@@ -105,6 +108,7 @@ export default function CrashGameSection() {
             crashSocket.disconnect();
         };
     }, []);
+
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
