@@ -10,7 +10,7 @@ export interface Ichat {
 export interface IChatClientToServerEvents {
   'auth': (token: string) => void;
   'join-chat': (_id: string) => void;
-  message: (data: { _id: string; message: string }) => void;
+  message: (message: string) => void;
 }
 
 export interface IChatServerToClientEvents {

@@ -114,7 +114,6 @@ const LiveChat = () => {
   const sendMessage = () => {
     if (!inputStr) return;
     const message = {
-      _id: '6654c17632c3ce235eac3795',
       message: inputStr
     };
     console.log(message);
