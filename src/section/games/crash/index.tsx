@@ -59,19 +59,20 @@ export default function CrashGameSection() {
     };
 
     const handleStartBet = async () => {
-        if (betAmount > 0) {
+        if (betAmount > 0 && !avaliableBet) {
             const joinParams = {
                 target: 100000,
                 betAmount: Number(betAmount).valueOf()
             }
-            console.log(getAccessToken())
             socket?.emit('auth', getAccessToken())
             socket?.emit("join-crash-game", joinParams)
-        } else if (avaliableBet) {
+        }
+        if (avaliableBet) {
+            setAvaliableBet(false)
             socket?.emit('bet-cashout')
         }
     }
-
+    console.log({ avaliableBet, crashStatus })
     useEffect(() => {
         const crashSocket: Socket<
             ICrashClientToServerEvents,
@@ -80,6 +81,7 @@ export default function CrashGameSection() {
 
         crashSocket.on('game-bets', (bets: FormattedPlayerBetType[]) => {
             setBetData((prev: BetType[]) => [...bets, ...prev]);
+            setAvaliableBet(true)
         });
 
         crashSocket.on("game-starting", (data) => {
@@ -101,18 +103,15 @@ export default function CrashGameSection() {
 
         crashSocket.on("game-end", (data) => {
             setCrashStatus(ECrashStatus.END)
-            // setBetPlayer(null)
             setAvaliableBet(false)
         });
 
         crashSocket.on("crashgame-join-success", (data) => {
-            // setBetPlayer(data)
             setAvaliableBet(true)
         });
 
         crashSocket.on("bet-cashout", (data) => {
             setBetCashout(data?.userdata);
-            console.log(data?.userdata?.playerID);
         });
 
 
@@ -205,7 +204,7 @@ export default function CrashGameSection() {
                                                 </div>
 
                                             </div>
-                                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase' disabled={(crashStatus !== ECrashStatus.PREPARE) && !avaliableBet} onClick={handleStartBet}>{avaliableBet ? 'Cashout' : 'Place bet'}</Button>
+                                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full uppercase' disabled={(crashStatus !== ECrashStatus.PREPARE) && !avaliableBet} onClick={handleStartBet}>{avaliableBet ? 'Cash Out' : 'Place bet'}</Button>
                                         </div>
                                     </Card>
                                 </div>
