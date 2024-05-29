@@ -23,6 +23,7 @@ export interface ICrashClientToServerEvents {
     'crashgame-join-success': (data: FormattedPlayerBetType) => void;
     'bet-cashout-error': (data: string) => void;
     'bet-cashout-success': (result: any) => void;
+    'previous-crashgame-history': (count: number) => void;
 }
 
 export interface ICrashServerToClientEvents {

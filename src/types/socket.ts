@@ -33,6 +33,7 @@ export interface ServerToClientEvents {
   'game-end': (data: { game: FormattedGameHistoryType }) => void;
   'game-tick': (data: number) => void;
   'crashgame-join-success': (data: FormattedPlayerBetType) => void;
+  'previous-crashgame-history': (count: number) => void;
   connection_kicked: () => void;
 
   //conflipgame Events
@@ -89,7 +90,7 @@ export interface InterServerEvents {
   //common Events
 }
 
-export interface InterCoinflipGameServerEvents {}
+export interface InterCoinflipGameServerEvents { }
 
 export interface SocketData {
   lastAccess?: number;

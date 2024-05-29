@@ -11,7 +11,9 @@ export interface IChatClientToServerEvents {
   auth: (token: string) => void;
   'join-chat': (_id: string) => void;
   message: (message: string) => void;
+  'previous-crashgame-history': (count: number) => void;
 }
+
 
 export interface IChatServerToClientEvents {
   message: (data: Ichat) => void;
