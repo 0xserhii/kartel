@@ -1,6 +1,5 @@
 import {
     FormattedGameHistoryType,
-    PendingBetType,
     FormattedPlayerBetType,
     BetType
 } from './crashGame';
@@ -14,7 +13,7 @@ export interface ICrashClientToServerEvents {
     }) => void;
     'game-start': (data: { publicSeed: string }) => void;
     'bet-cashout': (data: {
-        userData: BetType;
+        userdata: BetType;
         status: number;
         stoppedAt: number | undefined;
         winningAmount: number;
