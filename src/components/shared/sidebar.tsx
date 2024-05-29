@@ -24,20 +24,18 @@ export default function Sidebar() {
           </Link>
           <DashboardNav items={navItems} />
         </div>
-        <div className="w-full">
-          <button
-            className="flex items-center gap-2 rounded-lg bg-blue1 px-6 py-4 text-white"
-            onClick={handleDeposit}
-          >
-            <img src={Deposit} />
-            <div className="flex flex-col items-stretch gap-1">
-              <span className="text-base font-semibold text-gray50">
-                Deposit Now
-              </span>
-              <span className="text-sm text-gray300">Get $100 bonus</span>
-            </div>
-          </button>
-        </div>
+        <button
+          className="flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white mb-5"
+          onClick={handleDeposit}
+        >
+          <img src={Deposit} />
+          <div className="flex flex-col items-stretch gap-1">
+            <span className="text-base font-semibold text-gray50">
+              Deposit Now
+            </span>
+            <span className="text-sm text-gray300">Get $100 bonus</span>
+          </div>
+        </button>
       </aside>
     </ScrollArea>
   );
