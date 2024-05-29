@@ -35,10 +35,9 @@ export default function CrashGameSection() {
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
     const [betAmount, setBetAmount] = useState(0);
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [betCashout, setBetCashout] = useState<BetType | null>(null);
+    const [betCashout, setBetCashout] = useState<BetType[]>([]);
     // const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
     const [avaliableBet, setAvaliableBet] = useState(false)
-
 
     const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
 
@@ -82,17 +81,14 @@ export default function CrashGameSection() {
             setBetData((prev: BetType[]) => [...bets, ...prev]);
         });
 
-        crashSocket.on("game-starting", (data) => {
-            setBetData([]);
-        });
-
-
         crashSocket.on('game-tick', (tick) => {
             setCrashStatus(ECrashStatus.PROGRESS)
         });
 
         crashSocket.on("game-starting", (data) => {
             setCrashStatus(ECrashStatus.PREPARE)
+            setBetData([]);
+            setBetCashout([]);
         });
 
         crashSocket.on("game-start", (data) => {
@@ -109,7 +105,7 @@ export default function CrashGameSection() {
         });
 
         crashSocket.on("bet-cashout", (data) => {
-            setBetCashout(data?.userdata);
+            setBetCashout((prev) => [...prev, data?.userdata]);
         });
 
         setSocket(crashSocket);
@@ -205,7 +201,7 @@ export default function CrashGameSection() {
                                 </div>
                                 <div className='flex flex-col md:w-7/12 w-full gap-5 h-full'>
                                     <div className='flex flex-row justify-between items-center py-1.5'>
-                                        <h5 className='uppercase text-gray-400 text-xl font-semibold'>124 players</h5>
+                                        <h5 className='uppercase text-gray-400 text-xl font-semibold'>{betData.length} players</h5>
                                         <span className='flex flex-row items-center gap-2'>
                                             <img src='/assets/icons/coin.svg' />
                                             <p className='text-[#049DD9] text-xl font-semibold'>8.097</p>
@@ -218,9 +214,8 @@ export default function CrashGameSection() {
                                                     <TableRow className="!bg-transparent">
                                                         <TableCell className="w-6/12 text-start">User</TableCell>
                                                         <TableCell className="w-1/6">Cash Out</TableCell>
-                                                        <TableCell className="w-1/6 text-center">Bet</TableCell>
-                                                        {/* <TableCell className="w-1/6 text-center">Multipler</TableCell> */}
-                                                        {/* <TableCell className="w-1/6 text-center">Payout</TableCell> */}
+                                                        <TableCell className="w-1/6 text-center">Bet Amount</TableCell>
+                                                        <TableCell className="w-1/6 text-center">Profit</TableCell>
                                                     </TableRow>
                                                 </TableBody>
                                             </Table>
@@ -245,21 +240,28 @@ export default function CrashGameSection() {
                                                                     </div>
                                                                 </TableCell>
                                                                 <TableCell className="w-1/6 text-center">
-                                                                    {betCashout?.playerID === player.playerID ? betCashout?.stoppedAt : "betting"}
+                                                                    {betCashout?.find(item => item.playerID === player.playerID)?.stoppedAt &&
+                                                                        (((betCashout?.find(item => item.playerID === player.playerID)?.stoppedAt ?? 0) / 100).toFixed(2)) + "x" || "betting"
+                                                                    }
                                                                 </TableCell>
                                                                 <TableCell className="w-1/6 text-center">
-                                                                    ${player.betAmount}
-                                                                </TableCell>
-                                                                {/* <TableCell className="w-1/6 text-center">
-                                                                    <span className={`rounded-lg border border-[#1D1776] px-0.5 py-0.5 text-white font-semibold text-center ${player.status == 1 ? "bg-[#0BA544]" : "bg-[#D31900]"}`}>
-                                                                        ${player.playerID}
-                                                                    </span>
-                                                                </TableCell> */}
-                                                                {/* <TableCell className="w-1/6">
-                                                                    <div className="flex items-center justify-center gap-1">
-                                                                        ${player.winningAmount}
+                                                                    <div className='flex flex-row items-center justify-center gap-1 w-full text-center'>
+                                                                        <img src="/assets/tokens/usk.png" alt="Multiplier" className='w-4 h-4' />
+                                                                        {player.betAmount}
                                                                     </div>
-                                                                </TableCell> */}
+                                                                </TableCell>
+                                                                <TableCell className="w-1/6 text-center">
+                                                                    {betCashout?.find(item => item.playerID === player.playerID)?.stoppedAt
+                                                                        ? <div className='flex flex-row items-center justify-center gap-1'>
+                                                                            <img src="/assets/tokens/usk.png" alt="Multiplier" className='w-4 h-4' />
+                                                                            {((((betCashout?.find(item => item.playerID === player.playerID)?.stoppedAt ?? 0) / 100)) * player.betAmount).toFixed(2)}
+                                                                        </div>
+                                                                        :
+                                                                        <span>
+                                                                            betting
+                                                                        </span>
+                                                                    }
+                                                                </TableCell>
                                                             </TableRow>
                                                         ))}
                                                     </TableBody>
