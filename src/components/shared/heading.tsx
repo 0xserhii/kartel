@@ -9,7 +9,6 @@ type THeadingProps = {
 
 export default function Heading({ className }: THeadingProps) {
   const pathname = usePathname();
-  console.log(pathname)
   return (
     <div className={className}>
       {tabItems.map((item, index) => (

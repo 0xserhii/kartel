@@ -62,11 +62,6 @@ export default function Leaderboard() {
                                             </TableCell>
                                             <TableCell className="w-1/2">
                                                 <div className="flex items-center gap-2">
-                                                    <img
-                                                        src={score.avatar}
-                                                        alt="User"
-                                                        className="h-8 w-8 rounded-full"
-                                                    />
                                                     <span>{score.name}</span>
                                                 </div>
                                             </TableCell>

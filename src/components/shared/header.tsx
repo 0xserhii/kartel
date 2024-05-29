@@ -42,7 +42,7 @@ export default function Header() {
                 <Bell className="text-gray50" />
               </div>
               <Separator orientation={'vertical'} className="h-6" />
-              <UserNav user={userData} />
+              <UserNav />
             </div>
           ) : (
             <Button className='bg-[#049DD9] hover:bg-[#049DD9] rounded-lg gap-2 text-white' onClick={handleSignIn}>

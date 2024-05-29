@@ -11,7 +11,7 @@ import {
 import { removeAllTokens } from '@/lib/axios';
 import { usePersistStore } from '@/store/persist';
 
-export default function UserNav(user) {
+export default function UserNav() {
   const userData = usePersistStore((store) => store.app.userData)
   const initUserData = usePersistStore((store) => store.actions.init)
 
@@ -27,7 +27,7 @@ export default function UserNav(user) {
           variant="outline"
           className="flex gap-2 p-2 bg-transparent hover:bg-transparent !outline-none !ring-0 !ring-offset-0 border-2 border-[#4a278da1]"
         >
-          <Avatar className="h-7 w-7">
+          <Avatar className="h-5 w-5">
             <AvatarImage src={"/assets/icons/gold-avatar.png"} alt={''} />
           </Avatar>
           <p className='text-white'>

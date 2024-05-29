@@ -14,7 +14,7 @@ import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
 import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export type HistoryItemProps = {
   name: string;
@@ -134,7 +134,7 @@ const LiveChat = () => {
 
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
-      <div className="flex items-center gap-3 p-5">
+      <div className="flex items-center gap-3 p-3">
         <span className="text-base font-medium text-gray300">LIVE CHAT</span>
         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-pink text-[12px] font-medium text-gray200">
           4
@@ -151,18 +151,17 @@ const LiveChat = () => {
             <Search className=" text-gray500" />
           </span>
         </div> */}
-        <ScrollArea className={`flex flex-1 overflow-y-auto flex-col items-stretch ${emojiIsOpened ? " max-h-[calc(80vh-300px)]" : " max-h-[calc(80vh)]"}`}>
+        <ScrollArea className={`flex py-3 flex-col items-stretch ${emojiIsOpened ? " max-h-[calc(80vh-300px)]" : " max-h-[calc(80vh)]"}`}>
           {chatHistory.map((chat, key) => (
-            <>
+            <React.Fragment key={key}>
               <HistoryItem
-                key={key}
                 name={chat.user?.username}
                 avatar={chat.user?.avatar}
                 time={formatTime(chat.sentAt.toString())}
                 message={chat.message}
               />
               <div ref={ref}></div>
-            </>
+            </React.Fragment>
           ))}
         </ScrollArea>
       </div>
@@ -185,7 +184,7 @@ const LiveChat = () => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   sendMessage();
-                  e.preventDefault(); // Prevents the default action of the enter key in a form
+                  e.preventDefault();
                 }
               }}
             />

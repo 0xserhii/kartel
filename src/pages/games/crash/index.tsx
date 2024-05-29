@@ -148,17 +148,20 @@ export default function CrashGames() {
                                     </div>
                                     <Card className=" border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                                         <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
-                                            <Table className="w-full table-fixed">
-                                                <TableBody>
-                                                    <TableRow className="!bg-transparent">
-                                                        <TableCell className="w-6/12 text-start">User</TableCell>
-                                                        <TableCell className="w-1/6">Time</TableCell>
-                                                        <TableCell className="w-1/6 text-center">Bet</TableCell>
-                                                        <TableCell className="w-1/6 text-center">Multipler</TableCell>
-                                                        <TableCell className="w-1/6 text-center">Payout</TableCell>
-                                                    </TableRow>
-                                                </TableBody>
-                                            </Table>
+                                            <ScrollArea className="">
+                                                <Table className="w-full table-fixed">
+                                                    <TableBody>
+                                                        <TableRow className="!bg-transparent">
+                                                            <TableCell className="w-1/2 text-start">User</TableCell>
+                                                            <TableCell className="w-1/6">Time</TableCell>
+                                                            <TableCell className="w-1/6 text-center">Bet</TableCell>
+                                                            <TableCell className="w-1/6 text-center">Multipler</TableCell>
+                                                            <TableCell className="w-1/6 text-center">Payout</TableCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                                <ScrollBar orientation="horizontal" />
+                                            </ScrollArea>
                                         </CardHeader>
                                         <CardContent className="px-2 py-0">
                                             <ScrollArea className="h-[280px] px-5 py-3">
@@ -189,8 +192,6 @@ export default function CrashGames() {
                                                                     <span className={`rounded-lg border border-[#1D1776] px-0.5 py-0.5 text-white font-semibold text-center ${player.status === "success" ? "bg-[#0BA544]" : "bg-[#D31900]"}`}>
                                                                         ${player.multipler}
                                                                     </span>
-
-
                                                                 </TableCell>
                                                                 <TableCell className="w-1/6">
                                                                     <div className="flex items-center justify-center gap-1">
