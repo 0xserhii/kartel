@@ -12,6 +12,11 @@ export interface IChatClientToServerEvents {
   message: (data: { _id: string; message: string }) => void;
 }
 
+export interface IChatClientToServerEvents {
+  'auth': (accessToken: string) => void;
+  message: (data: { _id: string; message: string }) => void;
+}
+
 export interface IChatServerToClientEvents {
   message: (data: Ichat) => void;
   'previous-chat-history': (data: {

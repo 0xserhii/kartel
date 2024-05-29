@@ -1,4 +1,3 @@
-import setting from '/assets/auth-btn.svg'
 import { multiPlayers } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import MovingBackgroundVideo from '../../../../../public/assets/games/crash/moving_background.mp4'
@@ -38,7 +37,7 @@ const CrashBoard = () => {
     const selected = multiPlayers[3];
 
     const crashBgVideoPlayer = useRef<HTMLVideoElement>(null)
-    const [socket, setSocket] = useState<Socket | null>(null);
+    // const [socket, setSocket] = useState<Socket | null>(null);
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
     const [crTick, setCrTick] = useState({ prev: 1, cur: 1 })
     const [prepareTime, setPrepareTime] = useState(0)
@@ -60,7 +59,6 @@ const CrashBoard = () => {
     const stopCrashBgVideo = () => {
         crashBgVideoPlayer?.current?.pause()
     }
-    console.log(socket)
 
 
     useEffect(() => {
@@ -93,7 +91,7 @@ const CrashBoard = () => {
             stopCrashBgVideo()
         })
 
-        setSocket(crashSocket);
+        // setSocket(crashSocket);
 
         return () => {
             crashSocket.disconnect();
@@ -168,15 +166,6 @@ const CrashBoard = () => {
                             x{item}
                         </span>
                     ))}
-                </div>
-                <div className='flex lg:flex-row flex-col items-center gap-2'>
-                    <button>
-                        <img src={setting} className='p-2 bg-[#F8BB54] rounded-md' />
-                    </button>
-                    <button className='flex flex-row items-center uppercase bg-[#049DD9] py-2 px-3 text-sm text-white gap-2 rounded-md'>
-                        <img src={setting} />
-                        history
-                    </button>
                 </div>
             </div>
         </div>

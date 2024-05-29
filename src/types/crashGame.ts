@@ -24,7 +24,7 @@ export interface BetType {
   status: number;
   level: VIPLevelType;
   stoppedAt?: number;
-  autoCashOut: number;
+  autoCashOut?: number;
   winningAmount?: number;
   forcedCashout?: boolean;
   createdAt?: Date;

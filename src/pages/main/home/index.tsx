@@ -29,7 +29,7 @@ export default function Home() {
                                     className="aspect-auto w-full rounded-lg"
                                 />
                                 <img src={CrashTitle} alt="Crash Title" className="w-24 absolute left-5 top-5 rounded-md" />
-                                <img src={Playnow} alt="Play Now" className="w-24 absolute left-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
+                                <img src={Playnow} alt="Play Now" className="cursor-pointer w-24 absolute left-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
                             </div>
                         </div>
                         <div className='w-6/12 flex flex-row h-full gap-6'>
@@ -41,7 +41,7 @@ export default function Home() {
                                 />
                                 <img src={CoinFlipTitle} alt="title" className="w-24 absolute right-2 top-2 rounded-md" />
                                 <img src={CoinFlipCoin} alt="Play Now" className="w-16 absolute left-6 bottom-6" />
-                                <img src={Playnow} alt="Play Now" className="w-24 absolute right-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
+                                <img src={Playnow} alt="Play Now" className="cursor-pointer w-24 absolute right-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
                             </div>
                             <div className="relative rounded-md w-6/12">
                                 <img
@@ -51,7 +51,7 @@ export default function Home() {
                                 />
                                 <img src={MinesTitle} alt="title" className="w-24 absolute right-2 top-2 rounded-md" />
                                 <img src={Bommbs} alt="Play Now" className="w-10 absolute left-16 bottom-10" />
-                                <img src={Playnow} alt="Play Now" className="w-24 absolute right-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
+                                <img src={Playnow} alt="Play Now" className="cursor-pointer w-24 absolute right-5 bottom-5 py-2 px-2 bg-white border-4 border-black rounded-md ease-in-out md:hover:scale-[1.3] hover:transition-all" />
                             </div>
                         </div>
                     </div>
