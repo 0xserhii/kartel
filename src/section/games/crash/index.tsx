@@ -63,7 +63,6 @@ export default function CrashGameSection() {
                 target: 100000,
                 betAmount: Number(betAmount).valueOf()
             }
-            socket?.emit('auth', getAccessToken())
             socket?.emit("join-crash-game", joinParams)
         }
         if (avaliableBet) {
@@ -108,13 +107,19 @@ export default function CrashGameSection() {
             setBetCashout((prev) => [...prev, data?.userdata]);
         });
 
+        crashSocket.emit('auth', getAccessToken())
+
         setSocket(crashSocket);
         return () => {
             crashSocket.disconnect();
         };
     }, []);
 
-    console.log({ avaliableBet, crashStatus })
+    useEffect(() => {
+        if (socket) {
+            socket.emit('auth', getAccessToken())
+        }
+    }, [getAccessToken(), socket])
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
             <div className="flex flex-col items-stretch gap-8">
