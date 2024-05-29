@@ -60,6 +60,8 @@ const CrashBoard = () => {
             ICrashServerToClientEvents
         > = io(`${SERVER_URL}/crash`);
 
+        crashSocket.emit('previous-crashgame-history', 10 as any);
+
         crashSocket.on('game-tick', (tick) => {
             setCrashStatus(ECrashStatus.PROGRESS)
             setCrTick(prev => ({
@@ -85,12 +87,11 @@ const CrashBoard = () => {
             console.log(historyData)
         });
 
-        crashSocket.emit('previous-crashgame-history', 10 as any);
 
         crashSocket.on("game-end", (data) => {
-
             setCrashStatus(ECrashStatus.END)
             stopCrashBgVideo()
+            crashSocket.emit('previous-crashgame-history', 10 as any);
         })
 
         // setSocket(crashSocket);
