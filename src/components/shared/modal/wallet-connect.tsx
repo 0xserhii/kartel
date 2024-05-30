@@ -7,12 +7,6 @@ import { Adapter, useWallet } from '@/provider/crypto/wallet';
 import { useState } from 'react';
 import useToast from '@/routes/hooks/use-toast';
 
-declare global {
-    interface Window {
-        station: any;
-    }
-}
-
 interface ITokenList {
     name: string;
     image: string;
