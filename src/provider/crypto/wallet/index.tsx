@@ -1,13 +1,13 @@
-import { AccountData, EncodeObject } from "@cosmjs/proto-signing";
+import { AccountData, EncodeObject } from '@cosmjs/proto-signing';
 import {
   Coin,
   DeliverTxResponse,
-  assertIsDeliverTxSuccess,
-} from "@cosmjs/stargate";
-import { ChainInfo } from "@keplr-wallet/types";
-import { DelegationResponse } from "cosmjs-types/cosmos/staking/v1beta1/staking";
-import { Any } from "cosmjs-types/google/protobuf/any";
-import { BigNumber } from "ethers";
+  assertIsDeliverTxSuccess
+} from '@cosmjs/stargate';
+import { ChainInfo } from '@keplr-wallet/types';
+import { DelegationResponse } from 'cosmjs-types/cosmos/staking/v1beta1/staking';
+import { Any } from 'cosmjs-types/google/protobuf/any';
+import { BigNumber } from 'ethers';
 import {
   CHAIN_INFO,
   DaoDao,
@@ -19,33 +19,33 @@ import {
   ReadOnly,
   Sonar,
   Station,
-  Xfi,
-} from "kujira.js";
+  Xfi
+} from 'kujira.js';
 import {
   FC,
   PropsWithChildren,
   createContext,
   useContext,
   useEffect,
-  useState,
-} from "react";
-import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination";
-import { WalletI } from "kujira.js/lib/cjs/wallets/interface";
-import { useNetwork } from "../network";
-import { usePasskeys } from "../passkey";
-import { Passkey } from "./passkey-class";
-import { useLocalStorage } from "@/routes/hooks";
+  useState
+} from 'react';
+import { PageRequest } from 'cosmjs-types/cosmos/base/query/v1beta1/pagination';
+import { WalletI } from 'kujira.js/lib/cjs/wallets/interface';
+import { useNetwork } from '../network';
+import { usePasskeys } from '../passkey';
+import { Passkey } from './passkey-class';
+import { useLocalStorage } from '@/routes/hooks';
 
 export enum Adapter {
-  Sonar = "sonar",
-  Passkey = "passkey",
-  ReadOnly = "readOnly",
-  Keplr = "keplr",
-  Station = "station",
-  Leap = "leap",
-  LeapSnap = "leapSnap",
-  Xfi = "xfi",
-  DaoDao = "daodao",
+  Sonar = 'sonar',
+  Passkey = 'passkey',
+  ReadOnly = 'readOnly',
+  Keplr = 'keplr',
+  Station = 'station',
+  Leap = 'leap',
+  LeapSnap = 'leapSnap',
+  Xfi = 'xfi',
+  DaoDao = 'daodao'
 }
 
 export type IWallet = {
@@ -54,10 +54,7 @@ export type IWallet = {
   account: (AccountData & { label?: string }) | null;
   kujiraAccount: Any | null;
   balances: Coin[];
-  getBalance: (
-    denom: Denom,
-    refresh?: boolean
-  ) => Promise<BigNumber | null>;
+  getBalance: (denom: Denom, refresh?: boolean) => Promise<BigNumber | null>;
   balance: (denom: Denom) => BigNumber;
   signAndBroadcast: (
     msgs: EncodeObject[],
@@ -76,21 +73,21 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => { },
-  disconnect: () => { },
+  connect: async () => {},
+  disconnect: () => {},
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
-    throw new Error("Not Implemented");
+    throw new Error('Not Implemented');
   },
 
   delegations: null,
-  refreshBalances: () => { },
-  refreshDelegations: () => { },
-  feeDenom: "ukuji",
-  setFeeDenom: () => { },
+  refreshBalances: () => {},
+  refreshDelegations: () => {},
+  feeDenom: 'ukuji',
+  setFeeDenom: () => {},
   chainInfo: {} as ChainInfo,
-  adapter: null,
+  adapter: null
 });
 
 const toAdapter = (wallet: any) => {
@@ -113,34 +110,25 @@ const toAdapter = (wallet: any) => {
                   : null;
 };
 
-export const WalletContext: FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const [stored, setStored] = useLocalStorage("wallet", "");
+export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
+  const [stored, setStored] = useLocalStorage('wallet', '');
   const [wallet, setWallet] = useState<WalletI | null>(null);
   const { signer, selectSigner } = usePasskeys();
 
   const adapter = toAdapter(wallet);
 
-  const [feeDenom, setFeeDenom] = useLocalStorage(
-    "feeDenom",
-    "ukuji"
-  );
-  const [balances, setBalances] = useState<Record<string, BigNumber>>(
-    {}
-  );
+  const [feeDenom, setFeeDenom] = useLocalStorage('feeDenom', 'ukuji');
+  const [balances, setBalances] = useState<Record<string, BigNumber>>({});
 
   const [kujiraBalances, setKujiraBalances] = useState<Coin[]>([]);
 
   const [{ network, chainInfo, query, rpc }] = useNetwork();
 
-  const [kujiraAccount, setKujiraAccount] = useState<null | Any>(
+  const [kujiraAccount, setKujiraAccount] = useState<null | Any>(null);
+
+  const [delegations, setDelegations] = useState<null | DelegationResponse[]>(
     null
   );
-
-  const [delegations, setDelegations] = useState<
-    null | DelegationResponse[]
-  >(null);
 
   useEffect(() => {
     stored && connect(stored, network, true);
@@ -149,7 +137,7 @@ export const WalletContext: FC<PropsWithChildren> = ({
     DaoDao.connect(chainInfo)
       .then(setWallet)
       .catch((err) => {
-        console.error(err)
+        console.error(err);
       });
   }, []);
 
@@ -170,9 +158,9 @@ export const WalletContext: FC<PropsWithChildren> = ({
           setBalances((prev) =>
             b.denom
               ? {
-                ...prev,
-                [b.denom]: BigNumber.from(b.amount),
-              }
+                  ...prev,
+                  [b.denom]: BigNumber.from(b.amount)
+                }
               : prev
           );
         });
@@ -219,7 +207,7 @@ export const WalletContext: FC<PropsWithChildren> = ({
       .then((balance) => {
         setBalances((prev) => ({
           ...prev,
-          [denom.reference]: balance,
+          [denom.reference]: balance
         }));
         return balance;
       });
@@ -235,36 +223,27 @@ export const WalletContext: FC<PropsWithChildren> = ({
     msgs: EncodeObject[],
     memo?: string
   ): Promise<DeliverTxResponse> => {
-    if (!wallet) throw new Error("No Wallet Connected");
-    const res = await wallet.signAndBroadcast(
-      rpc,
-      msgs,
-      feeDenom,
-      memo
-    );
+    if (!wallet) throw new Error('No Wallet Connected');
+    const res = await wallet.signAndBroadcast(rpc, msgs, feeDenom, memo);
     assertIsDeliverTxSuccess(res);
     return res;
   };
 
   const sonarRequest = (uri: string) => {
-    console.log(uri)
+    console.log(uri);
   };
 
-  const connect = async (
-    adapter: Adapter,
-    chain?: NETWORK,
-    auto?: boolean
-  ) => {
+  const connect = async (adapter: Adapter, chain?: NETWORK, auto?: boolean) => {
     const chainInfo: ChainInfo = {
-      ...CHAIN_INFO[chain || network],
+      ...CHAIN_INFO[chain || network]
     };
 
-    let connectedWalletAddress: any = null
+    let connectedWalletAddress: any = null;
 
     switch (adapter) {
       case Adapter.Passkey:
         if (!signer) {
-          console.error("No Signer Available");
+          console.error('No Signer Available');
           return;
         }
         Passkey.connect({ ...chainInfo, rpc }, signer)
@@ -273,18 +252,24 @@ export const WalletContext: FC<PropsWithChildren> = ({
             setWallet(passkey);
           })
           .catch((err) => {
-            setStored("");
+            setStored('');
             console.error(err.message);
           });
         break;
       case Adapter.Keplr:
-        connectedWalletAddress = await Keplr.connect({ ...chainInfo, rpc }, { feeDenom })
+        connectedWalletAddress = await Keplr.connect(
+          { ...chainInfo, rpc },
+          { feeDenom }
+        );
         setStored(adapter);
         setWallet(connectedWalletAddress);
         break;
 
       case Adapter.Leap:
-        connectedWalletAddress = await Leap.connect({ ...chainInfo, rpc }, { feeDenom })
+        connectedWalletAddress = await Leap.connect(
+          { ...chainInfo, rpc },
+          { feeDenom }
+        );
         setStored(adapter);
         setWallet(connectedWalletAddress);
         break;
@@ -296,7 +281,7 @@ export const WalletContext: FC<PropsWithChildren> = ({
             setWallet(x);
           })
           .catch((err) => {
-            setStored("");
+            setStored('');
             console.error(err.message);
           });
 
@@ -309,7 +294,7 @@ export const WalletContext: FC<PropsWithChildren> = ({
             setWallet(x);
           })
           .catch((err) => {
-            setStored("");
+            setStored('');
             console.error(err.message);
           });
 
@@ -318,14 +303,14 @@ export const WalletContext: FC<PropsWithChildren> = ({
       case Adapter.Sonar:
         Sonar.connect(network, {
           request: sonarRequest,
-          auto: !!auto,
+          auto: !!auto
         }).then((x) => {
           setStored(adapter);
           setWallet(x);
         });
         break;
       case Adapter.Station:
-        connectedWalletAddress = await Station.connect(chainInfo)
+        connectedWalletAddress = await Station.connect(chainInfo);
         setStored(adapter);
         setWallet(connectedWalletAddress);
         break;
@@ -339,8 +324,8 @@ export const WalletContext: FC<PropsWithChildren> = ({
   }, [wallet]);
 
   const disconnect = () => {
-    stored === Adapter.Passkey && selectSigner("");
-    setStored("");
+    stored === Adapter.Passkey && selectSigner('');
+    setStored('');
     setWallet(null);
     wallet?.disconnect();
   };
@@ -355,19 +340,16 @@ export const WalletContext: FC<PropsWithChildren> = ({
     balances: kujiraBalances,
     getBalance,
     balance,
-    signAndBroadcast: (msgs, memo) =>
-      signAndBroadcast(rpc, msgs, memo),
+    signAndBroadcast: (msgs, memo) => signAndBroadcast(rpc, msgs, memo),
     refreshBalances,
     refreshDelegations,
     feeDenom,
     setFeeDenom,
-    chainInfo,
+    chainInfo
   };
 
   return (
-    <Context.Provider
-      key={network + wallet?.account.address}
-      value={value}>
+    <Context.Provider key={network + wallet?.account.address} value={value}>
       {children}
     </Context.Provider>
   );

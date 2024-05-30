@@ -1,15 +1,13 @@
-
 import AppProvider from './provider';
 import AppRouter from './routes';
 import Modal from './components/shared/modal';
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { WalletContext } from './provider/crypto/wallet';
 import { NetworkContext } from './provider/crypto/network';
 import { PasskeyContext } from './provider/crypto/passkey';
 
 export default function App() {
-
   return (
     <AppProvider>
       <ToastContainer

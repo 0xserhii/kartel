@@ -90,7 +90,7 @@ export interface InterServerEvents {
   //common Events
 }
 
-export interface InterCoinflipGameServerEvents { }
+export interface InterCoinflipGameServerEvents {}
 
 export interface SocketData {
   lastAccess?: number;

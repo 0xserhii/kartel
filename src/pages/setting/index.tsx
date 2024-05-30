@@ -1,7 +1,3 @@
 export default function Setting() {
-    return (
-        <div>
-            this is the setting page
-        </div>
-    )
+  return <div>this is the setting page</div>;
 }

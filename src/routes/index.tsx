@@ -14,7 +14,6 @@ const CrashGames = lazy(() => import('@/pages/games/crash'));
 // ----------------------------------------------------------------------
 
 export default function AppRouter() {
-
   const dashboardRoutes = [
     {
       path: '/',
@@ -36,7 +35,7 @@ export default function AppRouter() {
         },
         {
           path: '/dashboard',
-          element: ""
+          element: ''
         },
         {
           path: '/crash',
@@ -73,8 +72,7 @@ export default function AppRouter() {
         {
           path: '/help-support',
           element: <CrashGames />
-        },
-
+        }
       ]
     }
   ];

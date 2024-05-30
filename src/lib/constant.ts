@@ -1,7 +1,7 @@
 export const BACKEND_API_ENDPOINT = {
-    auth: {
-        base: "/auth",
-        signUp: "/auth/sign-up",
-        signIn: "/auth/sign-in"
-    }
-}
+  auth: {
+    base: '/auth',
+    signUp: '/auth/sign-up',
+    signIn: '/auth/sign-in'
+  }
+};

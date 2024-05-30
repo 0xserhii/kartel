@@ -18,13 +18,13 @@ module.exports = {
       'warn',
       { allowConstantExport: true }
     ],
-    "@typescript-eslint/ban-ts-comment": [
-      "error",
+    '@typescript-eslint/ban-ts-comment': [
+      'error',
       {
-        "ts-expect-error": false,
-        "ts-ignore": true,
-        "ts-nocheck": true,
-        "ts-check": false
+        'ts-expect-error': false,
+        'ts-ignore': true,
+        'ts-nocheck': true,
+        'ts-check': false
       }
     ]
   }

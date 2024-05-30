@@ -98,7 +98,7 @@ const LiveChat = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.emit('auth', getAccessToken())
+      socket.emit('auth', getAccessToken());
     }
   }, [getAccessToken(), socket]);
 

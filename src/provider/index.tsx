@@ -14,7 +14,7 @@ const ErrorFallback = ({ error }: FallbackProps) => {
   console.log('error', error);
   return (
     <div
-      className="flex h-screen w-screen flex-col items-center  justify-center text-red-500"
+      className="text-red-500 flex h-screen w-screen flex-col  items-center justify-center"
       role="alert"
     >
       <h2 className="text-2xl font-semibold">

@@ -1,18 +1,18 @@
-import { useLocalStorage } from "@/routes/hooks";
+import { useLocalStorage } from '@/routes/hooks';
 import {
   HttpBatchClient,
   StatusResponse,
-  Tendermint37Client,
-} from "@cosmjs/tendermint-rpc";
-import { ChainInfo } from "@keplr-wallet/types";
+  Tendermint37Client
+} from '@cosmjs/tendermint-rpc';
+import { ChainInfo } from '@keplr-wallet/types';
 import {
   CHAIN_INFO,
   KujiraQueryClient,
   MAINNET,
   NETWORK,
   RPCS,
-  kujiraQueryClient,
-} from "kujira.js";
+  kujiraQueryClient
+} from 'kujira.js';
 import {
   Dispatch,
   FC,
@@ -22,8 +22,8 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
-} from "react";
+  useState
+} from 'react';
 
 interface RPCConnection {
   endpoint: string;
@@ -47,22 +47,20 @@ export type NetworkContext = {
 
 const Context = createContext<NetworkContext>({
   network: MAINNET,
-  setNetwork: () => { },
+  setNetwork: () => {},
   tmClient: null,
   query: null,
-  rpc: "",
+  rpc: '',
   rpcs: [],
-  setRpc: () => { },
+  setRpc: () => {},
   preferred: null,
-  unlock: () => { },
-  lock: () => { },
+  unlock: () => {},
+  lock: () => {}
 });
 
 const toClient = async (
   endpoint: string,
-  setLatencies?: Dispatch<
-    SetStateAction<Record<string, RPCConnection>>
-  >,
+  setLatencies?: Dispatch<SetStateAction<Record<string, RPCConnection>>>,
   statusCallback?: (res: StatusResponse) => void
 ): Promise<[Tendermint37Client, string]> => {
   const start = new Date().getTime();
@@ -70,7 +68,7 @@ const toClient = async (
   const c = await Tendermint37Client.create(
     new HttpBatchClient(endpoint, {
       dispatchInterval: 100,
-      batchSizeLimit: 200,
+      batchSizeLimit: 200
     })
   );
   const status = await c.status();
@@ -83,10 +81,8 @@ const toClient = async (
         endpoint,
         latency: new Date().getTime() - start,
         connectedTime: new Date(),
-        latestBlockTime: new Date(
-          status.syncInfo.latestBlockTime.toISOString()
-        ),
-      },
+        latestBlockTime: new Date(status.syncInfo.latestBlockTime.toISOString())
+      }
     }));
   return [c, endpoint];
 };
@@ -96,14 +92,10 @@ export const NetworkContext: React.FC<
     onError?: (err: any) => void;
   }>
 > = ({ children, onError }) => {
-  const [network, setNetwork] = useLocalStorage("network", MAINNET);
-  const [preferred, setPreferred] = useLocalStorage("rpc", "");
-  const [tm, setTmClient] = useState<
-    null | [Tendermint37Client, string]
-  >();
-  const [latencies, setLatencies] = useState<
-    Record<string, RPCConnection>
-  >({});
+  const [network, setNetwork] = useLocalStorage('network', MAINNET);
+  const [preferred, setPreferred] = useLocalStorage('rpc', '');
+  const [tm, setTmClient] = useState<null | [Tendermint37Client, string]>();
+  const [latencies, setLatencies] = useState<Record<string, RPCConnection>>({});
 
   const tmClient = tm && tm[0];
 
@@ -111,9 +103,7 @@ export const NetworkContext: React.FC<
     if (preferred) {
       toClient(preferred)
         .then(setTmClient)
-        .catch((err) =>
-          onError ? onError(err) : console.error(err)
-        );
+        .catch((err) => (onError ? onError(err) : console.error(err)));
     } else {
       Promise.any(
         RPCS[network as NETWORK].map((x) => toClient(x, setLatencies))
@@ -135,7 +125,7 @@ export const NetworkContext: React.FC<
   };
 
   const unlock = () => {
-    setPreferred("");
+    setPreferred('');
   };
 
   const lock = () => {
@@ -149,9 +139,7 @@ export const NetworkContext: React.FC<
 
   switch (tm) {
     case null:
-      return (
-        <NoConnection network={network} setNetwork={setNetwork} />
-      );
+      return <NoConnection network={network} setNetwork={setNetwork} />;
     case undefined:
       return null;
     default:
@@ -168,8 +156,9 @@ export const NetworkContext: React.FC<
             setRpc,
             unlock,
             lock,
-            preferred: preferred || null,
-          }}>
+            preferred: preferred || null
+          }}
+        >
           {children}
         </Context.Provider>
       );
@@ -181,15 +170,11 @@ const NoConnection: FC<{
   setNetwork(n: NETWORK): void;
 }> = ({ network, setNetwork }) => {
   return (
-    <div className="px-2 py-10 md-flex ai-c jc-c dir-c wrap">
-      <h1 className="fs-18">
-        No RPC connections available for {network}
-      </h1>
+    <div className="md-flex ai-c jc-c dir-c wrap px-2 py-10">
+      <h1 className="fs-18">No RPC connections available for {network}</h1>
       <h2 className="fs-16">Please check your internet connection</h2>
       {network !== MAINNET && (
-        <button
-          className="md-button mt-2"
-          onClick={() => setNetwork(MAINNET)}>
+        <button className="md-button mt-2" onClick={() => setNetwork(MAINNET)}>
           Switch to Mainnet
         </button>
       )}
@@ -222,7 +207,7 @@ export const useNetwork = (): [
     preferred,
     lock,
     unlock,
-    rpcs,
+    rpcs
   } = useContext(Context);
 
   return [
@@ -236,8 +221,8 @@ export const useNetwork = (): [
       setRpc,
       preferred,
       lock,
-      unlock,
+      unlock
     },
-    setNetwork,
+    setNetwork
   ];
 };

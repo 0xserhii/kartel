@@ -13,29 +13,27 @@ import { useWallet } from '@/provider/crypto/wallet';
 import { usePersistStore } from '@/store/persist';
 
 export default function UserNav() {
-  const userData = usePersistStore((store) => store.app.userData)
-  const initUserData = usePersistStore((store) => store.actions.init)
-  const { disconnect } = useWallet()
+  const userData = usePersistStore((store) => store.app.userData);
+  const initUserData = usePersistStore((store) => store.actions.init);
+  const { disconnect } = useWallet();
 
   const handleLogout = async () => {
-    await initUserData()
-    disconnect()
-    removeAllTokens()
-  }
+    await initUserData();
+    disconnect();
+    removeAllTokens();
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="flex gap-2 p-2 bg-transparent hover:bg-transparent !outline-none !ring-0 !ring-offset-0 border-2 border-[#4a278da1]"
+          className="flex gap-2 border-2 border-[#4a278da1] bg-transparent p-2 !outline-none !ring-0 !ring-offset-0 hover:bg-transparent"
         >
           <Avatar className="h-5 w-5">
-            <AvatarImage src={"/assets/icons/gold-avatar.png"} alt={''} />
+            <AvatarImage src={'/assets/icons/gold-avatar.png'} alt={''} />
           </Avatar>
-          <p className='text-white'>
-            {userData?.username}
-          </p>
+          <p className="text-white">{userData?.username}</p>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -49,26 +47,16 @@ export default function UserNav() {
               {userData?.username}
             </p>
             <p className="text-xs leading-none text-white">
-
               {userData?.userEmail}
             </p>
           </div>
-
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-          </DropdownMenuItem>
+          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem>Billing</DropdownMenuItem>
+          <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuItem onClick={handleLogout}>
-          Log out
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
