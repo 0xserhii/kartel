@@ -15,7 +15,7 @@ const Context = createContext<{
 }>({
   socket: null,
   channels: {},
-  addChannel: () => {},
+  addChannel: () => { },
 });
 
 export const RealtimeContext: React.FC<
