@@ -92,6 +92,7 @@ const LiveChat = () => {
 
     return () => {
       newSocket.disconnect();
+      setChatHistory([]);
     };
   }, []);
 
