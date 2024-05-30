@@ -67,7 +67,7 @@ export interface ClientToServerEvents {
   hello: () => void;
   //crashgameevents
   auth: (token: string) => void;
-  'join-crash-game': (target: number, betAmount: number) => void;
+  'join-crash-game': (target: number, betAmount: number, denom: string) => void;
   'bet-cashout': () => void;
 
   //coinflipgameevents

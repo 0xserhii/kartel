@@ -62,7 +62,8 @@ export default function CrashGameSection() {
         if (betAmount > 0 && !avaliableBet) {
             const joinParams = {
                 target: 100000,
-                betAmount: Number(betAmount).valueOf()
+                betAmount: Number(betAmount).valueOf(),
+
             }
             socket?.emit("join-crash-game", joinParams)
         }
@@ -95,7 +96,6 @@ export default function CrashGameSection() {
             toast.error(data)
         })
 
-
         crashSocket.on("game-start", (data) => {
             setCrashStatus(ECrashStatus.PROGRESS)
         });
@@ -125,7 +125,8 @@ export default function CrashGameSection() {
         if (socket) {
             socket.emit('auth', getAccessToken())
         }
-    }, [getAccessToken(), socket])
+    }, [getAccessToken(), socket]);
+
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
             <div className="flex flex-col items-stretch gap-8">

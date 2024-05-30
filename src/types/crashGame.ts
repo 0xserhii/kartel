@@ -28,12 +28,14 @@ export interface BetType {
   winningAmount?: number;
   forcedCashout?: boolean;
   createdAt?: Date;
+  denom: string;
 }
 
 export interface PendingBetType {
   betAmount: number;
   autoCashOut?: number;
   username: string;
+  denom: string;
 }
 
 export type FormattedPlayerBetType = Pick<
@@ -46,7 +48,9 @@ export type FormattedPlayerBetType = Pick<
   | 'level'
   | 'stoppedAt'
   | 'winningAmount'
+  | 'denom'
 >;
+
 
 export interface FormattedGameHistoryType
   extends Pick<

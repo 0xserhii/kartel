@@ -146,11 +146,12 @@ const CrashBoard = () => {
                 </div>
             )}
             {
-                crashStatus === ECrashStatus.PROGRESS && (
+                (crashStatus === ECrashStatus.PROGRESS || crashStatus === ECrashStatus.END) && (
                     <div className='absolute bottom-16 crash-car car-moving'>
-                        <img src="/assets/games/crash/moving_car.gif" className='w-64' alt="crash-car" />
+                        <img src={crashStatus === ECrashStatus.PROGRESS ? "/assets/games/crash/moving_car.gif" : "/assets/games/crash/explosion.gif"} className={cn(crashStatus === ECrashStatus.PROGRESS ? 'w-64' : "w-96")} alt="crash-car" />
                     </div>
                 )
+
             }
             <div className='flex flex-row justify-around items-center py-5 absolute top-0 left-0 gap-6'>
                 <div className='flex flex-row items-center justify-center gap-2'>
