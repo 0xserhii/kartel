@@ -29,20 +29,12 @@ import {
   useEffect,
   useState,
 } from "react";
-import { toast } from "react-hot-toast";
-//import QRCode from "react-qr-code";
 import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination";
 import { WalletI } from "kujira.js/lib/cjs/wallets/interface";
-import { QR } from "react-qr-rounded";
-import Input from "../wallet-component/Input";
-import { Modal } from "../wallet-component/Modal";
-import { IconAngleRight, IconSonar } from "../wallet-icons";
 import { useNetwork } from "../network";
 import { usePasskeys } from "../passkey";
-import Logo from "./../assets/sonar.png";
 import { Passkey } from "./passkey";
 import { useLocalStorage } from "@/routes/hooks";
-import { appLink } from "@/lib/wallet";
 
 export enum Adapter {
   Sonar = "sonar",
@@ -124,8 +116,6 @@ const toAdapter = (wallet: any) => {
 export const WalletContext: FC<PropsWithChildren<{}>> = ({
   children,
 }) => {
-  const [address, setAddress] = useLocalStorage("address", "");
-  const [showAddress, setShowAddress] = useState(false);
   const [stored, setStored] = useLocalStorage("wallet", "");
   const [wallet, setWallet] = useState<WalletI | null>(null);
   const { signer, selectSigner } = usePasskeys();
@@ -143,8 +133,6 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
   const [kujiraBalances, setKujiraBalances] = useState<Coin[]>([]);
 
   const [{ network, chainInfo, query, rpc }] = useNetwork();
-  const [link, setLink] = useState("");
-  const [modal, setModal] = useState(false);
 
   const [kujiraAccount, setKujiraAccount] = useState<null | Any>(
     null
@@ -155,19 +143,13 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
   >(null);
 
   useEffect(() => {
-    if (!wallet && stored === Adapter.ReadOnly && address) {
-      ReadOnly.connect(address).then(setWallet);
-      return;
-    }
-
     stored && connect(stored, network, true);
 
     const chainInfo: ChainInfo = CHAIN_INFO[network];
     DaoDao.connect(chainInfo)
       .then(setWallet)
       .catch((err) => {
-        err.message?.includes("missing an account") &&
-          toast.error(err.message);
+        console.error(err)
       });
   }, []);
 
@@ -265,8 +247,7 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
   };
 
   const sonarRequest = (uri: string) => {
-    setLink(uri);
-    setModal(true);
+    console.log(uri)
   };
 
   const connect = async (
@@ -284,7 +265,7 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
       switch (adapter) {
         case Adapter.Passkey:
           if (!signer) {
-            toast.error("No Signer Available");
+            console.error("No Signer Available");
             return;
           }
           Passkey.connect({ ...chainInfo, rpc }, signer)
@@ -294,7 +275,7 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
             })
             .catch((err) => {
               setStored("");
-              toast.error(err.message);
+              console.error(err.message);
             });
           break;
         case Adapter.Keplr:
@@ -304,7 +285,7 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
           break;
 
         case Adapter.Leap:
-          connectedWalletAddress = await Keplr.connect({ ...chainInfo, rpc }, { feeDenom })
+          connectedWalletAddress = await Leap.connect({ ...chainInfo, rpc }, { feeDenom })
           setStored(adapter);
           setWallet(connectedWalletAddress);
           break;
@@ -317,7 +298,7 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
             })
             .catch((err) => {
               setStored("");
-              toast.error(err.message);
+              console.error(err.message);
             });
 
           break;
@@ -330,7 +311,7 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
             })
             .catch((err) => {
               setStored("");
-              toast.error(err.message);
+              console.error(err.message);
             });
 
           break;
@@ -340,7 +321,6 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
             request: sonarRequest,
             auto: !!auto,
           }).then((x) => {
-            setModal(false);
             setStored(adapter);
             setWallet(x);
           });
@@ -351,12 +331,11 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
           setWallet(connectedWalletAddress);
           break;
         case Adapter.ReadOnly:
-          setShowAddress(true);
           break;
       }
     } catch (err: any) {
       setStored("");
-      toast.error(
+      console.error(
         err?.message === "extension instance is not created!"
           ? "Station extension not available"
           : err?.message
@@ -399,84 +378,6 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
       key={network + wallet?.account.address}
       value={value}>
       {children}
-      <Modal
-        show={modal}
-        close={() => {
-          setStored("");
-          setModal(false);
-        }}
-        className="modal--auto">
-        <div className="md-flex ai-c">
-          <div className="no-shrink bg-darkGrey">
-            {/* <QRCode
-              className="m-1"
-              value={link}
-              bgColor="transparent"
-              fgColor="#607d8b"
-            /> */}
-            <QR
-              height={256}
-              color="#ffffff"
-              backgroundColor="transparent"
-              rounding={50}
-              cutout
-              cutoutElement={
-                <img
-                  src={Logo}
-                  style={{
-                    objectFit: "contain",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                />
-              }
-              errorCorrectionLevel="M">
-              {link}
-            </QR>
-          </div>
-          <div className="ml-3">
-            <IconSonar
-              style={{
-                display: "block",
-                height: "3rem",
-                marginBottom: "1.5rem",
-              }}
-            />
-            <h3>Scan this code using the Sonar Mobile App.</h3>
-            <a
-              href={appLink("sonar")}
-              target="_blank"
-              className="md-button mt-2 md-button--icon-right">
-              Download Sonar
-              <IconAngleRight />
-            </a>
-          </div>
-        </div>
-      </Modal>
-
-      <Modal
-        show={showAddress}
-        close={() => setShowAddress(false)}
-        confirm={() =>
-          ReadOnly.connect(address).then((w) => {
-            setStored(Adapter.ReadOnly);
-            setWallet(w);
-            setShowAddress(false);
-          })
-        }
-        title="Read Only Connection">
-        <>
-          <p className="fs-14 lh-16 color-white mb-2">
-            Enter a Kujira address to see a <strong>read only</strong>{" "}
-            version of the app, as if connected with this address.
-          </p>
-          <Input
-            placeholder="kujira1..."
-            value={address}
-            onChange={(e) => setAddress(e.currentTarget.value)}
-          />
-        </>
-      </Modal>
     </Context.Provider>
   );
 };

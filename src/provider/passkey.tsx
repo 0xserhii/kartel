@@ -73,10 +73,6 @@ export const PasskeyContext: FC<PropsWithChildren> = ({
     return AuthnWebSigner.create(
       {
         name: RP_NAME,
-        // id:
-        //   window.location.hostname === "localhost"
-        //     ? "localhost"
-        //     : "kujira.network",
       },
       name
     ).then((signer) => {
@@ -89,12 +85,6 @@ export const PasskeyContext: FC<PropsWithChildren> = ({
 
   const selectSigner = (id: string) => {
     setSelected(id);
-    // if (!tmClient) throw new Error(`No Network`);
-    // const stored = signers[id];
-    // if (!stored) throw new Error(`No Passkey for ID ${id}`);
-    // AuthnClient.createWithSigner(tmClient, stored, {
-    //   gasPrice: GasPrice.fromString("0.034ukuji"),
-    // });
   };
   return (
     <context.Provider
