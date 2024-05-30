@@ -16,14 +16,17 @@ interface TokenBalances {
     kuji: number;
 }
 
+const walletList = { kuji: 0, usk: 0 }
+
 const DepositModal = () => {
+
     const modal = useModal();
     const userData = usePersistStore((store) => store.app.userData);
     const toast = useToast();
     const [depositAmount, setDepositAmount] = useState("");
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [openModal, type] = useRootStore((store) => [store.state.modal.open, store.state.modal.type]);
-    const [walletData, setWalletData] = useState<TokenBalances>();
+    const [walletData, setWalletData] = useState<TokenBalances>(walletList);
     const isOpen = openModal && type === ModalType.DEPOSIT;
 
     const hanndleOpenChange = async () => {
@@ -63,7 +66,6 @@ const DepositModal = () => {
 
     const handleDeposit = () => {
         updateBalance("update");
-        setDepositAmount('');
     };
 
     return (
