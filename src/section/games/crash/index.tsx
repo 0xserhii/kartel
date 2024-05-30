@@ -124,9 +124,12 @@ export default function CrashGameSection() {
 
     useEffect(() => {
         if (socket) {
+            console.log("sdfsdf")
             socket.emit('auth', getAccessToken())
         }
-    }, [getAccessToken(), socket]);
+    }, [getAccessToken()]);
+
+    console.log(getAccessToken())
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -235,7 +238,7 @@ export default function CrashGameSection() {
                                         </CardHeader>
                                         <CardContent className="px-2 py-0">
                                             <ScrollArea className="h-[280px] px-5 py-3">
-                                                <Table className="relative table-fixed border-separate border-spacing-y-3">
+                                                <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-y-hidden ">
                                                     <TableBody>
                                                         {betData?.sort((a, b) => b.betAmount - a.betAmount).map((player, index) => (
                                                             <TableRow
