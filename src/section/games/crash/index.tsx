@@ -259,7 +259,7 @@ export default function CrashGameSection() {
                                                                 </TableCell>
                                                                 <TableCell className="w-1/6 text-center">
                                                                     <div className='flex flex-row items-center justify-center gap-1 w-full text-center'>
-                                                                        <img src="/assets/tokens/usk.png" alt="Multiplier" className='w-4 h-4' />
+                                                                        <img src={`/assets/tokens/${player.denom}.png`} alt="Multiplier" className='w-4 h-4' />
                                                                         {player.betAmount}
                                                                     </div>
                                                                 </TableCell>
