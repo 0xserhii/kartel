@@ -22,9 +22,7 @@ const DepositModal = () => {
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [openModal, type] = useRootStore((store) => [store.state.modal.open, store.state.modal.type]);
     const [walletData, setWalletData] = useState<TokenBalances>();
-
     const isOpen = openModal && type === ModalType.DEPOSIT;
-
 
     const hanndleOpenChange = async () => {
         if (isOpen) {
@@ -60,6 +58,8 @@ const DepositModal = () => {
         updateBalance();
     };
 
+    console.log(walletData)
+
     return (
         <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
             <DialogContent className="sm:max-w-sm bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10 gap-6">
@@ -71,17 +71,38 @@ const DepositModal = () => {
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-3">
                         {
-                            walletData && Object.entries(walletData).map(([tokenName, balance], index) => (
+                            walletData ? (Object.entries(walletData).map(([tokenName, balance], index) => (
                                 <div key={index} className="flex flex-row justify-between items-center">
                                     <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
-                                        <img src={`/assets/tokens/${tokenName.toLowerCase()}.png`} className='w-5 h-5' />
+                                        <img src={`/assets/tokens/${tokenName}.png`} className='w-5 h-5' />
                                         {tokenName}
                                     </span>
                                     <span className="text-gray-300">
-                                        {balance.toLocaleString()}
+                                        {balance ?? 0}
                                     </span>
                                 </div>
-                            ))
+                            ))) : (
+                                <>
+                                    <div className="flex flex-row justify-between items-center">
+                                        <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
+                                            <img src={`/assets/tokens/usk.png`} className='w-5 h-5' />
+                                            usk
+                                        </span>
+                                        <span className="text-gray-300">
+                                            0
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-row justify-between items-center">
+                                        <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
+                                            <img src={`/assets/tokens/kuji.png`} className='w-5 h-5' />
+                                            kuji
+                                        </span>
+                                        <span className="text-gray-300">
+                                            0
+                                        </span>
+                                    </div>
+                                </>
+                            )
                         }
                     </div>
                     <div className='relative'>
@@ -113,7 +134,7 @@ const DepositModal = () => {
                         </span>
                     </div>
                 </div>
-                <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full' type="submit" onClick={handleDeposit}>Deposit</Button>
+                <Button className='bg-[#A326D4] py-5 hover:bg-[#A326D4] w-full' type="submit" onClick={handleDeposit}>Deposit</Button>
             </DialogContent >
         </Dialog >
     )

@@ -141,7 +141,7 @@ const SignInModal = () => {
                                     Forgot password?
                                 </a>
                             </div>
-                            <Button className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full' type="submit">login</Button>
+                            <Button className='bg-[#A326D4] py-5 hover:bg-[#A326D4] w-full' type="submit">login</Button>
                             <p className='text-gray-300 text-sm flex'>
                                 Don’t have an account ?&nbsp;<span className='text-[#049DD9] font-semibold cursor-pointer' onClick={handleSignUp}>Register</span>&nbsp;now
                             </p>

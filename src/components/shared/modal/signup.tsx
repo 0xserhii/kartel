@@ -189,7 +189,7 @@ const SignUpModal = () => {
                                     </label>
                                 </div>
                             </div>
-                            <Button type="submit" className='bg-[#F205B3] py-5 hover:bg-[#F205B3] w-full'>Register</Button>
+                            <Button type="submit" className='bg-[#A326D4] py-5 hover:bg-[#A326D4] w-full'>Register</Button>
                             <p className='text-gray-300 text-sm flex'>
                                 Already have an account ?&nbsp;<span className='text-[#049DD9] font-semibold cursor-pointer' onClick={handleSignIn}>Login</span>&nbsp;to start
                             </p>
