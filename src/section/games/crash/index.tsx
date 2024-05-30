@@ -40,7 +40,8 @@ export default function CrashGameSection() {
     const [betCashout, setBetCashout] = useState<BetType[]>([]);
     // const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
     const [avaliableBet, setAvaliableBet] = useState(false)
-    const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
+    const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE);
+    const [totalAmount, setTotalAmount] = useState<any>();
 
     const handleBetAmountChange = (event) => {
         const inputValue = event.target.value;
@@ -81,6 +82,19 @@ export default function CrashGameSection() {
 
         crashSocket.on('game-bets', (bets: FormattedPlayerBetType[]) => {
             setBetData((prev: BetType[]) => [...bets, ...prev]);
+
+            const totalUsk = bets
+                .filter(bet => bet.denom === 'usk')
+                .reduce((acc, item) => acc + item.betAmount, 0);
+
+            const totalKuji = bets
+                .filter(bet => bet.denom === 'kuji')
+                .reduce((acc, item) => acc + item.betAmount, 0);
+
+            setTotalAmount(prevAmounts => ({
+                usk: (prevAmounts?.usk || 0) + totalUsk,
+                kuji: (prevAmounts?.kuji || 0) + totalKuji
+            }));
         });
 
         crashSocket.on('game-tick', (tick) => {
@@ -91,6 +105,10 @@ export default function CrashGameSection() {
             setCrashStatus(ECrashStatus.PREPARE);
             setBetData([]);
             setBetCashout([]);
+            setTotalAmount(({
+                usk: 0,
+                kuji: 0
+            }));
         });
 
         crashSocket.on("game-join-error", (data) => {
@@ -124,12 +142,9 @@ export default function CrashGameSection() {
 
     useEffect(() => {
         if (socket) {
-            console.log("sdfsdf")
             socket.emit('auth', getAccessToken())
         }
     }, [getAccessToken()]);
-
-    console.log(getAccessToken())
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -218,10 +233,16 @@ export default function CrashGameSection() {
                                 <div className='flex flex-col md:w-7/12 w-full gap-5 h-full'>
                                     <div className='flex flex-row justify-between items-center py-1.5'>
                                         <h5 className='uppercase text-gray-400 text-xl font-semibold'>{betData.length} players</h5>
-                                        <span className='flex flex-row items-center gap-2'>
-                                            <img src='/assets/icons/coin.svg' />
-                                            <p className='text-[#049DD9] text-xl font-semibold'>8.097</p>
-                                        </span>
+                                        <div className='flex flex-row gap-10'>
+                                            <span className='flex flex-row items-center gap-2'>
+                                                <img src='/assets/tokens/usk.png' className='w-6 h-6' />
+                                                <p className='text-[#049DD9] text-xl font-semibold'>{totalAmount?.usk.toFixed(3)}</p>
+                                            </span>
+                                            <span className='flex flex-row items-center gap-2'>
+                                                <img src='/assets/tokens/kuji.png' className='w-6 h-6' />
+                                                <p className='text-[#049DD9] text-xl font-semibold'>{totalAmount?.kuji.toFixed(3)}</p>
+                                            </span>
+                                        </div>
                                     </div>
                                     <Card className=" border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                                         <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
@@ -269,7 +290,7 @@ export default function CrashGameSection() {
                                                                 <TableCell className="w-1/6 text-center">
                                                                     {betCashout?.find(item => item.playerID === player.playerID)?.stoppedAt
                                                                         ? <div className='flex flex-row items-center justify-center gap-1'>
-                                                                            <img src="/assets/tokens/usk.png" alt="Multiplier" className='w-4 h-4' />
+                                                                            <img src={`/assets/tokens/${betCashout.find(item => item.playerID === player.playerID)?.denom}.png`} alt="Multiplier" className='w-4 h-4' />
                                                                             {((((betCashout?.find(item => item.playerID === player.playerID)?.stoppedAt ?? 0) / 100)) * player.betAmount).toFixed(2)}
                                                                         </div>
                                                                         :
