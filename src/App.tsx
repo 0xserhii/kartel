@@ -1,6 +1,4 @@
 
-import { useEffect } from 'react';
-
 import AppProvider from './provider';
 import AppRouter from './routes';
 import Modal from './components/shared/modal';
