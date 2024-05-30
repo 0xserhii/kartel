@@ -41,10 +41,6 @@ const CrashBoard = () => {
         setPrepareTime((prev) => prev - 100)
     }
 
-    // const updateCountDown = () => {
-    //     setPrepareTime((prev) => prev - 10)
-    // }
-
     const playCrashBgVideo = () => {
         crashBgVideoPlayer?.current?.play()
     }
@@ -52,7 +48,6 @@ const CrashBoard = () => {
     const stopCrashBgVideo = () => {
         crashBgVideoPlayer?.current?.pause()
     }
-
 
     useEffect(() => {
         const crashSocket: Socket<

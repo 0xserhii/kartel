@@ -208,7 +208,7 @@ export default function CrashGameSection() {
                                                 </div>
 
                                             </div>
-                                            <Button className='bg-[#A326D4] py-5 hover:bg-[#A326D4] w-full uppercase' disabled={((crashStatus !== ECrashStatus.PREPARE) && !avaliableBet) || ((crashStatus !== ECrashStatus.PROGRESS) && avaliableBet)} onClick={handleStartBet}>{avaliableBet ? 'Cash Out' : 'Place bet'}</Button>
+                                            <Button className='bg-[#A326D4] py-5 hover:bg-[#A326D4] w-full uppercase h-12' disabled={((crashStatus !== ECrashStatus.PREPARE) && !avaliableBet) || ((crashStatus !== ECrashStatus.PROGRESS) && avaliableBet)} onClick={handleStartBet}>{avaliableBet ? 'Cash Out' : 'Place bet'}</Button>
                                         </div>
                                     </Card>
                                 </div>
