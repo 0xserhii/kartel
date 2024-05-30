@@ -3,4 +3,5 @@ export enum ECrashStatus {
     START = "START",
     END = "END",
     PROGRESS = "PROGRESS",
+    NONE = "NONE"
 }

@@ -70,13 +70,9 @@ const LiveChat = () => {
       IChatClientToServerEvents
     > = io(`${SERVER_URL}/chat`);
 
-    // Listen for 'message' events from the server
     newSocket.on('message', (message) => {
-      // Update chat history state to include the new message
       setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
     });
-
-    newSocket.emit('auth', getAccessToken());
 
     newSocket.on('previous-chat-history', (data) => {
       console.log('receive_previous_chat', data);
@@ -91,11 +87,19 @@ const LiveChat = () => {
     });
 
     setSocket(newSocket);
+    if (!socket?.connected) {
+      setChatHistory([]);
+    }
 
     return () => {
       newSocket.disconnect();
+      setChatHistory([]);
     };
   }, []);
+
+  useEffect(() => {
+    socket?.emit('auth', getAccessToken());
+  }, [getAccessToken()])
 
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);

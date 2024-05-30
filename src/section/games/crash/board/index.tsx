@@ -33,7 +33,7 @@ const CrashBoard = () => {
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
     const [crTick, setCrTick] = useState({ prev: 1, cur: 1 })
     const [prepareTime, setPrepareTime] = useState(0)
-    const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
+    const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.NONE)
     const [downIntervalId, setDownIntervalId] = useState(0)
     const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>([]);
 
@@ -84,9 +84,7 @@ const CrashBoard = () => {
 
         crashSocket.on('previous-crashgame-history', (historyData: any) => {
             setCrashHistoryData(historyData);
-            console.log(historyData)
         });
-
 
         crashSocket.on("game-end", (data) => {
             setCrashStatus(ECrashStatus.END)
@@ -111,10 +109,10 @@ const CrashBoard = () => {
     }, [crashStatus])
 
     return (
+
         <div className='relative rounded-md w-full h-[596px]'>
             <video
                 className='crash-moving-bg-video rounded-xl object-fill'
-
                 autoPlay
                 muted
                 ref={crashBgVideoPlayer}
@@ -125,33 +123,43 @@ const CrashBoard = () => {
                 <source src={MovingBackgroundVideo} type='video/mp4' />
             </video>
 
-            {(crashStatus === ECrashStatus.PROGRESS || crashStatus === ECrashStatus.END) && (
-                <div className='flex flex-col absolute top-32 left-10 gap-2 crash-status-shadow'>
-                    <div className={cn('text-white text-6xl font-extrabold', crashStatus === ECrashStatus.END && 'crashed-value')}>
-                        X<GrowingNumber start={crTick.prev} end={crTick.cur} />
+            {
+                (crashStatus === ECrashStatus.PROGRESS || crashStatus === ECrashStatus.END) && (
+                    <div className='flex flex-col absolute top-32 left-10 gap-2 crash-status-shadow'>
+                        <div className={cn('text-white text-6xl font-extrabold', crashStatus === ECrashStatus.END && 'crashed-value')}>
+                            X<GrowingNumber start={crTick.prev} end={crTick.cur} />
+                        </div>
+                        <div className='text-[#f5b95a] font-semibold'>
+                            {crashStatus === ECrashStatus.PROGRESS ? 'CURRENT PAYOUT' : 'ROUND OVER'}
+                        </div>
                     </div>
-                    <div className='text-[#f5b95a] font-semibold'>
-                        {crashStatus === ECrashStatus.PROGRESS ? 'CURRENT PAYOUT' : 'ROUND OVER'}
+                )}
+            {
+                (crashStatus === ECrashStatus.PREPARE && prepareTime > 0) && (
+                    <div className='flex flex-col justify-center items-center absolute top-[40%] left-[20%] gap-5 crash-status-shadow'>
+                        <div className='text-white text-xl font-semibold uppercase'>
+                            preparing round
+                        </div>
+                        <div className='uppercase text-[#f5b95a] text-6xl font-extrabold delay-100'>
+                            starting in {formatMillisecondsShort(prepareTime)}
+                        </div>
                     </div>
-                </div>
-            )}
-            {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
-                <div className='flex flex-col justify-center items-center absolute top-[40%] left-[20%] gap-5 crash-status-shadow'>
-                    <div className='text-white text-xl font-semibold'>
-                        PREPARING ROUND
-                    </div>
-                    <div className=' text-[#f5b95a] text-6xl font-extrabold delay-100'>
-                        STARTING IN {formatMillisecondsShort(prepareTime)}
-                    </div>
-                </div>
-            )}
+                )}
             {
                 (crashStatus === ECrashStatus.PROGRESS || crashStatus === ECrashStatus.END) && (
                     <div className='absolute bottom-16 crash-car car-moving'>
                         <img src={crashStatus === ECrashStatus.PROGRESS ? "/assets/games/crash/moving_car.gif" : "/assets/games/crash/explosion.gif"} className={cn(crashStatus === ECrashStatus.PROGRESS ? 'w-64' : "w-96")} alt="crash-car" />
                     </div>
                 )
-
+            }
+            {
+                (crashStatus === ECrashStatus.NONE) && (
+                    <div className='flex flex-col justify-center items-center absolute top-[40%] left-[30%] gap-5 crash-status-shadow'>
+                        <div className=' text-[#f5b95a] text-6xl font-extrabold delay-100 uppercase'>
+                            Starting...
+                        </div>
+                    </div>
+                )
             }
             <div className='flex flex-row justify-around items-center py-5 absolute top-0 left-0 gap-6'>
                 <div className='flex flex-row items-center justify-center gap-2'>
@@ -169,7 +177,6 @@ const CrashBoard = () => {
                             x{(item.crashPoint / 100).toFixed(2)}
                         </span>
                     ))}
-
                 </div>
             </div>
         </div>

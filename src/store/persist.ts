@@ -7,8 +7,10 @@ export type TPersistState = {
     userData: {
         username: string;
         userEmail: string;
+        _id: string;
     };
 };
+
 
 export type TPersistStore = {
     app: TPersistState;
@@ -19,8 +21,9 @@ export type TPersistStore = {
 };
 
 const initialState: TPersistState = {
-    userData: { username: "", userEmail: "" },
+    userData: { username: "", userEmail: "", _id: "" },
 };
+
 
 export const usePersistStore = create<TPersistStore>()(
     devtools(

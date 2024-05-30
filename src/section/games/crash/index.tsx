@@ -68,10 +68,12 @@ export default function CrashGameSection() {
             socket?.emit("join-crash-game", joinParams)
         }
         if (avaliableBet) {
+
             setAvaliableBet(false)
             socket?.emit('bet-cashout')
         }
     }
+
     useEffect(() => {
         const crashSocket: Socket<
             ICrashClientToServerEvents,
