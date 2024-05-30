@@ -63,12 +63,11 @@ export default function CrashGameSection() {
             const joinParams = {
                 target: 100000,
                 betAmount: Number(betAmount).valueOf(),
-
+                denom: selectedToken.name
             }
             socket?.emit("join-crash-game", joinParams)
         }
         if (avaliableBet) {
-
             setAvaliableBet(false)
             socket?.emit('bet-cashout')
         }

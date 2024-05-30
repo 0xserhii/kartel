@@ -56,9 +56,9 @@ const DepositModal = () => {
 
     const handleDeposit = () => {
         updateBalance();
+        setDepositAmount(0);
     };
 
-    console.log(walletData)
 
     return (
         <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
@@ -71,7 +71,7 @@ const DepositModal = () => {
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-3">
                         {
-                            walletData ? (Object.entries(walletData).map(([tokenName, balance], index) => (
+                            walletData && (walletData.kuji !== 0 || walletData.usk !== 0) ? (Object.entries(walletData).map(([tokenName, balance], index) => (
                                 <div key={index} className="flex flex-row justify-between items-center">
                                     <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
                                         <img src={`/assets/tokens/${tokenName}.png`} className='w-5 h-5' />
