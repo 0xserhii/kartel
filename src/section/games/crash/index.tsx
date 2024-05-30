@@ -13,6 +13,8 @@ import { BetType, FormattedPlayerBetType } from '@/types';
 import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
+import useToast from '@/routes/hooks/use-toast';
+
 
 
 export type Ttoken = {
@@ -28,7 +30,7 @@ export const token: Ttoken = [
 const betMode = ["manual", "auto"];
 const MultiplerArray = [1 / 2, 2, 4, 8]
 export default function CrashGameSection() {
-
+    const toast = useToast();
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectMode, setSelectMode] = useState(betMode[0]);
     const [betData, setBetData] = useState<BetType[]>([]);
@@ -88,6 +90,11 @@ export default function CrashGameSection() {
             setBetData([]);
             setBetCashout([]);
         });
+
+        crashSocket.on("game-join-error", (data) => {
+            toast.error(data)
+        })
+
 
         crashSocket.on("game-start", (data) => {
             setCrashStatus(ECrashStatus.PROGRESS)
