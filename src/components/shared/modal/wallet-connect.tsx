@@ -2,8 +2,8 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
 import useRootStore from "@/store/root"
 import { ModalType } from "@/types/modal"
 import useModal from "@/routes/hooks/use-modal"
-import { ChevronRight } from "lucide-react"
-import { Adapter, useWallet } from "@/provider/wallet"
+import { ChevronRight, Download } from "lucide-react"
+import { Adapter, useWallet } from "@/provider/crypto/wallet"
 import { useState } from "react"
 import useToast from "@/routes/hooks/use-toast"
 
@@ -27,6 +27,19 @@ const tokenList: ITokenList[] = [
     },
 ]
 
+const SmallLoading = (
+    <div className="small-loading">
+        <svg viewBox="10 10 20 20">
+            <circle r="7" cy="20" cx="20"></circle>
+        </svg>
+    </div>
+)
+
+const CWalletLink = {
+    keplr: "https://www.keplr.app/download",
+    cosmostation: "https://www.cosmostation.io/products/cosmostation_extension",
+    leap: "https://www.leapwallet.io",
+}
 
 const defaultLoading = {
     keplr: false,
@@ -36,12 +49,12 @@ const defaultLoading = {
 
 const WalletConnectModal = () => {
     const modal = useModal();
-    const [, setLoading] = useState(defaultLoading);
+    const [loading, setLoading] = useState(defaultLoading);
     const toast = useToast()
 
     const [openModal, type] = useRootStore((store) => [store.state.modal.open, store.state.modal.type]);
     const isOpen = openModal && type === ModalType.WALLETCONNECT;
-    const { connect, account } = useWallet()
+    const { connect } = useWallet()
 
     const hanndleOpenChange = async () => {
         if (isOpen) {
@@ -50,32 +63,42 @@ const WalletConnectModal = () => {
     }
 
     const handleConnectWalet = async (walletType: string) => {
+
         try {
             switch (walletType) {
                 case 'Keplr':
+                    if (!window.keplr) {
+                        window.open(CWalletLink.keplr, "_blank")
+                        return;
+                    }
                     setLoading((prev) => ({ ...prev, keplr: true }))
                     await connect(Adapter.Keplr)
                     break;
                 case 'Leap':
+                    if (!window.leap) {
+                        window.open(CWalletLink.leap, "_blank")
+                        return;
+                    }
                     setLoading((prev) => ({ ...prev, leap: true }))
                     await connect(Adapter.Leap)
                     break;
                 case 'Cosmotation':
+                    if (!window.station) {
+                        window.open(CWalletLink.cosmostation, "_blank")
+                        return;
+                    }
                     setLoading((prev) => ({ ...prev, cosmostation: true }))
                     await connect(Adapter.Station)
                     break;
                 default:
                     break;
             }
-            if (account) {
-                modal.close(ModalType.WALLETCONNECT)
-                modal.open(ModalType.DEPOSIT)
-            } else {
-                modal.close(ModalType.WALLETCONNECT)
-            }
+
+            modal.close(ModalType.WALLETCONNECT)
+            modal.open(ModalType.DEPOSIT)
             setLoading(defaultLoading)
         } catch (error) {
-            toast.error("Wallet connect error")
+            toast.error("User rejected")
             setLoading(defaultLoading)
         }
     }
@@ -96,7 +119,13 @@ const WalletConnectModal = () => {
                                         {item.name}
                                     </span>
                                 </div>
-                                <ChevronRight className="text-white w-5 h-5" />
+                                {item.name === "Keplr" && !loading.keplr && (window.keplr ? <ChevronRight className="text-white w-5 h-5" /> : <Download className="text-white w-5 h-5" />)}
+                                {item.name === "Leap" && !loading.leap && (window.leap ? <ChevronRight className="text-white w-5 h-5" /> : <Download className="text-white w-5 h-5" />)}
+                                {item.name === "Cosmotation" && !loading.cosmostation && (window.station ? <ChevronRight className="text-white w-5 h-5" /> : <Download className="text-white w-5 h-5" />)}
+                                {item.name === "Keplr" && loading.keplr && SmallLoading}
+                                {item.name === "Leap" && loading.leap && SmallLoading}
+                                {item.name === "Cosmotation" && loading.cosmostation && SmallLoading}
+
                             </button>
                         ))
                     }

@@ -6,7 +6,7 @@ import Deposit from '/assets/deposit-icon.svg';
 import { ScrollArea } from '../ui/scroll-area';
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
-import { useWallet } from '@/provider/wallet';
+import { useWallet } from '@/provider/crypto/wallet';
 
 export default function Sidebar() {
 
