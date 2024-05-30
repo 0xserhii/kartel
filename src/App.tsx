@@ -1,17 +1,14 @@
 
-import { useEffect } from 'react';
-
-import AppProvider from './providers';
+import AppProvider from './provider';
 import AppRouter from './routes';
 import Modal from './components/shared/modal';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { WalletContext } from './provider/wallet';
-import { NetworkContext } from './provider/network';
+import { WalletContext } from './provider/crypto/wallet';
+import { NetworkContext } from './provider/crypto/network';
+import { PasskeyContext } from './provider/crypto/passkey';
 
 export default function App() {
-
-  useEffect(() => { }, []);
 
   return (
     <AppProvider>
@@ -28,12 +25,14 @@ export default function App() {
         pauseOnHover
         theme="light"
       />
-      <NetworkContext>
-        <WalletContext>
-          <Modal />
-          <AppRouter />
-        </WalletContext>
-      </NetworkContext>
+      <PasskeyContext>
+        <NetworkContext>
+          <WalletContext>
+            <Modal />
+            <AppRouter />
+          </WalletContext>
+        </NetworkContext>
+      </PasskeyContext>
     </AppProvider>
   );
 }

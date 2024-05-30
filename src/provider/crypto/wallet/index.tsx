@@ -33,7 +33,7 @@ import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination";
 import { WalletI } from "kujira.js/lib/cjs/wallets/interface";
 import { useNetwork } from "../network";
 import { usePasskeys } from "../passkey";
-import { Passkey } from "./passkey";
+import { Passkey } from "./passkey-class";
 import { useLocalStorage } from "@/routes/hooks";
 
 export enum Adapter {
@@ -113,7 +113,7 @@ const toAdapter = (wallet: any) => {
                   : null;
 };
 
-export const WalletContext: FC<PropsWithChildren<{}>> = ({
+export const WalletContext: FC<PropsWithChildren> = ({
   children,
 }) => {
   const [stored, setStored] = useLocalStorage("wallet", "");
@@ -255,91 +255,82 @@ export const WalletContext: FC<PropsWithChildren<{}>> = ({
     chain?: NETWORK,
     auto?: boolean
   ) => {
-    try {
-      const chainInfo: ChainInfo = {
-        ...CHAIN_INFO[chain || network],
-      };
+    const chainInfo: ChainInfo = {
+      ...CHAIN_INFO[chain || network],
+    };
 
-      let connectedWalletAddress: any = null
+    let connectedWalletAddress: any = null
 
-      switch (adapter) {
-        case Adapter.Passkey:
-          if (!signer) {
-            console.error("No Signer Available");
-            return;
-          }
-          Passkey.connect({ ...chainInfo, rpc }, signer)
-            .then((passkey) => {
-              setStored(adapter);
-              setWallet(passkey);
-            })
-            .catch((err) => {
-              setStored("");
-              console.error(err.message);
-            });
-          break;
-        case Adapter.Keplr:
-          connectedWalletAddress = await Keplr.connect({ ...chainInfo, rpc }, { feeDenom })
-          setStored(adapter);
-          setWallet(connectedWalletAddress);
-          break;
+    switch (adapter) {
+      case Adapter.Passkey:
+        if (!signer) {
+          console.error("No Signer Available");
+          return;
+        }
+        Passkey.connect({ ...chainInfo, rpc }, signer)
+          .then((passkey) => {
+            setStored(adapter);
+            setWallet(passkey);
+          })
+          .catch((err) => {
+            setStored("");
+            console.error(err.message);
+          });
+        break;
+      case Adapter.Keplr:
+        connectedWalletAddress = await Keplr.connect({ ...chainInfo, rpc }, { feeDenom })
+        setStored(adapter);
+        setWallet(connectedWalletAddress);
+        break;
 
-        case Adapter.Leap:
-          connectedWalletAddress = await Leap.connect({ ...chainInfo, rpc }, { feeDenom })
-          setStored(adapter);
-          setWallet(connectedWalletAddress);
-          break;
+      case Adapter.Leap:
+        connectedWalletAddress = await Leap.connect({ ...chainInfo, rpc }, { feeDenom })
+        setStored(adapter);
+        setWallet(connectedWalletAddress);
+        break;
 
-        case Adapter.LeapSnap:
-          LeapSnap.connect({ ...chainInfo, rpc }, { feeDenom })
-            .then((x) => {
-              setStored(adapter);
-              setWallet(x);
-            })
-            .catch((err) => {
-              setStored("");
-              console.error(err.message);
-            });
-
-          break;
-
-        case Adapter.Xfi:
-          Xfi.connect({ ...chainInfo, rpc }, { feeDenom })
-            .then((x) => {
-              setStored(adapter);
-              setWallet(x);
-            })
-            .catch((err) => {
-              setStored("");
-              console.error(err.message);
-            });
-
-          break;
-
-        case Adapter.Sonar:
-          Sonar.connect(network, {
-            request: sonarRequest,
-            auto: !!auto,
-          }).then((x) => {
+      case Adapter.LeapSnap:
+        LeapSnap.connect({ ...chainInfo, rpc }, { feeDenom })
+          .then((x) => {
             setStored(adapter);
             setWallet(x);
+          })
+          .catch((err) => {
+            setStored("");
+            console.error(err.message);
           });
-          break;
-        case Adapter.Station:
-          connectedWalletAddress = await Station.connect(chainInfo)
+
+        break;
+
+      case Adapter.Xfi:
+        Xfi.connect({ ...chainInfo, rpc }, { feeDenom })
+          .then((x) => {
+            setStored(adapter);
+            setWallet(x);
+          })
+          .catch((err) => {
+            setStored("");
+            console.error(err.message);
+          });
+
+        break;
+
+      case Adapter.Sonar:
+        Sonar.connect(network, {
+          request: sonarRequest,
+          auto: !!auto,
+        }).then((x) => {
           setStored(adapter);
-          setWallet(connectedWalletAddress);
-          break;
-        case Adapter.ReadOnly:
-          break;
-      }
-    } catch (err: any) {
-      setStored("");
-      console.error(
-        err?.message === "extension instance is not created!"
-          ? "Station extension not available"
-          : err?.message
-      );
+          setWallet(x);
+        });
+        break;
+      case Adapter.Station:
+        connectedWalletAddress = await Station.connect(chainInfo)
+        setStored(adapter);
+        setWallet(connectedWalletAddress);
+        break;
+      case Adapter.ReadOnly:
+        break;
     }
   };
 
