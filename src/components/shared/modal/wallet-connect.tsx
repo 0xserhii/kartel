@@ -68,11 +68,9 @@ const WalletConnectModal = () => {
                     break;
             }
             if (account) {
-                toast.success("Wallet connected successfully")
                 modal.close(ModalType.WALLETCONNECT)
                 modal.open(ModalType.DEPOSIT)
             } else {
-                toast.error("User reject connect")
                 modal.close(ModalType.WALLETCONNECT)
             }
             setLoading(defaultLoading)
