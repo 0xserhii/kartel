@@ -47,7 +47,7 @@ const DepositModal = () => {
             if (response.status === 200) {
                 setWalletData(response.data?.responseObject.wallet);
                 if (type === "update") {
-                    toast.success("Deposit Successful");
+                    toast.success(`Deposit Successful`);
                 }
             }
         } catch (error) {
@@ -77,7 +77,7 @@ const DepositModal = () => {
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-3">
                         {
-                            walletData && (walletData.kuji !== 0 || walletData.usk !== 0) ? (Object.entries(walletData).map(([tokenName, balance], index) => (
+                            walletData && (Object.entries(walletData).map(([tokenName, balance], index) => (
                                 <div key={index} className="flex flex-row justify-between items-center">
                                     <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
                                         <img src={`/assets/tokens/${tokenName}.png`} className='w-5 h-5' />
@@ -87,29 +87,7 @@ const DepositModal = () => {
                                         {balance ?? 0}
                                     </span>
                                 </div>
-                            ))) : (
-                                <>
-                                    <div className="flex flex-row justify-between items-center">
-                                        <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
-                                            <img src={`/assets/tokens/usk.png`} className='w-5 h-5' />
-                                            usk
-                                        </span>
-                                        <span className="text-gray-300">
-                                            0
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-row justify-between items-center">
-                                        <span className="uppercase text-gray-300 flex flex-row items-center gap-3">
-                                            <img src={`/assets/tokens/kuji.png`} className='w-5 h-5' />
-                                            kuji
-                                        </span>
-                                        <span className="text-gray-300">
-                                            0
-                                        </span>
-                                    </div>
-                                </>
-                            )
-                        }
+                            )))}
                     </div>
                     <div className='relative'>
                         <Input value={depositAmount} onChange={handleBetAmountChange} type="number" className='text-white border border-purple-0.5 placeholder:text-gray-700' />

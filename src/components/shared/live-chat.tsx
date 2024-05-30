@@ -70,6 +70,8 @@ const LiveChat = () => {
       IChatClientToServerEvents
     > = io(`${SERVER_URL}/chat`);
 
+    newSocket.emit('auth', getAccessToken());
+
     newSocket.on('message', (message) => {
       setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
     });
@@ -87,19 +89,17 @@ const LiveChat = () => {
     });
 
     setSocket(newSocket);
-    if (!socket?.connected) {
-      setChatHistory([]);
-    }
 
     return () => {
       newSocket.disconnect();
-      setChatHistory([]);
     };
   }, []);
 
   useEffect(() => {
-    socket?.emit('auth', getAccessToken());
-  }, [getAccessToken()])
+    if (socket) {
+      socket.emit('auth', getAccessToken())
+    }
+  }, [getAccessToken(), socket]);
 
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);
