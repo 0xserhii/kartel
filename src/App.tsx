@@ -6,6 +6,8 @@ import AppRouter from './routes';
 import Modal from './components/shared/modal';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { WalletContext } from './provider/wallet';
+import { NetworkContext } from './provider/network';
 
 export default function App() {
 
@@ -13,7 +15,6 @@ export default function App() {
 
   return (
     <AppProvider>
-      <Modal />
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -27,7 +28,12 @@ export default function App() {
         pauseOnHover
         theme="light"
       />
-      <AppRouter />
+      <NetworkContext>
+        <WalletContext>
+          <Modal />
+          <AppRouter />
+        </WalletContext>
+      </NetworkContext>
     </AppProvider>
   );
 }
