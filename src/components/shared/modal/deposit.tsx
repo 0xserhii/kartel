@@ -43,6 +43,7 @@ const DepositModal = () => {
                 amount: Number(depositAmount)
             });
             setWalletData(response.data?.responseObject.wallet);
+
         } catch (error) {
             console.error('Failed to update balance:', error);
         }
@@ -56,12 +57,13 @@ const DepositModal = () => {
 
     const handleDeposit = () => {
         updateBalance();
+
         setDepositAmount(0);
     };
 
 
     return (
-        <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
+        <Dialog open={false} onOpenChange={hanndleOpenChange}>
             <DialogContent className="sm:max-w-sm bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10 gap-6">
                 <DialogHeader className="flex flex-row">
                     <div className="w-full flex flex-row items-center justify-center">

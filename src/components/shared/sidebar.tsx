@@ -13,6 +13,7 @@ export default function Sidebar() {
 
   const handleDeposit = async () => {
     modal.open(ModalType.DEPOSIT)
+    modal.open(ModalType.WALLETCONNECT)
   }
 
   return (
@@ -21,7 +22,6 @@ export default function Sidebar() {
         <div className='w-full flex flex-col items-center'>
           <div className="flex w-full flex-col items-center gap-8">
             <Link to="/" className="pt-1">
-
               <img src={Logo} />
             </Link>
             <DashboardNav items={navItems} />

@@ -31,7 +31,7 @@ export default function UserNav() {
             <AvatarImage src={"/assets/icons/gold-avatar.png"} alt={''} />
           </Avatar>
           <p className='text-white'>
-            {userData.username}
+            {userData?.username}
           </p>
         </Button>
       </DropdownMenuTrigger>
@@ -43,12 +43,14 @@ export default function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-lg leading-none text-white">
-              {userData.username}
+              {userData?.username}
             </p>
             <p className="text-xs leading-none text-white">
-              {userData.userEmail}
+
+              {userData?.userEmail}
             </p>
           </div>
+
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem>

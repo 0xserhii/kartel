@@ -27,7 +27,7 @@ export default function Header() {
       <Heading />
       <div className="ml-4 mr-8 flex items-center md:ml-6 gap-10">
         {
-          userData.username !== "" ? (
+          userData?.username !== "" ? (
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-4">
                 {/* <div className="flex h-10 w-36 items-center justify-end rounded-full border-[1.5px] border-blue2 px-[5px]">
