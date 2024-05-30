@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { token } from "@/section/games/crash"
 import axios from "axios"
 import { usePersistStore } from "@/store/persist"
+import useToast from "@/routes/hooks/use-toast"
 
 interface TokenBalances {
     usk: number;
@@ -18,7 +19,8 @@ interface TokenBalances {
 const DepositModal = () => {
     const modal = useModal();
     const userData = usePersistStore((store) => store.app.userData);
-    const [depositAmount, setDepositAmount] = useState(0);
+    const toast = useToast();
+    const [depositAmount, setDepositAmount] = useState("");
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [openModal, type] = useRootStore((store) => [store.state.modal.open, store.state.modal.type]);
     const [walletData, setWalletData] = useState<TokenBalances>();
@@ -35,15 +37,19 @@ const DepositModal = () => {
         setDepositAmount(inputValue);
     };
 
-    const updateBalance = async () => {
+    const updateBalance = async (type: string) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`, {
                 balanceType: selectedToken.name,
                 actionType: "deposit",
                 amount: Number(depositAmount)
-            });
-            setWalletData(response.data?.responseObject.wallet);
-
+            })
+            if (response.status === 200) {
+                setWalletData(response.data?.responseObject.wallet);
+                if (type === "update") {
+                    toast.success("Deposit Successful");
+                }
+            }
         } catch (error) {
             console.error('Failed to update balance:', error);
         }
@@ -51,19 +57,17 @@ const DepositModal = () => {
 
     useEffect(() => {
         if (isOpen) {
-            updateBalance();
+            updateBalance("get");
         }
     }, [isOpen]);
 
     const handleDeposit = () => {
-        updateBalance();
-
-        setDepositAmount(0);
+        updateBalance("update");
+        setDepositAmount('');
     };
 
-
     return (
-        <Dialog open={false} onOpenChange={hanndleOpenChange}>
+        <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
             <DialogContent className="sm:max-w-sm bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10 gap-6">
                 <DialogHeader className="flex flex-row">
                     <div className="w-full flex flex-row items-center justify-center">

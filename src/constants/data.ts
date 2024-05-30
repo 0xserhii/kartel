@@ -80,7 +80,7 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Help & Support',
         href: '/help-support',
-        icon: "/assets/icons/setting.svg",
+        icon: "/assets/icons/support.svg",
         label: 'Help & Support'
       }
     ]

@@ -13,7 +13,7 @@ export default function Sidebar() {
 
   const handleDeposit = async () => {
     modal.open(ModalType.DEPOSIT)
-    modal.open(ModalType.WALLETCONNECT)
+    // modal.open(ModalType.WALLETCONNECT)
   }
 
   return (
