@@ -27,7 +27,7 @@ export default function Sidebar() {
             <DashboardNav items={navItems} />
           </div>
           <button
-            className="absolute bottom-5 flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white"
+            className="absolute bottom-16 flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white"
             onClick={handleDeposit}
           >
             <img src={Deposit} />

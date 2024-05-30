@@ -36,7 +36,7 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
       )}
       to={item.href}
     >
-      <img src={item.icon} className="h-5 w-5" aria-hidden="true" alt="" />
+      <img src={item.icon} className="h-5 w-5" aria-hidden="true" />
       <span className="ml-3 text-sm font-medium uppercase">{item.label}</span>
     </Link>
   );
@@ -59,7 +59,7 @@ const DashboardNavGroup = ({ item }: DashboardNavGroupProps) => {
           <Icon className="h-4 w-4" />
         </div>
       </CollapsibleTrigger>
-      <CollapsibleContent className="mt-6 flex flex-col gap-4 transition-transform duration-100 ease-out">
+      <CollapsibleContent className="mt-6 flex flex-col gap-2 transition-transform duration-100 ease-out">
         {item.items.map((subitem, index) => (
           <DashboardNavItem
             key={index}

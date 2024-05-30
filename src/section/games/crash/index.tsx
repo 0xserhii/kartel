@@ -15,18 +15,18 @@ import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 
 
-type Ttoken = {
+export type Ttoken = {
     name: string;
     src: string;
 }[]
 
-const token: Ttoken = [
+export const token: Ttoken = [
     { name: "kuji", src: "/assets/tokens/kuji.png" },
     { name: "usk", src: "/assets/tokens/usk.png" },
 ]
 
 const betMode = ["manual", "auto"];
-const MultiplerArray = [2, 4, 8]
+const MultiplerArray = [1 / 2, 2, 4, 8]
 export default function CrashGameSection() {
 
     const [selectedToken, setSelectedToken] = useState(token[0]);
@@ -38,7 +38,6 @@ export default function CrashGameSection() {
     const [betCashout, setBetCashout] = useState<BetType[]>([]);
     // const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
     const [avaliableBet, setAvaliableBet] = useState(false)
-
     const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.PREPARE)
 
     const handleBetAmountChange = (event) => {
@@ -175,7 +174,7 @@ export default function CrashGameSection() {
                                                         </DropdownMenu>
                                                     </span>
                                                 </div>
-                                                <div className='grid grid-cols-3 space-x-3'>
+                                                <div className='grid grid-cols-4 space-x-3'>
                                                     {
                                                         MultiplerArray.map((item, index) => (
                                                             <Button
