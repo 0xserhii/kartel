@@ -1,7 +1,9 @@
-import { AccountData, EncodeObject } from '@cosmjs/proto-signing';
+import { AccountData, DirectSecp256k1HdWallet, EncodeObject } from '@cosmjs/proto-signing';
 import {
   Coin,
   DeliverTxResponse,
+  GasPrice,
+  SigningStargateClient,
   assertIsDeliverTxSuccess
 } from '@cosmjs/stargate';
 import { ChainInfo } from '@keplr-wallet/types';
@@ -10,7 +12,6 @@ import { Any } from 'cosmjs-types/google/protobuf/any';
 import { BigNumber } from 'ethers';
 import {
   CHAIN_INFO,
-  DaoDao,
   Denom,
   Keplr,
   Leap,
@@ -19,7 +20,8 @@ import {
   ReadOnly,
   Sonar,
   Station,
-  Xfi
+  Xfi,
+  registry
 } from 'kujira.js';
 import {
   FC,
@@ -60,6 +62,10 @@ export type IWallet = {
     msgs: EncodeObject[],
     memo?: string
   ) => Promise<DeliverTxResponse>;
+  broadcastWithPK: (
+    msgs: EncodeObject[],
+    memo?: string
+  ) => Promise<DeliverTxResponse>;
   delegations: null | DelegationResponse[];
   refreshBalances: () => void;
   refreshDelegations: () => void;
@@ -73,19 +79,21 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => {},
-  disconnect: () => {},
+  connect: async () => { },
+  disconnect: () => { },
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
     throw new Error('Not Implemented');
   },
-
+  broadcastWithPK: async () => {
+    throw new Error('Not Implemented');
+  },
   delegations: null,
-  refreshBalances: () => {},
-  refreshDelegations: () => {},
+  refreshBalances: () => { },
+  refreshDelegations: () => { },
   feeDenom: 'ukuji',
-  setFeeDenom: () => {},
+  setFeeDenom: () => { },
   chainInfo: {} as ChainInfo,
   adapter: null
 });
@@ -132,13 +140,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     stored && connect(stored, network, true);
-
-    const chainInfo: ChainInfo = CHAIN_INFO[network];
-    DaoDao.connect(chainInfo)
-      .then(setWallet)
-      .catch((err) => {
-        console.error(err);
-      });
   }, []);
 
   useEffect(() => {
@@ -150,7 +151,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     query?.bank
       .allBalances(
         wallet.account.address,
-        PageRequest.fromPartial({ limit: BigInt(10000) })
+        PageRequest.fromPartial({ limit: BigInt(10) })
       )
       .then((x) => {
         x && setKujiraBalances(x);
@@ -158,9 +159,9 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           setBalances((prev) =>
             b.denom
               ? {
-                  ...prev,
-                  [b.denom]: BigNumber.from(b.amount)
-                }
+                ...prev,
+                [b.denom]: BigNumber.from(b.amount)
+              }
               : prev
           );
         });
@@ -228,6 +229,33 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     assertIsDeliverTxSuccess(res);
     return res;
   };
+
+
+  const broadcastWithPK = async (
+    rpc: string,
+    msgs: EncodeObject[],
+    memo?: string
+  ): Promise<DeliverTxResponse> => {
+    if (!wallet) throw new Error('No Wallet Connected');
+    const mnemonic = 'climb merge income bachelor donor direct cheese nature yard fox enhance pepper';
+
+    const signer = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+      prefix: "kujira",
+    });
+
+    const [account] = await signer.getAccounts();
+    const client = await SigningStargateClient.connectWithSigner(
+      rpc,
+      signer,
+      {
+        registry,
+        gasPrice: GasPrice.fromString("0.034ukuji"),
+      }
+    );
+    const res = await client.signAndBroadcast(account.address, msgs, "auto", memo);
+    assertIsDeliverTxSuccess(res);
+    return res;
+  }
 
   const sonarRequest = (uri: string) => {
     console.log(uri);
@@ -341,6 +369,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     getBalance,
     balance,
     signAndBroadcast: (msgs, memo) => signAndBroadcast(rpc, msgs, memo),
+    broadcastWithPK: (msgs, memo) => broadcastWithPK(rpc, msgs, memo),
     refreshBalances,
     refreshDelegations,
     feeDenom,

@@ -4,6 +4,7 @@ import useRootStore from '@/store/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { Input } from '@/components/ui/input';
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +17,9 @@ import { token } from '@/section/games/crash';
 import axios from 'axios';
 import { usePersistStore } from '@/store/persist';
 import useToast from '@/routes/hooks/use-toast';
+import { useWallet } from '@/provider/crypto/wallet';
+import { fromHumanString, msg, toHuman } from 'kujira.js';
+
 interface TokenBalances {
   usk: number;
   kuji: number;
@@ -24,12 +28,25 @@ interface TokenBalances {
 const financial = ['Deposit', 'Withdraw'];
 const walletList = { kuji: 0, usk: 0 };
 
+const denoms = {
+  kuji: 'ukuji',
+  usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
+}
+
+
+const SmallLoading = (
+  <div className="small-loading">
+    <svg viewBox="10 10 20 20">
+      <circle r="7" cy="20" cx="20"></circle>
+    </svg>
+  </div>
+);
+
 const DepositModal = () => {
   const modal = useModal();
   const userData = usePersistStore((store) => store.app.userData);
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState('');
-  const [walletAddress, setWalletAddress] = useState('');
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [openModal, type] = useRootStore((store) => [
     store.state.modal.open,
@@ -38,6 +55,10 @@ const DepositModal = () => {
   const [walletData, setWalletData] = useState<TokenBalances>(walletList);
   const isOpen = openModal && type === ModalType.DEPOSIT;
   const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
+
+  const [loading, setLoading] = useState(false);
+
+  const { signAndBroadcast, account, balances, broadcastWithPK, refreshBalances } = useWallet()
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -50,29 +71,48 @@ const DepositModal = () => {
     setDepositAmount(inputValue);
   };
 
-  const handleWalletAddressChange = (event) => {
-    const inputValue = event.target.value;
-    setWalletAddress(inputValue);
-  };
-
-  const handleWithdraw = () => {
-    console.log('withdraw');
+  const handleWithdraw = async () => {
+    if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
+      toast.error(`Insufficient token`);
+      return
+    }
+    if (account) {
+      try {
+        setLoading(true)
+        await broadcastWithPK([msg.bank.msgSend({
+          fromAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
+          toAddress: account.address,
+          amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
+        })], "Withdraw from Kartel")
+        refreshBalances()
+        await updateBalance("withdraw")
+      } catch (err) {
+        console.log(err)
+        setLoading(false)
+      } finally {
+        setLoading(false)
+      }
+    }
   }
 
   const updateBalance = async (type: string) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
-        {
-          balanceType: selectedToken.name,
-          actionType: 'deposit',
-          amount: Number(depositAmount)
-        }
-      );
-      if (response.status === 200) {
-        setWalletData(response.data?.responseObject.wallet);
-        if (type === 'update') {
-          toast.success(`Deposit Successful`);
+      if (account) {
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
+          {
+            balanceType: selectedToken.name,
+            actionType: type,
+            amount: Number(depositAmount)
+          }
+        );
+        if (response.status === 200) {
+          setWalletData(response.data?.responseObject.wallet);
+          if (type === 'deposit') {
+            toast.success(`Deposit Successful`);
+          } else if (type === 'withdraw') {
+            toast.success(`Withdraw Successful`);
+          }
         }
       }
     } catch (error) {
@@ -86,13 +126,34 @@ const DepositModal = () => {
     }
   }, [isOpen]);
 
-  const handleDeposit = () => {
-    updateBalance('update');
+  const handleDeposit = async () => {
+    if (Number(depositAmount) > Number(toHuman(BigNumber.from(balances.find((item) => item.denom === selectedToken.denom)?.amount ?? 0), 6))) {
+      toast.error(`Insufficient token in wallet`);
+      return
+    }
+    if (account) {
+      try {
+        setLoading(true)
+        await signAndBroadcast([msg.bank.msgSend({
+          fromAddress: account?.address,
+          toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
+          amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
+        })], "Deposit to Kartel")
+        refreshBalances()
+        await updateBalance('deposit');
+      }
+      catch (err) {
+        console.log(err)
+        setLoading(false)
+      } finally {
+        setLoading(false)
+      }
+    }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
-      <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
+      <DialogContent className="gap-5 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
         <DialogHeader className="flex flex-row">
           <div className="flex w-full flex-row items-center justify-center">
             <img src="/assets/logo.svg" className="h-24 w-24" />
@@ -109,26 +170,32 @@ const DepositModal = () => {
             </button>
           ))}
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 justify-between w-full">
+          <div className='flex flex-row justify-between items-center w-full'>
+            <span className='text-gray-500 text-xs w-4/12 text-start pl-3'>Assets</span>
+            <span className='text-gray-500 text-xs w-4/12 text-center'>Site Balance</span>
+            <span className='text-gray-500 text-xs w-4/12 text-center'>Wallet Balance</span>
+          </div>
           {walletData &&
             Object.entries(walletData).map(([tokenName, balance], index) => (
               <div
                 key={index}
-                className="flex flex-row items-center justify-between"
+                className="flex flex-row items-center justify-between w-full"
               >
-                <span className="flex flex-row items-center gap-3 uppercase text-gray-300">
+                <span className="flex flex-row items-center gap-3 uppercase text-gray-300 w-4/12">
                   <img
                     src={`/assets/tokens/${tokenName}.png`}
                     className="h-5 w-5"
                   />
                   {tokenName}
                 </span>
-                <span className="text-gray-300">{balance ?? 0}</span>
+                <span className="text-gray-300 w-4/12 text-center">{Number(balance).toFixed(2) ?? 0}</span>
+                <span className='text-white w-4/12 text-center'>{toHuman(BigNumber.from(balances.find((item) => item.denom === denoms[tokenName])?.amount ?? 0), 6).toFixed(2)}</span>
               </div>
             ))}
         </div>
-        <div className="flex flex-col gap-4">
-          <span className='text-white'>Select Wallet</span>
+        <div className="flex flex-col gap-2">
+          <span className='text-white text-xs'>Token Amount</span>
           <div className="relative">
             <Input
               value={depositAmount}
@@ -170,23 +237,25 @@ const DepositModal = () => {
             </span>
           </div>
           {selectedFinancial === 'Withdraw' &&
-            <div className='flex flex-col gap-3'>
-              <span className='text-white'>Wallet Address</span>
+            <div className='flex flex-col gap-1 mt-2'>
+              <span className='text-white text-xs'>Wallet Address</span>
               <Input
-                value={walletAddress}
-                onChange={handleWalletAddressChange}
+                value={account?.address}
                 type="text"
-                placeholder='e.g. 0x997c71Efe6DE05bdd3072b8af97Ddf3E4B38731f'
+                onChange={() => { }}
+                placeholder='e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h'
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
             </div>}
         </div>
         <Button
-          className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4]"
+          className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4] gap-2"
           type="submit"
           onClick={selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit}
+          disabled={loading}
         >
           {selectedFinancial}
+          {loading && SmallLoading}
         </Button>
       </DialogContent>
     </Dialog>
