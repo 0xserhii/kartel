@@ -16,12 +16,12 @@ import { token } from '@/section/games/crash';
 import axios from 'axios';
 import { usePersistStore } from '@/store/persist';
 import useToast from '@/routes/hooks/use-toast';
-
 interface TokenBalances {
   usk: number;
   kuji: number;
 }
 
+const financial = ['Deposit', 'Withdraw'];
 const walletList = { kuji: 0, usk: 0 };
 
 const DepositModal = () => {
@@ -29,6 +29,7 @@ const DepositModal = () => {
   const userData = usePersistStore((store) => store.app.userData);
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState('');
+  const [walletAddress, setWalletAddress] = useState('');
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [openModal, type] = useRootStore((store) => [
     store.state.modal.open,
@@ -36,6 +37,7 @@ const DepositModal = () => {
   ]);
   const [walletData, setWalletData] = useState<TokenBalances>(walletList);
   const isOpen = openModal && type === ModalType.DEPOSIT;
+  const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -47,6 +49,15 @@ const DepositModal = () => {
     const inputValue = event.target.value;
     setDepositAmount(inputValue);
   };
+
+  const handleWalletAddressChange = (event) => {
+    const inputValue = event.target.value;
+    setWalletAddress(inputValue);
+  };
+
+  const handleWithdraw = () => {
+    console.log('withdraw');
+  }
 
   const updateBalance = async (type: string) => {
     try {
@@ -87,25 +98,37 @@ const DepositModal = () => {
             <img src="/assets/logo.svg" className="h-24 w-24" />
           </div>
         </DialogHeader>
+        <div className='flex flex-row justify-center items-center gap-5'>
+          {financial.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedFinancial(item)}
+              className={`${selectedFinancial === item ? ' border-white' : 'border-transparent'} text-white p-2 border-b-2 transition-all duration-300 ease-out`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-col gap-3">
+          {walletData &&
+            Object.entries(walletData).map(([tokenName, balance], index) => (
+              <div
+                key={index}
+                className="flex flex-row items-center justify-between"
+              >
+                <span className="flex flex-row items-center gap-3 uppercase text-gray-300">
+                  <img
+                    src={`/assets/tokens/${tokenName}.png`}
+                    className="h-5 w-5"
+                  />
+                  {tokenName}
+                </span>
+                <span className="text-gray-300">{balance ?? 0}</span>
+              </div>
+            ))}
+        </div>
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-3">
-            {walletData &&
-              Object.entries(walletData).map(([tokenName, balance], index) => (
-                <div
-                  key={index}
-                  className="flex flex-row items-center justify-between"
-                >
-                  <span className="flex flex-row items-center gap-3 uppercase text-gray-300">
-                    <img
-                      src={`/assets/tokens/${tokenName}.png`}
-                      className="h-5 w-5"
-                    />
-                    {tokenName}
-                  </span>
-                  <span className="text-gray-300">{balance ?? 0}</span>
-                </div>
-              ))}
-          </div>
+          <span className='text-white'>Select Wallet</span>
           <div className="relative">
             <Input
               value={depositAmount}
@@ -146,13 +169,24 @@ const DepositModal = () => {
               </DropdownMenu>
             </span>
           </div>
+          {selectedFinancial === 'Withdraw' &&
+            <div className='flex flex-col gap-3'>
+              <span className='text-white'>Wallet Address</span>
+              <Input
+                value={walletAddress}
+                onChange={handleWalletAddressChange}
+                type="text"
+                placeholder='e.g. 0x997c71Efe6DE05bdd3072b8af97Ddf3E4B38731f'
+                className="border border-purple-0.5 text-white placeholder:text-gray-700"
+              />
+            </div>}
         </div>
         <Button
           className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4]"
           type="submit"
-          onClick={handleDeposit}
+          onClick={selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit}
         >
-          Deposit
+          {selectedFinancial}
         </Button>
       </DialogContent>
     </Dialog>
