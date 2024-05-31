@@ -16,6 +16,9 @@ import { token } from '@/section/games/crash';
 import axios from 'axios';
 import { usePersistStore } from '@/store/persist';
 import useToast from '@/routes/hooks/use-toast';
+import { useWallet } from '@/provider/crypto/wallet';
+import { msg } from 'kujira.js';
+
 interface TokenBalances {
   usk: number;
   kuji: number;
@@ -39,6 +42,8 @@ const DepositModal = () => {
   const isOpen = openModal && type === ModalType.DEPOSIT;
   const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
 
+  const { signAndBroadcast, account } = useWallet()
+
   const hanndleOpenChange = async () => {
     if (isOpen) {
       modal.close(ModalType.DEPOSIT);
@@ -61,18 +66,22 @@ const DepositModal = () => {
 
   const updateBalance = async (type: string) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
-        {
-          balanceType: selectedToken.name,
-          actionType: 'deposit',
-          amount: Number(depositAmount)
-        }
-      );
-      if (response.status === 200) {
-        setWalletData(response.data?.responseObject.wallet);
-        if (type === 'update') {
-          toast.success(`Deposit Successful`);
+
+      if (account) {
+
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
+          {
+            balanceType: selectedToken.name,
+            actionType: 'deposit',
+            amount: Number(depositAmount)
+          }
+        );
+        if (response.status === 200) {
+          setWalletData(response.data?.responseObject.wallet);
+          if (type === 'update') {
+            toast.success(`Deposit Successful`);
+          }
         }
       }
     } catch (error) {
@@ -86,8 +95,15 @@ const DepositModal = () => {
     }
   }, [isOpen]);
 
-  const handleDeposit = () => {
-    updateBalance('update');
+  const handleDeposit = async () => {
+    if (account) {
+      await signAndBroadcast([msg.bank.msgSend({
+        fromAddress: account?.address,
+        toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
+        amount: [{ denom: 'ukuji', amount: '100000' }]
+      })], "Deposit to Kartel")
+      updateBalance('update');
+    }
   };
 
   return (
@@ -127,8 +143,8 @@ const DepositModal = () => {
               </div>
             ))}
         </div>
-        <div className="flex flex-col gap-4">
-          <span className='text-white'>Select Wallet</span>
+        <div className="flex flex-col gap-2">
+          <span className='text-white'>Token Amount</span>
           <div className="relative">
             <Input
               value={depositAmount}
@@ -170,13 +186,13 @@ const DepositModal = () => {
             </span>
           </div>
           {selectedFinancial === 'Withdraw' &&
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-1 mt-2'>
               <span className='text-white'>Wallet Address</span>
               <Input
                 value={walletAddress}
                 onChange={handleWalletAddressChange}
                 type="text"
-                placeholder='e.g. 0x997c71Efe6DE05bdd3072b8af97Ddf3E4B38731f'
+                placeholder='e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h'
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
             </div>}

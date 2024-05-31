@@ -8,7 +8,7 @@ import { ChainInfo } from '@keplr-wallet/types';
 import {
   CHAIN_INFO,
   KujiraQueryClient,
-  MAINNET,
+  TESTNET,
   NETWORK,
   RPCS,
   kujiraQueryClient
@@ -46,7 +46,7 @@ export type NetworkContext = {
 };
 
 const Context = createContext<NetworkContext>({
-  network: MAINNET,
+  network: TESTNET,
   setNetwork: () => { },
   tmClient: null,
   query: null,
@@ -92,7 +92,7 @@ export const NetworkContext: React.FC<
     onError?: (err: any) => void;
   }>
 > = ({ children, onError }) => {
-  const [network, setNetwork] = useLocalStorage('network', MAINNET);
+  const [network, setNetwork] = useLocalStorage('network', TESTNET);
   const [preferred, setPreferred] = useLocalStorage('rpc', '');
   const [tm, setTmClient] = useState<null | [Tendermint37Client, string]>();
   const [latencies, setLatencies] = useState<Record<string, RPCConnection>>({});
@@ -172,9 +172,9 @@ const NoConnection: FC<{
     <div className="md-flex ai-c jc-c dir-c wrap px-2 py-10">
       <h1 className="fs-18">No RPC connections available for {network}</h1>
       <h2 className="fs-16">Please check your internet connection</h2>
-      {network !== MAINNET && (
-        <button className="md-button mt-2" onClick={() => setNetwork(MAINNET)}>
-          Switch to Mainnet
+      {network !== TESTNET && (
+        <button className="md-button mt-2" onClick={() => setNetwork(TESTNET)}>
+          Switch to Testnet
         </button>
       )}
     </div>

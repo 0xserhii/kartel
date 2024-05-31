@@ -10,7 +10,6 @@ import { Any } from 'cosmjs-types/google/protobuf/any';
 import { BigNumber } from 'ethers';
 import {
   CHAIN_INFO,
-  DaoDao,
   Denom,
   Keplr,
   Leap,
@@ -132,13 +131,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     stored && connect(stored, network, true);
-
-    const chainInfo: ChainInfo = CHAIN_INFO[network];
-    DaoDao.connect(chainInfo)
-      .then(setWallet)
-      .catch((err) => {
-        console.error(err);
-      });
   }, []);
 
   useEffect(() => {

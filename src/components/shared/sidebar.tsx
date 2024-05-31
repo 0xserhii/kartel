@@ -12,8 +12,6 @@ export default function Sidebar() {
   const modal = useModal();
   const { account } = useWallet();
 
-  console.log(account)
-
   const handleDeposit = async () => {
     if (account) modal.open(ModalType.DEPOSIT);
     else modal.open(ModalType.WALLETCONNECT);
@@ -29,7 +27,7 @@ export default function Sidebar() {
             </Link>
             <DashboardNav items={navItems} />
           </div>
-          <div className='flex mt-16'>
+          <div className='flex mt-10'>
             <button
               className="flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white"
               onClick={handleDeposit}
