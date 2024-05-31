@@ -1,19 +1,15 @@
-import {
-  AuthnClient,
-  AuthnCredential,
-  AuthnWebSigner,
-} from "kujira.js";
+import { AuthnClient, AuthnCredential, AuthnWebSigner } from 'kujira.js';
 import {
   FC,
   PropsWithChildren,
   createContext,
   useContext,
-  useState,
-} from "react";
-import { useLocalStorage } from "@/routes/hooks";
+  useState
+} from 'react';
+import { useLocalStorage } from '@/routes/hooks';
 
-const STORE_KEY = "authn-web";
-const RP_NAME = "Kujira Passkey";
+const STORE_KEY = 'authn-web';
+const RP_NAME = 'Kujira Passkey';
 
 interface Stored {
   name: string;
@@ -30,18 +26,18 @@ export interface PasskeyContextI {
 
 const context = createContext<PasskeyContextI>({
   signers: {},
-  selectSigner: () => { },
-  createSigner: async () => { },
+  selectSigner: () => {},
+  createSigner: async () => {}
 });
 
 export const fetchSigners = (): Record<string, AuthnWebSigner> => {
   const stored: Record<string, Stored> = JSON.parse(
-    localStorage.getItem(STORE_KEY) || "{}"
+    localStorage.getItem(STORE_KEY) || '{}'
   );
   return Object.entries(stored).reduce(
     (a, [k, v]) => ({
       ...a,
-      [k]: new AuthnWebSigner(v.credential, v.name),
+      [k]: new AuthnWebSigner(v.credential, v.name)
     }),
     {}
   );
@@ -54,25 +50,20 @@ export const storeSigner = (signer: AuthnWebSigner) => {
       ...fetchSigners(),
       [signer.credential.id]: {
         credential: signer.credential,
-        name: signer.name,
-      },
+        name: signer.name
+      }
     })
   );
 };
 
-export const PasskeyContext: FC<PropsWithChildren> = ({
-  children,
-}) => {
+export const PasskeyContext: FC<PropsWithChildren> = ({ children }) => {
   const [signers, setSigners] = useState(fetchSigners());
-  const [selected, setSelected] = useLocalStorage(
-    "authn-web-selected",
-    ""
-  );
+  const [selected, setSelected] = useLocalStorage('authn-web-selected', '');
 
   const createSigner = (name: string) => {
     return AuthnWebSigner.create(
       {
-        name: RP_NAME,
+        name: RP_NAME
       },
       name
     ).then((signer) => {
@@ -92,8 +83,9 @@ export const PasskeyContext: FC<PropsWithChildren> = ({
         signers,
         createSigner,
         selectSigner,
-        signer: selected ? signers[selected] : undefined,
-      }}>
+        signer: selected ? signers[selected] : undefined
+      }}
+    >
       {children}
     </context.Provider>
   );

@@ -17,12 +17,12 @@ export default function MobileSidebar({
   return (
     <>
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="bg-dark !px-0 border-none">
-          <div className="flex flex-col gap-8 items-center w-full p-5 ">
+        <SheetContent side="left" className="border-none bg-dark !px-0">
+          <div className="flex w-full flex-col items-center gap-8 p-5 ">
             <Link to="/" className="py-2 text-2xl font-bold text-white ">
-              <img src={Logo} alt='Logo' />
+              <img src={Logo} alt="Logo" />
             </Link>
-            <div className="space-y-1 px-2 w-full">
+            <div className="w-full space-y-1 px-2">
               <DashboardNav items={navItems} setOpen={setSidebarOpen} />
             </div>
           </div>

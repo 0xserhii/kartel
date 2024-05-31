@@ -1,19 +1,18 @@
 import { HistoryItemProps } from '@/components/shared/live-chat';
 import { NavItemGroup } from '@/types';
 
-
 export const multiPlayers = [
-  "3.01",
-  "3.02",
-  "1.00",
-  "3.03",
-  "1.00.05",
-  "1.00",
-  "2.00",
-  "3.04",
-  "3.05",
-  "3.06",
-]
+  '3.01',
+  '3.02',
+  '1.00',
+  '3.03',
+  '1.00.05',
+  '1.00',
+  '2.00',
+  '3.04',
+  '3.05',
+  '3.06'
+];
 
 export const navItems: NavItemGroup[] = [
   {
@@ -22,19 +21,19 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Crash',
         href: '/crash',
-        icon: "/assets/icons/crash.svg",
+        icon: '/assets/icons/crash.svg',
         label: 'Crash'
       },
       {
         title: 'Coin Flip',
         href: '/coin-flip',
-        icon: "/assets/icons/coins.svg",
+        icon: '/assets/icons/coins.svg',
         label: 'coin flip'
       },
       {
         title: 'Mines',
         href: '/mines',
-        icon: "/assets/icons/mines.svg",
+        icon: '/assets/icons/mines.svg',
         label: 'mines'
       }
     ]
@@ -45,25 +44,25 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Slots',
         href: '/slots',
-        icon: "/assets/icons/slots.svg",
+        icon: '/assets/icons/slots.svg',
         label: 'slots'
       },
       {
         title: 'Black Jack',
         href: '/coin-flip-mini',
-        icon: "/assets/icons/blackjack.svg",
+        icon: '/assets/icons/blackjack.svg',
         label: 'coin flip'
       },
       {
         title: 'Roulette',
         href: '/roulette',
-        icon: "/assets/icons/roulette.svg",
+        icon: '/assets/icons/roulette.svg',
         label: 'roulette'
       },
       {
         title: 'Horse Racing Game',
         href: '/hourse-racing',
-        icon: "/assets/icons/horserace.svg",
+        icon: '/assets/icons/horserace.svg',
         label: 'horse racing game'
       }
     ]
@@ -74,13 +73,13 @@ export const navItems: NavItemGroup[] = [
       {
         title: 'Settings',
         href: '/settings',
-        icon: "/assets/icons/setting.svg",
+        icon: '/assets/icons/setting.svg',
         label: 'settings'
       },
       {
         title: 'Help & Support',
         href: '/help-support',
-        icon: "/assets/icons/support.svg",
+        icon: '/assets/icons/support.svg',
         label: 'Help & Support'
       }
     ]
@@ -88,9 +87,9 @@ export const navItems: NavItemGroup[] = [
 ];
 
 export const tabItems = [
-  { name: 'home', path: "/" },
-  { name: 'leader board', path: "/leader-board" },
-  { name: 'dashboard', path: "/dashboard" }
+  { name: 'home', path: '/' },
+  { name: 'leader board', path: '/leader-board' },
+  { name: 'dashboard', path: '/dashboard' }
 ];
 
 export const chatsMock: HistoryItemProps[] = [
@@ -250,20 +249,97 @@ export const scores = [
 ];
 
 export const players = [
-  { user: "Kristin Watson", avatar: '/assets/icons/silver-avatar.png', time: "08:27:15", betAmount: 183, multipler: 123, payout: 183, status: "success" },
-  { user: "Alice Johnson", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 153, payout: 183, status: "failed" },
-  { user: "David Smith", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 163, payout: 183, status: "success" },
-  { user: "Emma Wilson", avatar: '/assets/icons/gold-avatar.png', time: "08:27:15", betAmount: 183, multipler: 152, payout: 183, status: "failed" },
-  { user: "James Brown", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/icons/silver-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/icons/gold-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/icons/silver-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/icons/avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-  { user: "James Brown", avatar: '/assets/icons/gold-avatar.png', time: "08:27:15", betAmount: 183, multipler: 134, payout: 183, status: "success" },
-]
-
-
-
+  {
+    user: 'Kristin Watson',
+    avatar: '/assets/icons/silver-avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 123,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'Alice Johnson',
+    avatar: '/assets/icons/avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 153,
+    payout: 183,
+    status: 'failed'
+  },
+  {
+    user: 'David Smith',
+    avatar: '/assets/icons/avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 163,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'Emma Wilson',
+    avatar: '/assets/icons/gold-avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 152,
+    payout: 183,
+    status: 'failed'
+  },
+  {
+    user: 'James Brown',
+    avatar: '/assets/icons/avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 134,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'James Brown',
+    avatar: '/assets/icons/silver-avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 134,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'James Brown',
+    avatar: '/assets/icons/gold-avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 134,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'James Brown',
+    avatar: '/assets/icons/silver-avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 134,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'James Brown',
+    avatar: '/assets/icons/avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 134,
+    payout: 183,
+    status: 'success'
+  },
+  {
+    user: 'James Brown',
+    avatar: '/assets/icons/gold-avatar.png',
+    time: '08:27:15',
+    betAmount: 183,
+    multipler: 134,
+    payout: 183,
+    status: 'success'
+  }
+];
 
 export const users = [
   {

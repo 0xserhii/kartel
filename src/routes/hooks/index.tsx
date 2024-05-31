@@ -1,4 +1,3 @@
-
 export { usePathname } from './use-pathname';
 export { useRouter } from './use-router';
 export * as useModal from './use-modal';

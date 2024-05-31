@@ -15,7 +15,7 @@ export default function DashboardLayout({
   const [liveChatOpen, setLiveChatOpen] = useState<boolean>(false);
 
   return (
-    <div className="from-dark-0.7 flex bg-opacity-90 h-screen bg-gradient-to-b to-dark bg-blend-multiply">
+    <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
       <div className='absolute left-0 top-0 -z-10 h-full w-full bg-[url("/assets/bg-01.png")] bg-cover bg-top bg-no-repeat bg-blend-multiply' />
       <MobileSidebar
         sidebarOpen={sidebarOpen}
@@ -34,12 +34,12 @@ export default function DashboardLayout({
           <Header />
         </div>
         <main className="flex flex-row justify-between focus:outline-none">
-          <div className='flex-1'>{children}</div>
+          <div className="flex-1">{children}</div>
           <MobileLivechat
             livechatOpen={liveChatOpen}
             setLivechatOpen={setLiveChatOpen}
           />
-          <div className="shadow-purple-0.15 hidden shadow-lg lg:block">
+          <div className="hidden shadow-lg shadow-purple-0.15 lg:block">
             <LiveChat />
           </div>
           <MessageSquareText

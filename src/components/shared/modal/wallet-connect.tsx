@@ -1,109 +1,161 @@
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog"
-import useRootStore from "@/store/root"
-import { ModalType } from "@/types/modal"
-import useModal from "@/routes/hooks/use-modal"
-import { ChevronRight } from "lucide-react"
-import { Adapter, useWallet } from "@/provider/wallet"
-import { useState } from "react"
-import useToast from "@/routes/hooks/use-toast"
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import useRootStore from '@/store/root';
+import { ModalType } from '@/types/modal';
+import useModal from '@/routes/hooks/use-modal';
+import { ChevronRight, Download } from 'lucide-react';
+import { Adapter, useWallet } from '@/provider/crypto/wallet';
+import { useState } from 'react';
+import useToast from '@/routes/hooks/use-toast';
 
 interface ITokenList {
-    name: string,
-    image: string,
+    name: string;
+    image: string;
 }
 
 const tokenList: ITokenList[] = [
     {
-        name: "Keplr",
-        image: "/assets/tokens/keplr.svg",
+        name: 'Keplr',
+        image: '/assets/tokens/keplr.svg'
     },
     {
-        name: "Leap",
-        image: "/assets/tokens/leap.svg",
+        name: 'Leap',
+        image: '/assets/tokens/leap.svg'
     },
     {
-        name: "Cosmotation",
-        image: "/assets/tokens/cosmostation.svg",
-    },
-]
+        name: 'Cosmotation',
+        image: '/assets/tokens/cosmostation.svg'
+    }
+];
 
+const SmallLoading = (
+    <div className="small-loading">
+        <svg viewBox="10 10 20 20">
+            <circle r="7" cy="20" cx="20"></circle>
+        </svg>
+    </div>
+);
+
+const CWalletLink = {
+    keplr: 'https://www.keplr.app/download',
+    cosmostation: 'https://www.cosmostation.io/products/cosmostation_extension',
+    leap: 'https://www.leapwallet.io'
+};
 
 const defaultLoading = {
     keplr: false,
     cosmostation: false,
-    leap: false,
-}
+    leap: false
+};
 
 const WalletConnectModal = () => {
     const modal = useModal();
-    const [, setLoading] = useState(defaultLoading);
-    const toast = useToast()
+    const [loading, setLoading] = useState(defaultLoading);
+    const toast = useToast();
 
-    const [openModal, type] = useRootStore((store) => [store.state.modal.open, store.state.modal.type]);
+    const [openModal, type] = useRootStore((store) => [
+        store.state.modal.open,
+        store.state.modal.type
+    ]);
     const isOpen = openModal && type === ModalType.WALLETCONNECT;
-    const { connect, account } = useWallet()
+    const { connect } = useWallet();
 
     const hanndleOpenChange = async () => {
         if (isOpen) {
-            modal.close(ModalType.WALLETCONNECT)
+            modal.close(ModalType.WALLETCONNECT);
         }
-    }
+    };
 
     const handleConnectWalet = async (walletType: string) => {
         try {
             switch (walletType) {
                 case 'Keplr':
-                    setLoading((prev) => ({ ...prev, keplr: true }))
-                    await connect(Adapter.Keplr)
+                    if (!window.keplr) {
+                        window.open(CWalletLink.keplr, '_blank');
+                        return;
+                    }
+                    setLoading((prev) => ({ ...prev, keplr: true }));
+                    await connect(Adapter.Keplr);
                     break;
                 case 'Leap':
-                    setLoading((prev) => ({ ...prev, leap: true }))
-                    await connect(Adapter.Leap)
+                    if (!window.leap) {
+                        window.open(CWalletLink.leap, '_blank');
+                        return;
+                    }
+                    setLoading((prev) => ({ ...prev, leap: true }));
+                    await connect(Adapter.Leap);
                     break;
                 case 'Cosmotation':
-                    setLoading((prev) => ({ ...prev, cosmostation: true }))
-                    await connect(Adapter.Station)
+                    if (!window.station) {
+                        window.open(CWalletLink.cosmostation, '_blank');
+                        return;
+                    }
+                    setLoading((prev) => ({ ...prev, cosmostation: true }));
+                    await connect(Adapter.Station);
                     break;
                 default:
                     break;
             }
-            if (account) {
-                modal.close(ModalType.WALLETCONNECT)
-                modal.open(ModalType.DEPOSIT)
-            } else {
-                modal.close(ModalType.WALLETCONNECT)
-            }
-            setLoading(defaultLoading)
+
+            modal.close(ModalType.WALLETCONNECT);
+            modal.open(ModalType.DEPOSIT);
+            setLoading(defaultLoading);
         } catch (error) {
-            toast.error("Wallet connect error")
-            setLoading(defaultLoading)
+            toast.error('User rejected');
+            setLoading(defaultLoading);
         }
-    }
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
-            <DialogContent className="sm:max-w-sm bg-[#0D0B32] border-2 border-gray-900 rounded-lg p-10 gap-10">
+            <DialogContent className="gap-10 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
                 <DialogHeader className="flex flex-row text-center">
-                    <p className="text-white text-2xl text-center">Wallet Connect</p>
+                    <p className="text-center text-2xl text-white">Wallet Connect</p>
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
-                    {
-                        tokenList.map((item, index) => (
-                            <button onClick={() => handleConnectWalet(item.name)} className="flex flex-row justify-between items-center gap-2 p-2 rounded-lg" key={index}>
-                                <div className="flex flex-row items-center gap-5">
-                                    <img src={item.image} className="w-8 h-8" />
-                                    <span className="text-white text-lg text-start">
-                                        {item.name}
-                                    </span>
-                                </div>
-                                <ChevronRight className="text-white w-5 h-5" />
-                            </button>
-                        ))
-                    }
+                    {tokenList.map((item, index) => (
+                        <button
+                            onClick={() => handleConnectWalet(item.name)}
+                            className="flex flex-row items-center justify-between gap-2 rounded-lg p-2"
+                            key={index}
+                        >
+                            <div className="flex flex-row items-center gap-5">
+                                <img src={item.image} className="h-8 w-8" />
+                                <span className="text-start text-lg text-white">
+                                    {item.name}
+                                </span>
+                            </div>
+                            {item.name === 'Keplr' &&
+                                !loading.keplr &&
+                                (window.keplr ? (
+                                    <ChevronRight className="h-5 w-5 text-white" />
+                                ) : (
+                                    <Download className="h-5 w-5 text-white" />
+                                ))}
+                            {item.name === 'Leap' &&
+                                !loading.leap &&
+                                (window.leap ? (
+                                    <ChevronRight className="h-5 w-5 text-white" />
+                                ) : (
+                                    <Download className="h-5 w-5 text-white" />
+                                ))}
+                            {item.name === 'Cosmotation' &&
+                                !loading.cosmostation &&
+                                (window.station ? (
+                                    <ChevronRight className="h-5 w-5 text-white" />
+                                ) : (
+                                    <Download className="h-5 w-5 text-white" />
+                                ))}
+                            {item.name === 'Keplr' && loading.keplr && SmallLoading}
+                            {item.name === 'Leap' && loading.leap && SmallLoading}
+                            {item.name === 'Cosmotation' &&
+                                loading.cosmostation &&
+                                SmallLoading}
+                        </button>
+                    ))}
                 </div>
-            </DialogContent >
-        </Dialog >
-    )
-}
+            </DialogContent>
+        </Dialog>
+    );
+};
 
 export default WalletConnectModal;

@@ -90,7 +90,6 @@ input::-webkit-inner-spin-button {
   }
 }
 
-
 /* react-toast custom style */
 
 .Toastify__toast {
@@ -107,8 +106,8 @@ input::-webkit-inner-spin-button {
 }
 
 .Toastify__toast--error::before {
-  content: url("/assets/toast/close.svg");
-  padding-left: .5rem;
+  content: url('/assets/toast/close.svg');
+  padding-left: 0.5rem;
   height: 21px;
   width: 2rem;
 }
@@ -123,7 +122,7 @@ input::-webkit-inner-spin-button {
 }
 
 .Toastify__toast--success::before {
-  content: url("/assets/toast/check.svg");
+  content: url('/assets/toast/check.svg');
   height: 27px;
   width: 1.8rem;
 }
@@ -159,7 +158,6 @@ input::-webkit-inner-spin-button {
 .Toastify__toast>button>svg {
   display: none;
 }
-
 
 /* crash style */
 .crash-moving-bg-video {
@@ -202,7 +200,12 @@ input::-webkit-inner-spin-button {
 @keyframes blinkred {
   50% {
     -webkit-text-stroke: 4px rgb(255, 255, 255);
-    text-shadow: rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px, rgb(255, 170, 255) 0px 0px 20px;
+    text-shadow:
+      rgb(255, 170, 255) 0px 0px 20px,
+      rgb(255, 170, 255) 0px 0px 20px,
+      rgb(255, 170, 255) 0px 0px 20px,
+      rgb(255, 170, 255) 0px 0px 20px,
+      rgb(255, 170, 255) 0px 0px 20px;
   }
 }
 
@@ -210,4 +213,61 @@ input::-webkit-inner-spin-button {
   color: rgb(255, 47, 81);
   -webkit-text-stroke: 2px rgb(255, 47, 81);
   animation: 500ms ease 0s 5 normal none running blinkred;
+}
+
+/* small loading */
+.small-loading svg {
+  width: 1.5em;
+  transform-origin: center;
+  animation: rotate4 2s linear infinite;
+}
+
+.small-loading circle {
+  fill: none;
+  stroke: hsl(0, 0%, 100%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash4 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate4 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash4 {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dashoffset: -125px;
+  }
+}
+
+
+@keyframes animation-m10ze4 {
+  0% {
+    transform: scale(0.95);
+    box-shadow: rgb(163, 38, 212) 0px 0px 0px 0px;
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: rgba(84, 214, 44, 0) 0px 0px 0px 10px;
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: rgba(84, 214, 44, 0) 0px 0px 0px 0px;
+  }
 }

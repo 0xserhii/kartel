@@ -51,7 +51,6 @@ export type FormattedPlayerBetType = Pick<
   | 'denom'
 >;
 
-
 export interface FormattedGameHistoryType
   extends Pick<
     GameStateType,
@@ -90,3 +89,4 @@ export interface CrashHistoryData {
   players: { [key: string]: PlayerInfo };
   crashPoint: number;
 }
+

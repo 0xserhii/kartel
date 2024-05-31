@@ -16,7 +16,7 @@ export default function MobileLivechat({
       <Sheet open={livechatOpen} onOpenChange={setLivechatOpen}>
         <SheetContent
           side="right"
-          className="shadow-purple-0.15 w-auto border-none bg-dark p-0 pt-16 shadow-lg "
+          className="w-auto border-none bg-dark p-0 pt-16 shadow-lg shadow-purple-0.15 "
         >
           <LiveChat />
         </SheetContent>

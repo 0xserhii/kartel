@@ -1,4 +1,3 @@
-
 import VIPLevelType from './vipLevel';
 
 export interface ICoinPlayer {
@@ -9,4 +8,3 @@ export interface ICoinPlayer {
   level: VIPLevelType;
   isBot?: boolean;
 }
-

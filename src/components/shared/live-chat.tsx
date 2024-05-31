@@ -77,7 +77,6 @@ const LiveChat = () => {
     });
 
     newSocket.on('previous-chat-history', (data) => {
-      console.log('receive_previous_chat', data);
       if (!data.chatHistories.length) {
         console.log(data.message);
       } else {
@@ -88,8 +87,11 @@ const LiveChat = () => {
       }
     });
 
-    setSocket(newSocket);
+    newSocket.on('disconnect', () => {
+      setChatHistory([]);
+    });
 
+    setSocket(newSocket);
     return () => {
       newSocket.disconnect();
     };
@@ -97,7 +99,7 @@ const LiveChat = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.emit('auth', getAccessToken())
+      socket.emit('auth', getAccessToken());
     }
   }, [getAccessToken(), socket]);
 
@@ -106,7 +108,6 @@ const LiveChat = () => {
   };
 
   const onEmojiClick = (emojiObject: EmojiClickData) => {
-    console.log(emojiObject);
     setInputStr((prevInput) => prevInput + emojiObject.emoji);
   };
 
@@ -148,9 +149,10 @@ const LiveChat = () => {
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
       <div className="flex items-center gap-3 p-3">
         <span className="text-base font-medium text-gray300">LIVE CHAT</span>
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-pink text-[12px] font-medium text-gray200">
-          4
-        </span>
+        <div className='w-2 h-2 bg-[#A326D4] rounded-full' style={{
+          transform: "scale(1)",
+          animation: "2s ease 0s infinite normal none running animation-m10ze4"
+        }}></div>
       </div>
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">

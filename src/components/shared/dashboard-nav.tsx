@@ -61,11 +61,7 @@ const DashboardNavGroup = ({ item }: DashboardNavGroupProps) => {
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-6 flex flex-col gap-2 transition-transform duration-100 ease-out">
         {item.items.map((subitem, index) => (
-          <DashboardNavItem
-            key={index}
-            item={subitem}
-            setOpen={setOpen}
-          />
+          <DashboardNavItem key={index} item={subitem} setOpen={setOpen} />
         ))}
       </CollapsibleContent>
     </Collapsible>
