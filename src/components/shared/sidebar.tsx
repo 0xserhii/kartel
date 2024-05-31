@@ -12,6 +12,8 @@ export default function Sidebar() {
   const modal = useModal();
   const { account } = useWallet();
 
+  console.log(account)
+
   const handleDeposit = async () => {
     if (account) modal.open(ModalType.DEPOSIT);
     else modal.open(ModalType.WALLETCONNECT);
