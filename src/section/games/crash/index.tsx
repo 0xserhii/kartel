@@ -24,18 +24,20 @@ import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/routes/hooks/use-toast';
 
-export type Ttoken = {
+export interface IToken {
   name: string;
   src: string;
-}[];
+  denom: string
+};
 
-export const token: Ttoken = [
-  { name: 'kuji', src: '/assets/tokens/kuji.png' },
-  { name: 'usk', src: '/assets/tokens/usk.png' }
+export const token: Array<IToken> = [
+  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'ukuji' },
+  { name: 'usk', src: '/assets/tokens/usk.png', denom: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk' }
 ];
 
 const betMode = ['manual', 'auto'];
 const MultiplerArray = [1 / 2, 2, 4, 8];
+
 export default function CrashGameSection() {
   const toast = useToast();
   const [selectedToken, setSelectedToken] = useState(token[0]);
@@ -177,7 +179,7 @@ export default function CrashGameSection() {
                           className={cn(
                             'min-h-full rounded-lg border border-[#1D1776] bg-[#151245] px-6 py-5 font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white',
                             selectMode === item &&
-                              'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
+                            'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
                           )}
                           key={index}
                           onClick={() => setSelectMode(item)}

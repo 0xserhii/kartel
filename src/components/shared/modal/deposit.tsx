@@ -18,7 +18,7 @@ import axios from 'axios';
 import { usePersistStore } from '@/store/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
-import { msg, toHuman } from 'kujira.js';
+import { fromHumanString, msg, toHuman } from 'kujira.js';
 
 interface TokenBalances {
   usk: number;
@@ -103,11 +103,15 @@ const DepositModal = () => {
   }, [isOpen]);
 
   const handleDeposit = async () => {
+    if (Number(depositAmount) > Number(toHuman(BigNumber.from(balances.find((item) => item.denom === selectedToken.denom)?.amount ?? 0), 6))) {
+      toast.error(`Insufficient token in wallet`);
+      return
+    }
     if (account) {
       await signAndBroadcast([msg.bank.msgSend({
         fromAddress: account?.address,
         toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
-        amount: [{ denom: 'ukuji', amount: '100000' }]
+        amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
       })], "Deposit to Kartel")
       updateBalance('update');
     }
@@ -152,7 +156,7 @@ const DepositModal = () => {
                   {tokenName}
                 </span>
                 <span className="text-gray-300 w-4/12 text-center">{balance ?? 0}</span>
-                <span className='text-white w-4/12 text-center'>{toHuman(BigNumber.from(balances.find((item) => item.denom === denoms[tokenName])?.amount ?? 0), 6).toFixed(3)}</span>
+                <span className='text-white w-4/12 text-center'>{toHuman(BigNumber.from(balances.find((item) => item.denom === denoms[tokenName])?.amount ?? 0), 6).toFixed(2)}</span>
               </div>
             ))}
         </div>
