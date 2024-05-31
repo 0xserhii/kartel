@@ -88,11 +88,14 @@ const LiveChat = () => {
       }
     });
 
-    setSocket(newSocket);
+    newSocket.on('disconnect', () => {
+      console.log("socked disconnected")
+      setChatHistory([]);
+    });
 
+    setSocket(newSocket);
     return () => {
       newSocket.disconnect();
-      setChatHistory([]);
     };
   }, []);
 
@@ -107,7 +110,6 @@ const LiveChat = () => {
   };
 
   const onEmojiClick = (emojiObject: EmojiClickData) => {
-    console.log(emojiObject);
     setInputStr((prevInput) => prevInput + emojiObject.emoji);
   };
 
