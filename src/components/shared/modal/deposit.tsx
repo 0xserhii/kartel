@@ -33,6 +33,15 @@ const denoms = {
   usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
 }
 
+
+const SmallLoading = (
+  <div className="small-loading">
+    <svg viewBox="10 10 20 20">
+      <circle r="7" cy="20" cx="20"></circle>
+    </svg>
+  </div>
+);
+
 const DepositModal = () => {
   const modal = useModal();
   const userData = usePersistStore((store) => store.app.userData);
@@ -236,12 +245,13 @@ const DepositModal = () => {
             </div>}
         </div>
         <Button
-          className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4]"
+          className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4] gap-2"
           type="submit"
           onClick={selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit}
           disabled={loading}
         >
           {selectedFinancial}
+          {loading && SmallLoading}
         </Button>
       </DialogContent>
     </Dialog>
