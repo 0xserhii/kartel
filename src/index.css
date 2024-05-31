@@ -155,7 +155,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.Toastify__toast > button > svg {
+.Toastify__toast>button>svg {
   display: none;
 }
 
@@ -251,5 +251,23 @@ input::-webkit-inner-spin-button {
 
   100% {
     stroke-dashoffset: -125px;
+  }
+}
+
+
+@keyframes animation-m10ze4 {
+  0% {
+    transform: scale(0.95);
+    box-shadow: rgb(12, 175, 96) 0px 0px 0px 0px;
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: rgba(84, 214, 44, 0) 0px 0px 0px 10px;
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: rgba(84, 214, 44, 0) 0px 0px 0px 0px;
   }
 }

@@ -77,7 +77,6 @@ const LiveChat = () => {
     });
 
     newSocket.on('previous-chat-history', (data) => {
-      console.log('receive_previous_chat', data);
       if (!data.chatHistories.length) {
         console.log(data.message);
       } else {
@@ -89,7 +88,6 @@ const LiveChat = () => {
     });
 
     newSocket.on('disconnect', () => {
-      console.log("socked disconnected")
       setChatHistory([]);
     });
 
@@ -149,8 +147,12 @@ const LiveChat = () => {
 
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
-      <div className="flex items-center gap-3 p-3">
+      <div className="flex items-center gap-3 p-3 justify-center">
         <span className="text-base font-medium text-gray300">LIVE CHAT</span>
+        <div className='w-2 h-2 bg-green rounded-full' style={{
+          transform: "scale(1)",
+          animation: "2s ease 0s infinite normal none running animation-m10ze4"
+        }}></div>
       </div>
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
