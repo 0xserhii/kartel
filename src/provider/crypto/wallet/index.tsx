@@ -10,7 +10,6 @@ import { Any } from 'cosmjs-types/google/protobuf/any';
 import { BigNumber } from 'ethers';
 import {
   CHAIN_INFO,
-  DaoDao,
   Denom,
   Keplr,
   Leap,
@@ -19,7 +18,7 @@ import {
   ReadOnly,
   Sonar,
   Station,
-  Xfi
+  Xfi,
 } from 'kujira.js';
 import {
   FC,
@@ -73,8 +72,8 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => {},
-  disconnect: () => {},
+  connect: async () => { },
+  disconnect: () => { },
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
@@ -82,10 +81,10 @@ const Context = createContext<IWallet>({
   },
 
   delegations: null,
-  refreshBalances: () => {},
-  refreshDelegations: () => {},
+  refreshBalances: () => { },
+  refreshDelegations: () => { },
   feeDenom: 'ukuji',
-  setFeeDenom: () => {},
+  setFeeDenom: () => { },
   chainInfo: {} as ChainInfo,
   adapter: null
 });
@@ -132,13 +131,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     stored && connect(stored, network, true);
-
-    const chainInfo: ChainInfo = CHAIN_INFO[network];
-    DaoDao.connect(chainInfo)
-      .then(setWallet)
-      .catch((err) => {
-        console.error(err);
-      });
   }, []);
 
   useEffect(() => {
@@ -150,7 +142,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     query?.bank
       .allBalances(
         wallet.account.address,
-        PageRequest.fromPartial({ limit: BigInt(10000) })
+        PageRequest.fromPartial({ limit: BigInt(10) })
       )
       .then((x) => {
         x && setKujiraBalances(x);
@@ -158,9 +150,9 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           setBalances((prev) =>
             b.denom
               ? {
-                  ...prev,
-                  [b.denom]: BigNumber.from(b.amount)
-                }
+                ...prev,
+                [b.denom]: BigNumber.from(b.amount)
+              }
               : prev
           );
         });
