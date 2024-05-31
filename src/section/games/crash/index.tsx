@@ -90,8 +90,8 @@ export default function CrashGameSection() {
 
   useEffect(() => {
     const crashSocket: Socket<
-      ICrashClientToServerEvents,
-      ICrashServerToClientEvents
+      ICrashServerToClientEvents,
+      ICrashClientToServerEvents
     > = io(`${SERVER_URL}/crash`);
 
     crashSocket.on('game-bets', (bets: FormattedPlayerBetType[]) => {
@@ -287,7 +287,7 @@ export default function CrashGameSection() {
                       <span className="flex flex-row items-center gap-2">
                         <img src="/assets/tokens/usk.png" className="h-6 w-6" />
                         <p className="text-xl font-semibold text-[#049DD9]">
-                          {totalAmount?.usk.toFixed(3)}
+                          {totalAmount?.usk.toFixed(3) ?? "0.000"}
                         </p>
                       </span>
                       <span className="flex flex-row items-center gap-2">
@@ -296,7 +296,7 @@ export default function CrashGameSection() {
                           className="h-6 w-6"
                         />
                         <p className="text-xl font-semibold text-[#049DD9]">
-                          {totalAmount?.kuji.toFixed(3)}
+                          {totalAmount?.kuji.toFixed(3) ?? "0.000"}
                         </p>
                       </span>
                     </div>

@@ -147,9 +147,9 @@ const LiveChat = () => {
 
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
-      <div className="flex items-center gap-3 p-3 justify-center">
+      <div className="flex items-center gap-3 p-3">
         <span className="text-base font-medium text-gray300">LIVE CHAT</span>
-        <div className='w-2 h-2 bg-green rounded-full' style={{
+        <div className='w-2 h-2 bg-[#A326D4] rounded-full' style={{
           transform: "scale(1)",
           animation: "2s ease 0s infinite normal none running animation-m10ze4"
         }}></div>
