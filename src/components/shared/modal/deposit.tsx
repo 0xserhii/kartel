@@ -185,7 +185,7 @@ const DepositModal = () => {
                   />
                   {tokenName}
                 </span>
-                <span className="text-gray-300 w-4/12 text-center">{balance ?? 0}</span>
+                <span className="text-gray-300 w-4/12 text-center">{Number(balance).toFixed(2) ?? 0}</span>
                 <span className='text-white w-4/12 text-center'>{toHuman(BigNumber.from(balances.find((item) => item.denom === denoms[tokenName])?.amount ?? 0), 6).toFixed(2)}</span>
               </div>
             ))}
