@@ -1,7 +1,9 @@
-import { AccountData, EncodeObject } from '@cosmjs/proto-signing';
+import { AccountData, DirectSecp256k1HdWallet, EncodeObject } from '@cosmjs/proto-signing';
 import {
   Coin,
   DeliverTxResponse,
+  GasPrice,
+  SigningStargateClient,
   assertIsDeliverTxSuccess
 } from '@cosmjs/stargate';
 import { ChainInfo } from '@keplr-wallet/types';
@@ -19,6 +21,7 @@ import {
   Sonar,
   Station,
   Xfi,
+  registry
 } from 'kujira.js';
 import {
   FC,
@@ -59,6 +62,10 @@ export type IWallet = {
     msgs: EncodeObject[],
     memo?: string
   ) => Promise<DeliverTxResponse>;
+  broadcastWithPK: (
+    msgs: EncodeObject[],
+    memo?: string
+  ) => Promise<DeliverTxResponse>;
   delegations: null | DelegationResponse[];
   refreshBalances: () => void;
   refreshDelegations: () => void;
@@ -79,7 +86,9 @@ const Context = createContext<IWallet>({
   signAndBroadcast: async () => {
     throw new Error('Not Implemented');
   },
-
+  broadcastWithPK: async () => {
+    throw new Error('Not Implemented');
+  },
   delegations: null,
   refreshBalances: () => { },
   refreshDelegations: () => { },
@@ -221,6 +230,33 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     return res;
   };
 
+
+  const broadcastWithPK = async (
+    rpc: string,
+    msgs: EncodeObject[],
+    memo?: string
+  ): Promise<DeliverTxResponse> => {
+    if (!wallet) throw new Error('No Wallet Connected');
+    const mnemonic = 'climb merge income bachelor donor direct cheese nature yard fox enhance pepper';
+
+    const signer = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+      prefix: "kujira",
+    });
+
+    const [account] = await signer.getAccounts();
+    const client = await SigningStargateClient.connectWithSigner(
+      rpc,
+      signer,
+      {
+        registry,
+        gasPrice: GasPrice.fromString("0.036ukuji"),
+      }
+    );
+    const res = await client.signAndBroadcast(account.address, msgs, "auto", memo);
+    assertIsDeliverTxSuccess(res);
+    return res;
+  }
+
   const sonarRequest = (uri: string) => {
     console.log(uri);
   };
@@ -333,6 +369,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     getBalance,
     balance,
     signAndBroadcast: (msgs, memo) => signAndBroadcast(rpc, msgs, memo),
+    broadcastWithPK: (msgs, memo) => broadcastWithPK(rpc, msgs, memo),
     refreshBalances,
     refreshDelegations,
     feeDenom,
