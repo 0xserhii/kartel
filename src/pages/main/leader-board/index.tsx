@@ -9,8 +9,27 @@ import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
 import { scores } from '@/constants/data';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Socket, io } from 'socket.io-client';
+import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from '@/types/leader';
 
 export default function Leaderboard() {
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+
+  useEffect(() => {
+    const leaderBoardSocket: Socket<
+      ILeaderboardServerToClientEvents,
+      ILeaderboardClientToServerEvents
+    > = io(`${SERVER_URL}/leaderboard`);
+
+    leaderBoardSocket.on('leaderboard-fetch-all', (data) => {
+      console.log(data);
+    });
+
+    return () => {
+      leaderBoardSocket.disconnect();
+    };
+  }, []);
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       <Tabs
