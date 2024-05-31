@@ -58,7 +58,7 @@ const DepositModal = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const { signAndBroadcast, account, balances, broadcastWithPK } = useWallet()
+  const { signAndBroadcast, account, balances, broadcastWithPK, refreshBalances } = useWallet()
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -84,6 +84,7 @@ const DepositModal = () => {
           toAddress: account.address,
           amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
         })], "Withdraw from Kartel")
+        refreshBalances()
         await updateBalance("withdraw")
       } catch (err) {
         console.log(err)
@@ -138,6 +139,7 @@ const DepositModal = () => {
           toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
           amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
         })], "Deposit to Kartel")
+        refreshBalances()
         await updateBalance('deposit');
       }
       catch (err) {
