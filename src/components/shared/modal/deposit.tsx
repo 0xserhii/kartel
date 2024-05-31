@@ -38,7 +38,6 @@ const DepositModal = () => {
   const userData = usePersistStore((store) => store.app.userData);
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState('');
-  const [walletAddress, setWalletAddress] = useState('');
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [openModal, type] = useRootStore((store) => [
     store.state.modal.open,
@@ -48,7 +47,9 @@ const DepositModal = () => {
   const isOpen = openModal && type === ModalType.DEPOSIT;
   const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
 
-  const { signAndBroadcast, account, balances } = useWallet()
+  const [loading, setLoading] = useState(false);
+
+  const { signAndBroadcast, account, balances, broadcastWithPK } = useWallet()
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -56,26 +57,37 @@ const DepositModal = () => {
     }
   };
 
-
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
     setDepositAmount(inputValue);
   };
 
-  const handleWalletAddressChange = (event) => {
-    const inputValue = event.target.value;
-    setWalletAddress(inputValue);
-  };
-
-  const handleWithdraw = () => {
-    console.log('withdraw');
+  const handleWithdraw = async () => {
+    if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
+      toast.error(`Insufficient token`);
+      return
+    }
+    if (account) {
+      try {
+        setLoading(true)
+        await broadcastWithPK([msg.bank.msgSend({
+          fromAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
+          toAddress: account.address,
+          amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
+        })], "Withdraw from Kartel")
+        toast.success("Withdraw success")
+      } catch (err) {
+        console.log(err)
+        setLoading(false)
+      } finally {
+        setLoading(false)
+      }
+    }
   }
 
   const updateBalance = async (type: string) => {
     try {
-
       if (account) {
-
         const response = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
           {
@@ -108,12 +120,21 @@ const DepositModal = () => {
       return
     }
     if (account) {
-      await signAndBroadcast([msg.bank.msgSend({
-        fromAddress: account?.address,
-        toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
-        amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
-      })], "Deposit to Kartel")
-      updateBalance('update');
+      try {
+        setLoading(true)
+        await signAndBroadcast([msg.bank.msgSend({
+          fromAddress: account?.address,
+          toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
+          amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
+        })], "Deposit to Kartel")
+        updateBalance('update');
+      }
+      catch (err) {
+        console.log(err)
+        setLoading(false)
+      } finally {
+        setLoading(false)
+      }
     }
   };
 
@@ -206,9 +227,9 @@ const DepositModal = () => {
             <div className='flex flex-col gap-1 mt-2'>
               <span className='text-white text-xs'>Wallet Address</span>
               <Input
-                value={walletAddress}
-                onChange={handleWalletAddressChange}
+                value={account?.address}
                 type="text"
+                onChange={() => { }}
                 placeholder='e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h'
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
@@ -218,6 +239,7 @@ const DepositModal = () => {
           className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4]"
           type="submit"
           onClick={selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit}
+          disabled={loading}
         >
           {selectedFinancial}
         </Button>

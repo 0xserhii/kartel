@@ -77,7 +77,6 @@ const LiveChat = () => {
     });
 
     newSocket.on('previous-chat-history', (data) => {
-      console.log('receive_previous_chat', data);
       if (!data.chatHistories.length) {
         console.log(data.message);
       } else {
@@ -89,7 +88,6 @@ const LiveChat = () => {
     });
 
     newSocket.on('disconnect', () => {
-      console.log("socked disconnected")
       setChatHistory([]);
     });
 
