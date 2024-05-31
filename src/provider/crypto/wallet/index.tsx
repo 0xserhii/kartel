@@ -249,7 +249,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
       signer,
       {
         registry,
-        gasPrice: GasPrice.fromString("0.036ukuji"),
+        gasPrice: GasPrice.fromString("0.034ukuji"),
       }
     );
     const res = await client.signAndBroadcast(account.address, msgs, "auto", memo);
