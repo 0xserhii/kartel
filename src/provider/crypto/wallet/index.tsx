@@ -142,7 +142,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     query?.bank
       .allBalances(
         wallet.account.address,
-        PageRequest.fromPartial({ limit: BigInt(10000) })
+        PageRequest.fromPartial({ limit: BigInt(10) })
       )
       .then((x) => {
         x && setKujiraBalances(x);

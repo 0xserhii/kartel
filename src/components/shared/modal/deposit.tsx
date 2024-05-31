@@ -4,6 +4,7 @@ import useRootStore from '@/store/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { Input } from '@/components/ui/input';
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +18,7 @@ import axios from 'axios';
 import { usePersistStore } from '@/store/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
-import { msg } from 'kujira.js';
+import { msg, toHuman } from 'kujira.js';
 
 interface TokenBalances {
   usk: number;
@@ -26,6 +27,11 @@ interface TokenBalances {
 
 const financial = ['Deposit', 'Withdraw'];
 const walletList = { kuji: 0, usk: 0 };
+
+const denoms = {
+  kuji: 'ukuji',
+  usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
+}
 
 const DepositModal = () => {
   const modal = useModal();
@@ -42,13 +48,14 @@ const DepositModal = () => {
   const isOpen = openModal && type === ModalType.DEPOSIT;
   const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
 
-  const { signAndBroadcast, account } = useWallet()
+  const { signAndBroadcast, account, balances } = useWallet()
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
       modal.close(ModalType.DEPOSIT);
     }
   };
+
 
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
@@ -108,7 +115,7 @@ const DepositModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
-      <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
+      <DialogContent className="gap-5 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
         <DialogHeader className="flex flex-row">
           <div className="flex w-full flex-row items-center justify-center">
             <img src="/assets/logo.svg" className="h-24 w-24" />
@@ -125,26 +132,32 @@ const DepositModal = () => {
             </button>
           ))}
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 justify-between w-full">
+          <div className='flex flex-row justify-between items-center w-full'>
+            <span className='text-gray-500 text-xs w-4/12 text-start pl-3'>Assets</span>
+            <span className='text-gray-500 text-xs w-4/12 text-center'>Site Balance</span>
+            <span className='text-gray-500 text-xs w-4/12 text-center'>Wallet Balance</span>
+          </div>
           {walletData &&
             Object.entries(walletData).map(([tokenName, balance], index) => (
               <div
                 key={index}
-                className="flex flex-row items-center justify-between"
+                className="flex flex-row items-center justify-between w-full"
               >
-                <span className="flex flex-row items-center gap-3 uppercase text-gray-300">
+                <span className="flex flex-row items-center gap-3 uppercase text-gray-300 w-4/12">
                   <img
                     src={`/assets/tokens/${tokenName}.png`}
                     className="h-5 w-5"
                   />
                   {tokenName}
                 </span>
-                <span className="text-gray-300">{balance ?? 0}</span>
+                <span className="text-gray-300 w-4/12 text-center">{balance ?? 0}</span>
+                <span className='text-white w-4/12 text-center'>{toHuman(BigNumber.from(balances.find((item) => item.denom === denoms[tokenName])?.amount ?? 0), 6).toFixed(3)}</span>
               </div>
             ))}
         </div>
         <div className="flex flex-col gap-2">
-          <span className='text-white'>Token Amount</span>
+          <span className='text-white text-xs'>Token Amount</span>
           <div className="relative">
             <Input
               value={depositAmount}
@@ -187,7 +200,7 @@ const DepositModal = () => {
           </div>
           {selectedFinancial === 'Withdraw' &&
             <div className='flex flex-col gap-1 mt-2'>
-              <span className='text-white'>Wallet Address</span>
+              <span className='text-white text-xs'>Wallet Address</span>
               <Input
                 value={walletAddress}
                 onChange={handleWalletAddressChange}
