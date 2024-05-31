@@ -84,7 +84,7 @@ const DepositModal = () => {
           toAddress: account.address,
           amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
         })], "Withdraw from Kartel")
-        toast.success("Withdraw success")
+        await updateBalance("withdraw")
       } catch (err) {
         console.log(err)
         setLoading(false)
@@ -101,14 +101,16 @@ const DepositModal = () => {
           `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
           {
             balanceType: selectedToken.name,
-            actionType: 'deposit',
+            actionType: type,
             amount: Number(depositAmount)
           }
         );
         if (response.status === 200) {
           setWalletData(response.data?.responseObject.wallet);
-          if (type === 'update') {
+          if (type === 'deposit') {
             toast.success(`Deposit Successful`);
+          } else if (type === 'withdraw') {
+            toast.success(`Withdraw Successful`);
           }
         }
       }
@@ -136,7 +138,7 @@ const DepositModal = () => {
           toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
           amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
         })], "Deposit to Kartel")
-        updateBalance('update');
+        await updateBalance('deposit');
       }
       catch (err) {
         console.log(err)
