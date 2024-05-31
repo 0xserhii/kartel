@@ -2,11 +2,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CrashBanner from '/assets/crash-banner.svg';
 import CoinflipBanner from '/assets/banner-bg.png';
 import CoinflipTitle from '/assets/coinflip-title.png';
+import CrashTitle from '/assets/crash-title.png';
 import PlayText from '/assets/play-text.svg';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
 import { scores } from '@/constants/data';
+import { Link } from 'react-router-dom';
 
 export default function Leaderboard() {
   return (
@@ -101,15 +103,17 @@ export default function Leaderboard() {
               className="aspect-auto w-full rounded-md"
             />
             <img
-              src={CoinflipTitle}
+              src={CrashTitle}
               alt="Crash Title"
               className="absolute right-2 top-2 mt-auto"
             />
-            <img
-              src={PlayText}
-              alt="Play Text"
-              className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
-            />
+            <Link to='/crash'>
+              <img
+                src={PlayText}
+                alt="Play Text"
+                className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3] cursor-pointer"
+              />
+            </Link>
           </div>
         </TabsContent>
 
@@ -127,8 +131,8 @@ export default function Leaderboard() {
             />
             <img
               src={PlayText}
-              alt="Play Text"
-              className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
+              alt="Play Text  "
+              className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3] cursor-pointer"
             />
           </div>
         </TabsContent>
