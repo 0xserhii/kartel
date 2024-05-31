@@ -27,7 +27,7 @@ export default function Sidebar() {
             </Link>
             <DashboardNav items={navItems} />
           </div>
-          <div className='flex mt-16'>
+          <div className='flex mt-10'>
             <button
               className="flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white"
               onClick={handleDeposit}
