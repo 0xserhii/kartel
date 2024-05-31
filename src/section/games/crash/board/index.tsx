@@ -55,8 +55,8 @@ const CrashBoard = () => {
 
   useEffect(() => {
     const crashSocket: Socket<
-      ICrashClientToServerEvents,
-      ICrashServerToClientEvents
+      ICrashServerToClientEvents,
+      ICrashClientToServerEvents
     > = io(`${SERVER_URL}/crash`);
 
     crashSocket.emit('previous-crashgame-history', 10 as any);
