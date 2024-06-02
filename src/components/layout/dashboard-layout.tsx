@@ -35,12 +35,12 @@ export default function DashboardLayout({
           <Header />
         </div>
         <main className="flex flex-row justify-between focus:outline-none">
-          <div className="flex-1">{children}</div>
+          <div className="flex-1" >{children}</div>
           <MobileLivechat
             livechatOpen={liveChatOpen}
             setLivechatOpen={setLiveChatOpen}
           />
-          <div className={`shadow-lg shadow-purple-0.15 ${!open && 'hidden'}`}>
+          <div className={`shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out transform ${open ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'} ${!open ? 'hidden' : ''}`}>
             <LiveChat />
           </div>
           <MessageSquareText

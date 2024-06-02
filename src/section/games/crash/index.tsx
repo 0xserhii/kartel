@@ -15,15 +15,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
 import { BetType, FormattedPlayerBetType } from '@/types';
-import {
-  ICrashClientToServerEvents,
-  ICrashServerToClientEvents
-} from '@/types/crash';
+import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/routes/hooks/use-toast';
 import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray } from '@/constants/data';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export interface IToken {
   name: string;
@@ -46,7 +44,7 @@ export default function CrashGameSection() {
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [betData, setBetData] = useState<BetType[]>([]);
   const [betAmount, setBetAmount] = useState(0);
-  const [autoCashoutPoint, setAutoCashoutPoint] = useState(0);
+  const [autoCashoutPoint, setAutoCashoutPoint] = useState(1.05);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [betCashout, setBetCashout] = useState<BetType[]>([]);
   const [avaliableBet, setAvaliableBet] = useState(false);
@@ -57,6 +55,7 @@ export default function CrashGameSection() {
   const [totalAmount, setTotalAmount] = useState<any>();
   const [round, setRound] = useState(roundArray[0]);
   const [selectMode, setSelectMode] = useState(betMode[0]);
+  const [avaliableAutoBet, setAvaliableAutoBet] = useState<boolean>(false);
   const isAutoMode = selectMode === 'auto';
 
   const handleBetAmountChange = (event) => {
@@ -207,7 +206,7 @@ export default function CrashGameSection() {
                           className={cn(
                             'min-h-full rounded-lg border border-[#1D1776] bg-[#151245] px-6 py-5 font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white',
                             selectMode === item &&
-                              'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
+                            'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
                           )}
                           key={index}
                           onClick={() => setSelectMode(item)}
@@ -219,12 +218,33 @@ export default function CrashGameSection() {
                   </div>
                   <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                     <div className="flex h-full w-full flex-col gap-8 rounded-lg bg-[#0D0B32CC] p-8">
-                      <div className="flex flex-col gap-6">
-                        <p className="text-md font-semibold uppercase text-[#556987]">
+                      <div className='flex flex-row items-center'>
+                        <p className="text-md font-semibold uppercase text-[#556987] w-6/12">
                           bet amount
                         </p>
+                        <Button
+                          className="h-12 w-6/12 bg-[#A326D4] py-5 uppercase hover:bg-[#A326D4]"
+                          disabled={
+                            (crashStatus !== ECrashStatus.PREPARE &&
+                              !avaliableBet) ||
+                            (crashStatus !== ECrashStatus.PROGRESS &&
+                              avaliableBet)
+                          }
+                          onClick={isAutoMode ? handleAutoBet : handleStartBet}
+                        >
+                          {isAutoMode
+                            ? avaliableBet
+                              ? 'Auto Cash Out'
+                              : 'Auto Place Bet'
+                            : avaliableBet
+                              ? 'Cash Out'
+                              : 'Place Bet'}
+                        </Button>
+                      </div>
+                      <div className="flex flex-col gap-6">
                         <div className="relative">
                           <Input
+                            type='number'
                             value={betAmount}
                             onChange={handleBetAmountChange}
                             className="border border-purple-0.5 text-white placeholder:text-gray-700"
@@ -279,14 +299,18 @@ export default function CrashGameSection() {
                           ))}
                         </div>
                         {!isAutoMode && (
-                          <div className="flex flex-row justify-between gap-2">
-                            <span className="w-4/12 text-white">
-                              Auto Cashout
-                            </span>
-                            <div className="flex w-8/12 items-center justify-center gap-1">
+                          <div className="flex flex-col justify-between gap-2">
+                            <div className="flex flex-row items-center justify-between gap-2">
+                              <span className="text-white">
+                                Auto Cashout
+                              </span>
+                              <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoBet} onClick={() => setAvaliableAutoBet(!avaliableAutoBet)} />
+                            </div>
+                            <div className="flex w-full items-center justify-center gap-1">
                               <Slider
-                                className="w-10/12"
-                                step={0.5}
+                                className={`w-11/12 ${!avaliableAutoBet && 'opacity-35'}`}
+                                disabled={!avaliableAutoBet}
+                                step={0.01}
                                 max={100}
                                 min={1}
                                 defaultValue={[autoCashoutAmount]}
@@ -294,8 +318,8 @@ export default function CrashGameSection() {
                                   setAutoCashoutAmount(value[0])
                                 }
                               />
-                              <span className="w-2/12 text-end text-white">
-                                {autoCashoutAmount}
+                              <span className="w-1/12 text-end text-white">
+                                {autoCashoutAmount + "x"}
                               </span>
                             </div>
                           </div>
@@ -305,8 +329,11 @@ export default function CrashGameSection() {
                             <div className="flex w-full">
                               <div className="relative w-full">
                                 <Input
+                                  type='number'
                                   value={autoCashoutPoint}
                                   onChange={handleAutoCashoutPointChange}
+                                  min={1.05}
+                                  max={1000}
                                   className="w-full border border-purple-0.5 text-white placeholder:text-gray-700"
                                 />
                                 <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
@@ -328,24 +355,6 @@ export default function CrashGameSection() {
                           </>
                         )}
                       </div>
-                      <Button
-                        className="h-12 w-full bg-[#A326D4] py-5 uppercase hover:bg-[#A326D4]"
-                        disabled={
-                          (crashStatus !== ECrashStatus.PREPARE &&
-                            !avaliableBet) ||
-                          (crashStatus !== ECrashStatus.PROGRESS &&
-                            avaliableBet)
-                        }
-                        onClick={isAutoMode ? handleAutoBet : handleStartBet}
-                      >
-                        {isAutoMode
-                          ? avaliableBet
-                            ? 'Auto Cash Out'
-                            : 'Auto Place Bet'
-                          : avaliableBet
-                            ? 'Cash Out'
-                            : 'Place Bet'}
-                      </Button>
                     </div>
                   </Card>
                 </div>
