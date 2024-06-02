@@ -1,10 +1,9 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { Card } from '@/components/ui/card';
 import CrashBoard from './board';
 import { Socket, io } from 'socket.io-client';
 import {
@@ -23,6 +22,7 @@ import {
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/routes/hooks/use-toast';
+import BetBoard from './bet-board';
 
 export interface IToken {
   name: string;
@@ -49,6 +49,7 @@ export default function CrashGameSection() {
   const [betCashout, setBetCashout] = useState<BetType[]>([]);
   // const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
   const [avaliableBet, setAvaliableBet] = useState(false);
+  const [autoCashoutAmount, setAutoCashoutAmount] = useState(1);
   const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
     ECrashStatus.PREPARE
   );
@@ -254,13 +255,63 @@ export default function CrashGameSection() {
                           <span className="w-4/12 text-white">
                             Auto Cashout
                           </span>
-                          <Slider
-                            className="w-8/12"
-                            step={1}
-                            max={10}
-                            min={1}
-                            defaultValue={[8]}
-                          />
+                          <div className='flex w-8/12 justify-center items-center gap-1'>
+                            <Slider
+                              className="w-10/12"
+                              step={0.5}
+                              max={100}
+                              min={1}
+                              defaultValue={[autoCashoutAmount]}
+                              onValueChange={(value) => setAutoCashoutAmount(value[0])}
+                            />
+                            <span className='text-white w-2/12 text-end'>{autoCashoutAmount}</span>
+                          </div>
+                        </div>
+                        <div className='flex w-full'>
+                          <div className="relative">
+                            <Input
+                              value={betAmount}
+                              onChange={handleBetAmountChange}
+                              className="border border-purple-0.5 text-white placeholder:text-gray-700 w-full"
+                            />
+                            <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <div className="flex cursor-pointer items-center gap-2 uppercase">
+                                    <img
+                                      src={selectedToken.src}
+                                      className="h-4 w-4"
+                                    />
+                                    {selectedToken.name}
+                                  </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-12 border-purple-0.5 bg-[#0D0B32CC]">
+                                  <DropdownMenuRadioGroup
+                                    value={selectedToken.name}
+                                    onValueChange={(value) => {
+                                      const newToken = token.find(
+                                        (t) => t.name === value
+                                      );
+                                      if (newToken) {
+                                        setSelectedToken(newToken);
+                                      }
+                                    }}
+                                  >
+                                    {token.map((t, index) => (
+                                      <DropdownMenuRadioItem
+                                        key={index}
+                                        value={t.name}
+                                        className="gap-5 uppercase text-white hover:bg-transparent"
+                                      >
+                                        <img src={t.src} className="h-4 w-4" />
+                                        {t.name}
+                                      </DropdownMenuRadioItem>
+                                    ))}
+                                  </DropdownMenuRadioGroup>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </span>
+                          </div>
                         </div>
                       </div>
                       <Button
@@ -301,107 +352,14 @@ export default function CrashGameSection() {
                       </span>
                     </div>
                   </div>
-                  <Card className=" border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
-                      <Table className="w-full table-fixed">
-                        <TableBody>
-                          <TableRow className="!bg-transparent">
-                            <TableCell className="w-6/12 text-start">
-                              User
-                            </TableCell>
-                            <TableCell className="w-1/6">Cash Out</TableCell>
-                            <TableCell className="w-1/6 text-center">
-                              Bet Amount
-                            </TableCell>
-                            <TableCell className="w-1/6 text-center">
-                              Profit
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </CardHeader>
-                    <CardContent className="px-2 py-0">
-                      <ScrollArea className="h-[280px] px-5 py-3">
-                        <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-y-hidden ">
-                          <TableBody>
-                            {betData
-                              ?.sort((a, b) => b.betAmount - a.betAmount)
-                              .map((player, index) => (
-                                <TableRow
-                                  key={index}
-                                  className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
-                                >
-                                  <TableCell className="w-1/2">
-                                    <div className="flex items-center gap-2">
-                                      <img
-                                        src="/assets/icons/avatar.png"
-                                        alt="User"
-                                        className="h-8 w-8 rounded-full"
-                                      />
-                                      <span>{player.username}</span>
-                                    </div>
-                                  </TableCell>
-                                  <TableCell className="w-1/6 text-center">
-                                    {(betCashout?.find(
-                                      (item) =>
-                                        item.playerID === player.playerID
-                                    )?.stoppedAt &&
-                                      (
-                                        (betCashout?.find(
-                                          (item) =>
-                                            item.playerID === player.playerID
-                                        )?.stoppedAt ?? 0) / 100
-                                      ).toFixed(2) + 'x') ||
-                                      'betting'}
-                                  </TableCell>
-                                  <TableCell className="w-1/6 text-center">
-                                    <div className="flex w-full flex-row items-center justify-center gap-1 text-center">
-                                      <img
-                                        src={`/assets/tokens/${player.denom}.png`}
-                                        alt="Multiplier"
-                                        className="h-4 w-4"
-                                      />
-                                      {player.betAmount}
-                                    </div>
-                                  </TableCell>
-                                  <TableCell className="w-1/6 text-center">
-                                    {betCashout?.find(
-                                      (item) =>
-                                        item.playerID === player.playerID
-                                    )?.stoppedAt ? (
-                                      <div className="flex flex-row items-center justify-center gap-1">
-                                        <img
-                                          src={`/assets/tokens/${betCashout.find((item) => item.playerID === player.playerID)?.denom}.png`}
-                                          alt="Multiplier"
-                                          className="h-4 w-4"
-                                        />
-                                        {(
-                                          ((betCashout?.find(
-                                            (item) =>
-                                              item.playerID === player.playerID
-                                          )?.stoppedAt ?? 0) /
-                                            100) *
-                                          player.betAmount
-                                        ).toFixed(2)}
-                                      </div>
-                                    ) : (
-                                      <span>betting</span>
-                                    )}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                          </TableBody>
-                        </Table>
-                        <ScrollBar orientation="horizontal" />
-                      </ScrollArea>
-                    </CardContent>
-                  </Card>
+                  <BetBoard betData={betData} betCashout={betCashout} />
                 </div>
               </div>
+
             </div>
           </div>
         </div>
-      </div>
-    </ScrollArea>
+      </div >
+    </ScrollArea >
   );
 }
