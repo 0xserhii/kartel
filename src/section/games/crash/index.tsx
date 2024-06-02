@@ -102,7 +102,7 @@ export default function CrashGameSection() {
   const handleAutoBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
       const joinParams = {
-        cashoutPoint: Number(autoCashoutPoint).valueOf(),
+        cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
         count: Number(round).valueOf(),
         betAmount: Number(betAmount).valueOf(),
         denom: selectedToken.name
