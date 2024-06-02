@@ -10,16 +10,19 @@ import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
-import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from '@/types/leader';
+import {
+  ILeaderboardClientToServerEvents,
+  ILeaderboardServerToClientEvents
+} from '@/types/leader';
 import { LeaderboardType } from '@/types/leaderboard';
 
 interface ILeaderType {
   _id: string;
   username: string;
-  rank: number,
-  hasVerifiedAccount: boolean,
-  createdAt: string,
-  leaderboard: LeaderboardType
+  rank: number;
+  hasVerifiedAccount: boolean;
+  createdAt: string;
+  leaderboard: LeaderboardType;
 }
 
 export default function Leaderboard() {
@@ -38,8 +41,6 @@ export default function Leaderboard() {
         setLoading(false);
         setLeaderboards(data.leaderboard?.crash);
       }
-
-
     });
 
     return () => {
@@ -81,14 +82,18 @@ export default function Leaderboard() {
                   <TableCell className="w-3/12 text-center">
                     Bet Amount
                   </TableCell>
-                  <TableCell className="w-3/12 text-center">Win Amount</TableCell>
+                  <TableCell className="w-3/12 text-center">
+                    Win Amount
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </CardHeader>
-          <CardContent className={`px-2 py-0 ${loading ? 'opacity-50 h-[536px]' : ''}`}>
+          <CardContent
+            className={`px-2 py-0 ${loading ? 'h-[536px] opacity-50' : ''}`}
+          >
             {loading ? (
-              <div className='flex justify-center items-center h-full w-full'>
+              <div className="flex h-full w-full items-center justify-center">
                 <div className="small-loading">
                   <svg viewBox="10 10 20 20">
                     <circle r="7" cy="20" cx="20"></circle>
@@ -98,7 +103,6 @@ export default function Leaderboard() {
             ) : (
               <ScrollArea className="h-88 px-5 py-3">
                 <Table className="relative table-fixed border-separate border-spacing-y-3">
-
                   <TableBody>
                     {leaderboards?.map((score, index) => {
                       return (
@@ -108,8 +112,11 @@ export default function Leaderboard() {
                         >
                           <TableCell className="w-3/12 text-center">
                             <div className="flex items-center justify-center gap-2">
-                              {(index + 1) <= 3 && (
-                                <img src={`/assets/medal/top${index + 1}.svg`} className='w-5 h-5' />
+                              {index + 1 <= 3 && (
+                                <img
+                                  src={`/assets/medal/top${index + 1}.svg`}
+                                  className="h-5 w-5"
+                                />
                               )}
                               <span>{index + 1}</span>
                             </div>
@@ -120,20 +127,29 @@ export default function Leaderboard() {
                             </div>
                           </TableCell>
                           <TableCell className="w-3/12 text-center">
-                            {Number((score.leaderboard?.crash?.usk?.betAmount ?? 0) + (score.leaderboard?.crash?.kuji?.betAmount ?? 0)).toFixed(2)}
+                            {Number(
+                              (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
+                                (score.leaderboard?.crash?.kuji?.betAmount ?? 0)
+                            ).toFixed(2)}
                           </TableCell>
                           <TableCell className="w-3/12">
                             <div className="flex items-center justify-center gap-1">
-                              {Number((score.leaderboard?.crash?.usk?.winAmount ?? 0) + (score.leaderboard?.crash?.kuji?.winAmount ?? 0)).toFixed(2)}
+                              {Number(
+                                (score.leaderboard?.crash?.usk?.winAmount ??
+                                  0) +
+                                  (score.leaderboard?.crash?.kuji?.winAmount ??
+                                    0)
+                              ).toFixed(2)}
                             </div>
                           </TableCell>
                         </TableRow>
-                      )
+                      );
                     })}
                   </TableBody>
                 </Table>
                 <ScrollBar orientation="horizontal" />
-              </ScrollArea>)}
+              </ScrollArea>
+            )}
           </CardContent>
         </Card>
 
@@ -149,11 +165,11 @@ export default function Leaderboard() {
               alt="Crash Title"
               className="absolute right-2 top-2 mt-auto"
             />
-            <Link to='/crash'>
+            <Link to="/crash">
               <img
                 src={PlayText}
                 alt="Play Text"
-                className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3] cursor-pointer"
+                className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
               />
             </Link>
           </div>
@@ -174,7 +190,7 @@ export default function Leaderboard() {
             <img
               src={PlayText}
               alt="Play Text  "
-              className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3] cursor-pointer"
+              className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
             />
           </div>
         </TabsContent>

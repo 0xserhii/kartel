@@ -1,16 +1,18 @@
 import Heading from './heading';
 import UserNav from './user-nav';
 // import Coin from '/assets/coin-icon.svg';
-import { Bell } from 'lucide-react';
+import { Bell, MessageSquareMore } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 import { usePersistStore } from '@/store/persist';
+import { useOpen } from '@/provider/chat-provider';
 
 export default function Header() {
   const modal = useModal();
+  const { open, setOpen } = useOpen();
   const userData = usePersistStore((store) => store.app.userData);
 
   const handleSignIn = async () => {
@@ -37,6 +39,14 @@ export default function Header() {
                     <Plus />
                   </Button>
                 </div> */}
+              <Button
+                className="hidden bg-transparent hover:bg-transparent lg:block"
+                onClick={() => setOpen(!open)}
+              >
+                <MessageSquareMore
+                  className={`text-[${open ? '#A326D4' : '#fff'}]`}
+                />
+              </Button>
               <Bell className="text-gray50" />
             </div>
             <Separator orientation={'vertical'} className="h-6" />

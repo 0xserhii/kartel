@@ -60,7 +60,7 @@ export interface FormattedGameHistoryType
     | 'publicSeed'
     | 'crashPoint'
     | 'createdAt'
-  > { }
+  > {}
 
 interface LevelInfo {
   name: string;
@@ -90,3 +90,9 @@ export interface CrashHistoryData {
   crashPoint: number;
 }
 
+export interface AutoCrashGameData {
+  betAmount: number;
+  denom: string;
+  cashoutPoint: number;
+  count: number;
+}

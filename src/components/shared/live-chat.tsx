@@ -10,7 +10,6 @@ import {
   Ichat
 } from '@/types';
 
-import { Input } from '../ui/input';
 import { Separator } from '../ui/separator';
 import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
@@ -18,6 +17,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { getAccessToken } from '@/lib/axios';
 import { usePersistStore } from '@/store/persist';
 import useToast from '@/routes/hooks/use-toast';
+import { Input } from '../ui/input';
 
 export type HistoryItemProps = {
   name: string;
@@ -46,9 +46,9 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
           </span>
           <span className="text-xs font-medium text-gray500"> {time}</span>
         </div>
-        <span className="max-w-50 rounded-sm text-[12px] font-medium text-gray200">
+        <div className="max-w-[234px] rounded-sm text-[12px] font-medium text-gray200">
           {message}
-        </span>
+        </div>
       </div>
     </div>
   );
@@ -149,10 +149,14 @@ const LiveChat = () => {
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
       <div className="flex items-center gap-3 p-3">
         <span className="text-base font-medium text-gray300">LIVE CHAT</span>
-        <div className='w-2 h-2 bg-[#A326D4] rounded-full' style={{
-          transform: "scale(1)",
-          animation: "2s ease 0s infinite normal none running animation-m10ze4"
-        }}></div>
+        <div
+          className="h-2 w-2 rounded-full bg-[#A326D4]"
+          style={{
+            transform: 'scale(1)',
+            animation:
+              '2s ease 0s infinite normal none running animation-m10ze4'
+          }}
+        ></div>
       </div>
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
@@ -182,8 +186,8 @@ const LiveChat = () => {
         </ScrollArea>
       </div>
       <div className="w-full bg-purple-0.15 px-2 text-gray-400">
-        <div className="flex flex-col">
-          <div className="flex w-full items-center gap-2">
+        <div className="flex h-full flex-col">
+          <div className="flex h-full w-full items-center gap-2">
             <Smile
               className={`cursor-pointer ${emojiIsOpened ? 'text-yellow' : ''}`}
               onClick={() => {
@@ -191,14 +195,13 @@ const LiveChat = () => {
               }}
             />
             <Input
-              placeholder="Type here"
-              className="!focus:ring-0 !focus:ring-offset-0 !focus:ring min-h-10 w-full resize-none overflow-hidden rounded-none !border-none !bg-transparent p-0 text-gray-400 !outline-none !ring-0 !ring-offset-0"
+              className="!focus:ring-0 !focus:ring-offset-0 !focus:ring w-full resize-none overflow-hidden rounded-none !border-none !bg-transparent p-0 text-gray-400 !outline-none !ring-0 !ring-offset-0"
               value={inputStr}
               onChange={(e) => {
                 setInputStr(e.target.value);
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && !e.shiftKey) {
                   sendMessage();
                   e.preventDefault();
                 }

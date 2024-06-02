@@ -469,3 +469,7 @@ export type Employee = {
   job: string;
   profile_picture?: string | null; // Profile picture can be a string (URL) or null (if no picture)
 };
+
+export const betMode = ['manual', 'auto'];
+export const multiplerArray = [1 / 2, 2, 4, 8];
+export const roundArray = [5, 10, 15, 20, 10000];

@@ -1,4 +1,4 @@
 export interface LeaderboardType {
-    coinflip: any;
-    crash: any
+  coinflip: any;
+  crash: any;
 }
