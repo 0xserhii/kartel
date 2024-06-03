@@ -471,5 +471,19 @@ export type Employee = {
 };
 
 export const betMode = ['manual', 'auto'];
+
 export const multiplerArray = [1 / 2, 2, 4, 8];
+
 export const roundArray = [5, 10, 15, 20, 10000];
+
+export const coinSide = ['tail', 'head'];
+
+export const coinFlipPresets = [
+  { value: "1:0", label: "custom", multiplier: "" },
+  { value: "10:5", label: "10:5 (x1.57)", multiplier: "x1.57" },
+  { value: "1:1", label: "1:1 (x1.96)", multiplier: "x1.96" },
+  { value: "4:3", label: "4:3 (x3.14)", multiplier: "x3.14" },
+  { value: "6:5", label: "6:5 (x8.96)", multiplier: "x8.96" },
+  { value: "9:8", label: "9:8 (x50.18)", multiplier: "x50.18" },
+  { value: "10:10", label: "10:10 (x1003.52)", multiplier: "x1003.52" }
+];
