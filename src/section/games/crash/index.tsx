@@ -123,8 +123,7 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      console.log(data)
-      if (data === "Autobet has been canceled. This will be applied on next bet.") {
+      if (data === "Autobet has been canceled, effective from the next round.") {
         setAutoBet(true);
       } else {
         setAutoBet(false);
@@ -211,181 +210,179 @@ export default function CrashGameSection() {
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="flex flex-col items-stretch gap-8">
-        <div className="flex flex-col items-stretch gap-6">
-          <div className="flex h-full w-full flex-row justify-between gap-6">
-            <div className="w-full">
-              <CrashBoard />
-              <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
-                <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
-                  <div className="flex flex-row items-center justify-between">
-                    <span className="text-lg uppercase text-gray-400">
-                      bet mode
-                    </span>
-                    <div className="flex flex-row items-center gap-3">
-                      {betMode.map((item, index) => (
-                        <Button
-                          className={cn(
-                            'min-h-full rounded-lg border border-[#1D1776] bg-[#151245] px-6 py-5 font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white',
-                            selectMode === item &&
-                            'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
-                          )}
-                          key={index}
-                          onClick={() => setSelectMode(item)}
-                        >
-                          {item}
-                        </Button>
-                      ))}
-                    </div>
+        <div className="flex h-full w-full flex-row justify-between gap-6">
+          <div className="w-full">
+            <CrashBoard />
+            <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
+              <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
+                <div className="flex flex-row items-center justify-between">
+                  <span className="text-lg uppercase text-gray-400">
+                    bet mode
+                  </span>
+                  <div className="flex flex-row items-center gap-3">
+                    {betMode.map((item, index) => (
+                      <Button
+                        className={cn(
+                          'min-h-full rounded-lg border border-[#1D1776] bg-[#151245] px-6 py-5 font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white',
+                          selectMode === item &&
+                          'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
+                        )}
+                        key={index}
+                        onClick={() => setSelectMode(item)}
+                      >
+                        {item}
+                      </Button>
+                    ))}
                   </div>
-                  <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-                    <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
-                      <div className='flex flex-row items-center justify-end'>
-                        <Button
-                          className="h-12 bg-[#A326D4] py-3 px-3 w-6/12 uppercase hover:bg-[#A326D4]"
-                          disabled={
-                            isAutoMode ? false : (
-                              (crashStatus !== ECrashStatus.PREPARE &&
-                                !avaliableBet) ||
-                              (crashStatus !== ECrashStatus.PROGRESS &&
-                                avaliableBet))
-                          }
-                          onClick={isAutoMode ? handleAutoBet : handleStartBet}
-                        >
-                          {isAutoMode
-                            ? autoBet
-                              ? 'Auto Bet'
-                              : 'Cancel'
-                            : avaliableBet
-                              ? 'Cash Out'
-                              : 'Place Bet'}
-                        </Button>
+                </div>
+                <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
+                  <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
+                    <div className='flex flex-row items-center justify-end'>
+                      <Button
+                        className="h-12 bg-[#A326D4] py-3 px-3 w-6/12 uppercase hover:bg-[#A326D4]"
+                        disabled={
+                          isAutoMode ? false : (
+                            (crashStatus !== ECrashStatus.PREPARE &&
+                              !avaliableBet) ||
+                            (crashStatus !== ECrashStatus.PROGRESS &&
+                              avaliableBet))
+                        }
+                        onClick={isAutoMode ? handleAutoBet : handleStartBet}
+                      >
+                        {isAutoMode
+                          ? autoBet
+                            ? 'Auto Bet'
+                            : 'Cancel'
+                          : avaliableBet
+                            ? 'Cash Out'
+                            : 'Place Bet'}
+                      </Button>
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      <p className="text-sm uppercase text-[#556987] w-6/12">
+                        bet amount
+                      </p>
+                      <div className="relative">
+                        <Input
+                          type='number'
+                          value={betAmount}
+                          onChange={handleBetAmountChange}
+                          className="border border-purple-0.5 text-white placeholder:text-gray-700"
+                        />
+                        <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <div className="flex cursor-pointer items-center gap-2 uppercase">
+                                <img
+                                  src={selectedToken.src}
+                                  className="h-4 w-4"
+                                />
+                                {selectedToken.name}
+                              </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-12 border-purple-0.5 bg-[#0D0B32CC]">
+                              <DropdownMenuRadioGroup
+                                value={selectedToken.name}
+                                onValueChange={(value) => {
+                                  const newToken = token.find(
+                                    (t) => t.name === value
+                                  );
+                                  if (newToken) {
+                                    setSelectedToken(newToken);
+                                  }
+                                }}
+                              >
+                                {token.map((t, index) => (
+                                  <DropdownMenuRadioItem
+                                    key={index}
+                                    value={t.name}
+                                    className="gap-5 uppercase text-white hover:bg-transparent"
+                                  >
+                                    <img src={t.src} className="h-4 w-4" />
+                                    {t.name}
+                                  </DropdownMenuRadioItem>
+                                ))}
+                              </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </span>
                       </div>
-                      <div className="flex flex-col gap-4">
-                        <p className="text-sm uppercase text-[#556987] w-6/12">
-                          bet amount
-                        </p>
-                        <div className="relative">
-                          <Input
-                            type='number'
-                            value={betAmount}
-                            onChange={handleBetAmountChange}
-                            className="border border-purple-0.5 text-white placeholder:text-gray-700"
-                          />
-                          <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <div className="flex cursor-pointer items-center gap-2 uppercase">
-                                  <img
-                                    src={selectedToken.src}
-                                    className="h-4 w-4"
-                                  />
-                                  {selectedToken.name}
-                                </div>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className="w-12 border-purple-0.5 bg-[#0D0B32CC]">
-                                <DropdownMenuRadioGroup
-                                  value={selectedToken.name}
-                                  onValueChange={(value) => {
-                                    const newToken = token.find(
-                                      (t) => t.name === value
-                                    );
-                                    if (newToken) {
-                                      setSelectedToken(newToken);
-                                    }
-                                  }}
-                                >
-                                  {token.map((t, index) => (
-                                    <DropdownMenuRadioItem
-                                      key={index}
-                                      value={t.name}
-                                      className="gap-5 uppercase text-white hover:bg-transparent"
-                                    >
-                                      <img src={t.src} className="h-4 w-4" />
-                                      {t.name}
-                                    </DropdownMenuRadioItem>
-                                  ))}
-                                </DropdownMenuRadioGroup>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </span>
+                      <div className="grid grid-cols-4 space-x-3">
+                        {multiplerArray.map((item, index) => (
+                          <Button
+                            className="rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white"
+                            key={index}
+                            onClick={() => handleMultiplierClick(item)}
+                          >
+                            {item + 'x'}
+                          </Button>
+                        ))}
+                      </div>
+                      {!isAutoMode && (
+                        <div className="flex flex-col justify-between gap-2">
+                          <div className="flex flex-row items-center justify-start gap-2">
+                            <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
+                            <span className="text-white">
+                              Auto Cashout
+                            </span>
+                          </div>
+                          <div className="flex w-full items-center justify-center gap-1">
+                            <Slider
+                              className={`w-10/12 ${!avaliableAutoCashout && 'opacity-35'}`}
+                              disabled={!avaliableAutoCashout}
+                              step={0.05}
+                              max={100}
+                              min={1}
+                              defaultValue={[autoCashoutAmount]}
+                              onValueChange={(value) =>
+                                setAutoCashoutAmount(value[0])
+                              }
+                            />
+                            <span className="w-2/12 text-end text-white">
+                              {autoCashoutAmount + "x"}
+                            </span>
+                          </div>
                         </div>
-                        <div className="grid grid-cols-4 space-x-3">
-                          {multiplerArray.map((item, index) => (
-                            <Button
-                              className="rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white"
-                              key={index}
-                              onClick={() => handleMultiplierClick(item)}
-                            >
-                              {item + 'x'}
-                            </Button>
-                          ))}
-                        </div>
-                        {!isAutoMode && (
-                          <div className="flex flex-col justify-between gap-2">
-                            <div className="flex flex-row items-center justify-start gap-2">
-                              <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
-                              <span className="text-white">
-                                Auto Cashout
-                              </span>
-                            </div>
-                            <div className="flex w-full items-center justify-center gap-1">
-                              <Slider
-                                className={`w-10/12 ${!avaliableAutoCashout && 'opacity-35'}`}
-                                disabled={!avaliableAutoCashout}
-                                step={0.05}
-                                max={100}
-                                min={1}
-                                defaultValue={[autoCashoutAmount]}
-                                onValueChange={(value) =>
-                                  setAutoCashoutAmount(value[0])
-                                }
+                      )}
+                      {isAutoMode && (
+                        <>
+                          <div className="flex w-full">
+                            <div className="relative w-full">
+                              <Input
+                                type='number'
+                                value={autoCashoutPoint}
+                                onChange={handleAutoCashoutPointChange}
+                                min={1.05}
+                                max={1000}
+                                className="w-full border border-purple-0.5 text-white placeholder:text-gray-700"
                               />
-                              <span className="w-2/12 text-end text-white">
-                                {autoCashoutAmount + "x"}
+                              <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                                Cashout
                               </span>
                             </div>
                           </div>
-                        )}
-                        {isAutoMode && (
-                          <>
-                            <div className="flex w-full">
-                              <div className="relative w-full">
-                                <Input
-                                  type='number'
-                                  value={autoCashoutPoint}
-                                  onChange={handleAutoCashoutPointChange}
-                                  min={1.05}
-                                  max={1000}
-                                  className="w-full border border-purple-0.5 text-white placeholder:text-gray-700"
-                                />
-                                <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
-                                  Cashout
-                                </span>
-                              </div>
-                            </div>
-                            <div className="grid grid-cols-5 space-x-3">
-                              {roundArray.map((item, index) => (
-                                <Button
-                                  className={`rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white ${round === item ? 'bg-[#A326D4] text-white' : ''}`}
-                                  key={index}
-                                  onClick={() => setRound(item)}
-                                >
-                                  {item === 10000 ? '∞' : item}
-                                </Button>
-                              ))}
-                            </div>
-                          </>
-                        )}
-                      </div>
+                          <div className="grid grid-cols-5 space-x-3">
+                            {roundArray.map((item, index) => (
+                              <Button
+                                className={`rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white ${round === item ? 'bg-[#A326D4] text-white' : ''}`}
+                                key={index}
+                                onClick={() => setRound(item)}
+                              >
+                                {item === 10000 ? '∞' : item}
+                              </Button>
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
-                  </Card>
-                </div>
-                <BetBoard
-                  betData={betData}
-                  betCashout={betCashout}
-                  totalAmount={totalAmount}
-                />
+                  </div>
+                </Card>
               </div>
+              <BetBoard
+                betData={betData}
+                betCashout={betCashout}
+                totalAmount={totalAmount}
+              />
             </div>
           </div>
         </div>

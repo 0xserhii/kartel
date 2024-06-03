@@ -9,7 +9,8 @@ const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const Home = lazy(() => import('@/pages/main/home'));
 const Leaderboard = lazy(() => import('@/pages/main/leader-board'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
-const CrashGames = lazy(() => import('@/pages/games/crash'));
+const CrashGame = lazy(() => import('@/pages/games/crash'));
+const CoinFlipGame = lazy(() => import('@/pages/games/coin-flip'));
 
 // ----------------------------------------------------------------------
 
@@ -39,39 +40,39 @@ export default function AppRouter() {
         },
         {
           path: '/crash',
-          element: <CrashGames />
+          element: <CrashGame />
         },
         {
           path: '/coin-flip',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/mines',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/slots',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/coin-flip-mini',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/roulette',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/hourse-racing',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/settings',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         },
         {
           path: '/help-support',
-          element: <CrashGames />
+          element: <CoinFlipGame />
         }
       ]
     }
