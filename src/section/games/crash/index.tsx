@@ -237,10 +237,10 @@ export default function CrashGameSection() {
                     </div>
                   </div>
                   <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-                    <div className="flex h-full w-full flex-col gap-8 rounded-lg bg-[#0D0B32CC] p-8">
-                      <div className='flex flex-row items-center justify-center'>
+                    <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
+                      <div className='flex flex-row items-center justify-end'>
                         <Button
-                          className="h-12 bg-[#A326D4] py-5 w-6/12 uppercase hover:bg-[#A326D4]"
+                          className="h-12 bg-[#A326D4] py-3 px-3 w-6/12 uppercase hover:bg-[#A326D4]"
                           disabled={
                             isAutoMode ? false : (
                               (crashStatus !== ECrashStatus.PREPARE &&
@@ -329,7 +329,7 @@ export default function CrashGameSection() {
                             </div>
                             <div className="flex w-full items-center justify-center gap-1">
                               <Slider
-                                className={`w-11/12 ${!avaliableAutoCashout && 'opacity-35'}`}
+                                className={`w-10/12 ${!avaliableAutoCashout && 'opacity-35'}`}
                                 disabled={!avaliableAutoCashout}
                                 step={0.01}
                                 max={100}
@@ -339,7 +339,7 @@ export default function CrashGameSection() {
                                   setAutoCashoutAmount(value[0])
                                 }
                               />
-                              <span className="w-1/12 text-end text-white">
+                              <span className="w-2/12 text-end text-white">
                                 {autoCashoutAmount + "x"}
                               </span>
                             </div>
