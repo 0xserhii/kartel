@@ -238,12 +238,9 @@ export default function CrashGameSection() {
                   </div>
                   <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                     <div className="flex h-full w-full flex-col gap-8 rounded-lg bg-[#0D0B32CC] p-8">
-                      <div className='flex flex-row items-center'>
-                        <p className="text-md font-semibold uppercase text-[#556987] w-6/12">
-                          bet amount
-                        </p>
+                      <div className='flex flex-row items-center justify-center'>
                         <Button
-                          className="h-12 w-6/12 bg-[#A326D4] py-5 uppercase hover:bg-[#A326D4]"
+                          className="h-12 bg-[#A326D4] py-5 w-6/12 uppercase hover:bg-[#A326D4]"
                           disabled={
                             isAutoMode ? false : (
                               (crashStatus !== ECrashStatus.PREPARE &&
@@ -262,7 +259,10 @@ export default function CrashGameSection() {
                               : 'Place Bet'}
                         </Button>
                       </div>
-                      <div className="flex flex-col gap-6">
+                      <div className="flex flex-col gap-4">
+                        <p className="text-sm uppercase text-[#556987] w-6/12">
+                          bet amount
+                        </p>
                         <div className="relative">
                           <Input
                             type='number'
