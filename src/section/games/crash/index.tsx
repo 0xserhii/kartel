@@ -88,9 +88,10 @@ export default function CrashGameSection() {
   const handleStartBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
       const joinParams = {
-        target: 100000,
+        target: avaliableAutoCashout ? Number(autoCashoutAmount) * 100 : 1000000,
         betAmount: Number(betAmount).valueOf(),
         denom: selectedToken.name
+
       };
       socket?.emit('join-crash-game', joinParams);
     }
@@ -331,7 +332,7 @@ export default function CrashGameSection() {
                               <Slider
                                 className={`w-10/12 ${!avaliableAutoCashout && 'opacity-35'}`}
                                 disabled={!avaliableAutoCashout}
-                                step={0.01}
+                                step={0.05}
                                 max={100}
                                 min={1}
                                 defaultValue={[autoCashoutAmount]}
