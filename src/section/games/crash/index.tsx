@@ -1,11 +1,10 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import CrashBoard from './board';
+import { Card } from '@/components/ui/card';
+import CrashBoard from './car-board';
 import { Socket, io } from 'socket.io-client';
 import {
   DropdownMenu,
@@ -16,43 +15,49 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
 import { BetType, FormattedPlayerBetType } from '@/types';
-import {
-  ICrashClientToServerEvents,
-  ICrashServerToClientEvents
-} from '@/types/crash';
+import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/routes/hooks/use-toast';
+import BetBoard from './bet-board';
+import { multiplerArray, betMode, roundArray } from '@/constants/data';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export interface IToken {
   name: string;
   src: string;
-  denom: string
-};
+  denom: string;
+}
 
 export const token: Array<IToken> = [
   { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'ukuji' },
-  { name: 'usk', src: '/assets/tokens/usk.png', denom: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk' }
+  {
+    name: 'usk',
+    src: '/assets/tokens/usk.png',
+    denom: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
+  }
 ];
 
-const betMode = ['manual', 'auto'];
-const MultiplerArray = [1 / 2, 2, 4, 8];
-
 export default function CrashGameSection() {
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const toast = useToast();
   const [selectedToken, setSelectedToken] = useState(token[0]);
-  const [selectMode, setSelectMode] = useState(betMode[0]);
   const [betData, setBetData] = useState<BetType[]>([]);
-  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const [betAmount, setBetAmount] = useState(0);
+  const [autoCashoutPoint, setAutoCashoutPoint] = useState(1.05);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [betCashout, setBetCashout] = useState<BetType[]>([]);
-  // const [betPlayer, setBetPlayer] = useState<FormattedPlayerBetType | null>(null)
   const [avaliableBet, setAvaliableBet] = useState(false);
+  const [autoBet, setAutoBet] = useState(true);
+  const [autoCashoutAmount, setAutoCashoutAmount] = useState(1);
   const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
     ECrashStatus.PREPARE
   );
   const [totalAmount, setTotalAmount] = useState<any>();
+  const [round, setRound] = useState(roundArray[0]);
+  const [selectMode, setSelectMode] = useState(betMode[0]);
+  const [avaliableAutoCashout, setAvaliableAutoCashout] = useState<boolean>(false);
+  const isAutoMode = selectMode === 'auto';
 
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
@@ -66,6 +71,13 @@ export default function CrashGameSection() {
     } else if (inputValue === '') {
       setBetAmount(0);
     }
+  };
+
+  const handleAutoCashoutPointChange = (event) => {
+    const inputValue = event.target.value;
+    if (inputValue === '') {
+      setAutoCashoutPoint(0);
+    } else setAutoCashoutPoint(inputValue);
   };
 
   const handleMultiplierClick = (multiplier) => {
@@ -87,6 +99,41 @@ export default function CrashGameSection() {
       socket?.emit('bet-cashout');
     }
   };
+
+  const handleAutoBet = async () => {
+    if (autoBet) {
+      if (betAmount > 0) {
+        const joinParams = {
+          cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
+          count: Number(round).valueOf(),
+          betAmount: Number(betAmount).valueOf(),
+          denom: selectedToken.name
+        };
+        socket?.emit('auto-crashgame-bet', joinParams);
+      } else {
+        setAutoBet(false);
+      }
+    } else {
+      setAutoBet(true);
+      socket?.emit('cancel-auto-bet');
+    }
+  };
+
+  useEffect(() => {
+    const handleJoinSuccess = (data) => {
+      toast.success(data);
+      console.log(data)
+      if (data === "Autobet has been canceled. This will be applied on next bet.") {
+        setAutoBet(true);
+      } else {
+        setAutoBet(false);
+      }
+    };
+    socket?.on('auto-crashgame-join-success', handleJoinSuccess);
+    return () => {
+      socket?.off('auto-crashgame-join-success', handleJoinSuccess);
+    }
+  }, [socket, toast]);
 
   useEffect(() => {
     const crashSocket: Socket<
@@ -170,9 +217,9 @@ export default function CrashGameSection() {
               <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
                 <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
                   <div className="flex flex-row items-center justify-between">
-                    <h5 className="text-xl font-semibold uppercase text-gray-400">
+                    <span className="text-lg uppercase text-gray-400">
                       bet mode
-                    </h5>
+                    </span>
                     <div className="flex flex-row items-center gap-3">
                       {betMode.map((item, index) => (
                         <Button
@@ -191,12 +238,34 @@ export default function CrashGameSection() {
                   </div>
                   <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                     <div className="flex h-full w-full flex-col gap-8 rounded-lg bg-[#0D0B32CC] p-8">
-                      <div className="flex flex-col gap-6">
-                        <p className="text-md font-semibold uppercase text-[#556987]">
+                      <div className='flex flex-row items-center'>
+                        <p className="text-md font-semibold uppercase text-[#556987] w-6/12">
                           bet amount
                         </p>
+                        <Button
+                          className="h-12 w-6/12 bg-[#A326D4] py-5 uppercase hover:bg-[#A326D4]"
+                          disabled={
+                            isAutoMode ? false : (
+                              (crashStatus !== ECrashStatus.PREPARE &&
+                                !avaliableBet) ||
+                              (crashStatus !== ECrashStatus.PROGRESS &&
+                                avaliableBet))
+                          }
+                          onClick={isAutoMode ? handleAutoBet : handleStartBet}
+                        >
+                          {isAutoMode
+                            ? autoBet
+                              ? 'Auto Bet'
+                              : 'Cancel'
+                            : avaliableBet
+                              ? 'Cash Out'
+                              : 'Place Bet'}
+                        </Button>
+                      </div>
+                      <div className="flex flex-col gap-6">
                         <div className="relative">
                           <Input
+                            type='number'
                             value={betAmount}
                             onChange={handleBetAmountChange}
                             className="border border-purple-0.5 text-white placeholder:text-gray-700"
@@ -240,7 +309,7 @@ export default function CrashGameSection() {
                           </span>
                         </div>
                         <div className="grid grid-cols-4 space-x-3">
-                          {MultiplerArray.map((item, index) => (
+                          {multiplerArray.map((item, index) => (
                             <Button
                               className="rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white"
                               key={index}
@@ -250,153 +319,71 @@ export default function CrashGameSection() {
                             </Button>
                           ))}
                         </div>
-                        <div className="flex flex-row justify-between gap-2">
-                          <span className="w-4/12 text-white">
-                            Auto Cashout
-                          </span>
-                          <Slider
-                            className="w-8/12"
-                            step={1}
-                            max={10}
-                            min={1}
-                            defaultValue={[8]}
-                          />
-                        </div>
-                      </div>
-                      <Button
-                        className="h-12 w-full bg-[#A326D4] py-5 uppercase hover:bg-[#A326D4]"
-                        disabled={
-                          (crashStatus !== ECrashStatus.PREPARE &&
-                            !avaliableBet) ||
-                          (crashStatus !== ECrashStatus.PROGRESS &&
-                            avaliableBet)
-                        }
-                        onClick={handleStartBet}
-                      >
-                        {avaliableBet ? 'Cash Out' : 'Place bet'}
-                      </Button>
-                    </div>
-                  </Card>
-                </div>
-                <div className="flex h-full w-full flex-col gap-5 md:w-7/12">
-                  <div className="flex flex-row items-center justify-between py-1.5">
-                    <h5 className="text-xl font-semibold uppercase text-gray-400">
-                      {betData.length} players
-                    </h5>
-                    <div className="flex flex-row gap-10">
-                      <span className="flex flex-row items-center gap-2">
-                        <img src="/assets/tokens/usk.png" className="h-6 w-6" />
-                        <p className="text-xl font-semibold text-[#049DD9]">
-                          {totalAmount?.usk.toFixed(3) ?? "0.000"}
-                        </p>
-                      </span>
-                      <span className="flex flex-row items-center gap-2">
-                        <img
-                          src="/assets/tokens/kuji.png"
-                          className="h-6 w-6"
-                        />
-                        <p className="text-xl font-semibold text-[#049DD9]">
-                          {totalAmount?.kuji.toFixed(3) ?? "0.000"}
-                        </p>
-                      </span>
-                    </div>
-                  </div>
-                  <Card className=" border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-                    <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
-                      <Table className="w-full table-fixed">
-                        <TableBody>
-                          <TableRow className="!bg-transparent">
-                            <TableCell className="w-6/12 text-start">
-                              User
-                            </TableCell>
-                            <TableCell className="w-1/6">Cash Out</TableCell>
-                            <TableCell className="w-1/6 text-center">
-                              Bet Amount
-                            </TableCell>
-                            <TableCell className="w-1/6 text-center">
-                              Profit
-                            </TableCell>
-                          </TableRow>
-                        </TableBody>
-                      </Table>
-                    </CardHeader>
-                    <CardContent className="px-2 py-0">
-                      <ScrollArea className="h-[280px] px-5 py-3">
-                        <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-y-hidden ">
-                          <TableBody>
-                            {betData
-                              ?.sort((a, b) => b.betAmount - a.betAmount)
-                              .map((player, index) => (
-                                <TableRow
+                        {!isAutoMode && (
+                          <div className="flex flex-col justify-between gap-2">
+                            <div className="flex flex-row items-center justify-start gap-2">
+                              <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
+                              <span className="text-white">
+                                Auto Cashout
+                              </span>
+                            </div>
+                            <div className="flex w-full items-center justify-center gap-1">
+                              <Slider
+                                className={`w-11/12 ${!avaliableAutoCashout && 'opacity-35'}`}
+                                disabled={!avaliableAutoCashout}
+                                step={0.01}
+                                max={100}
+                                min={1}
+                                defaultValue={[autoCashoutAmount]}
+                                onValueChange={(value) =>
+                                  setAutoCashoutAmount(value[0])
+                                }
+                              />
+                              <span className="w-1/12 text-end text-white">
+                                {autoCashoutAmount + "x"}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        {isAutoMode && (
+                          <>
+                            <div className="flex w-full">
+                              <div className="relative w-full">
+                                <Input
+                                  type='number'
+                                  value={autoCashoutPoint}
+                                  onChange={handleAutoCashoutPointChange}
+                                  min={1.05}
+                                  max={1000}
+                                  className="w-full border border-purple-0.5 text-white placeholder:text-gray-700"
+                                />
+                                <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                                  Cashout
+                                </span>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-5 space-x-3">
+                              {roundArray.map((item, index) => (
+                                <Button
+                                  className={`rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white ${round === item ? 'bg-[#A326D4] text-white' : ''}`}
                                   key={index}
-                                  className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
+                                  onClick={() => setRound(item)}
                                 >
-                                  <TableCell className="w-1/2">
-                                    <div className="flex items-center gap-2">
-                                      <img
-                                        src="/assets/icons/avatar.png"
-                                        alt="User"
-                                        className="h-8 w-8 rounded-full"
-                                      />
-                                      <span>{player.username}</span>
-                                    </div>
-                                  </TableCell>
-                                  <TableCell className="w-1/6 text-center">
-                                    {(betCashout?.find(
-                                      (item) =>
-                                        item.playerID === player.playerID
-                                    )?.stoppedAt &&
-                                      (
-                                        (betCashout?.find(
-                                          (item) =>
-                                            item.playerID === player.playerID
-                                        )?.stoppedAt ?? 0) / 100
-                                      ).toFixed(2) + 'x') ||
-                                      'betting'}
-                                  </TableCell>
-                                  <TableCell className="w-1/6 text-center">
-                                    <div className="flex w-full flex-row items-center justify-center gap-1 text-center">
-                                      <img
-                                        src={`/assets/tokens/${player.denom}.png`}
-                                        alt="Multiplier"
-                                        className="h-4 w-4"
-                                      />
-                                      {player.betAmount}
-                                    </div>
-                                  </TableCell>
-                                  <TableCell className="w-1/6 text-center">
-                                    {betCashout?.find(
-                                      (item) =>
-                                        item.playerID === player.playerID
-                                    )?.stoppedAt ? (
-                                      <div className="flex flex-row items-center justify-center gap-1">
-                                        <img
-                                          src={`/assets/tokens/${betCashout.find((item) => item.playerID === player.playerID)?.denom}.png`}
-                                          alt="Multiplier"
-                                          className="h-4 w-4"
-                                        />
-                                        {(
-                                          ((betCashout?.find(
-                                            (item) =>
-                                              item.playerID === player.playerID
-                                          )?.stoppedAt ?? 0) /
-                                            100) *
-                                          player.betAmount
-                                        ).toFixed(2)}
-                                      </div>
-                                    ) : (
-                                      <span>betting</span>
-                                    )}
-                                  </TableCell>
-                                </TableRow>
+                                  {item === 10000 ? '∞' : item}
+                                </Button>
                               ))}
-                          </TableBody>
-                        </Table>
-                        <ScrollBar orientation="horizontal" />
-                      </ScrollArea>
-                    </CardContent>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   </Card>
                 </div>
+                <BetBoard
+                  betData={betData}
+                  betCashout={betCashout}
+                  totalAmount={totalAmount}
+                />
               </div>
             </div>
           </div>

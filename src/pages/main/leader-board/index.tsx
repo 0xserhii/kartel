@@ -7,14 +7,28 @@ import PlayText from '/assets/play-text.svg';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
-import { scores } from '@/constants/data';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
-import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from '@/types/leader';
+import {
+  ILeaderboardClientToServerEvents,
+  ILeaderboardServerToClientEvents
+} from '@/types/leader';
+import { LeaderboardType } from '@/types/leaderboard';
+
+interface ILeaderType {
+  _id: string;
+  username: string;
+  rank: number;
+  hasVerifiedAccount: boolean;
+  createdAt: string;
+  leaderboard: LeaderboardType;
+}
 
 export default function Leaderboard() {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+  const [leaderboards, setLeaderboards] = useState<ILeaderType[]>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const leaderBoardSocket: Socket<
@@ -23,7 +37,10 @@ export default function Leaderboard() {
     > = io(`${SERVER_URL}/leaderboard`);
 
     leaderBoardSocket.on('leaderboard-fetch-all', (data) => {
-      console.log(data);
+      if (data.leaderboard?.crash) {
+        setLoading(false);
+        setLeaderboards(data.leaderboard?.crash);
+      }
     });
 
     return () => {
@@ -60,57 +77,79 @@ export default function Leaderboard() {
             <Table className="w-full table-fixed">
               <TableBody>
                 <TableRow className="!bg-transparent">
-                  <TableCell className="w-1/12 text-center">No.</TableCell>
-                  <TableCell className="w-1/2">User</TableCell>
-                  <TableCell className="w-1/6 text-center">Time</TableCell>
-                  <TableCell className="w-1/6 text-center">
+                  <TableCell className="w-3/12 text-center">No.</TableCell>
+                  <TableCell className="w-3/12">User</TableCell>
+                  <TableCell className="w-3/12 text-center">
                     Bet Amount
                   </TableCell>
-                  <TableCell className="w-1/6 text-center">Score</TableCell>
+                  <TableCell className="w-3/12 text-center">
+                    Win Amount
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </CardHeader>
-          <CardContent className="px-2 py-0">
-            <ScrollArea className="h-88 px-5 py-3">
-              <Table className="relative table-fixed border-separate border-spacing-y-3">
-                <TableBody>
-                  {scores.map((score, index) => (
-                    <TableRow
-                      key={index}
-                      className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
-                    >
-                      <TableCell className="w-1/12 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          {score.rank <= 3 && (
-                            <img src="/assets/win-icon.svg" />
-                          )}
-                          {score.rank}
-                        </div>
-                      </TableCell>
-                      <TableCell className="w-1/2">
-                        <div className="flex items-center gap-2">
-                          <span>{score.name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="w-1/6 text-center">
-                        {score.time}
-                      </TableCell>
-                      <TableCell className="w-1/6 text-center">
-                        ${score.betAmount}
-                      </TableCell>
-                      <TableCell className="w-1/6">
-                        <div className="flex items-center justify-center gap-1">
-                          <img src="/assets/score-icon.svg" alt="score flag" />
-                          {score.score}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
+          <CardContent
+            className={`px-2 py-0 ${loading ? 'h-[536px] opacity-50' : ''}`}
+          >
+            {loading ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <div className="small-loading">
+                  <svg viewBox="10 10 20 20">
+                    <circle r="7" cy="20" cx="20"></circle>
+                  </svg>
+                </div>
+              </div>
+            ) : (
+              <ScrollArea className="h-88 px-5 py-3">
+                <Table className="relative table-fixed border-separate border-spacing-y-3">
+                  <TableBody>
+                    {leaderboards?.map((score, index) => {
+                      return (
+                        <TableRow
+                          key={index}
+                          className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
+                        >
+                          <TableCell className="w-3/12 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              {index + 1 <= 3 && (
+                                <img
+                                  src={`/assets/medal/top${index + 1}.svg`}
+                                  className="h-5 w-5"
+                                />
+                              )}
+                              <span>{index + 1}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="w-3/12">
+                            <div className="flex items-center gap-2">
+                              <span>{score.username}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="w-3/12 text-center">
+                            {Number(
+                              (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
+                                (score.leaderboard?.crash?.kuji?.betAmount ?? 0)
+                            ).toFixed(2)}
+                          </TableCell>
+                          <TableCell className="w-3/12">
+                            <div className="flex items-center justify-center gap-1">
+                              {Number(
+                                (score.leaderboard?.crash?.usk?.winAmount ??
+                                  0) +
+                                  (score.leaderboard?.crash?.kuji?.winAmount ??
+                                    0)
+                              ).toFixed(2)}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            )}
           </CardContent>
         </Card>
 
@@ -126,11 +165,11 @@ export default function Leaderboard() {
               alt="Crash Title"
               className="absolute right-2 top-2 mt-auto"
             />
-            <Link to='/crash'>
+            <Link to="/crash">
               <img
                 src={PlayText}
                 alt="Play Text"
-                className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3] cursor-pointer"
+                className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
               />
             </Link>
           </div>
@@ -151,7 +190,7 @@ export default function Leaderboard() {
             <img
               src={PlayText}
               alt="Play Text  "
-              className="absolute bottom-4 left-7 mt-auto shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3] cursor-pointer"
+              className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
             />
           </div>
         </TabsContent>

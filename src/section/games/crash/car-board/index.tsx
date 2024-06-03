@@ -108,7 +108,7 @@ const CrashBoard = () => {
   }, [crashStatus]);
 
   return (
-    <div className="relative h-[596px] w-full rounded-md">
+    <div className="relative h-[496px] w-full rounded-md">
       <video
         className="crash-moving-bg-video rounded-xl object-fill"
         autoPlay
@@ -120,25 +120,24 @@ const CrashBoard = () => {
       >
         <source src={MovingBackgroundVideo} type="video/mp4" />
       </video>
-
       {(crashStatus === ECrashStatus.PROGRESS ||
         crashStatus === ECrashStatus.END) && (
-          <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-            <div
-              className={cn(
-                'text-6xl font-extrabold text-white',
-                crashStatus === ECrashStatus.END && 'crashed-value'
-              )}
-            >
-              X<GrowingNumber start={crTick.prev} end={crTick.cur} />
-            </div>
-            <div className="font-semibold text-[#f5b95a]">
-              {crashStatus === ECrashStatus.PROGRESS
-                ? 'CURRENT PAYOUT'
-                : 'ROUND OVER'}
-            </div>
+        <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+          <div
+            className={cn(
+              'text-6xl font-extrabold text-white',
+              crashStatus === ECrashStatus.END && 'crashed-value'
+            )}
+          >
+            X<GrowingNumber start={crTick.prev} end={crTick.cur} />
           </div>
-        )}
+          <div className="font-semibold text-[#f5b95a]">
+            {crashStatus === ECrashStatus.PROGRESS
+              ? 'CURRENT PAYOUT'
+              : 'ROUND OVER'}
+          </div>
+        </div>
+      )}
       {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
         <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
           <div className="text-xl font-semibold uppercase text-white">
@@ -151,20 +150,20 @@ const CrashBoard = () => {
       )}
       {(crashStatus === ECrashStatus.PROGRESS ||
         crashStatus === ECrashStatus.END) && (
-          <div className="crash-car car-moving absolute bottom-16">
-            <img
-              src={
-                crashStatus === ECrashStatus.PROGRESS
-                  ? '/assets/games/crash/moving_car.gif'
-                  : '/assets/games/crash/explosion.gif'
-              }
-              className={cn(
-                crashStatus === ECrashStatus.PROGRESS ? 'w-64' : 'w-96'
-              )}
-              alt="crash-car"
-            />
-          </div>
-        )}
+        <div className="crash-car car-moving absolute bottom-16">
+          <img
+            src={
+              crashStatus === ECrashStatus.PROGRESS
+                ? '/assets/games/crash/moving_car.gif'
+                : '/assets/games/crash/explosion.gif'
+            }
+            className={cn(
+              crashStatus === ECrashStatus.PROGRESS ? 'w-64' : 'w-96'
+            )}
+            alt="crash-car"
+          />
+        </div>
+      )}
       {crashStatus === ECrashStatus.NONE && (
         <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
           <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">

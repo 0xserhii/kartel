@@ -5,7 +5,7 @@ import Header from '../shared/header';
 import MobileSidebar from '../shared/mobile-sidebar';
 import MobileLivechat from '../shared/mobile-livechat';
 import LiveChat from '../shared/live-chat';
-
+import { useOpen } from '@/provider/chat-provider';
 export default function DashboardLayout({
   children
 }: {
@@ -13,6 +13,7 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [liveChatOpen, setLiveChatOpen] = useState<boolean>(false);
+  const { open } = useOpen();
 
   return (
     <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
@@ -34,12 +35,12 @@ export default function DashboardLayout({
           <Header />
         </div>
         <main className="flex flex-row justify-between focus:outline-none">
-          <div className="flex-1">{children}</div>
+          <div className="flex-1" >{children}</div>
           <MobileLivechat
             livechatOpen={liveChatOpen}
             setLivechatOpen={setLiveChatOpen}
           />
-          <div className="hidden shadow-lg shadow-purple-0.15 lg:block">
+          <div className={`shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out transform ${open ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'} ${!open ? 'hidden' : ''}`}>
             <LiveChat />
           </div>
           <MessageSquareText

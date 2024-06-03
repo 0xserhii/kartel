@@ -1,4 +1,8 @@
-import { AccountData, DirectSecp256k1HdWallet, EncodeObject } from '@cosmjs/proto-signing';
+import {
+  AccountData,
+  DirectSecp256k1HdWallet,
+  EncodeObject
+} from '@cosmjs/proto-signing';
 import {
   Coin,
   DeliverTxResponse,
@@ -79,8 +83,8 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => { },
-  disconnect: () => { },
+  connect: async () => {},
+  disconnect: () => {},
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
@@ -90,10 +94,10 @@ const Context = createContext<IWallet>({
     throw new Error('Not Implemented');
   },
   delegations: null,
-  refreshBalances: () => { },
-  refreshDelegations: () => { },
+  refreshBalances: () => {},
+  refreshDelegations: () => {},
   feeDenom: 'ukuji',
-  setFeeDenom: () => { },
+  setFeeDenom: () => {},
   chainInfo: {} as ChainInfo,
   adapter: null
 });
@@ -159,9 +163,9 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           setBalances((prev) =>
             b.denom
               ? {
-                ...prev,
-                [b.denom]: BigNumber.from(b.amount)
-              }
+                  ...prev,
+                  [b.denom]: BigNumber.from(b.amount)
+                }
               : prev
           );
         });
@@ -230,32 +234,33 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     return res;
   };
 
-
   const broadcastWithPK = async (
     rpc: string,
     msgs: EncodeObject[],
     memo?: string
   ): Promise<DeliverTxResponse> => {
     if (!wallet) throw new Error('No Wallet Connected');
-    const mnemonic = 'climb merge income bachelor donor direct cheese nature yard fox enhance pepper';
+    const mnemonic =
+      'climb merge income bachelor donor direct cheese nature yard fox enhance pepper';
 
     const signer = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
-      prefix: "kujira",
+      prefix: 'kujira'
     });
 
     const [account] = await signer.getAccounts();
-    const client = await SigningStargateClient.connectWithSigner(
-      rpc,
-      signer,
-      {
-        registry,
-        gasPrice: GasPrice.fromString("0.034ukuji"),
-      }
+    const client = await SigningStargateClient.connectWithSigner(rpc, signer, {
+      registry,
+      gasPrice: GasPrice.fromString('0.034ukuji')
+    });
+    const res = await client.signAndBroadcast(
+      account.address,
+      msgs,
+      'auto',
+      memo
     );
-    const res = await client.signAndBroadcast(account.address, msgs, "auto", memo);
     assertIsDeliverTxSuccess(res);
     return res;
-  }
+  };
 
   const sonarRequest = (uri: string) => {
     console.log(uri);

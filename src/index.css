@@ -10,6 +10,19 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b34a766;
+  border-radius: 10px;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -155,7 +168,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.Toastify__toast>button>svg {
+.Toastify__toast > button > svg {
   display: none;
 }
 
@@ -188,7 +201,7 @@ input::-webkit-inner-spin-button {
   }
 
   30% {
-    left: 55%;
+    left: 60%;
   }
 
   100% {
@@ -253,7 +266,6 @@ input::-webkit-inner-spin-button {
     stroke-dashoffset: -125px;
   }
 }
-
 
 @keyframes animation-m10ze4 {
   0% {

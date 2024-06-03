@@ -4,7 +4,7 @@ import useRootStore from '@/store/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { Input } from '@/components/ui/input';
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from '@ethersproject/bignumber';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,8 +31,7 @@ const walletList = { kuji: 0, usk: 0 };
 const denoms = {
   kuji: 'ukuji',
   usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
-}
-
+};
 
 const SmallLoading = (
   <div className="small-loading">
@@ -58,7 +57,13 @@ const DepositModal = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const { signAndBroadcast, account, balances, broadcastWithPK, refreshBalances } = useWallet()
+  const {
+    signAndBroadcast,
+    account,
+    balances,
+    broadcastWithPK,
+    refreshBalances
+  } = useWallet();
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -74,26 +79,36 @@ const DepositModal = () => {
   const handleWithdraw = async () => {
     if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
       toast.error(`Insufficient token`);
-      return
+      return;
     }
     if (account) {
       try {
-        setLoading(true)
-        await broadcastWithPK([msg.bank.msgSend({
-          fromAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
-          toAddress: account.address,
-          amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
-        })], "Withdraw from Kartel")
-        refreshBalances()
-        await updateBalance("withdraw")
+        setLoading(true);
+        await broadcastWithPK(
+          [
+            msg.bank.msgSend({
+              fromAddress: 'kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h',
+              toAddress: account.address,
+              amount: [
+                {
+                  denom: selectedToken.denom,
+                  amount: fromHumanString(depositAmount, 6).toString()
+                }
+              ]
+            })
+          ],
+          'Withdraw from Kartel'
+        );
+        refreshBalances();
+        await updateBalance('withdraw');
       } catch (err) {
-        console.log(err)
-        setLoading(false)
+        console.log(err);
+        setLoading(false);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
-  }
+  };
 
   const updateBalance = async (type: string) => {
     try {
@@ -127,26 +142,46 @@ const DepositModal = () => {
   }, [isOpen]);
 
   const handleDeposit = async () => {
-    if (Number(depositAmount) > Number(toHuman(BigNumber.from(balances.find((item) => item.denom === selectedToken.denom)?.amount ?? 0), 6))) {
+    if (
+      Number(depositAmount) >
+      Number(
+        toHuman(
+          BigNumber.from(
+            balances.find((item) => item.denom === selectedToken.denom)
+              ?.amount ?? 0
+          ),
+          6
+        )
+      )
+    ) {
       toast.error(`Insufficient token in wallet`);
-      return
+      return;
     }
     if (account) {
       try {
-        setLoading(true)
-        await signAndBroadcast([msg.bank.msgSend({
-          fromAddress: account?.address,
-          toAddress: "kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h",
-          amount: [{ denom: selectedToken.denom, amount: fromHumanString(depositAmount, 6).toString() }]
-        })], "Deposit to Kartel")
-        refreshBalances()
+        setLoading(true);
+        await signAndBroadcast(
+          [
+            msg.bank.msgSend({
+              fromAddress: account?.address,
+              toAddress: 'kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h',
+              amount: [
+                {
+                  denom: selectedToken.denom,
+                  amount: fromHumanString(depositAmount, 6).toString()
+                }
+              ]
+            })
+          ],
+          'Deposit to Kartel'
+        );
+        refreshBalances();
         await updateBalance('deposit');
-      }
-      catch (err) {
-        console.log(err)
-        setLoading(false)
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     }
   };
@@ -159,43 +194,59 @@ const DepositModal = () => {
             <img src="/assets/logo.svg" className="h-24 w-24" />
           </div>
         </DialogHeader>
-        <div className='flex flex-row justify-center items-center gap-5'>
+        <div className="flex flex-row items-center justify-center gap-5">
           {financial.map((item, index) => (
             <button
               key={index}
               onClick={() => setSelectedFinancial(item)}
-              className={`${selectedFinancial === item ? ' border-white' : 'border-transparent'} text-white p-2 border-b-2 transition-all duration-300 ease-out`}
+              className={`${selectedFinancial === item ? ' border-white' : 'border-transparent'} border-b-2 p-2 text-white transition-all duration-300 ease-out`}
             >
               {item}
             </button>
           ))}
         </div>
-        <div className="flex flex-col gap-3 justify-between w-full">
-          <div className='flex flex-row justify-between items-center w-full'>
-            <span className='text-gray-500 text-xs w-4/12 text-start pl-3'>Assets</span>
-            <span className='text-gray-500 text-xs w-4/12 text-center'>Site Balance</span>
-            <span className='text-gray-500 text-xs w-4/12 text-center'>Wallet Balance</span>
+        <div className="flex w-full flex-col justify-between gap-3">
+          <div className="flex w-full flex-row items-center justify-between">
+            <span className="w-4/12 pl-3 text-start text-xs text-gray-500">
+              Assets
+            </span>
+            <span className="w-4/12 text-center text-xs text-gray-500">
+              Site Balance
+            </span>
+            <span className="w-4/12 text-center text-xs text-gray-500">
+              Wallet Balance
+            </span>
           </div>
           {walletData &&
             Object.entries(walletData).map(([tokenName, balance], index) => (
               <div
                 key={index}
-                className="flex flex-row items-center justify-between w-full"
+                className="flex w-full flex-row items-center justify-between"
               >
-                <span className="flex flex-row items-center gap-3 uppercase text-gray-300 w-4/12">
+                <span className="flex w-4/12 flex-row items-center gap-3 uppercase text-gray-300">
                   <img
                     src={`/assets/tokens/${tokenName}.png`}
                     className="h-5 w-5"
                   />
                   {tokenName}
                 </span>
-                <span className="text-gray-300 w-4/12 text-center">{Number(balance).toFixed(2) ?? 0}</span>
-                <span className='text-white w-4/12 text-center'>{toHuman(BigNumber.from(balances.find((item) => item.denom === denoms[tokenName])?.amount ?? 0), 6).toFixed(2)}</span>
+                <span className="w-4/12 text-center text-gray-300">
+                  {Number(balance).toFixed(2) ?? 0}
+                </span>
+                <span className="w-4/12 text-center text-white">
+                  {toHuman(
+                    BigNumber.from(
+                      balances.find((item) => item.denom === denoms[tokenName])
+                        ?.amount ?? 0
+                    ),
+                    6
+                  ).toFixed(2)}
+                </span>
               </div>
             ))}
         </div>
         <div className="flex flex-col gap-2">
-          <span className='text-white text-xs'>Token Amount</span>
+          <span className="text-xs text-white">Token Amount</span>
           <div className="relative">
             <Input
               value={depositAmount}
@@ -236,22 +287,25 @@ const DepositModal = () => {
               </DropdownMenu>
             </span>
           </div>
-          {selectedFinancial === 'Withdraw' &&
-            <div className='flex flex-col gap-1 mt-2'>
-              <span className='text-white text-xs'>Wallet Address</span>
+          {selectedFinancial === 'Withdraw' && (
+            <div className="mt-2 flex flex-col gap-1">
+              <span className="text-xs text-white">Wallet Address</span>
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
-                placeholder='e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h'
+                onChange={() => {}}
+                placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
-            </div>}
+            </div>
+          )}
         </div>
         <Button
-          className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4] gap-2"
+          className="w-full gap-2 bg-[#A326D4] py-5 hover:bg-[#A326D4]"
           type="submit"
-          onClick={selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit}
+          onClick={
+            selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit
+          }
           disabled={loading}
         >
           {selectedFinancial}
