@@ -48,6 +48,7 @@ export default function CrashGameSection() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [betCashout, setBetCashout] = useState<BetType[]>([]);
   const [avaliableBet, setAvaliableBet] = useState(false);
+  const [autoBet, setAutoBet] = useState(true);
   const [autoCashoutAmount, setAutoCashoutAmount] = useState(1);
   const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
     ECrashStatus.PREPARE
@@ -55,7 +56,7 @@ export default function CrashGameSection() {
   const [totalAmount, setTotalAmount] = useState<any>();
   const [round, setRound] = useState(roundArray[0]);
   const [selectMode, setSelectMode] = useState(betMode[0]);
-  const [avaliableAutoBet, setAvaliableAutoBet] = useState<boolean>(false);
+  const [avaliableAutoCashout, setAvaliableAutoCashout] = useState<boolean>(false);
   const isAutoMode = selectMode === 'auto';
 
   const handleBetAmountChange = (event) => {
@@ -100,20 +101,39 @@ export default function CrashGameSection() {
   };
 
   const handleAutoBet = async () => {
-    if (betAmount > 0 && !avaliableBet) {
-      const joinParams = {
-        cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
-        count: Number(round).valueOf(),
-        betAmount: Number(betAmount).valueOf(),
-        denom: selectedToken.name
-      };
-      socket?.emit('auto-crashgame-bet', joinParams);
-    }
-    if (avaliableBet) {
-      setAvaliableBet(false);
-      socket?.emit('bet-cashout');
+    if (autoBet) {
+      if (betAmount > 0) {
+        const joinParams = {
+          cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
+          count: Number(round).valueOf(),
+          betAmount: Number(betAmount).valueOf(),
+          denom: selectedToken.name
+        };
+        socket?.emit('auto-crashgame-bet', joinParams);
+      } else {
+        setAutoBet(false);
+      }
+    } else {
+      setAutoBet(true);
+      socket?.emit('cancel-auto-bet');
     }
   };
+
+  useEffect(() => {
+    const handleJoinSuccess = (data) => {
+      toast.success(data);
+      console.log(data)
+      if (data === "Autobet has been canceled. This will be applied on next bet.") {
+        setAutoBet(true);
+      } else {
+        setAutoBet(false);
+      }
+    };
+    socket?.on('auto-crashgame-join-success', handleJoinSuccess);
+    return () => {
+      socket?.off('auto-crashgame-join-success', handleJoinSuccess);
+    }
+  }, [socket, toast]);
 
   useEffect(() => {
     const crashSocket: Socket<
@@ -225,17 +245,18 @@ export default function CrashGameSection() {
                         <Button
                           className="h-12 w-6/12 bg-[#A326D4] py-5 uppercase hover:bg-[#A326D4]"
                           disabled={
-                            (crashStatus !== ECrashStatus.PREPARE &&
-                              !avaliableBet) ||
-                            (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet)
+                            isAutoMode ? false : (
+                              (crashStatus !== ECrashStatus.PREPARE &&
+                                !avaliableBet) ||
+                              (crashStatus !== ECrashStatus.PROGRESS &&
+                                avaliableBet))
                           }
                           onClick={isAutoMode ? handleAutoBet : handleStartBet}
                         >
                           {isAutoMode
-                            ? avaliableBet
-                              ? 'Auto Cash Out'
-                              : 'Auto Place Bet'
+                            ? autoBet
+                              ? 'Auto Bet'
+                              : 'Cancel'
                             : avaliableBet
                               ? 'Cash Out'
                               : 'Place Bet'}
@@ -300,16 +321,16 @@ export default function CrashGameSection() {
                         </div>
                         {!isAutoMode && (
                           <div className="flex flex-col justify-between gap-2">
-                            <div className="flex flex-row items-center justify-between gap-2">
+                            <div className="flex flex-row items-center justify-start gap-2">
+                              <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
                               <span className="text-white">
                                 Auto Cashout
                               </span>
-                              <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoBet} onClick={() => setAvaliableAutoBet(!avaliableAutoBet)} />
                             </div>
                             <div className="flex w-full items-center justify-center gap-1">
                               <Slider
-                                className={`w-11/12 ${!avaliableAutoBet && 'opacity-35'}`}
-                                disabled={!avaliableAutoBet}
+                                className={`w-11/12 ${!avaliableAutoCashout && 'opacity-35'}`}
+                                disabled={!avaliableAutoCashout}
                                 step={0.01}
                                 max={100}
                                 min={1}

@@ -1,7 +1,7 @@
 import Heading from './heading';
 import UserNav from './user-nav';
 // import Coin from '/assets/coin-icon.svg';
-import { Bell, MessageSquareMore } from 'lucide-react';
+import { MessageSquareMore } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
@@ -28,9 +28,9 @@ export default function Header() {
       <Heading />
       <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
         {userData?.username !== '' ? (
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-4">
-              {/* <div className="flex h-10 w-36 items-center justify-end rounded-full border-[1.5px] border-blue2 px-[5px]">
+          <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-3"> */}
+            {/* <div className="flex h-10 w-36 items-center justify-end rounded-full border-[1.5px] border-blue2 px-[5px]">
                   <div className="flex flex-grow items-center gap-1 pl-[15px] text-blue2">
                     <img src={Coin} alt="Coin-icon" />
                     <span>12,000</span>
@@ -39,16 +39,16 @@ export default function Header() {
                     <Plus />
                   </Button>
                 </div> */}
-              <Button
-                className="hidden bg-transparent hover:bg-transparent lg:block"
-                onClick={() => setOpen(!open)}
-              >
-                <MessageSquareMore
-                  className={`text-[${open ? '#A326D4' : '#fff'}]`}
-                />
-              </Button>
-              <Bell className="text-gray50" />
-            </div>
+            <Button
+              className="hidden bg-transparent hover:bg-transparent lg:block px-0"
+              onClick={() => setOpen(!open)}
+            >
+              <MessageSquareMore
+                className={`text-[${open ? '#A326D4' : '#fff'}]`}
+              />
+            </Button>
+            {/* <Bell className="text-gray50" /> */}
+            {/* </div> */}
             <Separator orientation={'vertical'} className="h-6" />
             <UserNav />
           </div>

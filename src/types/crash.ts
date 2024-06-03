@@ -28,6 +28,7 @@ export interface ICrashServerToClientEvents {
   'previous-crashgame-history': (count: number) => void;
   'game-join-error': (data: string) => void;
   'join-crash-game': (target: number, betAmount: number, denom: string) => void;
+  'auto-crashgame-join-success': (data: string) => void;
 }
 
 export interface ICrashClientToServerEvents {
