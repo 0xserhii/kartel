@@ -46,7 +46,6 @@ const CoinFlipSection = () => {
     const [selectedSide, setSelectedSide] = useState(true)
     const [coinAmount, setCoinAmount] = useState(1);
     const [autobetAmount, setAutobetAmount] = useState(1);
-    const [flipping, setFlipping] = useState(false);
     const [coins, setCoins] = useState<boolean[]>([]);
     const [selectedHeads, setSelectedHeads] = useState(1);
     const [probability, setProbability] = useState(0);
@@ -82,14 +81,6 @@ const CoinFlipSection = () => {
         setSelectedHeads(heads);
     };
 
-    const onChangeCoins = async () => {
-        setFlipping(true);
-        const timer = setTimeout(() => {
-            setFlipping(false);
-        }, 600);
-        return () => clearTimeout(timer);
-    }
-
     const startCoinflip = () => {
         if (betAmount > 0) {
             if ((coinAmount >= 9 && selectedHeads < 3) || (coinAmount >= 6 && selectedHeads <= 2)) {
@@ -117,10 +108,6 @@ const CoinFlipSection = () => {
             socket.emit('auth', getAccessToken());
         }
     }, [getAccessToken(), socket]);
-
-    useEffect(() => {
-        onChangeCoins();
-    }, [coins]);
 
     useEffect(() => {
         const newCoins = Array.from({ length: coinAmount }, (_, index) =>
