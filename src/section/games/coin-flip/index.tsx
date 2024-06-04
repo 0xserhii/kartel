@@ -107,6 +107,12 @@ const CoinFlipSection = () => {
     }
 
     useEffect(() => {
+        if (socket) {
+            socket.emit('auth', getAccessToken());
+        }
+    }, [getAccessToken(), socket]);
+
+    useEffect(() => {
         onChangeCoins();
     }, [coins]);
 
@@ -163,11 +169,7 @@ const CoinFlipSection = () => {
         });
     }, [coinAmount, selectedHeads])
 
-    useEffect(() => {
-        if (socket) {
-            socket.emit('auth', getAccessToken());
-        }
-    }, [getAccessToken()]);
+
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
