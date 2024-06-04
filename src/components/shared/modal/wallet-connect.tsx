@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import useRootStore from '@/store/root';
+import useRootStore from '@/store/zustand/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { ChevronRight, Download } from 'lucide-react';

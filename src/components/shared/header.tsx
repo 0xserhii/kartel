@@ -7,7 +7,7 @@ import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
-import { usePersistStore } from '@/store/persist';
+import { usePersistStore } from '@/store/zustand/persist';
 import { useOpen } from '@/provider/chat-provider';
 
 export default function Header() {

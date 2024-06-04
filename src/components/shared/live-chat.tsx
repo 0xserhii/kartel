@@ -15,7 +15,7 @@ import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
 import { getAccessToken } from '@/lib/axios';
-import { usePersistStore } from '@/store/persist';
+import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { Input } from '../ui/input';
 

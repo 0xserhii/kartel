@@ -7,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import useRootStore from '@/store/root';
+import useRootStore from '@/store/zustand/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { z } from 'zod';
@@ -23,7 +23,7 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { usePersistStore } from '@/store/persist';
+import { usePersistStore } from '@/store/zustand/persist';
 
 const SignInSchema = z.object({
   email: z
