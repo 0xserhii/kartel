@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./CoinFlipSection.css";
+import "./coinflip-section.css";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,6 +8,8 @@ import { token } from "../crash";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { coinFlipPresets, coinSide, multiplerArray } from "@/constants/data";
 import { Button } from "@/components/ui/button";
+// import { Socket, io } from "socket.io-client";
+// import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
 
 interface ICoin {
     result: 'head' | 'tail',
@@ -65,12 +67,16 @@ const CoinFlipSection = () => {
         setFlipping(false);
     };
 
-    useEffect(() => {
+    const onChangeCoins = async () => {
         setFlipping(true);
         const timer = setTimeout(() => {
             setFlipping(false);
         }, 600);
         return () => clearTimeout(timer);
+    }
+
+    useEffect(() => {
+        onChangeCoins();
     }, [coins]);
 
     useEffect(() => {
@@ -84,6 +90,13 @@ const CoinFlipSection = () => {
         }
         setCoins(newCoins);
     }, [selectedHeads, coinAmount, selectedSide]);
+
+    // useEffect(() => {
+    //     const coinflipSocket: Socket<
+    //         ICoinflipServerToClientEvents,
+    //         ICoinflipClientToServerEvents
+    //     > = io(`${SERVER_URL}/coinflip`);
+    // }, [coins]);
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -208,7 +221,7 @@ const CoinFlipSection = () => {
                                             coinSide.map((side, index) => (
                                                 <div key={index}>
                                                     <div className={`cursor-pointer flex flex-col items-center justify-center border-2 h-full rounded-full ${selectedSide === side ? "border-[#f4b205] scale-110" : "border-transparent opacity-80"} transition-transform duration-150`} onClick={() => setSelectedSide(side)}>
-                                                        <img src={side === "head" ? "/assets/games/coin-flip/coin-head.svg" : "/assets/games/coin-flip/coin-tail.svg"} alt={side} className="w-20 h-20 p-0.5" />
+                                                        <img src={side === "head" ? "/assets/games/coin-flip/coin-head.svg" : "/assets/games/coin-flip/coin-tail.svg"} alt={side} className="w-24 h-24 p-0.5" />
                                                     </div>
                                                 </div>
                                             ))
@@ -227,7 +240,6 @@ const CoinFlipSection = () => {
             </div>
         </ScrollArea>
     );
-
 }
 
 export default CoinFlipSection;
