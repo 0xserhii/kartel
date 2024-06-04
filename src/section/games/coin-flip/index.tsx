@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Socket, io } from "socket.io-client";
 import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
 import { getAccessToken } from "@/lib/axios";
-import { toast } from "react-toastify";
+import useToast from '@/routes/hooks/use-toast';
 
 interface ICoin {
     result: 1 | 0,
@@ -41,11 +41,13 @@ const probabilityXOrMoreHeads = async (x: number, n: number): Promise<number> =>
 
 const CoinFlipSection = () => {
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+    const toast = useToast();
     const [socket, setSocket] = useState<Socket | null>(null);
     const [betAmount, setBetAmount] = useState(0);
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectedSide, setSelectedSide] = useState(coinSide[1])
     const [coinAmount, setCoinAmount] = useState(1);
+    const [autobetAmount, setAutobetAmount] = useState(1);
     const [flipping, setFlipping] = useState(false);
     const [coins, setCoins] = useState<ICoin[]>(Array.from({ length: 5 }, () => ({ result: 1, flipping: true })));
     const [selectedHeads, setSelectedHeads] = useState(3);
@@ -93,12 +95,14 @@ const CoinFlipSection = () => {
     const startCoinflip = () => {
         if (betAmount > 0) {
             socket?.emit('create-new-coinflipgame', {
-                betAmount: Number(betAmount),
+                betAmount: Number(betAmount) ?? 0.1,
                 denom: selectedToken.name,
                 betCoinsCount: coinAmount,
                 betSideCount: selectedHeads,
                 betSide: selectedSide === 1 ? false : true
             });
+        } else {
+            toast.error("Bet Amount should be between 0.1 and 100")
         }
     }
 
@@ -186,20 +190,27 @@ const CoinFlipSection = () => {
                     <div className="flex flex-col 2xl:px-30 lg:px-20 xl:px-20 mg:px-40 px-72 py-6">
                         <div className="w-full flex flex-row justify-center gap-10">
                             <div className="flex flex-col gap-6 w-6/12">
-                                <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                <div className="flex flex-col gap-2">
                                     <span className="text-gray200 text-sm">
                                         Coins
                                     </span>
-                                    <Slider className="w-52" step={1} min={1} max={10} defaultValue={coinAmount[0]} onValueChange={(value) => setCoinAmount(value[0])} />
-                                    <span className="text-white text-sm">
-                                        {coinAmount}
-                                    </span>
+                                    <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                        <Slider className="w-52" step={1} min={1} max={10} defaultValue={coinAmount[0]} onValueChange={(value) => setCoinAmount(value[0])} />
+                                        <span className="text-white text-sm">
+                                            {coinAmount}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                <div className="flex flex-col gap-2">
                                     <span className="text-gray200 text-sm">
                                         Auto Bet
                                     </span>
-                                    <Slider className="w-52" />
+                                    <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                        <Slider className="w-52" defaultValue={autobetAmount[0]} onValueChange={(value) => setAutobetAmount(value[0])} />
+                                        <span className="text-white text-sm">
+                                            {autobetAmount}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div className="w-full flex flex-col gap-4">
                                     <p className="text-sm uppercase text-[#556987] w-6/12">
@@ -264,32 +275,39 @@ const CoinFlipSection = () => {
                                 </div>
                             </div>
                             <div className="flex flex-col gap-6 w-6/12">
-                                <div className="flex xl:flex-row flex-col w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                <div className="flex flex-col gap-2">
                                     <span className="text-gray200 text-sm">
                                         Heads / Tails
                                     </span>
-                                    <Slider className="w-52" max={coinAmount} min={coinAmount < 6 ? 1 : coinAmount < 9 ? 2 : 3} step={1} defaultValue={selectedHeads[0]} onValueChange={(value) => setSelectedHeads(value[0])} />
-                                    <span className="text-white text-sm">
-                                        {selectedHeads}
-                                    </span>
+                                    <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                        <Slider className="w-52" max={coinAmount} min={coinAmount < 6 ? 1 : coinAmount < 9 ? 2 : 3} step={1} defaultValue={selectedHeads[0]} onValueChange={(value) => setSelectedHeads(value[0])} />
+                                        <span className="text-white text-sm">
+                                            {selectedHeads}
+                                        </span>
+                                    </div>
                                 </div>
-                                <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-2 px-1 justify-between items-center">
-                                    <Select onValueChange={handlePresetSelection}>
-                                        <SelectTrigger className="!text-gray200 w-full py-4">
-                                            <SelectValue placeholder="custom" className="!text-white" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {coinFlipPresets.map((option) => (
-                                                <SelectItem
-                                                    key={option.value}
-                                                    value={option.value}
-                                                    className="text-gray200">
-                                                    {option.label}
-                                                </SelectItem>
+                                <div className="flex flex-col gap-2">
+                                    <span className="text-gray200 text-sm">
+                                        Presets
+                                    </span>
+                                    <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-2 px-1 justify-between items-center">
+                                        <Select onValueChange={handlePresetSelection}>
+                                            <SelectTrigger className="!text-gray200 w-full py-4">
+                                                <SelectValue placeholder="custom" className="!text-white" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {coinFlipPresets.map((option) => (
+                                                    <SelectItem
+                                                        key={option.value}
+                                                        value={option.value}
+                                                        className="text-gray200">
+                                                        {option.label}
+                                                    </SelectItem>
 
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                                 <div className="flex my-auto justify-center items-center gap-10">
                                     <div className="flex flex-row gap-10">
