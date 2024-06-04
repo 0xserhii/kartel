@@ -10,7 +10,8 @@ import {
     take,
     cancel,
     takeLatest,
-    takeEvery
+    takeEvery,
+    delay
 } from 'redux-saga/effects';
 
 import { chatActions } from '../actions';
@@ -32,12 +33,19 @@ function subscribe(socket) {
             emit(chatActions.disconnectChatServer());
         });
 
-        socket.on(EChatSocketEvent.GET_CHAT_HISTORY, (history: IChat[]) => {
-            emit(chatActions.getChatHistory(history));
+        socket.on(EChatSocketEvent.RECEIVE_CHAT_HISTORY, (history: {
+            message: string;
+            chatHistories: IChat[];
+        }) => {
+            emit(chatActions.receiveChatHistory(history.chatHistories));
         });
 
         return () => { };
     });
+}
+
+function* getChatHistory(socket) {
+    yield call([socket, socket.emit], EChatSocketEvent.GET_CHAT_HISTORY);
 }
 
 function* login(socket) {
@@ -53,14 +61,29 @@ function* read(socket) {
     }
 }
 
-function* handleIO(socket) {
-    yield fork(read, socket);
-    yield fork(login, socket);
+function* getChatHistorySaga() {
+    try {
+        yield delay(100);
+        yield fork(getChatHistory, KartelSocket.chat);
+    } catch (error) {
+        console.log(error)
+    }
 }
 
-function* startChanelSaga() {
+function* subscribeSaga() {
     try {
-        socketTask = yield fork(handleIO, KartelSocket.chat);
+        yield fork(read, KartelSocket.chat);
+        yield delay(100);
+        yield fork(getChatHistory, KartelSocket.chat);
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function* loginChanelSaga() {
+    try {
+        yield delay(500);
+        socketTask = yield fork(login, KartelSocket.chat);
     } catch (e) {
         console.log(e)
     }
@@ -76,11 +99,14 @@ function* stopChanelSaga() {
 }
 
 function* sendMsgSaga(action) {
+    yield delay(100);
     KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload)
 }
 
 const sagas = [
-    takeLatest(EChatSocketAction.LOGIN_CHAT, startChanelSaga),
+    takeLatest(EChatSocketAction.SUBSCRIBE_CHAT, subscribeSaga),
+    takeLatest(EChatSocketAction.LOGIN_CHAT, loginChanelSaga),
+    takeLatest(EChatSocketAction.GET_CHAT_HISTORY, getChatHistorySaga),
     takeLatest(EChatSocketAction.DISCONNECT_CHAT, stopChanelSaga),
     takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga),
 ];

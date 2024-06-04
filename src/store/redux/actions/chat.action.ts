@@ -2,9 +2,9 @@ import { IChat } from "@/types";
 import { EChatSocketAction } from "../reducers/chat.type";
 
 
-export function getChatHistory(chatHistory: IChat[]) {
+export function receiveChatHistory(chatHistory: IChat[]) {
     return {
-        type: EChatSocketAction.GET_CHAT_HISTORY,
+        type: EChatSocketAction.RECEIVE_CHAT_HISTORY,
         payload: chatHistory
     };
 }
@@ -34,5 +34,19 @@ export function loginChatServer() {
     return {
         type: EChatSocketAction.LOGIN_CHAT,
         payload: 'success'
+    }
+}
+
+export function subscribeChatServer() {
+    return {
+        type: EChatSocketAction.SUBSCRIBE_CHAT,
+        payload: null
+    }
+}
+
+export function getChatHistory() {
+    return {
+        type: EChatSocketAction.GET_CHAT_HISTORY,
+        payload: null
     }
 }

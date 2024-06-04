@@ -13,18 +13,20 @@ export enum EChatSocketEvent {
   SEND_MSG = 'message',
   RECEIVE_MSG = 'message',
   DISCONNECT_CHAT = 'disconnect',
-  GET_CHAT_HISTORY = 'previous-chat-history'
+  RECEIVE_CHAT_HISTORY = 'send-chat-history',
+  GET_CHAT_HISTORY = 'get-chat-history'
 }
 
 export interface IChatClientToServerEvents {
   [EChatSocketEvent.LOGIN]: (token: string) => void;
   [EChatSocketEvent.JOIN_CHAT]: (_id: string) => void;
   [EChatSocketEvent.SEND_MSG]: (message: string) => void;
+  [EChatSocketEvent.GET_CHAT_HISTORY]: () => void;
 }
 
 export interface IChatServerToClientEvents {
   [EChatSocketEvent.RECEIVE_MSG]: (data: IChat) => void;
-  [EChatSocketEvent.GET_CHAT_HISTORY]: (data: {
+  [EChatSocketEvent.RECEIVE_CHAT_HISTORY]: (data: {
     message: string;
     chatHistories: IChat[];
   }) => void;

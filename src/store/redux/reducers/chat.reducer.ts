@@ -14,7 +14,7 @@ const initialState = {
 
 export default function chatReducer(state = initialState, action): IChatState {
 	switch (action.type) {
-		case EChatSocketAction.GET_CHAT_HISTORY:
+		case EChatSocketAction.RECEIVE_CHAT_HISTORY:
 			return { ...state, chatHistory: action.payload as IChat[] };
 
 		case EChatSocketAction.RECEIVE_MSG:

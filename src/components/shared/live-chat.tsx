@@ -14,6 +14,7 @@ import { Input } from '../ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
+import { getAccessToken } from '@/lib/axios';
 
 export type HistoryItemProps = {
   name: string;
@@ -98,7 +99,20 @@ const LiveChat = () => {
 
   useEffect(() => {
     dispatch(chatActions.loginChatServer())
+  }, [getAccessToken()])
+
+  useEffect(() => {
+    dispatch(chatActions.subscribeChatServer())
   }, [])
+
+  useEffect(() => {
+    if ((chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory.length) {
+      ref.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end'
+      });
+    }
+  }, [chatState?.chatHistory]);
 
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
@@ -127,7 +141,7 @@ const LiveChat = () => {
         <ScrollArea
           className={`flex flex-col items-stretch py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
         >
-          {/* {chatState?.chatHistory?.map((chat, key) => (
+          {(chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory?.map((chat, key) => (
             <React.Fragment key={key}>
               <HistoryItem
                 name={chat.user?.username}
@@ -137,7 +151,7 @@ const LiveChat = () => {
               />
               <div ref={ref}></div>
             </React.Fragment>
-          ))} */}
+          ))}
         </ScrollArea>
       </div>
       <div className="w-full bg-purple-0.15 px-2 text-gray-400">
