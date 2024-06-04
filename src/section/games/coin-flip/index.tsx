@@ -8,22 +8,26 @@ import { token } from "../crash";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { coinFlipPresets, coinSide, multiplerArray } from "@/constants/data";
 import { Button } from "@/components/ui/button";
-// import { Socket, io } from "socket.io-client";
-// import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
+import { Socket, io } from "socket.io-client";
+import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
+import { getAccessToken } from "@/lib/axios";
 
 interface ICoin {
-    result: 'head' | 'tail',
+    result: 1 | 0,
     flipping: boolean
 }
 
 const CoinFlipSection = () => {
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+    const [socket, setSocket] = useState<Socket | null>(null);
     const [betAmount, setBetAmount] = useState(0);
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectedSide, setSelectedSide] = useState(coinSide[1])
     const [coinAmount, setCoinAmount] = useState(1);
     const [flipping, setFlipping] = useState(false);
-    const [coins, setCoins] = useState<ICoin[]>(Array.from({ length: 5 }, () => ({ result: "head", flipping: true })));
+    const [coins, setCoins] = useState<ICoin[]>(Array.from({ length: 5 }, () => ({ result: 1, flipping: true })));
     const [selectedHeads, setSelectedHeads] = useState(3);
+    const [probability, setProbability] = useState(0);
 
     const handleBetAmountChange = (event) => {
         const inputValue = event.target.value;
@@ -50,22 +54,22 @@ const CoinFlipSection = () => {
         setSelectedHeads(heads);
 
         const newCoins = coins.map(() => ({
-            result: (Math.random() > 0.5 ? "head" : "tail") as 'head' | 'tail',
+            result: (Math.random() > 0.5 ? 1 : 0) as 1 | 0,
             flipping: false
         }));
         setCoins(newCoins);
     };
 
-    const flipCoins = async () => {
-        setFlipping(true);
-        await new Promise(resolve => setTimeout(resolve, 600));
-        const newCoins = coins.map(() => ({
-            result: Math.random() > 0.5 ? "head" : "tail" as 'head' | 'tail',
-            flipping: false
-        }));
-        setCoins(newCoins);
-        setFlipping(false);
-    };
+    // const flipCoins = async () => {
+    //     setFlipping(true);
+    //     await new Promise(resolve => setTimeout(resolve, 600));
+    //     const newCoins = coins.map(() => ({
+    //         result: Math.random() > 0.5 ? 1 : 0 as 1 | 0,
+    //         flipping: false
+    //     }));
+    //     setCoins(newCoins);
+    //     setFlipping(false);
+    // };
 
     const onChangeCoins = async () => {
         setFlipping(true);
@@ -80,38 +84,64 @@ const CoinFlipSection = () => {
     }, [coins]);
 
     useEffect(() => {
-        const oppositeSide = selectedSide === "head" ? "tail" : "head";
+        const oppositeSide = selectedSide === 1 ? 0 : 1;
         const newCoins = Array.from({ length: coinAmount }, () => ({
-            result: oppositeSide as 'head' | 'tail',
+            result: oppositeSide as 1 | 0,
             flipping: true
         }));
         for (let i = 0; i < Math.min(selectedHeads, coinAmount); i++) {
-            newCoins[i].result = selectedSide as 'head' | 'tail';
+            newCoins[i].result = selectedSide as 1 | 0;
         }
         setCoins(newCoins);
     }, [selectedHeads, coinAmount, selectedSide]);
 
-    // useEffect(() => {
-    //     const coinflipSocket: Socket<
-    //         ICoinflipServerToClientEvents,
-    //         ICoinflipClientToServerEvents
-    //     > = io(`${SERVER_URL}/coinflip`);
-    // }, [coins]);
+    useEffect(() => {
+        const coinflipSocket: Socket<
+            ICoinflipServerToClientEvents,
+            ICoinflipClientToServerEvents
+        > = io(`${SERVER_URL}/coinflip`);
+
+        coinflipSocket.emit('auth', getAccessToken());
+        coinflipSocket.on('coinflip-probability', (data) => {
+            setProbability(data);
+        });
+
+        setSocket(coinflipSocket);
+    }, []);
+
+    useEffect(() => {
+        if (coinAmount > 0) {
+            const joinParams = {
+                betCoinsAmount: coinAmount,
+                betSideCount: selectedHeads,
+            };
+            socket?.emit('coinflip-probability', joinParams);
+        }
+    }, [coinAmount, selectedHeads])
+
+    useEffect(() => {
+        if (socket) {
+            socket.emit('auth', getAccessToken());
+        }
+    }, [getAccessToken()]);
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
             <div className="flex flex-col items-stretch gap-8">
                 <div className="flex flex-col gap-6">
-                    <div className="h-80 flex justify-center items-center">
-                        <div className="grid gap-6" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
-                            {coins.map((coin, index) => (
-                                <div key={index} className={`coin w-6/12 ${flipping ? 'flipping' : ''}`}>
-                                    <div className="coin-flip-side">
-                                        <img src={`/assets/games/coin-flip/coin-${coin.result}.svg`} alt={coin.result} />
+                    <div className="h-80 flex flex-col justify-between items-center">
+                        <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
+                            {coins.map((coin, index) => {
+                                return (
+                                    <div key={index} id="coin" className={`coin w-6/12 ${flipping ? 'flipping' : ''}`}>
+                                        <div className="coin-flip-side">
+                                            <img src={`/assets/games/coin-flip/coin-${coin.result === 0 ? 'head' : 'tail'}.svg`} alt="head" />
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
+                        <span className="text-white text-sm">{probability}% Chance</span>
                     </div>
                     <div className="flex flex-col 2xl:px-30 lg:px-20 xl:px-20 mg:px-40 px-72 py-6">
                         <div className="w-full flex flex-row justify-center gap-10">
@@ -191,7 +221,7 @@ const CoinFlipSection = () => {
                                 </div>
                             </div>
                             <div className="flex flex-col gap-6 w-6/12">
-                                <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
+                                <div className="flex xl:flex-row flex-col w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
                                     <span className="text-gray200 text-sm">
                                         Mint Heads / Tails
                                     </span>
@@ -220,8 +250,8 @@ const CoinFlipSection = () => {
                                         {
                                             coinSide.map((side, index) => (
                                                 <div key={index}>
-                                                    <div className={`cursor-pointer flex flex-col items-center justify-center border-2 h-full rounded-full ${selectedSide === side ? "border-[#f4b205] scale-110" : "border-transparent opacity-80"} transition-transform duration-150`} onClick={() => setSelectedSide(side)}>
-                                                        <img src={side === "head" ? "/assets/games/coin-flip/coin-head.svg" : "/assets/games/coin-flip/coin-tail.svg"} alt={side} className="w-24 h-24 p-0.5" />
+                                                    <div className={`cursor-pointer flex flex-col items-center justify-center border-2 h-full rounded-full ${selectedSide === side ? "border-[#f4b205]" : "border-transparent opacity-80"} transition-transform duration-150`} onClick={() => setSelectedSide(side)}>
+                                                        <img src={side === 0 ? "/assets/games/coin-flip/coin-head.svg" : "/assets/games/coin-flip/coin-tail.svg"} alt={side === 1 ? "head" : "tail"} className="w-24 h-24 p-0.5" />
                                                     </div>
                                                 </div>
                                             ))
@@ -232,7 +262,7 @@ const CoinFlipSection = () => {
                         </div>
                     </div>
                     <div className="flex flex-row justify-center items-center gap-10">
-                        <Button className="bg-[#A326D4] hover:bg-[#A326D4] text-white py-7 px-36 rounded-lg text-md font-light" onClick={flipCoins}>
+                        <Button className="bg-[#A326D4] hover:bg-[#A326D4] text-white py-7 px-36 rounded-lg text-md font-light" >
                             Flip coins
                         </Button>
                     </div>

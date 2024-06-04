@@ -476,7 +476,7 @@ export const multiplerArray = [1 / 2, 2, 4, 8];
 
 export const roundArray = [5, 10, 15, 20, 10000];
 
-export const coinSide = ['tail', 'head'];
+export const coinSide = [1, 0];
 
 export const coinFlipPresets = [
   { value: "1:0", label: "custom", multiplier: "" },
