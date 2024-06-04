@@ -4,15 +4,24 @@
     perspective: 1000px;
 }
 
+@keyframes flipCoin {
+    0% {
+        transform: rotateY(0);
+    }
+
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
 .coin.flipping {
-    animation: flip 0.6s ease-out 1;
+    animation: flipCoin 0.6s forwards;
 }
 
 @keyframes flip {
     0% {
         transform: rotateY(0deg);
     }
-
 
     50% {
         transform: rotateY(90deg);

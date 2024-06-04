@@ -11,11 +11,33 @@ import { Button } from "@/components/ui/button";
 import { Socket, io } from "socket.io-client";
 import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
 import { getAccessToken } from "@/lib/axios";
+import { toast } from "react-toastify";
 
 interface ICoin {
     result: 1 | 0,
     flipping: boolean
 }
+
+const probabilityXOrMoreHeads = async (x: number, n: number): Promise<number> => {
+    const factorial = (n: number): number => {
+        let result = 1;
+        for (let i = 2; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    };
+    const binomialCoefficient = (n: number, k: number): number => {
+        return factorial(n) / (factorial(k) * factorial(n - k));
+    };
+    const binomialProbability = (n: number, k: number, p: number): number => {
+        return binomialCoefficient(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+    };
+    let probability = 0;
+    for (let k = x; k <= n; k++) {
+        probability += binomialProbability(n, k, 0.5);
+    }
+    return probability;
+};
 
 const CoinFlipSection = () => {
     const SERVER_URL = import.meta.env.VITE_SERVER_URL;
@@ -60,23 +82,24 @@ const CoinFlipSection = () => {
         setCoins(newCoins);
     };
 
-    // const flipCoins = async () => {
-    //     setFlipping(true);
-    //     await new Promise(resolve => setTimeout(resolve, 600));
-    //     const newCoins = coins.map(() => ({
-    //         result: Math.random() > 0.5 ? 1 : 0 as 1 | 0,
-    //         flipping: false
-    //     }));
-    //     setCoins(newCoins);
-    //     setFlipping(false);
-    // };
-
     const onChangeCoins = async () => {
         setFlipping(true);
         const timer = setTimeout(() => {
             setFlipping(false);
         }, 600);
         return () => clearTimeout(timer);
+    }
+
+    const startCoinflip = () => {
+        if (betAmount > 0) {
+            socket?.emit('create-new-coinflipgame', {
+                betAmount: Number(betAmount),
+                denom: selectedToken.name,
+                betCoinsCount: coinAmount,
+                betSideCount: selectedHeads,
+                betSide: selectedSide === 1 ? false : true
+            });
+        }
     }
 
     useEffect(() => {
@@ -102,21 +125,38 @@ const CoinFlipSection = () => {
         > = io(`${SERVER_URL}/coinflip`);
 
         coinflipSocket.emit('auth', getAccessToken());
+
         coinflipSocket.on('coinflip-probability', (data) => {
             setProbability(data);
+        });
+
+        coinflipSocket.on('game-creation-error', (message) => {
+            toast.error(message);
+        });
+
+        coinflipSocket.on('new-coinflip-game', (gameData) => {
+            console.log(gameData);
+        });
+
+        coinflipSocket.on('coinflipgame-join-success', () => {
+            toast.success('Joined game');
+        });
+
+        coinflipSocket.on('coinflipgame-rolled', (gameData) => {
+            console.log(gameData);
+        });
+
+        coinflipSocket.on('coinflipgame-joined', (gameData) => {
+            console.log(gameData);
         });
 
         setSocket(coinflipSocket);
     }, []);
 
     useEffect(() => {
-        if (coinAmount > 0) {
-            const joinParams = {
-                betCoinsAmount: coinAmount,
-                betSideCount: selectedHeads,
-            };
-            socket?.emit('coinflip-probability', joinParams);
-        }
+        probabilityXOrMoreHeads(selectedHeads, coinAmount).then((probability) => {
+            setProbability(probability * 100);
+        });
     }, [coinAmount, selectedHeads])
 
     useEffect(() => {
@@ -133,7 +173,7 @@ const CoinFlipSection = () => {
                         <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
                             {coins.map((coin, index) => {
                                 return (
-                                    <div key={index} id="coin" className={`coin w-6/12 ${flipping ? 'flipping' : ''}`}>
+                                    <div key={index} id="coin" className={`coin w-6/12 flipping ${flipping ? 'flipping' : ''}`}>
                                         <div className="coin-flip-side">
                                             <img src={`/assets/games/coin-flip/coin-${coin.result === 0 ? 'head' : 'tail'}.svg`} alt="head" />
                                         </div>
@@ -148,9 +188,12 @@ const CoinFlipSection = () => {
                             <div className="flex flex-col gap-6 w-6/12">
                                 <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
                                     <span className="text-gray200 text-sm">
-                                        Coin Amount
+                                        Coins
                                     </span>
                                     <Slider className="w-52" step={1} min={1} max={10} defaultValue={coinAmount[0]} onValueChange={(value) => setCoinAmount(value[0])} />
+                                    <span className="text-white text-sm">
+                                        {coinAmount}
+                                    </span>
                                 </div>
                                 <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
                                     <span className="text-gray200 text-sm">
@@ -223,9 +266,12 @@ const CoinFlipSection = () => {
                             <div className="flex flex-col gap-6 w-6/12">
                                 <div className="flex xl:flex-row flex-col w-full border border-purple-0.5 rounded-lg py-4 px-5 justify-between items-center">
                                     <span className="text-gray200 text-sm">
-                                        Mint Heads / Tails
+                                        Heads / Tails
                                     </span>
-                                    <Slider className="w-52" max={10} min={coinAmount === 1 ? 1 : 3} step={1} defaultValue={selectedHeads[0]} onValueChange={(value) => setSelectedHeads(value[0])} />
+                                    <Slider className="w-52" max={coinAmount} min={coinAmount < 6 ? 1 : coinAmount < 9 ? 2 : 3} step={1} defaultValue={selectedHeads[0]} onValueChange={(value) => setSelectedHeads(value[0])} />
+                                    <span className="text-white text-sm">
+                                        {selectedHeads}
+                                    </span>
                                 </div>
                                 <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-2 px-1 justify-between items-center">
                                     <Select onValueChange={handlePresetSelection}>
@@ -262,7 +308,7 @@ const CoinFlipSection = () => {
                         </div>
                     </div>
                     <div className="flex flex-row justify-center items-center gap-10">
-                        <Button className="bg-[#A326D4] hover:bg-[#A326D4] text-white py-7 px-36 rounded-lg text-md font-light" >
+                        <Button className="bg-[#A326D4] hover:bg-[#A326D4] text-white py-7 px-36 rounded-lg text-md font-light" onClick={startCoinflip}>
                             Flip coins
                         </Button>
                     </div>
