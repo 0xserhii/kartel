@@ -187,10 +187,9 @@ const CoinFlipSection = () => {
                         <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
                             {coins.map((coin, index) => {
                                 return (
-                                    <div key={index} id="coin" className={`coin ${isRolling ? "flipping" : `${coin ? "coin-front" : "coin-back"}`}`}>
-                                        {/* <div className="coin-flip-side">
-                                            <img src={`/assets/games/coin-flip/coin-${coin ? 'head' : 'tail'}.svg`} alt="coin" />
-                                        </div> */}
+                                    <div key={index} id="coin" className={`coin ${isRolling ? "flipping" : `${coin ? "coin-front" : "coin-back"}`}`} style={{
+                                        animation: isRolling ? `${Math.random() * 0.5 + 0.5}s flip infinite` : undefined
+                                    }}>
                                     </div>
                                 )
                             })}
