@@ -1,26 +1,38 @@
-import { chatConstant } from "../constants";
+import { IChat } from "@/types";
+import { EChatSocketAction } from "../reducers/chat.type";
 
 
-export function startChannel() {
+export function getChatHistory(chatHistory: IChat[]) {
     return {
-        type: chatConstant.START_CHANNEL
+        type: EChatSocketAction.GET_CHAT_HISTORY,
+        payload: chatHistory
     };
 }
 
-export function stopChannel() {
+export function receiveMsg(msg: IChat) {
     return {
-        type: chatConstant.STOP_CHANNEL
+        type: EChatSocketAction.RECEIVE_MSG,
+        payload: msg
     };
 }
 
-export function serverOn() {
+export function disconnectChatServer() {
     return {
-        type: chatConstant.SERVER_ON
+        type: EChatSocketAction.DISCONNECT_CHAT,
+        payload: null
     };
 }
 
-export function serverOff() {
+export function sendMsg(msg: string) {
     return {
-        type: chatConstant.SERVER_OFF
+        type: EChatSocketAction.SEND_MSG,
+        payload: msg
     };
+}
+
+export function loginChatServer() {
+    return {
+        type: EChatSocketAction.LOGIN_CHAT,
+        payload: 'success'
+    }
 }

@@ -1,24 +1,30 @@
-import { chatConstant, mainConstant } from "../constants";
+import { IChat } from "@/types";
+import { EChatSocketAction } from "./chat.type";
 
+
+interface IChatState {
+	chatHistory: IChat[];
+	loginStatus: boolean;
+}
 
 const initialState = {
-	serverIsOn: false
+	chatHistory: [],
+	loginStatus: false,
 };
 
-export default function socketReducer(state = initialState, action) {
+export default function chatReducer(state = initialState, action): IChatState {
 	switch (action.type) {
-		case chatConstant.SERVER_ON:
-			return Object.assign({}, state, {
-				serverIsOn: true
-			});
+		case EChatSocketAction.GET_CHAT_HISTORY:
+			return { ...state, chatHistory: action.payload as IChat[] };
 
-		case chatConstant.SERVER_OFF:
-			return Object.assign({}, state, {
-				serverIsOn: false
-			});
+		case EChatSocketAction.RECEIVE_MSG:
+			return { ...state, chatHistory: [...state.chatHistory, action.payload as IChat] };
 
-		case mainConstant.RESET:
+		case EChatSocketAction.DISCONNECT_CHAT:
 			return initialState;
+
+		case EChatSocketAction.LOGIN_CHAT:
+			return { ...state, loginStatus: true };
 
 		default:
 			return state;

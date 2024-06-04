@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import useRootStore from '@/store/zustand/zustand/root';
+import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { Input } from '@/components/ui/input';

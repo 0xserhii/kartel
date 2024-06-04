@@ -9,36 +9,31 @@ import {
     fork,
     take,
     cancel,
-    takeLatest
+    takeLatest,
+    takeEvery
 } from 'redux-saga/effects';
 
-import io from 'socket.io-client';
 import { chatActions } from '../actions';
 import { getAccessToken } from '@/lib/axios';
-import { chatConstant } from '../constants';
+import KartelSocket from '@/lib/socket-service';
+import { EChatSocketEvent, IChat } from '@/types';
+import { EChatSocketAction } from '../reducers/chat.type';
 
-let socket;
+
 let socketTask;
-
-const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-
-function connectSocket() {
-    const socket = io(`${SERVER_URL}/chat`);
-    return new Promise((resolve) => {
-        socket.on('connect', () => {
-            resolve(socket);
-        });
-    });
-}
 
 function subscribe(socket) {
     return eventChannel(emit => {
-        socket.on('disconnect', () => {
-            emit(chatActions.startChannel());
+        socket.on(EChatSocketEvent.RECEIVE_MSG, (msg: IChat) => {
+            emit(chatActions.receiveMsg(msg));
         });
 
-        socket.on('login-error', () => {
-            console.log('login error')
+        socket.on(EChatSocketEvent.DISCONNECT_CHAT, () => {
+            emit(chatActions.disconnectChatServer());
+        });
+
+        socket.on(EChatSocketEvent.GET_CHAT_HISTORY, (history: IChat[]) => {
+            emit(chatActions.getChatHistory(history));
         });
 
         return () => { };
@@ -47,9 +42,7 @@ function subscribe(socket) {
 
 function* login(socket) {
     const token = getAccessToken();
-    yield socket.emit('login', {
-        token
-    });
+    yield call([socket, socket.emit], EChatSocketEvent.LOGIN, token);
 }
 
 function* read(socket) {
@@ -61,34 +54,35 @@ function* read(socket) {
 }
 
 function* handleIO(socket) {
-    yield fork(login, socket);
     yield fork(read, socket);
+    yield fork(login, socket);
 }
 
 function* startChanelSaga() {
     try {
-        yield put(chatActions.stopChannel());
-        socket = yield call(connectSocket);
-        yield put(chatActions.serverOn());
-        socketTask = yield fork(handleIO, socket);
+        socketTask = yield fork(handleIO, KartelSocket.chat);
     } catch (e) {
         console.log(e)
     }
 }
 
 function* stopChanelSaga() {
-    if (socket) {
-        socket.off();
-        socket.disconnect();
+    if (KartelSocket.chat) {
+        KartelSocket.chat.off();
+        KartelSocket.chat.disconnect();
     }
 
     yield cancel(socketTask);
-    yield put(chatActions.serverOff());
+}
+
+function* sendMsgSaga(action) {
+    KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload)
 }
 
 const sagas = [
-    takeLatest(chatConstant.START_CHANNEL, startChanelSaga),
-    takeLatest(chatConstant.STOP_CHANNEL, stopChanelSaga)
+    takeLatest(EChatSocketAction.LOGIN_CHAT, startChanelSaga),
+    takeLatest(EChatSocketAction.DISCONNECT_CHAT, stopChanelSaga),
+    takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga),
 ];
 
 export default sagas;

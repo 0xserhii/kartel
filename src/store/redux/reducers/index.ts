@@ -1,6 +1,6 @@
 import {
     combineReducers,
-} from 'redux';
+} from '@reduxjs/toolkit';
 
 import chatReducer from './chat.reducer';
 
