@@ -123,7 +123,7 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === "Autobet has been canceled, effective from the next round.") {
+      if (data === "Autobet has been canceled.") {
         setAutoBet(true);
       } else {
         setAutoBet(false);
