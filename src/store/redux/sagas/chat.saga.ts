@@ -100,7 +100,7 @@ function* stopChanelSaga() {
 }
 
 function* sendMsgSaga(action) {
-    yield delay(1000);
+    yield delay(500);
     KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload)
 }
 
