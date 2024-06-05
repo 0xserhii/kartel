@@ -1,4 +1,4 @@
-import { ICoinPlayer } from './coinflipGame';
+import { ICoinPlayer } from './coinflip';
 import {
   FormattedGameHistoryType,
   PendingBetType,
@@ -90,7 +90,7 @@ export interface InterServerEvents {
   //common Events
 }
 
-export interface InterCoinflipGameServerEvents {}
+export interface InterCoinflipGameServerEvents { }
 
 export interface SocketData {
   lastAccess?: number;

@@ -9,44 +9,19 @@ import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { Socket, io } from 'socket.io-client';
-import {
-  ILeaderboardClientToServerEvents,
-  ILeaderboardServerToClientEvents
-} from '@/types/leader';
-import { LeaderboardType } from '@/types/leaderboard';
-
-interface ILeaderType {
-  _id: string;
-  username: string;
-  rank: number;
-  hasVerifiedAccount: boolean;
-  createdAt: string;
-  leaderboard: LeaderboardType;
-}
+import { leaderboardActions } from '@/store/redux/actions';
+import { useAppDispatch, useAppSelector } from '@/store/redux';
 
 export default function Leaderboard() {
-  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-  const [leaderboards, setLeaderboards] = useState<ILeaderType[]>();
   const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const leaderboardState = useAppSelector((state) => state.leaderboard)
 
   useEffect(() => {
-    const leaderBoardSocket: Socket<
-      ILeaderboardServerToClientEvents,
-      ILeaderboardClientToServerEvents
-    > = io(`${SERVER_URL}/leaderboard`);
-
-    leaderBoardSocket.on('leaderboard-fetch-all', (data) => {
-      if (data.leaderboard?.crash) {
-        setLoading(false);
-        setLeaderboards(data.leaderboard?.crash);
-      }
-    });
-
-    return () => {
-      leaderBoardSocket.disconnect();
-    };
+    dispatch(leaderboardActions.subscribeLeaderboardServer());
+    setLoading(false);
   }, []);
+
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       <Tabs
@@ -89,9 +64,7 @@ export default function Leaderboard() {
               </TableBody>
             </Table>
           </CardHeader>
-          <CardContent
-            className={`px-2 py-0 ${loading ? 'h-[536px] opacity-50' : ''}`}
-          >
+          <CardContent className={`px-2 py-0 ${loading ? 'h-[536px] opacity-50' : ''}`}>
             {loading ? (
               <div className="flex h-full w-full items-center justify-center">
                 <div className="small-loading">
@@ -104,7 +77,7 @@ export default function Leaderboard() {
               <ScrollArea className="h-88 px-5 py-3">
                 <Table className="relative table-fixed border-separate border-spacing-y-3">
                   <TableBody>
-                    {leaderboards?.map((score, index) => {
+                    {leaderboardState?.leaderboardHistory?.crash?.map((score, index) => {
                       return (
                         <TableRow
                           key={index}
@@ -129,7 +102,7 @@ export default function Leaderboard() {
                           <TableCell className="w-3/12 text-center">
                             {Number(
                               (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                                (score.leaderboard?.crash?.kuji?.betAmount ?? 0)
+                              (score.leaderboard?.crash?.kuji?.betAmount ?? 0)
                             ).toFixed(2)}
                           </TableCell>
                           <TableCell className="w-3/12">
@@ -137,8 +110,8 @@ export default function Leaderboard() {
                               {Number(
                                 (score.leaderboard?.crash?.usk?.winAmount ??
                                   0) +
-                                  (score.leaderboard?.crash?.kuji?.winAmount ??
-                                    0)
+                                (score.leaderboard?.crash?.kuji?.winAmount ??
+                                  0)
                               ).toFixed(2)}
                             </div>
                           </TableCell>

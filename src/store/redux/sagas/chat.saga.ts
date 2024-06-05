@@ -30,6 +30,7 @@ function subscribe(socket) {
         });
 
         socket.on(EChatSocketEvent.DISCONNECT_CHAT, () => {
+            console.log('disconnect chat event')
             emit(chatActions.disconnectChatServer());
         });
 
@@ -99,7 +100,7 @@ function* stopChanelSaga() {
 }
 
 function* sendMsgSaga(action) {
-    yield delay(100);
+    yield delay(1000);
     KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload)
 }
 

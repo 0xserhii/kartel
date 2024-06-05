@@ -1,8 +1,15 @@
-import { LeaderboardType } from './leaderboard';
+export interface LeaderboardType {
+  coinflip: any;
+  crash: any;
+}
 
-export interface ILeaderboardClientToServerEvents {}
+export enum ELeaderboardSocketEvent {
+  GET_LEADERBOARD_HISTORY = 'leaderboard-fetch-all'
+}
+
+export interface ILeaderboardClientToServerEvents { }
 export interface ILeaderboardServerToClientEvents {
-  'leaderboard-fetch-all': (data: {
+  [ELeaderboardSocketEvent.GET_LEADERBOARD_HISTORY]: (data: {
     message: string;
     leaderboard: LeaderboardType;
   }) => void;

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import { useSpring, animated } from '@react-spring/web';
 import {
+  ECrashSocketEvent,
   ICrashClientToServerEvents,
   ICrashServerToClientEvents
 } from '@/types/crash';
@@ -59,9 +60,9 @@ const CrashBoard = () => {
       ICrashClientToServerEvents
     > = io(`${SERVER_URL}/crash`);
 
-    crashSocket.emit('previous-crashgame-history', 10 as any);
+    crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
-    crashSocket.on('game-tick', (tick) => {
+    crashSocket.on(ECrashSocketEvent.GAME_TICK, (tick) => {
       setCrashStatus(ECrashStatus.PROGRESS);
       setCrTick((prev) => ({
         prev: prev.cur,
@@ -69,26 +70,26 @@ const CrashBoard = () => {
       }));
     });
 
-    crashSocket.on('game-starting', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_STARTING, (data) => {
       setCrashStatus(ECrashStatus.PREPARE);
       setPrepareTime(data.timeUntilStart ?? 0);
       stopCrashBgVideo();
     });
 
-    crashSocket.on('game-start', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_START, (data) => {
       setCrashStatus(ECrashStatus.PROGRESS);
       setCrTick({ prev: 1, cur: 1 });
       playCrashBgVideo();
     });
 
-    crashSocket.on('previous-crashgame-history', (historyData: any) => {
+    crashSocket.on(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, (historyData: any) => {
       setCrashHistoryData(historyData);
     });
 
-    crashSocket.on('game-end', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_END, (data) => {
       setCrashStatus(ECrashStatus.END);
       stopCrashBgVideo();
-      crashSocket.emit('previous-crashgame-history', 10 as any);
+      crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
     });
 
     // setSocket(crashSocket);
