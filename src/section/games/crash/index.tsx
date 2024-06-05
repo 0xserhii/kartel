@@ -123,7 +123,7 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === "Autobet has been canceled, effective from the next round.") {
+      if (data === "Autobet has been canceled.") {
         setAutoBet(true);
       } else {
         setAutoBet(false);
@@ -174,6 +174,7 @@ export default function CrashGameSection() {
 
     crashSocket.on('game-join-error', (data) => {
       toast.error(data);
+      setAutoBet(true);
     });
 
     crashSocket.on('game-start', (data) => {
@@ -268,10 +269,11 @@ export default function CrashGameSection() {
                           value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
+                          disabled={isAutoMode && !autoBet}
                         />
                         <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
+                            <DropdownMenuTrigger asChild disabled={isAutoMode && !autoBet}>
                               <div className="flex cursor-pointer items-center gap-2 uppercase">
                                 <img
                                   src={selectedToken.src}
@@ -310,6 +312,7 @@ export default function CrashGameSection() {
                       <div className="grid grid-cols-4 space-x-3">
                         {multiplerArray.map((item, index) => (
                           <Button
+                            disabled={isAutoMode && !autoBet}
                             className="rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white"
                             key={index}
                             onClick={() => handleMultiplierClick(item)}
@@ -349,6 +352,7 @@ export default function CrashGameSection() {
                           <div className="flex w-full">
                             <div className="relative w-full">
                               <Input
+                                disabled={isAutoMode && !autoBet}
                                 type='number'
                                 value={autoCashoutPoint}
                                 onChange={handleAutoCashoutPointChange}
@@ -364,6 +368,7 @@ export default function CrashGameSection() {
                           <div className="grid grid-cols-5 space-x-3">
                             {roundArray.map((item, index) => (
                               <Button
+                                disabled={isAutoMode && !autoBet}
                                 className={`rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white ${round === item ? 'bg-[#A326D4] text-white' : ''}`}
                                 key={index}
                                 onClick={() => setRound(item)}
