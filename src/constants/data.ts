@@ -88,7 +88,7 @@ export const navItems: NavItemGroup[] = [
 
 export const tabItems = [
   { name: 'home', path: '/' },
-  { name: 'leader board', path: '/leader-board' },
+  { name: 'leaderboard', path: '/leader-board' },
   { name: 'dashboard', path: '/dashboard' }
 ];
 

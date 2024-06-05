@@ -6,35 +6,52 @@ import {
   AutoCrashGameData
 } from './crashGame';
 
+export enum ECrashSocketEvent {
+  GAME_BETS = 'game-bets',
+  GAME_STARTING = 'game-starting',
+  GAME_START = 'game-start',
+  BET_CASHOUT = 'bet-cashout',
+  GAME_END = 'game-end',
+  GAME_TICK = 'game-tick',
+  JOIN_CRASH_GAME = 'join-crash-game',
+  CRASHGAME_JOIN_SUCCESS = 'crashgame-join-success',
+  AUTO_CRASHGAME_BET = 'auto-crashgame-bet',
+  PREVIOUS_CRASHGAME_HISTORY = 'previous-crashgame-history',
+  GAME_JOIN_ERROR = 'game-join-error',
+  BET_CASHOUT_ERROR = 'bet-cashout-error',
+  BET_CASHOUT_SUCCESS = 'bet-cashout-success',
+  AUTO_CRASHGAME_JOIN_SUCCESS = 'auto-crashgame-join-success'
+}
+
 export interface ICrashServerToClientEvents {
-  'game-bets': (bets: FormattedPlayerBetType[]) => void;
-  'game-starting': (data: {
+  [ECrashSocketEvent.GAME_BETS]: (bets: FormattedPlayerBetType[]) => void;
+  [ECrashSocketEvent.GAME_STARTING]: (data: {
     _id: string | null;
     privateHash: string | null;
     timeUntilStart?: number;
   }) => void;
-  'game-start': (data: { publicSeed: string }) => void;
-  'bet-cashout': (data: {
+  [ECrashSocketEvent.GAME_START]: (data: { publicSeed: string }) => void;
+  [ECrashSocketEvent.BET_CASHOUT]: (data: {
     userdata: BetType;
     status: number;
     stoppedAt: number | undefined;
     winningAmount: number;
   }) => void;
-  'game-end': (data: { game: FormattedGameHistoryType }) => void;
-  'game-tick': (data: number) => void;
-  'crashgame-join-success': (data: FormattedPlayerBetType) => void;
-  'bet-cashout-error': (data: string) => void;
-  'bet-cashout-success': (result: any) => void;
-  'previous-crashgame-history': (count: number) => void;
-  'game-join-error': (data: string) => void;
-  'join-crash-game': (target: number, betAmount: number, denom: string) => void;
-  'auto-crashgame-join-success': (data: string) => void;
+  [ECrashSocketEvent.GAME_END]: (data: { game: FormattedGameHistoryType }) => void;
+  [ECrashSocketEvent.GAME_TICK]: (data: number) => void;
+  [ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS]: (data: FormattedPlayerBetType) => void;
+  [ECrashSocketEvent.BET_CASHOUT_ERROR]: (data: string) => void;
+  [ECrashSocketEvent.BET_CASHOUT_SUCCESS]: (result: any) => void;
+  [ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY]: (count: number) => void;
+  [ECrashSocketEvent.GAME_JOIN_ERROR]: (data: string) => void;
+  [ECrashSocketEvent.JOIN_CRASH_GAME]: (target: number, betAmount: number, denom: string) => void;
+  [ECrashSocketEvent.AUTO_CRASHGAME_JOIN_SUCCESS]: (data: string) => void;
 }
 
 export interface ICrashClientToServerEvents {
   auth: (token: string) => void;
-  'join-crash-game': (target: number, betAmount: number) => void;
-  'bet-cashout': () => void;
-  'previous-crashgame-history': (historyData: CrashHistoryData[]) => void;
-  'auto-crashgame-bet': (data: AutoCrashGameData) => void;
+  [ECrashSocketEvent.JOIN_CRASH_GAME]: (target: number, betAmount: number) => void;
+  [ECrashSocketEvent.BET_CASHOUT]: () => void;
+  [ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY]: (historyData: CrashHistoryData[]) => void;
+  [ECrashSocketEvent.AUTO_CRASHGAME_BET]: (data: AutoCrashGameData) => void;
 }

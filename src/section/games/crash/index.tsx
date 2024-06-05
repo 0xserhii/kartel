@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
 import { BetType, FormattedPlayerBetType } from '@/types';
-import { ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
+import { ECrashSocketEvent, ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/routes/hooks/use-toast';
@@ -141,7 +141,7 @@ export default function CrashGameSection() {
       ICrashClientToServerEvents
     > = io(`${SERVER_URL}/crash`);
 
-    crashSocket.on('game-bets', (bets: FormattedPlayerBetType[]) => {
+    crashSocket.on(ECrashSocketEvent.GAME_BETS, (bets: FormattedPlayerBetType[]) => {
       setBetData((prev: BetType[]) => [...bets, ...prev]);
 
       const totalUsk = bets
@@ -158,11 +158,11 @@ export default function CrashGameSection() {
       }));
     });
 
-    crashSocket.on('game-tick', (tick) => {
+    crashSocket.on(ECrashSocketEvent.GAME_TICK, (tick) => {
       setCrashStatus(ECrashStatus.PROGRESS);
     });
 
-    crashSocket.on('game-starting', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_STARTING, (data) => {
       setCrashStatus(ECrashStatus.PREPARE);
       setBetData([]);
       setBetCashout([]);
@@ -172,25 +172,25 @@ export default function CrashGameSection() {
       });
     });
 
-    crashSocket.on('game-join-error', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
       setAutoBet(true);
     });
 
-    crashSocket.on('game-start', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_START, (data) => {
       setCrashStatus(ECrashStatus.PROGRESS);
     });
 
-    crashSocket.on('game-end', (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_END, (data) => {
       setCrashStatus(ECrashStatus.END);
       setAvaliableBet(false);
     });
 
-    crashSocket.on('crashgame-join-success', (data) => {
+    crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, (data) => {
       setAvaliableBet(true);
     });
 
-    crashSocket.on('bet-cashout', (data) => {
+    crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
     });
 

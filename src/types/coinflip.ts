@@ -1,4 +1,13 @@
-import { ICoinPlayer } from "./coinflipGame";
+import VIPLevelType from './vipLevel';
+
+export interface ICoinPlayer {
+    _id: string;
+    username: string;
+    avatar: string;
+    color: string;
+    level: VIPLevelType;
+    isBot?: boolean;
+}
 
 export interface ICoinflipServerToClientEvents {
     'coinflip-probability': (data: number) => void;

@@ -58,8 +58,7 @@ const LiveChat = () => {
   const toast = useToast();
 
   const chatState = useAppSelector((state) => state.chat)
-  const dispatch = useAppDispatch()
-
+  const dispatch = useAppDispatch();
 
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);
@@ -98,11 +97,11 @@ const LiveChat = () => {
 
   useEffect(() => {
     dispatch(chatActions.loginChatServer())
-  }, [getAccessToken()])
+  }, [getAccessToken()]);
 
   useEffect(() => {
     dispatch(chatActions.subscribeChatServer())
-  }, [])
+  }, []);
 
   useEffect(() => {
     if ((chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory.length) {
@@ -128,15 +127,6 @@ const LiveChat = () => {
       </div>
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
-        {/* <div className="relative">
-          <Input
-            placeholder="Search"
-            className="pl-4 pr-10 min-h-12 border-gray500 text-gray500"
-          />
-          <span className="absolute top-0 flex items-center justify-center h-full right-4 text-gray500">
-            <Search className=" text-gray500" />
-          </span>
-        </div> */}
         <ScrollArea
           className={`flex flex-col items-stretch py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
         >
