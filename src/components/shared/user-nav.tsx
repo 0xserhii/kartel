@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { removeAllTokens } from '@/lib/axios';
 import { useWallet } from '@/provider/crypto/wallet';
-import { usePersistStore } from '@/store/persist';
+import { usePersistStore } from '@/store/zustand/persist';
 
 export default function UserNav() {
   const userData = usePersistStore((store) => store.app.userData);

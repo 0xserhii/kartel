@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import useRootStore from '@/store/root';
+import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/routes/hooks/use-modal';
 import { Input } from '@/components/ui/input';
@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from 'react';
 import { token } from '@/section/games/crash';
 import axios from 'axios';
-import { usePersistStore } from '@/store/persist';
+import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
@@ -293,7 +293,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => {}}
+                onChange={() => { }}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

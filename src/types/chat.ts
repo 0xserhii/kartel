@@ -1,22 +1,33 @@
 import { IChatUser } from './user';
 
-export interface Ichat {
+export interface IChat {
   _id: string;
   user: IChatUser;
   message: string;
   sentAt: Date;
 }
 
+export enum EChatSocketEvent {
+  LOGIN = 'auth',
+  JOIN_CHAT = 'join_chat',
+  SEND_MSG = 'message',
+  RECEIVE_MSG = 'message',
+  DISCONNECT_CHAT = 'disconnect',
+  RECEIVE_CHAT_HISTORY = 'send-chat-history',
+  GET_CHAT_HISTORY = 'get-chat-history'
+}
+
 export interface IChatClientToServerEvents {
-  auth: (token: string) => void;
-  'join-chat': (_id: string) => void;
-  message: (message: string) => void;
+  [EChatSocketEvent.LOGIN]: (token: string) => void;
+  [EChatSocketEvent.JOIN_CHAT]: (_id: string) => void;
+  [EChatSocketEvent.SEND_MSG]: (message: string) => void;
+  [EChatSocketEvent.GET_CHAT_HISTORY]: () => void;
 }
 
 export interface IChatServerToClientEvents {
-  message: (data: Ichat) => void;
-  'previous-chat-history': (data: {
+  [EChatSocketEvent.RECEIVE_MSG]: (data: IChat) => void;
+  [EChatSocketEvent.RECEIVE_CHAT_HISTORY]: (data: {
     message: string;
-    chatHistories: Ichat[];
+    chatHistories: IChat[];
   }) => void;
 }

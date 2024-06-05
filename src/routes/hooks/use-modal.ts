@@ -1,4 +1,4 @@
-import useRootStore from '@/store/root';
+import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
 
 export default function useModal() {

@@ -3,21 +3,17 @@ import EmojiPicker, {
   EmojiClickData,
   EmojiStyle
 } from 'emoji-picker-react';
-import { io, Socket } from 'socket.io-client';
-import {
-  IChatClientToServerEvents,
-  IChatServerToClientEvents,
-  Ichat
-} from '@/types';
 
 import { Separator } from '../ui/separator';
 import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
-import { getAccessToken } from '@/lib/axios';
-import { usePersistStore } from '@/store/persist';
+import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { Input } from '../ui/input';
+import { chatActions } from '@/store/redux/actions';
+import { useAppDispatch, useAppSelector } from '@/store/redux';
+import { getAccessToken } from '@/lib/axios';
 
 export type HistoryItemProps = {
   name: string;
@@ -56,52 +52,14 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
 
 const LiveChat = () => {
   const [inputStr, setInputStr] = useState('');
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
-  const [chatHistory, setChatHistory] = useState<Ichat[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const userData = usePersistStore((store) => store.app.userData);
   const toast = useToast();
-  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-  useEffect(() => {
-    const newSocket: Socket<
-      IChatServerToClientEvents,
-      IChatClientToServerEvents
-    > = io(`${SERVER_URL}/chat`);
+  const chatState = useAppSelector((state) => state.chat)
+  const dispatch = useAppDispatch()
 
-    newSocket.emit('auth', getAccessToken());
-
-    newSocket.on('message', (message) => {
-      setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
-    });
-
-    newSocket.on('previous-chat-history', (data) => {
-      if (!data.chatHistories.length) {
-        console.log(data.message);
-      } else {
-        setChatHistory((prevChatHistory) => [
-          ...data.chatHistories,
-          ...prevChatHistory
-        ]);
-      }
-    });
-
-    newSocket.on('disconnect', () => {
-      setChatHistory([]);
-    });
-
-    setSocket(newSocket);
-    return () => {
-      newSocket.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (socket) {
-      socket.emit('auth', getAccessToken());
-    }
-  }, [getAccessToken(), socket]);
 
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);
@@ -129,21 +87,31 @@ const LiveChat = () => {
 
     const message = inputStr;
     try {
-      socket?.emit('message', message);
+      // socket?.emit('message', message);
+      dispatch(chatActions.sendMsg(message))
       setInputStr('');
     } catch (error) {
       console.log(error);
     }
   };
 
+
   useEffect(() => {
-    if (chatHistory.length) {
+    dispatch(chatActions.loginChatServer())
+  }, [getAccessToken()])
+
+  useEffect(() => {
+    dispatch(chatActions.subscribeChatServer())
+  }, [])
+
+  useEffect(() => {
+    if ((chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory.length) {
       ref.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'end'
       });
     }
-  }, [chatHistory.length]);
+  }, [chatState?.chatHistory]);
 
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
@@ -172,7 +140,7 @@ const LiveChat = () => {
         <ScrollArea
           className={`flex flex-col items-stretch py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
         >
-          {chatHistory.map((chat, key) => (
+          {(chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory?.map((chat, key) => (
             <React.Fragment key={key}>
               <HistoryItem
                 name={chat.user?.username}
