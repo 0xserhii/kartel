@@ -11,7 +11,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { Input } from '../ui/input';
-import { useDispatch, useSelector } from 'react-redux';
 import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { getAccessToken } from '@/lib/axios';
