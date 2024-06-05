@@ -52,6 +52,7 @@ const CoinFlipSection = () => {
     const [isEarned, setIsEarned] = useState(false);
     const [isRolling, setIsRolling] = useState(false);
     const { width, height } = useWindowSize();
+    const [winAmount, setWinAmount] = useState(0);
     const [coinflipStatus, setCoinflipStatus] = useState<ECOINFLIPStatus>(
         ECOINFLIPStatus.NONE
     );
@@ -103,6 +104,29 @@ const CoinFlipSection = () => {
         }
     }
 
+    const handleChangeCoinAmount = (value) => {
+        if (selectedHeads > value[0]) {
+            setSelectedHeads(value[0])
+        }
+
+        if (value[0] < 6) {
+            setSelectedHeads(1)
+        }
+        else if (value[0] < 8) {
+            setSelectedHeads(2)
+        } else if (value[0] <= 10) {
+            setSelectedHeads(3)
+        }
+        setCoinAmount(value[0]);
+    }
+
+    const handleHeadsAmounts = (value) => {
+        if (value[0] > coinAmount) {
+            setCoinAmount(value[0]);
+        }
+        setSelectedHeads(value[0]);
+    }
+
     useEffect(() => {
         if (socket) {
             socket.emit('auth', getAccessToken());
@@ -138,6 +162,13 @@ const CoinFlipSection = () => {
             setCoinflipStatus(ECOINFLIPStatus.START);
         });
 
+        coinflipSocket.on('update-wallet', (data, denom) => {
+            if (data > 0) {
+                setWinAmount(parseFloat(data.toFixed(2)));
+            }
+            setCoinflipStatus(ECOINFLIPStatus.START);
+        });
+
         coinflipSocket.on('coinflipgame-rolled', (gameData) => {
             setCoins(gameData.coinflipResult);
             setIsEarned(gameData.isEarn);
@@ -154,7 +185,7 @@ const CoinFlipSection = () => {
         probabilityXOrMoreHeads(selectedHeads, coinAmount).then((probability) => {
             setProbability(probability * 100);
         });
-    }, [coinAmount, selectedHeads])
+    }, [coinAmount, selectedHeads]);
 
     return (
         <ScrollArea className="h-[calc(100vh-64px)]">
@@ -168,7 +199,7 @@ const CoinFlipSection = () => {
                     <div className="h-64 flex flex-col justify-around items-center">
                         {
                             coinflipStatus === ECOINFLIPStatus.END && (
-                                <span className="absolute text-xl uppercase top-3 text-[#df8002] font-bold">{isEarned ? "You Won" : "You Lost"}</span>
+                                <span className="absolute text-xl uppercase top-3 text-[#df8002] font-bold">{isEarned ? `You Won ${winAmount}` : "You Lost"}</span>
                             )
                         }
                         <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
@@ -191,7 +222,7 @@ const CoinFlipSection = () => {
                                         Coins
                                     </span>
                                     <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-3 px-5 justify-between items-center">
-                                        <Slider className={`w-10/12 ${isRolling && "opacity-25"}`} step={1} min={1} max={10} defaultValue={coinAmount[0]} onValueChange={(value) => setCoinAmount(value[0])} disabled={isRolling} />
+                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} step={1} min={1} max={10} value={[coinAmount]} onValueChange={handleChangeCoinAmount} disabled={isRolling} />
                                         <span className="text-white text-sm">
                                             {coinAmount}
                                         </span>
@@ -202,7 +233,7 @@ const CoinFlipSection = () => {
                                         Auto Bet
                                     </span>
                                     <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-3 px-5 justify-between items-center">
-                                        <Slider className={`w-10/12 ${isRolling && "opacity-25"}`} defaultValue={autobetAmount[0]} onValueChange={(value) => setAutobetAmount(value[0])} disabled={isRolling} />
+                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} value={[betAmount]} onValueChange={(value) => setAutobetAmount(value[0])} disabled={isRolling} />
                                         <span className="text-white text-sm">
                                             {autobetAmount}
                                         </span>
@@ -278,7 +309,7 @@ const CoinFlipSection = () => {
                                         Heads / Tails
                                     </span>
                                     <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-3 px-5 justify-between items-center">
-                                        <Slider className={`w-10/12 ${isRolling && "opacity-25"}`} max={coinAmount} min={coinAmount < 6 ? 1 : coinAmount < 9 ? 2 : 3} step={1} defaultValue={selectedHeads[0]} onValueChange={(value) => setSelectedHeads(value[0])} disabled={isRolling} />
+                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} max={10} min={coinAmount < 6 ? 1 : coinAmount < 8 ? 2 : 3} step={1} value={[selectedHeads]} onValueChange={handleHeadsAmounts} disabled={isRolling} />
                                         <span className="text-white text-sm">
                                             {selectedHeads}
                                         </span>

@@ -27,6 +27,7 @@ export interface ICoinflipServerToClientEvents {
         coinflipResult: boolean[];
         isEarn: boolean;
     }) => void;
+    'update-wallet': (data: number, denom: string) => void;
 }
 
 export interface ICoinflipClientToServerEvents {
