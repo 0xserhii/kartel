@@ -42,7 +42,7 @@
     background-image: url(/assets/games/coin-flip/coin-head.svg);
     background-position: center;
     background-size: cover;
-    animation: flipfront 1s forwards;
+    animation: flipfront 0.5s forwards;
 }
 
 .coin-back {
@@ -50,7 +50,7 @@
     background-image: url(/assets/games/coin-flip/coin-tail.svg);
     background-position: center;
     background-size: cover;
-    animation: flipback 1s forwards;
+    animation: flipback 0.5s forwards;
 }
 
 @keyframes flip {
