@@ -45,7 +45,7 @@ const CoinFlipSection = () => {
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectedSide, setSelectedSide] = useState(true)
     const [coinAmount, setCoinAmount] = useState(1);
-    const [autobetAmount, setAutobetAmount] = useState(1);
+    const [autobetAmount, setAutobetAmount] = useState(0);
     const [coins, setCoins] = useState<boolean[]>([]);
     const [selectedHeads, setSelectedHeads] = useState(1);
     const [probability, setProbability] = useState(0);
@@ -233,7 +233,7 @@ const CoinFlipSection = () => {
                                         Auto Bet
                                     </span>
                                     <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-3 px-5 justify-between items-center">
-                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} value={[betAmount]} onValueChange={(value) => setAutobetAmount(value[0])} disabled={isRolling} />
+                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} value={[autobetAmount]} onValueChange={(value) => setAutobetAmount(value[0])} disabled={isRolling} />
                                         <span className="text-white text-sm">
                                             {autobetAmount}
                                         </span>
