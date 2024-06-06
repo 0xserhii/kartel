@@ -9,14 +9,24 @@ export interface ICoinPlayer {
     isBot?: boolean;
 }
 
+export enum ECoinflipSocketEvent {
+    LOGIN = 'auth',
+    CREATE_NEW_COINFLIPGAME = 'create-new-coinflipgame',
+    JOIN_COINFLIPGAME = 'join-coinflipgame',
+    COINFLIPGAME_JOIN_SUCCESS = 'coinflipgame-join-success',
+    COINFLIPGAME_JOINED = 'coinflipgame-joined',
+    COINFLIPGAME_ROLLING = 'coinflipgame-rolling',
+    COINFLIPGAME_ROLLED = 'coinflipgame-rolled',
+    UPDATE_WALLET = 'update-wallet',
+    GAME_CREATION_ERROR = 'game-creation-error'
+}
+
 export interface ICoinflipServerToClientEvents {
-    'coinflip-probability': (data: number) => void;
-    'game-creation-error': (message: string) => void;
-    'new-coinflip-game': (gameData: any) => void;
-    'coinflipgame-join-success': () => void;
-    'coinflipgame-joined': (data: { _id: string; newPlayer: ICoinPlayer }) => void;
-    'coinflipgame-rolling': (data: { game_id: string, animation_time: number }) => void;
-    'coinflipgame-rolled': ({
+    [ECoinflipSocketEvent.LOGIN]: (token: string) => void;
+    [ECoinflipSocketEvent.COINFLIPGAME_JOIN_SUCCESS]: () => void;
+    [ECoinflipSocketEvent.COINFLIPGAME_JOINED]: (data: { _id: string; newPlayer: ICoinPlayer }) => void;
+    [ECoinflipSocketEvent.COINFLIPGAME_ROLLING]: (data: { game_id: string, animation_time: number }) => void;
+    [ECoinflipSocketEvent.COINFLIPGAME_ROLLED]: ({
         _id,
         randomModule,
         coinflipResult,
@@ -27,12 +37,12 @@ export interface ICoinflipServerToClientEvents {
         coinflipResult: boolean[];
         isEarn: boolean;
     }) => void;
-    'update-wallet': (data: number, denom: string) => void;
+    [ECoinflipSocketEvent.UPDATE_WALLET]: (amount: number) => void;
+    [ECoinflipSocketEvent.GAME_CREATION_ERROR]: (message: string) => void;
 }
 
 export interface ICoinflipClientToServerEvents {
     auth: (token: string) => void;
-    'coinflip-probability': (data: { betCoinsCount: number; betSideCount: number; }) => void;
-    'create-new-coinflipgame': (data: { betAmount: number; denom: string; betCoinsCount: number; betSideCount: number, betSide: boolean }) => void;
+    [ECoinflipSocketEvent.CREATE_NEW_COINFLIPGAME]: (data: { betAmount: number; denom: string; betCoinsCount: number; betSideCount: number, betSide: boolean }) => void;
 }
 

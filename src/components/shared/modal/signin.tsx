@@ -77,7 +77,6 @@ const SignInModal = () => {
         BACKEND_API_ENDPOINT.auth.signIn,
         { data: signInPayload }
       ]);
-      console.log(resSignIn);
       if (resSignIn?.responseObject?.auth?.accessToken) {
         setAccessToken(resSignIn?.responseObject?.auth?.accessToken);
         await setUserData(resSignIn?.responseObject?.user);

@@ -94,7 +94,6 @@ const LiveChat = () => {
     }
   };
 
-
   useEffect(() => {
     dispatch(chatActions.loginChatServer())
   }, [getAccessToken()]);
