@@ -62,11 +62,13 @@ export default function Home() {
                   alt="Play Now"
                   className="absolute bottom-6 left-6 w-16"
                 />
-                <img
-                  src={Playnow}
-                  alt="Play Now"
-                  className="absolute bottom-5 right-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:transition-all md:hover:scale-[1.3]"
-                />
+                <Link to="/coin-flip">
+                  <img
+                    src={Playnow}
+                    alt="Play Now"
+                    className="absolute bottom-5 right-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:transition-all md:hover:scale-[1.3]"
+                  />
+                </Link>
               </div>
               <div className="relative w-6/12 rounded-md">
                 <img

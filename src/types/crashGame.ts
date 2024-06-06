@@ -1,5 +1,10 @@
 import VIPLevelType from './vipLevel';
 
+export interface IToken {
+  name: string;
+  src: string;
+  denom: string;
+}
 export interface GameStateType {
   _id: string;
   status: number;
