@@ -8,13 +8,12 @@ import { token } from "../crash";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { coinFlipPresets, coinSide, multiplerArray } from "@/constants/data";
 import { Button } from "@/components/ui/button";
-import { Socket, io } from "socket.io-client";
-import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
 import { getAccessToken } from "@/lib/axios";
 import useToast from '@/routes/hooks/use-toast';
 import { useWindowSize } from "@/routes/hooks";
 import Confetti from "react-confetti";
-import { ECOINFLIPStatus } from "@/constants/status";
+import { useAppDispatch, useAppSelector } from "@/store/redux";
+import { coinflipActions } from "@/store/redux/actions";
 
 const probabilityXOrMoreHeads = async (x: number, n: number): Promise<number> => {
     const factorial = (n: number): number => {
@@ -38,24 +37,20 @@ const probabilityXOrMoreHeads = async (x: number, n: number): Promise<number> =>
 };
 
 const CoinFlipSection = () => {
-    const SERVER_URL = import.meta.env.VITE_SERVER_URL;
     const toast = useToast();
-    const [socket, setSocket] = useState<Socket | null>(null);
+    const dispatch = useAppDispatch();
+    const coinflipState = useAppSelector((state) => state.coinflip)
     const [betAmount, setBetAmount] = useState(0);
     const [selectedToken, setSelectedToken] = useState(token[0]);
     const [selectedSide, setSelectedSide] = useState(true)
     const [coinAmount, setCoinAmount] = useState(1);
-    const [autobetAmount, setAutobetAmount] = useState(1);
+    const [autobetAmount, setAutobetAmount] = useState(0);
     const [coins, setCoins] = useState<boolean[]>([]);
     const [selectedHeads, setSelectedHeads] = useState(1);
     const [probability, setProbability] = useState(0);
     const [isEarned, setIsEarned] = useState(false);
     const [isRolling, setIsRolling] = useState(false);
     const { width, height } = useWindowSize();
-    const [winAmount, setWinAmount] = useState(0);
-    const [coinflipStatus, setCoinflipStatus] = useState<ECOINFLIPStatus>(
-        ECOINFLIPStatus.NONE
-    );
 
     const handleBetAmountChange = (event) => {
         const inputValue = event.target.value;
@@ -84,54 +79,42 @@ const CoinFlipSection = () => {
 
     const startCoinflip = () => {
         if (betAmount > 0) {
-            if ((coinAmount >= 9 && selectedHeads < 3) || (coinAmount >= 6 && selectedHeads <= 2)) {
-                const requiredHeads = coinAmount >= 9 ? 3 : 2;
-                toast.error(`Select more than ${requiredHeads} ${selectedSide ? "heads" : "tails"}`);
-                return;
-            }
-            socket?.emit('create-new-coinflipgame', {
+            dispatch(coinflipActions.updategameState());
+            dispatch(coinflipActions.startCoinflipgame({
                 betAmount: Number(betAmount) ?? 0.1,
                 denom: selectedToken.name,
                 betCoinsCount: coinAmount,
                 betSideCount: selectedHeads,
                 betSide: selectedSide
-            });
+            }));
             setIsRolling(true);
             setIsEarned(false);
-            setCoinflipStatus(ECOINFLIPStatus.START);
         } else {
             toast.error("Bet Amount should be between 0.1 and 100")
         }
-    }
+    };
 
     const handleChangeCoinAmount = (value) => {
         if (selectedHeads > value[0]) {
             setSelectedHeads(value[0])
         }
-
         if (value[0] < 6) {
             setSelectedHeads(1)
         }
-        else if (value[0] < 8) {
+        else if (value[0] <= 8) {
             setSelectedHeads(2)
         } else if (value[0] <= 10) {
             setSelectedHeads(3)
         }
         setCoinAmount(value[0]);
-    }
+    };
 
     const handleHeadsAmounts = (value) => {
         if (value[0] > coinAmount) {
             setCoinAmount(value[0]);
         }
         setSelectedHeads(value[0]);
-    }
-
-    useEffect(() => {
-        if (socket) {
-            socket.emit('auth', getAccessToken());
-        }
-    }, [getAccessToken(), socket]);
+    };
 
     useEffect(() => {
         const newCoins = Array.from({ length: coinAmount }, (_, index) =>
@@ -141,45 +124,24 @@ const CoinFlipSection = () => {
     }, [selectedHeads, coinAmount, selectedSide]);
 
     useEffect(() => {
-        const coinflipSocket: Socket<
-            ICoinflipServerToClientEvents,
-            ICoinflipClientToServerEvents
-        > = io(`${SERVER_URL}/coinflip`);
+        if (coinflipState.msg) {
+            toast.error(coinflipState.msg)
+        }
+    }, [coinflipState.msg]);
 
-        coinflipSocket.emit('auth', getAccessToken());
+    useEffect(() => {
+        dispatch(coinflipActions.loginCoinflipServer())
+    }, [getAccessToken()]);
 
-        coinflipSocket.on('coinflip-probability', (data) => {
-            setProbability(data);
-        });
-
-        coinflipSocket.on('game-creation-error', (message) => {
-            toast.error(message);
-            setIsRolling(false);
-        });
-
-        coinflipSocket.on('coinflipgame-join-success', () => {
-            toast.success('Joined game');
-            setCoinflipStatus(ECOINFLIPStatus.START);
-        });
-
-        coinflipSocket.on('update-wallet', (data, denom) => {
-            if (data > 0) {
-                setWinAmount(parseFloat(data.toFixed(2)));
-            }
-            setCoinflipStatus(ECOINFLIPStatus.START);
-        });
-
-        coinflipSocket.on('coinflipgame-rolled', (gameData) => {
-            setCoins(gameData.coinflipResult);
-            setIsEarned(gameData.isEarn);
-            if (gameData.coinflipResult) {
-                setIsRolling(false);
-                setCoinflipStatus(ECOINFLIPStatus.END);
-            }
-        });
-
-        setSocket(coinflipSocket);
+    useEffect(() => {
+        dispatch(coinflipActions.subscribeCoinflipServer())
     }, []);
+
+    useEffect(() => {
+        setIsRolling(false);
+        setIsEarned(coinflipState.gameData.isEarn);
+        setCoins(coinflipState.gameData.coinflipResult);
+    }, [coinflipState.gameData]);
 
     useEffect(() => {
         probabilityXOrMoreHeads(selectedHeads, coinAmount).then((probability) => {
@@ -198,15 +160,14 @@ const CoinFlipSection = () => {
                 <div className="flex flex-col">
                     <div className="h-64 flex flex-col justify-around items-center">
                         {
-                            coinflipStatus === ECOINFLIPStatus.END && (
-                                <span className="absolute text-xl uppercase top-3 text-[#df8002] font-bold">{isEarned ? `You Won ${winAmount}` : "You Lost"}</span>
-                            )
+                            coinflipState.gameStatus &&
+                            <span className="absolute text-xl uppercase top-3 text-[#df8002] font-bold">{isEarned ? `You Won ${coinflipState.winAmount.toFixed(2)}` : `You Lost`}</span>
                         }
                         <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
                             {coins.map((coin, index) => {
                                 return (
                                     <div key={index} id="coin" className={`coin ${isRolling ? "flipping" : `${coin ? "coin-front" : "coin-back"}`}`} style={{
-                                        animation: isRolling ? `${Math.random() * 0.5 + 0.5}s flip infinite` : undefined
+                                        animation: isRolling ? `${Math.random() * 0.2 + 0.5}s flip infinite` : undefined
                                     }}>
                                     </div>
                                 )
@@ -233,7 +194,7 @@ const CoinFlipSection = () => {
                                         Auto Bet
                                     </span>
                                     <div className="flex flex-row w-full border border-purple-0.5 rounded-lg py-3 px-5 justify-between items-center">
-                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} value={[betAmount]} onValueChange={(value) => setAutobetAmount(value[0])} disabled={isRolling} />
+                                        <Slider className={`w-10/12 cursor-pointer ${isRolling && "opacity-25"}`} value={[autobetAmount]} onValueChange={(value) => setAutobetAmount(value[0])} disabled={isRolling} />
                                         <span className="text-white text-sm">
                                             {autobetAmount}
                                         </span>

@@ -4,10 +4,12 @@ import {
 
 import chatSagas from './chat.saga';
 import leaderboardSagas from './leaderboard.saga';
+import coinflipSagas from './coinflip.saga';
 
 export default function* rootSaga() {
     yield all([
         ...chatSagas,
-        ...leaderboardSagas
+        ...leaderboardSagas,
+        ...coinflipSagas
     ]);
 }

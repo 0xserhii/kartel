@@ -32,7 +32,6 @@ export default function UserAuthForm() {
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    console.log('data', data);
     router.push('/');
   };
 

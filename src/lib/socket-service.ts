@@ -15,10 +15,10 @@ const chatSocket: Socket<
 //     ICrashClientToServerEvents
 // > = io(`${SERVER_URL}/crash`);
 
-// const coinflipSocket: Socket<
-//     ICoinflipServerToClientEvents,
-//     ICoinflipClientToServerEvents
-// > = io(`${SERVER_URL}/coinflip`);
+const coinflipSocket: Socket<
+    ICoinflipServerToClientEvents,
+    ICoinflipClientToServerEvents
+> = io(`${SERVER_URL}/coinflip`);
 
 const leaderboardSocket: Socket<
     ICoinflipServerToClientEvents,
@@ -28,7 +28,7 @@ const leaderboardSocket: Socket<
 const KartelSocket = {
     chat: chatSocket,
     // crash: crashSocket,
-    // coinflip: coinflipSocket,
+    coinflip: coinflipSocket,
     leaderboard: leaderboardSocket
 }
 
