@@ -20,9 +20,6 @@ export default function chatReducer(state = initialState, action): IChatState {
 		case EChatSocketAction.RECEIVE_MSG:
 			return { ...state, chatHistory: [...state.chatHistory, action.payload as IChat] };
 
-		case EChatSocketAction.DISCONNECT_CHAT:
-			return initialState;
-
 		case EChatSocketAction.LOGIN_CHAT:
 			return { ...state, loginStatus: true };
 
