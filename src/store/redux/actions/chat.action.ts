@@ -16,13 +16,6 @@ export function receiveMsg(msg: IChat) {
     };
 }
 
-export function disconnectChatServer() {
-    return {
-        type: EChatSocketAction.DISCONNECT_CHAT,
-        payload: null
-    };
-}
-
 export function sendMsg(msg: string) {
     return {
         type: EChatSocketAction.SEND_MSG,

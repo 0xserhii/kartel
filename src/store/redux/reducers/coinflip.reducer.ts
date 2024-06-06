@@ -39,9 +39,6 @@ export default function coinflipReducer(state = initialState, action): ICoinflip
         case ECoinflipSocketAction.UPDATE_WALLET:
             return { ...state, winAmount: action.payload };
 
-        case ECoinflipSocketAction.DISCONNECT_COINFLIP:
-            return initialState;
-
         case ECoinflipSocketAction.LOGIN_COINFLIP:
             return { ...state, loginStatus: true };
 

@@ -29,11 +29,6 @@ function subscribe(socket) {
             emit(chatActions.receiveMsg(msg));
         });
 
-        socket.on(EChatSocketEvent.DISCONNECT_CHAT, () => {
-            console.log('disconnect chat event')
-            emit(chatActions.disconnectChatServer());
-        });
-
         socket.on(EChatSocketEvent.RECEIVE_CHAT_HISTORY, (history: {
             message: string;
             chatHistories: IChat[];
