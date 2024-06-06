@@ -44,7 +44,6 @@ function subscribe(socket) {
             isEarn: boolean
         }) => {
             emit(coinflipActions.coinflipgameRolled(gameData));
-            // emit(coinflipActions.updategameState());
         });
 
         return () => { };
@@ -94,7 +93,6 @@ function* stopChanelSaga() {
 function* startCoinflipgameSaga(action) {
     yield delay(500);
     KartelSocket.coinflip.emit(ECoinflipSocketEvent.CREATE_NEW_COINFLIPGAME, action.payload)
-    // yield put(coinflipActions.updategameState());
 }
 
 const sagas = [
