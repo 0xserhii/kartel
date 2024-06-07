@@ -120,7 +120,7 @@ export default function CrashGameSection() {
       const joinParams = {
         target: avaliableAutoCashout ? Number(autoCashoutAmount) * 100 : 1000000,
         betAmount: Number(betAmount).valueOf(),
-        denom: selectedToken.name
+        denom: selectedToken.name,
       };
       socket?.emit('join-crash-game', joinParams);
     }
@@ -380,7 +380,8 @@ export default function CrashGameSection() {
                             (crashStatus !== ECrashStatus.PREPARE &&
                               !avaliableBet) ||
                             (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet))
+                              avaliableBet)
+                          )
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -393,7 +394,7 @@ export default function CrashGameSection() {
                             : 'Place Bet'}
                       </Button>
                     </div>
-                    <div className="flex flex-col gap-4">
+                    <div className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-[29.3px]'}`}>
                       <p className="text-sm uppercase text-[#556987] w-6/12">
                         bet amount
                       </p>
@@ -456,7 +457,7 @@ export default function CrashGameSection() {
                         ))}
                       </div>
                       {!isAutoMode && (
-                        <div className="flex flex-col justify-between gap-2">
+                        <div className="flex flex-col justify-between gap-3">
                           <div className="flex flex-row items-center justify-start gap-2">
                             <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
                             <span className="text-white">
@@ -470,7 +471,7 @@ export default function CrashGameSection() {
                               step={0.05}
                               max={100}
                               min={1}
-                              defaultValue={[autoCashoutAmount]}
+                              value={[autoCashoutAmount]}
                               onValueChange={(value) =>
                                 setAutoCashoutAmount(value[0])
                               }
