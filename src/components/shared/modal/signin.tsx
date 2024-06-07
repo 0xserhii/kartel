@@ -158,7 +158,7 @@ const SignInModal = () => {
                 </a>
               </div>
               <Button
-                className="w-full bg-[#A326D4] py-5 hover:bg-[#A326D4]"
+                className="w-full bg-purple py-5 hover:bg-purple"
                 type="submit"
               >
                 login

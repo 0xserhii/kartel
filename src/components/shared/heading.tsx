@@ -17,7 +17,7 @@ export default function Heading({ className }: THeadingProps) {
           to={item.path}
           className={cn(
             'min-h-full rounded-none border-b-2 border-b-transparent px-6 py-5 font-semibold uppercase text-gray-300 hover:bg-transparent',
-            pathname === item.path && 'text-[#A326D4]'
+            pathname === item.path && 'text-purple'
           )}
         >
           {item.name}

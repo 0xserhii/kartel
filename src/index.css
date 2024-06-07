@@ -244,3 +244,20 @@ input::-webkit-inner-spin-button {
   stroke-linecap: round;
   animation: dash4 1.5s ease-in-out infinite;
 }
+
+@keyframes animation-bubble {
+  0% {
+    transform: scale(0.95);
+    box-shadow: rgb(163, 38, 212) 0px 0px 0px 0px;
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: rgba(84, 214, 44, 0) 0px 0px 0px 10px;
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: rgba(84, 214, 44, 0) 0px 0px 0px 0px;
+  }
+}

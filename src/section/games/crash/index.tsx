@@ -20,24 +20,9 @@ import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/routes/hooks/use-toast';
 import BetBoard from './bet-board';
-import { multiplerArray, betMode, roundArray } from '@/constants/data';
+import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSpring, animated } from '@react-spring/web';
-
-export interface IToken {
-  name: string;
-  src: string;
-  denom: string;
-}
-
-export const token: Array<IToken> = [
-  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'ukuji' },
-  {
-    name: 'usk',
-    src: '/assets/tokens/usk.png',
-    denom: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
-  }
-];
 
 const GrowingNumber = ({ start, end }) => {
   const { number: numberValue } = useSpring({
@@ -339,7 +324,7 @@ export default function CrashGameSection() {
                     <span
                       key={index}
                       className={cn(
-                        'rounded-lg border border-[#1D1776] bg-[#151245] px-2 py-1 text-center text-xs text-gray-300'
+                        'rounded-lg border border-[#1D1776] bg-dark-blue px-2 py-1 text-center text-xs text-gray-300'
                       )}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
@@ -358,9 +343,9 @@ export default function CrashGameSection() {
                     {betMode.map((item, index) => (
                       <Button
                         className={cn(
-                          'min-h-full rounded-lg border border-[#1D1776] bg-[#151245] px-6 py-5 font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white',
+                          'min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white',
                           selectMode === item &&
-                          'border-[#A326D4] bg-[#A326D4] text-white hover:bg-[#A326D4]'
+                          'border-purple bg-purple text-white hover:bg-purple'
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -374,7 +359,7 @@ export default function CrashGameSection() {
                   <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
                     <div className='flex flex-row items-center justify-end'>
                       <Button
-                        className="h-12 bg-[#A326D4] py-3 px-3 w-6/12 uppercase hover:bg-[#A326D4]"
+                        className="h-12 bg-purple py-3 px-3 w-6/12 uppercase hover:bg-purple"
                         disabled={
                           isAutoMode ? false : (
                             (crashStatus !== ECrashStatus.PREPARE &&
@@ -448,7 +433,7 @@ export default function CrashGameSection() {
                         {multiplerArray.map((item, index) => (
                           <Button
                             disabled={isAutoMode && !autoBet}
-                            className="rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white"
+                            className="rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white"
                             key={index}
                             onClick={() => handleMultiplierClick(item)}
                           >
@@ -504,7 +489,7 @@ export default function CrashGameSection() {
                             {roundArray.map((item, index) => (
                               <Button
                                 disabled={isAutoMode && !autoBet}
-                                className={`rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white ${round === item ? 'bg-[#A326D4] text-white' : ''}`}
+                                className={`rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white ${round === item ? 'bg-purple text-white' : ''}`}
                                 key={index}
                                 onClick={() => setRound(item)}
                               >

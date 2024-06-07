@@ -1,4 +1,3 @@
-import { HistoryItemProps } from '@/components/shared/live-chat';
 import { NavItemGroup } from '@/types';
 
 export const multiPlayers = [
@@ -90,162 +89,6 @@ export const tabItems = [
   { name: 'home', path: '/' },
   { name: 'leaderboard', path: '/leader-board' },
   { name: 'dashboard', path: '/dashboard' }
-];
-
-export const chatsMock: HistoryItemProps[] = [
-  {
-    name: 'John Doe',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '02:05'
-  },
-  {
-    name: 'Alice Johnson',
-    message:
-      'I came across your profile and I would like to know more about your services.',
-    avatar: '/assets/avatar-mock.png',
-    time: '05:18'
-  },
-  {
-    name: 'David Smith',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '23:45'
-  },
-  {
-    name: 'Emma Wilson',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '02:05'
-  },
-  {
-    name: 'James Brown',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '05:18'
-  },
-  {
-    name: 'Laura White',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '23:45'
-  },
-  {
-    name: 'Michael Lee',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '02:05'
-  },
-  {
-    name: 'Olivia Green',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '05:18'
-  },
-  {
-    name: 'Robert Taylor',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '23:45'
-  },
-  {
-    name: 'John Doe',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '02:05'
-  },
-  {
-    name: 'Alice Johnson',
-    message:
-      'I came across your profile and I would like to know more about your services.',
-    avatar: '/assets/avatar-mock.png',
-    time: '05:18'
-  },
-  {
-    name: 'David Smith',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '23:45'
-  },
-  {
-    name: 'Emma Wilson',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '02:05'
-  },
-  {
-    name: 'James Brown',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '05:18'
-  },
-  {
-    name: 'Laura White',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '23:45'
-  },
-  {
-    name: 'Michael Lee',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '02:05'
-  },
-  {
-    name: 'Olivia Green',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '05:18'
-  },
-  {
-    name: 'Robert Taylor',
-    message: 'Hello, how can I help you today?',
-    avatar: '/assets/avatar-mock.png',
-    time: '23:45'
-  }
-];
-
-export const scores = [
-  {
-    rank: 1,
-    name: 'Kristin Watson',
-    avatar: '/assets/avatar-mock.png',
-    score: 2373,
-    betAmount: 183,
-    time: '12:00:23'
-  },
-  {
-    rank: 2,
-    name: 'Alice Johnson',
-    avatar: '/assets/avatar-mock.png',
-    score: 2373,
-    betAmount: 183,
-    time: '12:00:23'
-  },
-  {
-    rank: 3,
-    name: 'David Smith',
-    avatar: '/assets/avatar-mock.png',
-    score: 2373,
-    betAmount: 183,
-    time: '12:00:23'
-  },
-  {
-    rank: 4,
-    name: 'Emma Wilson',
-    avatar: '/assets/avatar-mock.png',
-    score: 2373,
-    betAmount: 183,
-    time: '12:00:23'
-  },
-  {
-    rank: 5,
-    name: 'James Brown',
-    avatar: '/assets/avatar-mock.png',
-    score: 2373,
-    betAmount: 183,
-    time: '12:00:23'
-  }
 ];
 
 export const players = [
@@ -486,4 +329,25 @@ export const coinFlipPresets = [
   { value: "6:5", label: "6:5 (x8.96)", multiplier: "x8.96" },
   { value: "9:8", label: "9:8 (x50.18)", multiplier: "x50.18" },
   { value: "10:10", label: "10:10 (x1003.52)", multiplier: "x1003.52" }
+];
+
+
+export interface IToken {
+  name: string;
+  src: string;
+  denom: string;
+}
+
+export const token: Array<IToken> = [
+  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'kuji' },
+  {
+    name: 'usk',
+    src: '/assets/tokens/usk.png',
+    denom: 'usk'
+  },
+  {
+    name: 'kart',
+    src: '/assets/tokens/kartel.svg',
+    denom: 'kartel'
+  },
 ];

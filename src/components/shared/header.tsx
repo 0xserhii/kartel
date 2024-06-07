@@ -44,7 +44,7 @@ export default function Header() {
               onClick={() => setOpen(!open)}
             >
               <MessageSquareMore
-                className={`text-[${open ? '#A326D4' : '#fff'}]`}
+                className={`text-${open ? 'purple' : 'white'}`}
               />
             </Button>
             {/* <Bell className="text-gray50" /> */}

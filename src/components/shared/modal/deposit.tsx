@@ -13,12 +13,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { useEffect, useState } from 'react';
-import { token } from '@/section/games/crash';
 import axios from 'axios';
 import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/routes/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
+import { token } from '@/constants/data';
 
 interface TokenBalances {
   usk: number;
@@ -301,7 +301,7 @@ const DepositModal = () => {
           )}
         </div>
         <Button
-          className="w-full gap-2 bg-[#A326D4] py-5 hover:bg-[#A326D4]"
+          className="w-full gap-2 bg-purple py-5 hover:bg-purple"
           type="submit"
           onClick={
             selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit
