@@ -111,7 +111,6 @@ const DepositModal = () => {
   };
 
   const updateBalance = async (type: string) => {
-    console.log("handle desposti")
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,

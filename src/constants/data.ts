@@ -319,6 +319,10 @@ export const multiplerArray = [1 / 2, 2, 4, 8];
 
 export const roundArray = [5, 10, 15, 20, 10000];
 
+export const minesAmountPresets = [1, 3, 5, 10, 24];
+
+export const sampleMine = [true, false, true, false, true, false, false, false, false, false, true, true, true, true, false, false, false, true, true, true, false, false, true, false, false]
+
 export const coinSide = [false, true];
 
 export const coinFlipPresets = [
