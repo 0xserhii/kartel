@@ -55,7 +55,7 @@ export default function AppRouter() {
           element: <CoinFlipGame />
         },
         {
-          path: '/coin-flip-mini',
+          path: '/black-jack',
           element: <CoinFlipGame />
         },
         {

@@ -111,23 +111,22 @@ const DepositModal = () => {
   };
 
   const updateBalance = async (type: string) => {
+    console.log("handle desposti")
     try {
-      if (account) {
-        const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
-          {
-            balanceType: selectedToken.name,
-            actionType: type,
-            amount: Number(depositAmount)
-          }
-        );
-        if (response.status === 200) {
-          setWalletData(response.data?.responseObject.wallet);
-          if (type === 'deposit') {
-            toast.success(`Deposit Successful`);
-          } else if (type === 'withdraw') {
-            toast.success(`Withdraw Successful`);
-          }
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
+        {
+          balanceType: selectedToken.name,
+          actionType: type,
+          amount: Number(depositAmount)
+        }
+      );
+      if (response.status === 200) {
+        setWalletData(response.data?.responseObject.wallet);
+        if (type === 'deposit') {
+          toast.success(`Deposit Successful`);
+        } else if (type === 'withdraw') {
+          toast.success(`Withdraw Successful`);
         }
       }
     } catch (error) {
