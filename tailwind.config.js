@@ -23,7 +23,7 @@ module.exports = {
         'dark-blue': '#151245',
         white: '#ffffff',
         'blue-border': '#1D1776',
-        purple: '#A326D4',
+        purple: '#ff149d',
         'purple-0.15': 'rgba(75,52,167, 0.15)',
         'purple-0.5': 'rgba(75,52,167, 0.5)',
         pink: '#F205B3',

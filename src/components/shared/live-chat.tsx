@@ -86,7 +86,6 @@ const LiveChat = () => {
 
     const message = inputStr;
     try {
-      // socket?.emit('message', message);
       dispatch(chatActions.sendMsg(message))
       setInputStr('');
     } catch (error) {
@@ -116,11 +115,11 @@ const LiveChat = () => {
       <div className="flex items-center gap-3 p-3">
         <span className="text-base font-medium text-gray300">LIVE CHAT</span>
         <div
-          className="h-2 w-2 rounded-full bg-[#A326D4]"
+          className="h-2 w-2 rounded-full bg-purple"
           style={{
             transform: 'scale(1)',
             animation:
-              '2s ease 0s infinite normal none running animation-m10ze4'
+              '2s ease 0s infinite normal none running animation-bubble'
           }}
         ></div>
       </div>

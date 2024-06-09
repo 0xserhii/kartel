@@ -10,9 +10,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { removeAllTokens } from '@/lib/axios';
 import { useWallet } from '@/provider/crypto/wallet';
+import useModal from '@/routes/hooks/use-modal';
 import { usePersistStore } from '@/store/zustand/persist';
+import { ModalType } from '@/types/modal';
 
 export default function UserNav() {
+  const modal = useModal();
   const userData = usePersistStore((store) => store.app.userData);
   const initUserData = usePersistStore((store) => store.actions.init);
   const { disconnect } = useWallet();
@@ -21,6 +24,10 @@ export default function UserNav() {
     await initUserData();
     disconnect();
     removeAllTokens();
+  };
+
+  const connectWallet = async () => {
+    modal.open(ModalType.WALLETCONNECT);
   };
 
   return (
@@ -52,6 +59,7 @@ export default function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
+          <DropdownMenuItem onClick={connectWallet}>Connect Wallet</DropdownMenuItem>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Billing</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
