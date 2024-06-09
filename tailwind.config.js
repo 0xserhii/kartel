@@ -28,6 +28,7 @@ module.exports = {
         'purple-0.5': 'rgba(75,52,167, 0.5)',
         pink: '#F205B3',
         darkBlue: '#060273',
+        darkBlue2: '#0B0833',
         'dark-blue-0.4': '#4B34A7',
         blue1: '#035AA6',
         blue2: '#049DD9',

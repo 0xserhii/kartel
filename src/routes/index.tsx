@@ -11,6 +11,7 @@ const Leaderboard = lazy(() => import('@/pages/main/leader-board'));
 const SignUpPage = lazy(() => import('@/pages/auth/signup'));
 const CrashGame = lazy(() => import('@/pages/games/crash'));
 const CoinFlipGame = lazy(() => import('@/pages/games/coin-flip'));
+const MinesGame = lazy(() => import('@/pages/games/mines'));
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +49,7 @@ export default function AppRouter() {
         },
         {
           path: '/mines',
-          element: <CoinFlipGame />
+          element: <MinesGame />
         },
         {
           path: '/slots',

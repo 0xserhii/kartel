@@ -13,3 +13,9 @@ export enum ECOINFLIPStatus {
   NONE = 'NONE'
 }
 
+export enum EMinesStatus {
+  START = 'START',
+  END = 'END',
+  NONE = 'NONE'
+}
+
