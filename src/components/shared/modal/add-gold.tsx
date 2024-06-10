@@ -7,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 
 const AddGoldModal = () => {
   const modal = useModal();

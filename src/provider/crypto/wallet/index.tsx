@@ -40,7 +40,7 @@ import { WalletI } from 'kujira.js/lib/cjs/wallets/interface';
 import { useNetwork } from '../network';
 import { usePasskeys } from '../passkey';
 import { Passkey } from './passkey-class';
-import { useLocalStorage } from '@/routes/hooks';
+import { useLocalStorage } from '@/hooks';
 
 export enum Adapter {
   Sonar = 'sonar',

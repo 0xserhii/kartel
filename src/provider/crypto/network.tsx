@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@/routes/hooks';
+import { useLocalStorage } from '@/hooks';
 import {
   HttpBatchClient,
   StatusResponse,
@@ -47,15 +47,15 @@ export type NetworkContext = {
 
 const Context = createContext<NetworkContext>({
   network: TESTNET,
-  setNetwork: () => {},
+  setNetwork: () => { },
   tmClient: null,
   query: null,
   rpc: '',
   rpcs: [],
-  setRpc: () => {},
+  setRpc: () => { },
   preferred: null,
-  unlock: () => {},
-  lock: () => {}
+  unlock: () => { },
+  lock: () => { }
 });
 
 const toClient = async (

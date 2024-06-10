@@ -9,7 +9,7 @@ import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
 import { usePersistStore } from '@/store/zustand/persist';
-import useToast from '@/routes/hooks/use-toast';
+import useToast from '@/hooks/use-toast';
 import { Input } from '../ui/input';
 import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
@@ -83,7 +83,7 @@ const LiveChat = () => {
 
     const message = inputStr;
     try {
-      dispatch(chatActions.sendMsg(message))
+      dispatch(chatActions.sendMsg(message));
       setInputStr('');
     } catch (error) {
       console.log(error);
@@ -106,10 +106,12 @@ const LiveChat = () => {
 
   useEffect(() => {
     if ((chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory.length) {
-      ref.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'end'
-      });
+      setTimeout(() => {
+        ref.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
     }
   }, [chatState?.chatHistory]);
 

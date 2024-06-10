@@ -5,7 +5,7 @@ import { MessageSquareMore } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 import { usePersistStore } from '@/store/zustand/persist';
 import { useOpen } from '@/provider/chat-provider';

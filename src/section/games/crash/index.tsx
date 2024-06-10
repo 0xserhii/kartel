@@ -18,7 +18,7 @@ import { BetType, CrashHistoryData, FormattedPlayerBetType } from '@/types';
 import { ECrashSocketEvent, ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
-import useToast from '@/routes/hooks/use-toast';
+import useToast from '@/hooks/use-toast';
 import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';

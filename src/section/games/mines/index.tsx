@@ -78,7 +78,7 @@ export default function MinesGameSection() {
                     )
                 }
             </div>
-            <div className="flex flex-col gap-20">
+            <div className="flex flex-col gap-12">
                 <div className="flex flex-row justify-between relative mt-10">
                     <div className="w-1/12 flex justify-center items-center">
                         <div className="flex flex-col justify-center items-center bg-darkBlue2 rounded-lg px-7 py-4 gap-1">
@@ -106,7 +106,7 @@ export default function MinesGameSection() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col gap-20 justify-center items-center">
+                <div className="flex flex-col gap-12 justify-center items-center">
                     <div className="flex justify-center gap-6">
                         <div className="flex flex-col gap-4">
                             <p className="text-sm uppercase text-[#556987] w-6/12">

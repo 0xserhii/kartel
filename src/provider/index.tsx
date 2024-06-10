@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useRouter } from '@/routes/hooks';
+import { useRouter } from '@/hooks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';

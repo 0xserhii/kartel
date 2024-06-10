@@ -10,8 +10,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { removeAllTokens } from '@/lib/axios';
 import { useWallet } from '@/provider/crypto/wallet';
-import useToast from '@/routes/hooks/use-toast';
-import useModal from '@/routes/hooks/use-modal';
+import useToast from '@/hooks/use-toast';
+import useModal from '@/hooks/use-modal';
 import { usePersistStore } from '@/store/zustand/persist';
 import { ModalType } from '@/types/modal';
 

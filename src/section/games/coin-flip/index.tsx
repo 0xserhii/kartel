@@ -9,8 +9,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenu
 import { coinFlipPresets, coinSide, multiplerArray } from "@/constants/data";
 import { Button } from "@/components/ui/button";
 import { getAccessToken } from "@/lib/axios";
-import useToast from '@/routes/hooks/use-toast';
-import { useWindowSize } from "@/routes/hooks";
+import useToast from '@/hooks/use-toast';
+import { useWindowSize } from "@/hooks";
 import Confetti from "react-confetti";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { coinflipActions } from "@/store/redux/actions";

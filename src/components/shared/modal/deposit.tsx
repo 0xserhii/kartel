@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 import { Input } from '@/components/ui/input';
 import { BigNumber } from '@ethersproject/bignumber';
 import {
@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { usePersistStore } from '@/store/zustand/persist';
-import useToast from '@/routes/hooks/use-toast';
+import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
 import { token } from '@/constants/data';

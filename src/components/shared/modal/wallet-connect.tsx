@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 import { ChevronRight, Download } from 'lucide-react';
 import { Adapter, useWallet } from '@/provider/crypto/wallet';
 import { useState } from 'react';
-import useToast from '@/routes/hooks/use-toast';
+import useToast from '@/hooks/use-toast';
 
 interface ITokenList {
   name: string;
@@ -97,7 +97,6 @@ const WalletConnectModal = () => {
       }
 
       modal.close(ModalType.WALLETCONNECT);
-      toast.success('Wallet Connected');
       modal.open(ModalType.DEPOSIT);
       setLoading(defaultLoading);
     } catch (error) {
