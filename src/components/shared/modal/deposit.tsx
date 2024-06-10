@@ -17,7 +17,7 @@ import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
 import { token } from '@/constants/data';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/store/redux';
 
 interface TokenBalances {
   usk: number;
@@ -42,8 +42,8 @@ const SmallLoading = (
 
 const DepositModal = () => {
   const modal = useModal();
-  const userData = useSelector((state: any) => state.user.userData);
-  const modalState = useSelector((state: any) => state.modal);
+  const userData = useAppSelector((state: any) => state.user.userData);
+  const modalState = useAppSelector((state: any) => state.modal);
   const isOpen = modalState.open && modalState.type === ModalType.DEPOSIT;
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState('');

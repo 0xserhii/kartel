@@ -22,9 +22,9 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { userActions } from '@/store/redux/actions';
+import { useAppSelector } from '@/store/redux';
 
 const SignInSchema = z.object({
   email: z
@@ -45,7 +45,7 @@ const SignInDefaultValue = {
 const SignInModal = () => {
   const toast = useToast();
   const modal = useModal();
-  const modalState = useSelector((state: any) => state.modal);
+  const modalState = useAppSelector((state: any) => state.modal);
   const dispatch = useDispatch();
   const isOpen = modalState.open && modalState.type === ModalType.LOGIN;
   const signInForm = useForm<z.infer<typeof SignInSchema>>({
@@ -86,6 +86,7 @@ const SignInModal = () => {
       toast.error('SignIn Failed');
     }
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">

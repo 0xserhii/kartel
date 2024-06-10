@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/form';
 import { axiosPost } from '@/lib/axios';
 import { BACKEND_API_ENDPOINT } from '@/lib/constant';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/store/redux';
 
 const SignUpSchema = z
   .object({
@@ -55,7 +55,7 @@ const SignUpDefaultValue = {
 };
 
 const SignUpModal = () => {
-  const { open, type } = useSelector((state: any) => state.modal);
+  const { open, type } = useAppSelector((state: any) => state.modal);
   const isOpen = open && type === ModalType.SIGNUP;
   const modal = useModal();
   const toast = useToast();

@@ -7,11 +7,11 @@ import modalReducer from './modal.reducer';
 import userReducer from './user.reducer';
 
 export default () => {
-  return combineReducers({
-    chat: chatReducer,
-    leaderboard: leaderboardReducer,
-    coinflip: coinflipReducer,
-    modal: modalReducer,
-    user: userReducer
-  });
+    return combineReducers({
+        chat: chatReducer,
+        leaderboard: leaderboardReducer,
+        coinflip: coinflipReducer,
+        modal: modalReducer,
+        user: userReducer
+    });
 };

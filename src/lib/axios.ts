@@ -77,14 +77,29 @@ export const getAccessToken = (): string => {
   return '';
 };
 
+export const getUserData = (): string => {
+  if (window) {
+    const userData = localStorage.getItem('userData');
+    return userData || '';
+  }
+  return '';
+};
+
 export const setAccessToken = (token: string): void => {
   if (window && token !== '') {
     localStorage.setItem(accessKey, token);
   }
 };
 
+export const setUserData = (userData: any): void => {
+  if (window && userData !== '') {
+    localStorage.setItem('userData', userData);
+  }
+};
+
 export const removeAllTokens = (): void => {
   if (window) {
     localStorage.removeItem(accessKey);
+    localStorage.removeItem('userData');
   }
 };
