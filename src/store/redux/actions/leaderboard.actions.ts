@@ -14,3 +14,10 @@ export function subscribeLeaderboardServer() {
         payload: null
     }
 }
+
+export function disconnectLeaderboardServer() {
+    return {
+        type: ELeaderboardSocketAction.DISCONNECT_LEADERBOARD,
+        payload: null
+    }
+}

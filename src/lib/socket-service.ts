@@ -1,5 +1,6 @@
 import { IChatClientToServerEvents, IChatServerToClientEvents } from "@/types";
 import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
+import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from "@/types/leader";
 // import { ICrashClientToServerEvents, ICrashServerToClientEvents } from "@/types/crash";
 import { Socket, io } from "socket.io-client";
 import customParser from 'socket.io-msgpack-parser'

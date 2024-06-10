@@ -6,15 +6,12 @@ import Deposit from '/assets/deposit-icon.svg';
 import { ScrollArea } from '../ui/scroll-area';
 import useModal from '@/routes/hooks/use-modal';
 import { ModalType } from '@/types/modal';
-import { useWallet } from '@/provider/crypto/wallet';
 
 export default function Sidebar() {
   const modal = useModal();
-  const { account } = useWallet();
 
   const handleDeposit = async () => {
-    if (account) modal.open(ModalType.DEPOSIT);
-    else modal.open(ModalType.WALLETCONNECT);
+    modal.open(ModalType.DEPOSIT);
   };
 
   return (

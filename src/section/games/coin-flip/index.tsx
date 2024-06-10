@@ -4,7 +4,7 @@ import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { token } from "../crash";
+import { token } from "@/constants/data";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { coinFlipPresets, coinSide, multiplerArray } from "@/constants/data";
 import { Button } from "@/components/ui/button";
@@ -78,19 +78,24 @@ const CoinFlipSection = () => {
     };
 
     const startCoinflip = () => {
-        if (betAmount > 0) {
-            dispatch(coinflipActions.updategameState());
-            dispatch(coinflipActions.startCoinflipgame({
-                betAmount: Number(betAmount) ?? 0.1,
-                denom: selectedToken.name,
-                betCoinsCount: coinAmount,
-                betSideCount: selectedHeads,
-                betSide: selectedSide
-            }));
-            setIsRolling(true);
-            setIsEarned(false);
+        if (betAmount > 0 && betAmount < 10000) {
+            if (coinflipState.msg) {
+                toast.error(coinflipState.msg)
+                setIsRolling(false);
+            } else {
+                dispatch(coinflipActions.updategameState());
+                dispatch(coinflipActions.startCoinflipgame({
+                    betAmount: Number(betAmount) ?? 0.1,
+                    denom: selectedToken.name,
+                    betCoinsCount: coinAmount,
+                    betSideCount: selectedHeads,
+                    betSide: selectedSide
+                }));
+                setIsRolling(true);
+                setIsEarned(false);
+            }
         } else {
-            toast.error("Bet Amount should be between 0.1 and 100")
+            toast.error("Bet Amount should be between 0.1 and 10000");
         }
     };
 
@@ -126,6 +131,7 @@ const CoinFlipSection = () => {
     useEffect(() => {
         if (coinflipState.msg) {
             toast.error(coinflipState.msg)
+            setIsRolling(false);
         }
     }, [coinflipState.msg]);
 
@@ -163,7 +169,7 @@ const CoinFlipSection = () => {
                             coinflipState.gameStatus &&
                             <span className="absolute text-xl uppercase top-3 text-[#df8002] font-bold">{isEarned ? `You Won ${coinflipState.winAmount.toFixed(2)}` : `You Lost`}</span>
                         }
-                        <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
+                        <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${Math.min(coins.length, 5)}, 1fr)` }}>
                             {coins.map((coin, index) => {
                                 return (
                                     <div key={index} id="coin" className={`coin ${isRolling ? "flipping" : `${coin ? "coin-front" : "coin-back"}`}`} style={{
@@ -253,7 +259,7 @@ const CoinFlipSection = () => {
                                     <div className="grid grid-cols-4 gap-5">
                                         {multiplerArray.map((item, index) => (
                                             <Button
-                                                className="rounded-lg border border-[#1D1776] bg-[#151245] font-semibold uppercase text-gray500 hover:bg-[#151245] hover:text-white"
+                                                className="rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white"
                                                 key={index}
                                                 disabled={isRolling}
                                                 onClick={() => handleMultiplierClick(item)}
@@ -315,7 +321,7 @@ const CoinFlipSection = () => {
                             </div>
                         </div>
                         <div className="flex flex-row justify-center items-center gap-10">
-                            <Button className="bg-[#A326D4] hover:bg-[#A326D4] text-white py-6 px-36 rounded-lg text-md font-light" onClick={startCoinflip} >
+                            <Button className="bg-purple hover:bg-purple text-white py-6 px-36 rounded-lg text-md font-light" onClick={startCoinflip} >
                                 {
                                     isRolling ? "Rolling..." : "Flip coins"
                                 }

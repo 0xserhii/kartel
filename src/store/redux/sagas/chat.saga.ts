@@ -40,8 +40,8 @@ function subscribe(socket) {
     });
 }
 
-function* getChatHistory(socket) {
-    yield call([socket, socket.emit], EChatSocketEvent.GET_CHAT_HISTORY);
+function* getChatHistory(socket, action) {
+    yield call([socket, socket.emit], EChatSocketEvent.GET_CHAT_HISTORY, action.payload);
 }
 
 function* login(socket) {
@@ -57,20 +57,19 @@ function* read(socket) {
     }
 }
 
-function* getChatHistorySaga() {
+function* getChatHistorySaga(action) {
     try {
         yield delay(100);
-        yield fork(getChatHistory, KartelSocket.chat);
+        yield fork(getChatHistory, KartelSocket.chat, action);
     } catch (error) {
         console.log(error)
     }
 }
 
-function* subscribeSaga() {
+function* subscribeSaga(action) {
     try {
         yield fork(read, KartelSocket.chat);
         yield delay(100);
-        yield fork(getChatHistory, KartelSocket.chat);
     } catch (error) {
         console.log(error)
     }
