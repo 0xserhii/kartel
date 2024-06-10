@@ -20,8 +20,8 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { axiosPost } from '@/lib/axios';
-import { BACKEND_API_ENDPOINT } from '@/lib/constant';
+import { axiosPost } from '@/utils/axios';
+import { BACKEND_API_ENDPOINT } from '@/utils/constant';
 import { useAppSelector } from '@/store/redux';
 
 const SignUpSchema = z
