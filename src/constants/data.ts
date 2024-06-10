@@ -78,8 +78,6 @@ export const tabItems = [
   { name: 'dashboard', path: '/dashboard' }
 ];
 
-
-
 export type Employee = {
   id: number;
   first_name: string;
