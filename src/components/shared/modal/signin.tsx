@@ -13,8 +13,8 @@ import { z } from 'zod';
 import useToast from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { axiosPost, setAccessToken } from '@/lib/axios';
-import { BACKEND_API_ENDPOINT } from '@/lib/constant';
+import { axiosPost, setAccessToken } from '@/utils/axios';
+import { BACKEND_API_ENDPOINT } from '@/utils/constant';
 import {
   Form,
   FormControl,

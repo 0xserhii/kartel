@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { coinFlipPresets, coinSide, multiplerArray } from '@/constants/data';
 import { Button } from '@/components/ui/button';
-import { getAccessToken } from '@/lib/axios';
+import { getAccessToken } from '@/utils/axios';
 import useToast from '@/hooks/use-toast';
 import { useWindowSize } from '@/hooks';
 import Confetti from 'react-confetti';

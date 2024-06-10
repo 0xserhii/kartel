@@ -8,7 +8,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { getAccessToken, removeAllTokens } from '@/lib/axios';
+import { getAccessToken, removeAllTokens } from '@/utils/axios';
 import { useWallet } from '@/provider/crypto/wallet';
 import useToast from '@/hooks/use-toast';
 import useModal from '@/hooks/use-modal';

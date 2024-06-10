@@ -11,7 +11,7 @@ import useToast from '@/hooks/use-toast';
 import { Input } from '../ui/input';
 import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { getAccessToken } from '@/lib/axios';
+import { getAccessToken } from '@/utils/axios';
 import { useInView } from 'react-intersection-observer';
 
 

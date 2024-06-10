@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { NavItem, NavItemGroup } from '@/types';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';

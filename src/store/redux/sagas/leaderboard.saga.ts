@@ -1,5 +1,5 @@
 import { put, call, fork, take, takeLatest, delay } from 'redux-saga/effects';
-import KartelSocket from '@/lib/socket-service';
+import KartelSocket from '@/utils/socket-service';
 import { ELeaderboardSocketEvent } from '@/types/leader';
 import { ELeaderboardSocketAction } from '../reducers/leaderboard.type';
 import { eventChannel } from 'redux-saga';
@@ -14,7 +14,7 @@ function subscribe(socket) {
         emit(leaderboardActions.getLeaderboardHistory(data.leaderboard));
       }
     );
-    return () => {};
+    return () => { };
   });
 }
 

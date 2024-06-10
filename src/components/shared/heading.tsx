@@ -1,5 +1,5 @@
 import { tabItems } from '@/constants/data';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { usePathname } from '@/hooks';
 import { Link } from 'react-router-dom';
 
