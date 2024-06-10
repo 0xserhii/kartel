@@ -7,7 +7,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/hooks/use-modal';
 import { z } from 'zod';
@@ -23,7 +22,9 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { usePersistStore } from '@/store/zustand/persist';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { userActions } from '@/store/redux/actions';
 
 const SignInSchema = z.object({
   email: z
@@ -44,14 +45,9 @@ const SignInDefaultValue = {
 const SignInModal = () => {
   const toast = useToast();
   const modal = useModal();
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
-  const setUserData = usePersistStore((store) => store.actions.setUserData);
-
-  const isOpen = openModal && type === ModalType.LOGIN;
-
+  const modalState = useSelector((state: any) => state.modal);
+  const dispatch = useDispatch();
+  const isOpen = modalState.open && modalState.type === ModalType.LOGIN;
   const signInForm = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: SignInDefaultValue
@@ -79,7 +75,7 @@ const SignInModal = () => {
       ]);
       if (resSignIn?.responseObject?.auth?.accessToken) {
         setAccessToken(resSignIn?.responseObject?.auth?.accessToken);
-        await setUserData(resSignIn?.responseObject?.user);
+        await dispatch(userActions.userData(resSignIn?.responseObject?.user));
         toast.success('SignIn Success');
         modal.close(ModalType.LOGIN);
         return;

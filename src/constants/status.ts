@@ -18,4 +18,3 @@ export enum EMinesStatus {
   END = 'END',
   NONE = 'NONE'
 }
-

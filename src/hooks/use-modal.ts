@@ -1,11 +1,10 @@
-import useRootStore from '@/store/zustand/root';
-import { ModalType } from '@/types/modal';
+import { ModalType } from './../types/modal';
+import { closeModal, openModal } from '@/store/redux/actions/modal.action';
+import { useDispatch } from 'react-redux';
 
 export default function useModal() {
-  const setModal = useRootStore((store) => store.actions.setModal);
-
-  const open = (type: ModalType) => setModal({ type, open: true });
-  const close = (type: ModalType) => setModal({ type, open: false });
-
+  const dispatch = useDispatch();
+  const open = (type: ModalType) => dispatch(openModal(type));
+  const close = (type: ModalType) => dispatch(closeModal(type));
   return { open, close };
 }

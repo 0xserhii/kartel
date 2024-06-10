@@ -12,9 +12,9 @@ import { leaderboardActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 
 const leaderboardTabs = [
-  { title: "Crash", value: "crash" },
-  { title: "Coinflip", value: "coinflip" },
-]
+  { title: 'Crash', value: 'crash' },
+  { title: 'Coinflip', value: 'coinflip' }
+];
 
 export default function Leaderboard() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,28 +31,22 @@ export default function Leaderboard() {
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
-      <div
-        className="flex flex-col items-stretch gap-8 p-12"
-      >
+      <div className="flex flex-col items-stretch gap-8 p-12">
         <div className="flex items-center justify-between">
-          <div className="text-2xl font-semibold text-gray300">
-            Leaderboard
-          </div>
+          <div className="text-2xl font-semibold text-gray300">Leaderboard</div>
           <div className="flex items-center gap-2 bg-transparent">
-            {
-              leaderboardTabs.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => setActive(item.value)}
-                  className={`rounded-md border border-blue-border bg-dark-blue px-6 py-2 text-sm  ${active === item.value ? "bg-purple text-white" : "text-gray400"}`}
-                >
-                  {item.title}
-                </button>
-              ))
-            }
+            {leaderboardTabs.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setActive(item.value)}
+                className={`rounded-md border border-blue-border bg-dark-blue px-6 py-2 text-sm  ${active === item.value ? 'bg-purple text-white' : 'text-gray400'}`}
+              >
+                {item.title}
+              </button>
+            ))}
           </div>
         </div>
-        <div className='flex flex-col gap-3'>
+        <div className="flex flex-col gap-3">
           <Card className="w-full border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
               <Table className="w-full table-fixed">
@@ -66,9 +60,7 @@ export default function Leaderboard() {
                     <TableCell className="w-1/5 text-center">
                       Win Amount
                     </TableCell>
-                    <TableCell className="w-1/5 text-center">
-                      Profit
-                    </TableCell>
+                    <TableCell className="w-1/5 text-center">Profit</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -76,14 +68,14 @@ export default function Leaderboard() {
             <CardContent className={`px-2 py-0 ${'h-[536px]'}`}>
               {loading ? (
                 <div className="flex h-full w-full items-center justify-center">
-                  <span className='text-white'>Loading...</span>
+                  <span className="text-white">Loading...</span>
                 </div>
               ) : (
                 <ScrollArea className="h-88 px-5 py-3">
                   <Table className="relative table-fixed border-separate border-spacing-y-3">
                     <TableBody>
-                      {
-                        leaderboardState?.leaderboardHistory?.[active]?.map((score, index) => {
+                      {leaderboardState?.leaderboardHistory?.[active]?.map(
+                        (score, index) => {
                           return (
                             <TableRow
                               key={index}
@@ -107,17 +99,19 @@ export default function Leaderboard() {
                               </TableCell>
                               <TableCell className="w-1/5 text-center">
                                 {Number(
-                                  (score.leaderboard?.[active]?.usk?.betAmount ?? 0) +
-                                  (score.leaderboard?.[active]?.kuji?.betAmount ?? 0)
+                                  (score.leaderboard?.[active]?.usk
+                                    ?.betAmount ?? 0) +
+                                    (score.leaderboard?.[active]?.kuji
+                                      ?.betAmount ?? 0)
                                 ).toFixed(2)}
                               </TableCell>
                               <TableCell className="w-1/5">
                                 <div className="flex items-center justify-center gap-1">
                                   {Number(
-                                    (score.leaderboard?.[active]?.usk?.winAmount ??
-                                      0) +
-                                    (score.leaderboard?.[active]?.kuji?.winAmount ??
-                                      0)
+                                    (score.leaderboard?.[active]?.usk
+                                      ?.winAmount ?? 0) +
+                                      (score.leaderboard?.[active]?.kuji
+                                        ?.winAmount ?? 0)
                                   ).toFixed(2)}
                                 </div>
                               </TableCell>
@@ -125,11 +119,27 @@ export default function Leaderboard() {
                                 <div className="flex items-center justify-center gap-1">
                                   <span>
                                     {(() => {
-                                      const winAmount = (score.leaderboard?.[active]?.usk?.winAmount ?? 0) + (score.leaderboard?.[active]?.kuji?.winAmount ?? 0);
-                                      const betAmount = (score.leaderboard?.[active]?.usk?.betAmount ?? 0) + (score.leaderboard?.[active]?.kuji?.betAmount ?? 0);
-                                      const profit = (winAmount - betAmount).toFixed(2);
+                                      const winAmount =
+                                        (score.leaderboard?.[active]?.usk
+                                          ?.winAmount ?? 0) +
+                                        (score.leaderboard?.[active]?.kuji
+                                          ?.winAmount ?? 0);
+                                      const betAmount =
+                                        (score.leaderboard?.[active]?.usk
+                                          ?.betAmount ?? 0) +
+                                        (score.leaderboard?.[active]?.kuji
+                                          ?.betAmount ?? 0);
+                                      const profit = (
+                                        winAmount - betAmount
+                                      ).toFixed(2);
                                       return (
-                                        <span className={Number(profit) >= 0 ? 'text-white' : 'text-purple'}>
+                                        <span
+                                          className={
+                                            Number(profit) >= 0
+                                              ? 'text-white'
+                                              : 'text-purple'
+                                          }
+                                        >
                                           {profit}
                                         </span>
                                       );
@@ -139,8 +149,8 @@ export default function Leaderboard() {
                               </TableCell>
                             </TableRow>
                           );
-                        })
-                      }
+                        }
+                      )}
                     </TableBody>
                   </Table>
                   <ScrollBar orientation="horizontal" />
@@ -148,56 +158,52 @@ export default function Leaderboard() {
               )}
             </CardContent>
           </Card>
-          {
-            active === "crash" && (
-              <div className='flex transition-all ease-in-out'>
-                <div className="relative rounded-md">
+          {active === 'crash' && (
+            <div className="flex transition-all ease-in-out">
+              <div className="relative rounded-md">
+                <img
+                  src={CrashBanner}
+                  alt="Crash Banner"
+                  className="aspect-auto h-full w-full rounded-md"
+                />
+                <img
+                  src={CrashTitle}
+                  alt="Crash Title"
+                  className="absolute right-2 top-2 mt-auto"
+                />
+                <Link to="/crash">
                   <img
-                    src={CrashBanner}
-                    alt="Crash Banner"
-                    className="aspect-auto w-full rounded-md h-full"
+                    src={PlayText}
+                    alt="Play Text"
+                    className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
                   />
-                  <img
-                    src={CrashTitle}
-                    alt="Crash Title"
-                    className="absolute right-2 top-2 mt-auto"
-                  />
-                  <Link to="/crash">
-                    <img
-                      src={PlayText}
-                      alt="Play Text"
-                      className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
-                    />
-                  </Link>
-                </div>
+                </Link>
               </div>
-            )
-          }
-          {
-            active === "coinflip" && (
-              <div className='flex transition-all ease-in-out'>
-                <div className="relative rounded-md">
+            </div>
+          )}
+          {active === 'coinflip' && (
+            <div className="flex transition-all ease-in-out">
+              <div className="relative rounded-md">
+                <img
+                  src={CoinflipBanner}
+                  alt="Crash Banner"
+                  className="aspect-auto h-full w-full rounded-lg"
+                />
+                <img
+                  src={CoinflipTitle}
+                  alt="Crash Title"
+                  className="absolute right-2 top-2 mt-auto w-32"
+                />
+                <Link to="/coinflip">
                   <img
-                    src={CoinflipBanner}
-                    alt="Crash Banner"
-                    className="aspect-auto w-full h-full rounded-lg"
+                    src={PlayText}
+                    alt="Play Text"
+                    className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
                   />
-                  <img
-                    src={CoinflipTitle}
-                    alt="Crash Title"
-                    className="absolute right-2 top-2 mt-auto w-32"
-                  />
-                  <Link to="/coinflip">
-                    <img
-                      src={PlayText}
-                      alt="Play Text"
-                      className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
-                    />
-                  </Link>
-                </div>
+                </Link>
               </div>
-            )
-          }
+            </div>
+          )}
         </div>
       </div>
     </ScrollArea>

@@ -3,18 +3,17 @@ import EmojiPicker, {
   EmojiClickData,
   EmojiStyle
 } from 'emoji-picker-react';
-
 import { Separator } from '../ui/separator';
 import { Smile, SendHorizonal } from 'lucide-react';
 import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
-import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/hooks/use-toast';
 import { Input } from '../ui/input';
 import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { getAccessToken } from '@/lib/axios';
 import { useInView } from 'react-intersection-observer';
+import { useSelector } from 'react-redux';
 
 export type HistoryItemProps = {
   name: string;
@@ -26,8 +25,7 @@ export type HistoryItemProps = {
 const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
   return (
     <div className="flex items-center gap-1 px-3 py-1">
-      <div className="relative">
-      </div>
+      <div className="relative"></div>
       <div className="flex flex-1 flex-col justify-between rounded-lg bg-[#4a278d4f] px-2 py-1">
         <div>
           <span className="text-sm font-medium text-gray300">
@@ -47,14 +45,15 @@ const LiveChat = () => {
   const [inputStr, setInputStr] = useState('');
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
-  const userData = usePersistStore((store) => store.app.userData);
+  const userData = useSelector((store: any) => store.user.userData);
   const { ref: lastMessageRef, inView } = useInView({
     threshold: 0,
     triggerOnce: false
   });
   const toast = useToast();
   const chatState = useAppSelector((state) => state.chat);
-  const firstChatSentAt = chatState?.chatHistory?.length > 0 ? chatState.chatHistory[0].sentAt : null;
+  const firstChatSentAt =
+    chatState?.chatHistory?.length > 0 ? chatState.chatHistory[0].sentAt : null;
   const dispatch = useAppDispatch();
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);
@@ -92,10 +91,10 @@ const LiveChat = () => {
 
   useEffect(() => {
     setStatus(true);
-  }, [])
+  }, []);
 
   useEffect(() => {
-    dispatch(chatActions.loginChatServer())
+    dispatch(chatActions.loginChatServer());
   }, [getAccessToken()]);
 
   useEffect(() => {
@@ -105,7 +104,11 @@ const LiveChat = () => {
   }, [status]);
 
   useEffect(() => {
-    if ((chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory.length) {
+    if (
+      chatState?.chatHistory &&
+      Array.isArray(chatState?.chatHistory) &&
+      chatState?.chatHistory.length
+    ) {
       setTimeout(() => {
         ref.current?.scrollIntoView({
           behavior: 'smooth',
@@ -140,17 +143,19 @@ const LiveChat = () => {
           className={`flex flex-col items-stretch py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
         >
           <div ref={lastMessageRef}></div>
-          {(chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory?.map((chat, key) => (
-            <React.Fragment key={key}>
-              <HistoryItem
-                name={chat.user?.username}
-                avatar={chat.user?.avatar}
-                time={formatTime(chat.sentAt.toString())}
-                message={chat.message}
-              />
-              <div ref={ref}></div>
-            </React.Fragment>
-          ))}
+          {chatState?.chatHistory &&
+            Array.isArray(chatState?.chatHistory) &&
+            chatState?.chatHistory?.map((chat, key) => (
+              <React.Fragment key={key}>
+                <HistoryItem
+                  name={chat.user?.username}
+                  avatar={chat.user?.avatar}
+                  time={formatTime(chat.sentAt.toString())}
+                  message={chat.message}
+                />
+                <div ref={ref}></div>
+              </React.Fragment>
+            ))}
         </ScrollArea>
       </div>
       <div className="w-full bg-purple-0.15 px-2 text-gray-400">
@@ -198,7 +203,7 @@ const LiveChat = () => {
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

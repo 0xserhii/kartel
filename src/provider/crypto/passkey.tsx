@@ -26,8 +26,8 @@ export interface PasskeyContextI {
 
 const context = createContext<PasskeyContextI>({
   signers: {},
-  selectSigner: () => { },
-  createSigner: async () => { }
+  selectSigner: () => {},
+  createSigner: async () => {}
 });
 
 export const fetchSigners = (): Record<string, AuthnWebSigner> => {

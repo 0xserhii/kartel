@@ -15,7 +15,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
 import { BetType, CrashHistoryData, FormattedPlayerBetType } from '@/types';
-import { ECrashSocketEvent, ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
+import {
+  ECrashSocketEvent,
+  ICrashClientToServerEvents,
+  ICrashServerToClientEvents
+} from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
 import { getAccessToken } from '@/lib/axios';
 import useToast from '@/hooks/use-toast';
@@ -50,7 +54,8 @@ export default function CrashGameSection() {
   const [totalAmount, setTotalAmount] = useState<any>();
   const [round, setRound] = useState(roundArray[0]);
   const [selectMode, setSelectMode] = useState(betMode[0]);
-  const [avaliableAutoCashout, setAvaliableAutoCashout] = useState<boolean>(false);
+  const [avaliableAutoCashout, setAvaliableAutoCashout] =
+    useState<boolean>(false);
   const isAutoMode = selectMode === 'auto';
   const [crTick, setCrTick] = useState({ prev: 1, cur: 1 });
   const [prepareTime, setPrepareTime] = useState(0);
@@ -103,9 +108,11 @@ export default function CrashGameSection() {
   const handleStartBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
       const joinParams = {
-        target: avaliableAutoCashout ? Number(autoCashoutAmount) * 100 : 1000000,
+        target: avaliableAutoCashout
+          ? Number(autoCashoutAmount) * 100
+          : 1000000,
         betAmount: Number(betAmount).valueOf(),
-        denom: selectedToken.name,
+        denom: selectedToken.name
       };
       socket?.emit('join-crash-game', joinParams);
     }
@@ -143,7 +150,7 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === "Autobet has been canceled.") {
+      if (data === 'Autobet has been canceled.') {
         setAutoBet(true);
       } else {
         setAutoBet(false);
@@ -152,7 +159,7 @@ export default function CrashGameSection() {
     socket?.on('auto-crashgame-join-success', handleJoinSuccess);
     return () => {
       socket?.off('auto-crashgame-join-success', handleJoinSuccess);
-    }
+    };
   }, [socket, toast]);
 
   useEffect(() => {
@@ -189,9 +196,12 @@ export default function CrashGameSection() {
       playCrashBgVideo();
     });
 
-    crashSocket.on(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, (historyData: any) => {
-      setCrashHistoryData(historyData);
-    });
+    crashSocket.on(
+      ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY,
+      (historyData: any) => {
+        setCrashHistoryData(historyData);
+      }
+    );
 
     crashSocket.on(ECrashSocketEvent.GAME_END, (data) => {
       setCrashStatus(ECrashStatus.END);
@@ -200,21 +210,24 @@ export default function CrashGameSection() {
       crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
     });
 
-    crashSocket.on(ECrashSocketEvent.GAME_BETS, (bets: FormattedPlayerBetType[]) => {
-      setBetData((prev: BetType[]) => [...bets, ...prev]);
-      const totalUsk = bets
-        .filter((bet) => bet.denom === 'usk')
-        .reduce((acc, item) => acc + item.betAmount, 0);
+    crashSocket.on(
+      ECrashSocketEvent.GAME_BETS,
+      (bets: FormattedPlayerBetType[]) => {
+        setBetData((prev: BetType[]) => [...bets, ...prev]);
+        const totalUsk = bets
+          .filter((bet) => bet.denom === 'usk')
+          .reduce((acc, item) => acc + item.betAmount, 0);
 
-      const totalKuji = bets
-        .filter((bet) => bet.denom === 'kuji')
-        .reduce((acc, item) => acc + item.betAmount, 0);
+        const totalKuji = bets
+          .filter((bet) => bet.denom === 'kuji')
+          .reduce((acc, item) => acc + item.betAmount, 0);
 
-      setTotalAmount((prevAmounts) => ({
-        usk: (prevAmounts?.usk || 0) + totalUsk,
-        kuji: (prevAmounts?.kuji || 0) + totalKuji
-      }));
-    });
+        setTotalAmount((prevAmounts) => ({
+          usk: (prevAmounts?.usk || 0) + totalUsk,
+          kuji: (prevAmounts?.kuji || 0) + totalKuji
+        }));
+      }
+    );
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
@@ -265,22 +278,22 @@ export default function CrashGameSection() {
               </video>
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-                    <div
-                      className={cn(
-                        'text-6xl font-extrabold text-white',
-                        crashStatus === ECrashStatus.END && 'crashed-value'
-                      )}
-                    >
-                      X<GrowingNumber start={crTick.prev} end={crTick.cur} />
-                    </div>
-                    <div className="font-semibold text-[#f5b95a]">
-                      {crashStatus === ECrashStatus.PROGRESS
-                        ? 'CURRENT PAYOUT'
-                        : 'ROUND OVER'}
-                    </div>
+                <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+                  <div
+                    className={cn(
+                      'text-6xl font-extrabold text-white',
+                      crashStatus === ECrashStatus.END && 'crashed-value'
+                    )}
+                  >
+                    X<GrowingNumber start={crTick.prev} end={crTick.cur} />
                   </div>
-                )}
+                  <div className="font-semibold text-[#f5b95a]">
+                    {crashStatus === ECrashStatus.PROGRESS
+                      ? 'CURRENT PAYOUT'
+                      : 'ROUND OVER'}
+                  </div>
+                </div>
+              )}
               {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
                 <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className="text-xl font-semibold uppercase text-white">
@@ -293,20 +306,20 @@ export default function CrashGameSection() {
               )}
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-car car-moving absolute bottom-16">
-                    <img
-                      src={
-                        crashStatus === ECrashStatus.PROGRESS
-                          ? '/assets/games/crash/moving_car.gif'
-                          : '/assets/games/crash/explosion.gif'
-                      }
-                      className={cn(
-                        crashStatus === ECrashStatus.PROGRESS ? 'w-64' : 'w-96'
-                      )}
-                      alt="crash-car"
-                    />
-                  </div>
-                )}
+                <div className="crash-car car-moving absolute bottom-16">
+                  <img
+                    src={
+                      crashStatus === ECrashStatus.PROGRESS
+                        ? '/assets/games/crash/moving_car.gif'
+                        : '/assets/games/crash/explosion.gif'
+                    }
+                    className={cn(
+                      crashStatus === ECrashStatus.PROGRESS ? 'w-64' : 'w-96'
+                    )}
+                    alt="crash-car"
+                  />
+                </div>
+              )}
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
@@ -345,7 +358,7 @@ export default function CrashGameSection() {
                         className={cn(
                           'min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white',
                           selectMode === item &&
-                          'border-purple bg-purple text-white hover:bg-purple'
+                            'border-purple bg-purple text-white hover:bg-purple'
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -357,16 +370,16 @@ export default function CrashGameSection() {
                 </div>
                 <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                   <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
-                    <div className='flex flex-row items-center justify-end'>
+                    <div className="flex flex-row items-center justify-end">
                       <Button
-                        className="h-12 bg-purple py-3 px-3 w-6/12 uppercase hover:bg-purple"
+                        className="h-12 w-6/12 bg-purple px-3 py-3 uppercase hover:bg-purple"
                         disabled={
-                          isAutoMode ? false : (
-                            (crashStatus !== ECrashStatus.PREPARE &&
-                              !avaliableBet) ||
-                            (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet)
-                          )
+                          isAutoMode
+                            ? false
+                            : (crashStatus !== ECrashStatus.PREPARE &&
+                                !avaliableBet) ||
+                              (crashStatus !== ECrashStatus.PROGRESS &&
+                                avaliableBet)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -379,13 +392,15 @@ export default function CrashGameSection() {
                             : 'Place Bet'}
                       </Button>
                     </div>
-                    <div className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-[29.3px]'}`}>
-                      <p className="text-sm uppercase text-[#556987] w-6/12">
+                    <div
+                      className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-[29.3px]'}`}
+                    >
+                      <p className="w-6/12 text-sm uppercase text-[#556987]">
                         bet amount
                       </p>
                       <div className="relative">
                         <Input
-                          type='number'
+                          type="number"
                           value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
@@ -393,7 +408,10 @@ export default function CrashGameSection() {
                         />
                         <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild disabled={isAutoMode && !autoBet}>
+                            <DropdownMenuTrigger
+                              asChild
+                              disabled={isAutoMode && !autoBet}
+                            >
                               <div className="flex cursor-pointer items-center gap-2 uppercase">
                                 <img
                                   src={selectedToken.src}
@@ -444,10 +462,15 @@ export default function CrashGameSection() {
                       {!isAutoMode && (
                         <div className="flex flex-col justify-between gap-3">
                           <div className="flex flex-row items-center justify-start gap-2">
-                            <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
-                            <span className="text-white">
-                              Auto Cashout
-                            </span>
+                            <Checkbox
+                              id="terms"
+                              className="text-[#049DD9]"
+                              checked={avaliableAutoCashout}
+                              onClick={() =>
+                                setAvaliableAutoCashout(!avaliableAutoCashout)
+                              }
+                            />
+                            <span className="text-white">Auto Cashout</span>
                           </div>
                           <div className="flex w-full items-center justify-center gap-1">
                             <Slider
@@ -462,7 +485,7 @@ export default function CrashGameSection() {
                               }
                             />
                             <span className="w-2/12 text-end text-white">
-                              {autoCashoutAmount + "x"}
+                              {autoCashoutAmount + 'x'}
                             </span>
                           </div>
                         </div>
@@ -473,7 +496,7 @@ export default function CrashGameSection() {
                             <div className="relative w-full">
                               <Input
                                 disabled={isAutoMode && !autoBet}
-                                type='number'
+                                type="number"
                                 value={autoCashoutPoint}
                                 onChange={handleAutoCashoutPointChange}
                                 min={1.05}

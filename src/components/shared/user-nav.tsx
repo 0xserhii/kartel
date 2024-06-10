@@ -12,18 +12,20 @@ import { removeAllTokens } from '@/lib/axios';
 import { useWallet } from '@/provider/crypto/wallet';
 import useToast from '@/hooks/use-toast';
 import useModal from '@/hooks/use-modal';
-import { usePersistStore } from '@/store/zustand/persist';
 import { ModalType } from '@/types/modal';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { userActions } from '@/store/redux/actions';
 
 export default function UserNav() {
   const modal = useModal();
+  const dispatch = useDispatch();
   const toast = useToast();
-  const userData = usePersistStore((store) => store.app.userData);
-  const initUserData = usePersistStore((store) => store.actions.init);
+  const userData = useSelector((store: any) => store.user.userData);
   const { disconnect, account } = useWallet();
 
   const handleLogout = async () => {
-    await initUserData();
+    await dispatch(userActions.initUserData());
     disconnect();
     removeAllTokens();
     toast.success('Logout Successfully');

@@ -1,6 +1,5 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/hooks/use-modal';
 import { Input } from '@/components/ui/input';
@@ -14,11 +13,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { usePersistStore } from '@/store/zustand/persist';
 import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
 import { token } from '@/constants/data';
+import { useSelector } from 'react-redux';
 
 interface TokenBalances {
   usk: number;
@@ -43,16 +42,13 @@ const SmallLoading = (
 
 const DepositModal = () => {
   const modal = useModal();
-  const userData = usePersistStore((store) => store.app.userData);
+  const userData = useSelector((state: any) => state.user.userData);
+  const modalState = useSelector((state: any) => state.modal);
+  const isOpen = modalState.open && modalState.type === ModalType.DEPOSIT;
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState('');
   const [selectedToken, setSelectedToken] = useState(token[0]);
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
   const [walletData, setWalletData] = useState<TokenBalances>(walletList);
-  const isOpen = openModal && type === ModalType.DEPOSIT;
   const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
 
   const [loading, setLoading] = useState(false);
@@ -242,25 +238,16 @@ const DepositModal = () => {
                 </span>
               </div>
             ))}
-          <div
-            className="flex w-full flex-row items-center justify-between"
-          >
+          <div className="flex w-full flex-row items-center justify-between">
             <span className="flex w-4/12 flex-row items-center gap-3 uppercase text-gray-300">
-              <img
-                src={`/assets/tokens/kartel.svg`}
-                className="h-5 w-5"
-              />
+              <img src={`/assets/tokens/kartel.svg`} className="h-5 w-5" />
               kart
             </span>
             <span className="w-4/12 text-center text-gray-300">
-              {
-                Number(0).toFixed(2)
-              }
+              {Number(0).toFixed(2)}
             </span>
             <span className="w-4/12 text-center text-white">
-              {
-                Number(0).toFixed(2)
-              }
+              {Number(0).toFixed(2)}
             </span>
           </div>
         </div>
@@ -312,7 +299,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

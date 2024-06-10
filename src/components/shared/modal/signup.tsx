@@ -7,7 +7,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
 import useModal from '@/hooks/use-modal';
 import useToast from '@/hooks/use-toast';
@@ -23,6 +22,7 @@ import {
 } from '@/components/ui/form';
 import { axiosPost } from '@/lib/axios';
 import { BACKEND_API_ENDPOINT } from '@/lib/constant';
+import { useSelector } from 'react-redux';
 
 const SignUpSchema = z
   .object({
@@ -55,11 +55,8 @@ const SignUpDefaultValue = {
 };
 
 const SignUpModal = () => {
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
-  const isOpen = openModal && type === ModalType.SIGNUP;
+  const { open, type } = useSelector((state: any) => state.modal);
+  const isOpen = open && type === ModalType.SIGNUP;
   const modal = useModal();
   const toast = useToast();
 
