@@ -1,11 +1,11 @@
 import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 import { ChevronRight, Download } from 'lucide-react';
 import { Adapter, useWallet } from '@/provider/crypto/wallet';
 import { useState } from 'react';
-import useToast from '@/routes/hooks/use-toast';
+import useToast from '@/hooks/use-toast';
+import { useSelector } from 'react-redux';
 
 interface ITokenList {
   name: string;
@@ -51,12 +51,8 @@ const WalletConnectModal = () => {
   const modal = useModal();
   const [loading, setLoading] = useState(defaultLoading);
   const toast = useToast();
-
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
-  const isOpen = openModal && type === ModalType.WALLETCONNECT;
+  const { open, type } = useSelector((state: any) => state.modal);
+  const isOpen = open && type === ModalType.WALLETCONNECT;
   const { connect } = useWallet();
 
   const hanndleOpenChange = async () => {
@@ -95,9 +91,7 @@ const WalletConnectModal = () => {
         default:
           break;
       }
-
       modal.close(ModalType.WALLETCONNECT);
-      toast.success('Wallet Connected');
       modal.open(ModalType.DEPOSIT);
       setLoading(defaultLoading);
     } catch (error) {

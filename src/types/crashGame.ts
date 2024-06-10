@@ -65,7 +65,7 @@ export interface FormattedGameHistoryType
     | 'publicSeed'
     | 'crashPoint'
     | 'createdAt'
-  > { }
+  > {}
 
 interface LevelInfo {
   name: string;

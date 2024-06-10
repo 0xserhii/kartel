@@ -40,7 +40,7 @@ import { WalletI } from 'kujira.js/lib/cjs/wallets/interface';
 import { useNetwork } from '../network';
 import { usePasskeys } from '../passkey';
 import { Passkey } from './passkey-class';
-import { useLocalStorage } from '@/routes/hooks';
+import { useLocalStorage } from '@/hooks';
 
 export enum Adapter {
   Sonar = 'sonar',
@@ -83,8 +83,8 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => { },
-  disconnect: () => { },
+  connect: async () => {},
+  disconnect: () => {},
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
@@ -94,10 +94,10 @@ const Context = createContext<IWallet>({
     throw new Error('Not Implemented');
   },
   delegations: null,
-  refreshBalances: () => { },
-  refreshDelegations: () => { },
+  refreshBalances: () => {},
+  refreshDelegations: () => {},
   feeDenom: 'ukuji',
-  setFeeDenom: () => { },
+  setFeeDenom: () => {},
   chainInfo: {} as ChainInfo,
   adapter: null
 });
@@ -163,9 +163,9 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           setBalances((prev) =>
             b.denom
               ? {
-                ...prev,
-                [b.denom]: BigNumber.from(b.amount)
-              }
+                  ...prev,
+                  [b.denom]: BigNumber.from(b.amount)
+                }
               : prev
           );
         });

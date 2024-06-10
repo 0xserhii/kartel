@@ -1,6 +1,6 @@
 import { tabItems } from '@/constants/data';
 import { cn } from '@/lib/utils';
-import { usePathname } from '@/routes/hooks';
+import { usePathname } from '@/hooks';
 import { Link } from 'react-router-dom';
 
 type THeadingProps = {

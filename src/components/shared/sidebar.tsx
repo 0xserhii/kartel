@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Logo from '/assets/logo.svg';
 import Deposit from '/assets/deposit-icon.svg';
 import { ScrollArea } from '../ui/scroll-area';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 
 export default function Sidebar() {

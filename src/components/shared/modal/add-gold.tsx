@@ -5,18 +5,14 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
+import { useSelector } from 'react-redux';
 
 const AddGoldModal = () => {
   const modal = useModal();
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
-
-  const isOpen = openModal && type === ModalType.ADDGOLD;
+  const modalState = useSelector((state: any) => state.modal);
+  const isOpen = modalState.open && modalState.type === ModalType.ADDGOLD;
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
