@@ -20,7 +20,7 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useAppDispatch();
   const [active, setActive] = useState(leaderboardTabs[0].value);
-  const leaderboardState = useAppSelector((state) => state.leaderboard);
+  const leaderboardState = useAppSelector((state: any) => state.leaderboard);
 
   useEffect(() => {
     if (leaderboardState.leaderboardHistory) {
@@ -101,8 +101,8 @@ export default function Leaderboard() {
                                 {Number(
                                   (score.leaderboard?.[active]?.usk
                                     ?.betAmount ?? 0) +
-                                    (score.leaderboard?.[active]?.kuji
-                                      ?.betAmount ?? 0)
+                                  (score.leaderboard?.[active]?.kuji
+                                    ?.betAmount ?? 0)
                                 ).toFixed(2)}
                               </TableCell>
                               <TableCell className="w-1/5">
@@ -110,8 +110,8 @@ export default function Leaderboard() {
                                   {Number(
                                     (score.leaderboard?.[active]?.usk
                                       ?.winAmount ?? 0) +
-                                      (score.leaderboard?.[active]?.kuji
-                                        ?.winAmount ?? 0)
+                                    (score.leaderboard?.[active]?.kuji
+                                      ?.winAmount ?? 0)
                                   ).toFixed(2)}
                                 </div>
                               </TableCell>

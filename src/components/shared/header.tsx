@@ -7,13 +7,12 @@ import authBtn from '/assets/auth-btn.svg';
 import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 import { useOpen } from '@/provider/chat-provider';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/store/redux';
 
 export default function Header() {
   const modal = useModal();
   const { open, setOpen } = useOpen();
-  const userData = useSelector((store: any) => store.user.userData);
-
+  const userData = useAppSelector((store: any) => store.user.userData);
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN);
   };

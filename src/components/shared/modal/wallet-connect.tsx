@@ -5,7 +5,7 @@ import { ChevronRight, Download } from 'lucide-react';
 import { Adapter, useWallet } from '@/provider/crypto/wallet';
 import { useState } from 'react';
 import useToast from '@/hooks/use-toast';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/store/redux';
 
 interface ITokenList {
   name: string;
@@ -51,7 +51,7 @@ const WalletConnectModal = () => {
   const modal = useModal();
   const [loading, setLoading] = useState(defaultLoading);
   const toast = useToast();
-  const { open, type } = useSelector((state: any) => state.modal);
+  const { open, type } = useAppSelector((state: any) => state.modal);
   const isOpen = open && type === ModalType.WALLETCONNECT;
   const { connect } = useWallet();
 

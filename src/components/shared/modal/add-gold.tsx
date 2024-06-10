@@ -7,11 +7,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { ModalType } from '@/types/modal';
 import useModal from '@/hooks/use-modal';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/store/redux';
 
 const AddGoldModal = () => {
   const modal = useModal();
-  const modalState = useSelector((state: any) => state.modal);
+  const modalState = useAppSelector((state: any) => state.modal);
   const isOpen = modalState.open && modalState.type === ModalType.ADDGOLD;
 
   const hanndleOpenChange = async () => {

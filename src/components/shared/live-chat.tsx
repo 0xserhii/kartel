@@ -13,7 +13,7 @@ import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { getAccessToken } from '@/lib/axios';
 import { useInView } from 'react-intersection-observer';
-import { useSelector } from 'react-redux';
+
 
 export type HistoryItemProps = {
   name: string;
@@ -45,13 +45,13 @@ const LiveChat = () => {
   const [inputStr, setInputStr] = useState('');
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
-  const userData = useSelector((store: any) => store.user.userData);
+  const userData = useAppSelector((store: any) => store.user.userData);
   const { ref: lastMessageRef, inView } = useInView({
     threshold: 0,
     triggerOnce: false
   });
   const toast = useToast();
-  const chatState = useAppSelector((state) => state.chat);
+  const chatState = useAppSelector((state: any) => state.chat);
   const firstChatSentAt =
     chatState?.chatHistory?.length > 0 ? chatState.chatHistory[0].sentAt : null;
   const dispatch = useAppDispatch();
@@ -83,6 +83,7 @@ const LiveChat = () => {
     const message = inputStr;
     try {
       dispatch(chatActions.sendMsg(message));
+      setStatus(true);
       setInputStr('');
     } catch (error) {
       console.log(error);
@@ -90,18 +91,12 @@ const LiveChat = () => {
   };
 
   useEffect(() => {
-    setStatus(true);
-  }, []);
-
-  useEffect(() => {
     dispatch(chatActions.loginChatServer());
   }, [getAccessToken()]);
 
   useEffect(() => {
-    if (status) {
-      dispatch(chatActions.subscribeChatServer());
-    }
-  }, [status]);
+    dispatch(chatActions.subscribeChatServer());
+  }, []);
 
   useEffect(() => {
     if (
@@ -112,14 +107,14 @@ const LiveChat = () => {
       setTimeout(() => {
         ref.current?.scrollIntoView({
           behavior: 'smooth',
-          block: 'nearest'
+          block: 'center',
         });
-      }, 100);
+      }, 200);
     }
-  }, [chatState?.chatHistory]);
+  }, [status]);
 
   useEffect(() => {
-    if (inView && status) {
+    if (inView) {
       dispatch(chatActions.getChatHistory(firstChatSentAt));
     }
   }, [inView]);

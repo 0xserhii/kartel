@@ -2,30 +2,30 @@ export const USER_DATA = 'USER_DATA';
 export const INIT_USER_DATA = 'INIT_USER_DATA';
 
 export interface UserState {
-  userData: { username: string; userEmail: string; _id: string };
+    userData: { username: string; userEmail: string; _id: string };
 }
 
 interface UserAction {
-  type: string;
-  payload: { username: string; userEmail: string; _id: string };
+    type: string;
+    payload: any;
 }
 
-const initialState: UserState = {
-  userData: { username: '', userEmail: '', _id: '' }
+const initialState: any = {
+    userData: { username: '', userEmail: '', _id: '' }
 };
 
-const modalReducer = (
-  state: UserState = initialState,
-  action: UserAction
-): UserState => {
-  switch (action.type) {
-    case USER_DATA:
-      return { userData: action.payload };
-    case INIT_USER_DATA:
-      return { userData: { username: '', userEmail: '', _id: '' } };
-    default:
-      return state;
-  }
+const userReducer = (
+    state: any = initialState,
+    action: UserAction
+): any => {
+    switch (action.type) {
+        case USER_DATA:
+            return { userData: { username: action.payload.username, userEmail: action.payload.userEmail, _id: action.payload._id } };
+        case INIT_USER_DATA:
+            return { userData: { username: '', userEmail: '', _id: '' } };
+        default:
+            return state;
+    }
 };
 
-export default modalReducer;
+export default userReducer;
