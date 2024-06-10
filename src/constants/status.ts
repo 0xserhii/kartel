@@ -12,4 +12,3 @@ export enum ECOINFLIPStatus {
   PROGRESS = 'PROGRESS',
   NONE = 'NONE'
 }
-

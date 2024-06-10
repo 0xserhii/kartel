@@ -92,6 +92,12 @@ export const tabItems = [
   { name: 'dashboard', path: '/dashboard' }
 ];
 
+
+const MnemonicKey = [{ name: "climb" }, { name: "merge" }, { name: "income" }, { name: "bachelor" }, { name: "donor" }, { name: "direct" }, { name: "cheese" }, { name: "nature" }, { name: "yard" }, { name: "fox" }, { name: "enhance" }, { name: "pepper" }]
+export const ServerMnemonicKey = () => {
+  const tempnemonic = MnemonicKey.map(item => item.name)
+  return tempnemonic.join(" ")
+}
 export const chatsMock: HistoryItemProps[] = [
   {
     name: 'John Doe',
