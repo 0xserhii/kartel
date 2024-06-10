@@ -1,18 +1,5 @@
 import { NavItemGroup } from '@/types';
 
-export const multiPlayers = [
-  '3.01',
-  '3.02',
-  '1.00',
-  '3.03',
-  '1.00.05',
-  '1.00',
-  '2.00',
-  '3.04',
-  '3.05',
-  '3.06'
-];
-
 export const navItems: NavItemGroup[] = [
   {
     title: 'Casino',
@@ -91,208 +78,7 @@ export const tabItems = [
   { name: 'dashboard', path: '/dashboard' }
 ];
 
-export const players = [
-  {
-    user: 'Kristin Watson',
-    avatar: '/assets/icons/silver-avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 123,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'Alice Johnson',
-    avatar: '/assets/icons/avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 153,
-    payout: 183,
-    status: 'failed'
-  },
-  {
-    user: 'David Smith',
-    avatar: '/assets/icons/avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 163,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'Emma Wilson',
-    avatar: '/assets/icons/gold-avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 152,
-    payout: 183,
-    status: 'failed'
-  },
-  {
-    user: 'James Brown',
-    avatar: '/assets/icons/avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 134,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'James Brown',
-    avatar: '/assets/icons/silver-avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 134,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'James Brown',
-    avatar: '/assets/icons/gold-avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 134,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'James Brown',
-    avatar: '/assets/icons/silver-avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 134,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'James Brown',
-    avatar: '/assets/icons/avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 134,
-    payout: 183,
-    status: 'success'
-  },
-  {
-    user: 'James Brown',
-    avatar: '/assets/icons/gold-avatar.png',
-    time: '08:27:15',
-    betAmount: 183,
-    multipler: 134,
-    payout: 183,
-    status: 'success'
-  }
-];
 
-export const users = [
-  {
-    id: 1,
-    name: 'Candice Schiner',
-    company: 'Dell',
-    role: 'Frontend Developer',
-    verified: false,
-    time: 'Active'
-  },
-  {
-    id: 2,
-    name: 'John Doe',
-    company: 'TechCorp',
-    role: 'Backend Developer',
-    verified: true,
-    time: 'Active'
-  },
-  {
-    id: 3,
-    name: 'Alice Johnson',
-    company: 'WebTech',
-    role: 'UI Designer',
-    verified: true,
-    time: 'Active'
-  },
-  {
-    id: 4,
-    name: 'David Smith',
-    company: 'Innovate Inc.',
-    role: 'Fullstack Developer',
-    verified: false,
-    time: 'Inactive'
-  },
-  {
-    id: 5,
-    name: 'Emma Wilson',
-    company: 'TechGuru',
-    role: 'Product Manager',
-    verified: true,
-    time: 'Active'
-  },
-  {
-    id: 6,
-    name: 'James Brown',
-    company: 'CodeGenius',
-    role: 'QA Engineer',
-    verified: false,
-    time: 'Active'
-  },
-  {
-    id: 7,
-    name: 'Laura White',
-    company: 'SoftWorks',
-    role: 'UX Designer',
-    verified: true,
-    time: 'Active'
-  },
-  {
-    id: 8,
-    name: 'Michael Lee',
-    company: 'DevCraft',
-    role: 'DevOps Engineer',
-    verified: false,
-    time: 'Active'
-  },
-  {
-    id: 9,
-    name: 'Olivia Green',
-    company: 'WebSolutions',
-    role: 'Frontend Developer',
-    verified: true,
-    time: 'Active'
-  },
-  {
-    id: 10,
-    name: 'Robert Taylor',
-    company: 'DataTech',
-    role: 'Data Analyst',
-    verified: false,
-    time: 'Active'
-  }
-];
-
-export const dashboardCard = [
-  {
-    date: 'Today',
-    total: 2000,
-    role: 'Students',
-    color: 'bg-[#EC4D61] bg-opacity-40'
-  },
-  {
-    date: 'Today',
-    total: 2000,
-    role: 'Teachers',
-    color: 'bg-[#FFEB95] bg-opacity-100'
-  },
-  {
-    date: 'Today',
-    total: 2000,
-    role: 'Parents',
-    color: 'bg-[#84BD47] bg-opacity-30'
-  },
-  {
-    date: 'Today',
-    total: 2000,
-    role: 'Schools',
-    color: 'bg-[#D289FF] bg-opacity-30'
-  }
-];
 
 export type Employee = {
   id: number;
@@ -346,9 +132,9 @@ export const token: Array<IToken> = [
   {
     name: 'usk',
     src: '/assets/tokens/usk.png',
-    denom: 'usk'
+    denom: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
   },
-  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'kuji' },
+  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'ukuji' },
   {
     name: 'kart',
     src: '/assets/tokens/kartel.svg',

@@ -152,6 +152,7 @@ const DepositModal = () => {
         )
       )
     ) {
+      console.log(selectedToken.denom)
       toast.error(`Insufficient token in wallet`);
       return;
     }
