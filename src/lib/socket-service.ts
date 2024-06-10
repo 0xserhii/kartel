@@ -1,7 +1,6 @@
 import { IChatClientToServerEvents, IChatServerToClientEvents } from "@/types";
 import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
 import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from "@/types/leader";
-// import { ICrashClientToServerEvents, ICrashServerToClientEvents } from "@/types/crash";
 import { Socket, io } from "socket.io-client";
 import customParser from 'socket.io-msgpack-parser'
 
@@ -14,7 +13,7 @@ const createSocket = <ServerEvents, ClientEvents>(namespace: string): Socket<any
 
 const chatSocket = createSocket<IChatServerToClientEvents, IChatClientToServerEvents>('chat');
 const coinflipSocket = createSocket<ICoinflipServerToClientEvents, ICoinflipClientToServerEvents>('coinflip');
-const leaderboardSocket = createSocket<ICoinflipServerToClientEvents, ICoinflipClientToServerEvents>('leaderboard');
+const leaderboardSocket = createSocket<ILeaderboardServerToClientEvents, ILeaderboardClientToServerEvents>('leaderboard');
 
 const KartelSocket = {
     chat: chatSocket,
