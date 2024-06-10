@@ -97,7 +97,7 @@ const WalletConnectModal = () => {
       }
 
       modal.close(ModalType.WALLETCONNECT);
-      modal.open(ModalType.DEPOSIT);
+      // modal.open(ModalType.DEPOSIT);
       setLoading(defaultLoading);
     } catch (error) {
       toast.error('User rejected');

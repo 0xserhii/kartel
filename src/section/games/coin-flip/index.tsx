@@ -78,19 +78,24 @@ const CoinFlipSection = () => {
     };
 
     const startCoinflip = () => {
-        if (betAmount > 0) {
-            dispatch(coinflipActions.updategameState());
-            dispatch(coinflipActions.startCoinflipgame({
-                betAmount: Number(betAmount) ?? 0.1,
-                denom: selectedToken.name,
-                betCoinsCount: coinAmount,
-                betSideCount: selectedHeads,
-                betSide: selectedSide
-            }));
-            setIsRolling(true);
-            setIsEarned(false);
+        if (betAmount > 0 && betAmount < 10000) {
+            if (coinflipState.msg) {
+                toast.error(coinflipState.msg)
+                setIsRolling(false);
+            } else {
+                dispatch(coinflipActions.updategameState());
+                dispatch(coinflipActions.startCoinflipgame({
+                    betAmount: Number(betAmount) ?? 0.1,
+                    denom: selectedToken.name,
+                    betCoinsCount: coinAmount,
+                    betSideCount: selectedHeads,
+                    betSide: selectedSide
+                }));
+                setIsRolling(true);
+                setIsEarned(false);
+            }
         } else {
-            toast.error("Bet Amount should be between 0.1 and 100")
+            toast.error("Bet Amount should be between 0.1 and 10000");
         }
     };
 
@@ -126,6 +131,7 @@ const CoinFlipSection = () => {
     useEffect(() => {
         if (coinflipState.msg) {
             toast.error(coinflipState.msg)
+            setIsRolling(false);
         }
     }, [coinflipState.msg]);
 
@@ -163,7 +169,7 @@ const CoinFlipSection = () => {
                             coinflipState.gameStatus &&
                             <span className="absolute text-xl uppercase top-3 text-[#df8002] font-bold">{isEarned ? `You Won ${coinflipState.winAmount.toFixed(2)}` : `You Lost`}</span>
                         }
-                        <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${coinAmount > 5 ? 5 : coinAmount}, 1fr)` }}>
+                        <div className="grid gap-6 mt-10" style={{ gridTemplateColumns: `repeat(${Math.min(coins.length, 5)}, 1fr)` }}>
                             {coins.map((coin, index) => {
                                 return (
                                     <div key={index} id="coin" className={`coin ${isRolling ? "flipping" : `${coin ? "coin-front" : "coin-back"}`}`} style={{

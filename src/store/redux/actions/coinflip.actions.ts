@@ -48,6 +48,13 @@ export function updategameState() {
     }
 }
 
+export function disconnectCoinflipServer() {
+    return {
+        type: ECoinflipSocketAction.DISCONNECT_COINFLIP,
+        payload: null
+    }
+}
+
 export function startCoinflipgame(data: {
     betAmount: number;
     denom: string;
