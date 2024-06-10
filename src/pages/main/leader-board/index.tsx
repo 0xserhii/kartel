@@ -58,13 +58,16 @@ export default function Leaderboard() {
               <Table className="w-full table-fixed">
                 <TableBody>
                   <TableRow className="!bg-transparent">
-                    <TableCell className="w-3/12 text-center">No.</TableCell>
-                    <TableCell className="w-3/12">User</TableCell>
-                    <TableCell className="w-3/12 text-center">
+                    <TableCell className="w-1/5 text-center">No.</TableCell>
+                    <TableCell className="w-1/5">User</TableCell>
+                    <TableCell className="w-1/5 text-center">
                       Bet Amount
                     </TableCell>
-                    <TableCell className="w-3/12 text-center">
+                    <TableCell className="w-1/5 text-center">
                       Win Amount
+                    </TableCell>
+                    <TableCell className="w-1/5 text-center">
+                      Profit
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -86,7 +89,7 @@ export default function Leaderboard() {
                               key={index}
                               className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
                             >
-                              <TableCell className="w-3/12 text-center">
+                              <TableCell className="w-1/5 text-center">
                                 <div className="flex items-center justify-center gap-2">
                                   {index + 1 <= 3 && (
                                     <img
@@ -97,18 +100,18 @@ export default function Leaderboard() {
                                   <span>{index + 1}</span>
                                 </div>
                               </TableCell>
-                              <TableCell className="w-3/12">
+                              <TableCell className="w-1/5">
                                 <div className="flex items-center gap-2">
                                   <span>{score.username}</span>
                                 </div>
                               </TableCell>
-                              <TableCell className="w-3/12 text-center">
+                              <TableCell className="w-1/5 text-center">
                                 {Number(
                                   (score.leaderboard?.[active]?.usk?.betAmount ?? 0) +
                                   (score.leaderboard?.[active]?.kuji?.betAmount ?? 0)
                                 ).toFixed(2)}
                               </TableCell>
-                              <TableCell className="w-3/12">
+                              <TableCell className="w-1/5">
                                 <div className="flex items-center justify-center gap-1">
                                   {Number(
                                     (score.leaderboard?.[active]?.usk?.winAmount ??
@@ -116,6 +119,22 @@ export default function Leaderboard() {
                                     (score.leaderboard?.[active]?.kuji?.winAmount ??
                                       0)
                                   ).toFixed(2)}
+                                </div>
+                              </TableCell>
+                              <TableCell className="w-1/5">
+                                <div className="flex items-center justify-center gap-1">
+                                  <span>
+                                    {(() => {
+                                      const winAmount = (score.leaderboard?.[active]?.usk?.winAmount ?? 0) + (score.leaderboard?.[active]?.kuji?.winAmount ?? 0);
+                                      const betAmount = (score.leaderboard?.[active]?.usk?.betAmount ?? 0) + (score.leaderboard?.[active]?.kuji?.betAmount ?? 0);
+                                      const profit = (winAmount - betAmount).toFixed(2);
+                                      return (
+                                        <span className={Number(profit) >= 0 ? 'text-white' : 'text-purple'}>
+                                          {profit}
+                                        </span>
+                                      );
+                                    })()}
+                                  </span>
                                 </div>
                               </TableCell>
                             </TableRow>

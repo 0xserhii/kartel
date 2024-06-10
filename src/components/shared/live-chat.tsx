@@ -109,7 +109,7 @@ const LiveChat = () => {
       setTimeout(() => {
         ref.current?.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'nearest'
         });
       }, 100);
     }

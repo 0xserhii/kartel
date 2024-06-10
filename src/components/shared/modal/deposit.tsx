@@ -186,10 +186,10 @@ const DepositModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
-      <DialogContent className="gap-5 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
+      <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
         <DialogHeader className="flex flex-row">
           <div className="flex w-full flex-row items-center justify-center">
-            <img src="/assets/logo.svg" className="h-24 w-24" />
+            <img src="/assets/logo.svg" className="h-20 w-20" />
           </div>
         </DialogHeader>
         <div className="flex flex-row items-center justify-center gap-5">
@@ -242,6 +242,27 @@ const DepositModal = () => {
                 </span>
               </div>
             ))}
+          <div
+            className="flex w-full flex-row items-center justify-between"
+          >
+            <span className="flex w-4/12 flex-row items-center gap-3 uppercase text-gray-300">
+              <img
+                src={`/assets/tokens/kartel.svg`}
+                className="h-5 w-5"
+              />
+              kart
+            </span>
+            <span className="w-4/12 text-center text-gray-300">
+              {
+                Number(0).toFixed(2)
+              }
+            </span>
+            <span className="w-4/12 text-center text-white">
+              {
+                Number(0).toFixed(2)
+              }
+            </span>
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <span className="text-xs text-white">Token Amount</span>
