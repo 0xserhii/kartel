@@ -37,9 +37,16 @@ export function subscribeChatServer() {
     }
 }
 
-export function getChatHistory() {
+export function disconnectChatServer() {
+    return {
+        type: EChatSocketAction.DISCONNECT_CHAT,
+        payload: null
+    }
+}
+
+export function getChatHistory(sendAt) {
     return {
         type: EChatSocketAction.GET_CHAT_HISTORY,
-        payload: null
+        payload: sendAt
     }
 }

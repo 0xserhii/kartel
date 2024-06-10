@@ -1,5 +1,6 @@
 import { IChatClientToServerEvents, IChatServerToClientEvents } from "@/types";
 import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
+import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from "@/types/leader";
 // import { ICrashClientToServerEvents, ICrashServerToClientEvents } from "@/types/crash";
 import { Socket, io } from "socket.io-client";
 
@@ -10,26 +11,20 @@ const chatSocket: Socket<
     IChatClientToServerEvents
 > = io(`${SERVER_URL}/chat`);
 
-// const crashSocket: Socket<
-//     ICrashServerToClientEvents,
-//     ICrashClientToServerEvents
-// > = io(`${SERVER_URL}/crash`);
-
 const coinflipSocket: Socket<
     ICoinflipServerToClientEvents,
     ICoinflipClientToServerEvents
 > = io(`${SERVER_URL}/coinflip`);
 
 const leaderboardSocket: Socket<
-    ICoinflipServerToClientEvents,
-    ICoinflipClientToServerEvents
+    ILeaderboardServerToClientEvents,
+    ILeaderboardClientToServerEvents
 > = io(`${SERVER_URL}/leaderboard`);
 
 const KartelSocket = {
     chat: chatSocket,
-    // crash: crashSocket,
     coinflip: coinflipSocket,
-    leaderboard: leaderboardSocket
+    leaderboard: leaderboardSocket,
 }
 
 export default KartelSocket

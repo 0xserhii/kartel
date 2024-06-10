@@ -343,12 +343,12 @@ export interface IToken {
 }
 
 export const token: Array<IToken> = [
-  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'kuji' },
   {
     name: 'usk',
     src: '/assets/tokens/usk.png',
     denom: 'usk'
   },
+  { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'kuji' },
   {
     name: 'kart',
     src: '/assets/tokens/kartel.svg',

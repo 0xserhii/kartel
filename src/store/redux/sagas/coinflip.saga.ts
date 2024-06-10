@@ -68,7 +68,7 @@ function* subscribeSaga() {
         yield fork(read, KartelSocket.coinflip);
         yield delay(100);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
 
@@ -86,7 +86,6 @@ function* stopChanelSaga() {
         KartelSocket.coinflip.off();
         KartelSocket.coinflip.disconnect();
     }
-
     yield cancel(socketTask);
 }
 

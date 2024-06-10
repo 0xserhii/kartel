@@ -23,8 +23,10 @@ export default function Leaderboard() {
   const leaderboardState = useAppSelector((state) => state.leaderboard);
 
   useEffect(() => {
+    if (leaderboardState.leaderboardHistory) {
+      setLoading(false);
+    }
     dispatch(leaderboardActions.subscribeLeaderboardServer());
-    setLoading(false);
   }, []);
 
   return (
@@ -50,8 +52,8 @@ export default function Leaderboard() {
             }
           </div>
         </div>
-        <div className='flex flex-row gap-3 mt-20'>
-          <Card className="w-6/12 border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
+        <div className='flex flex-col gap-3'>
+          <Card className="w-full border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
               <Table className="w-full table-fixed">
                 <TableBody>
@@ -68,60 +70,58 @@ export default function Leaderboard() {
                 </TableBody>
               </Table>
             </CardHeader>
-            <CardContent className={`px-2 py-0 ${loading ? 'h-[536px] opacity-50' : ''}`}>
+            <CardContent className={`px-2 py-0 ${'h-[536px]'}`}>
               {loading ? (
                 <div className="flex h-full w-full items-center justify-center">
-                  <div className="small-loading">
-                    <svg viewBox="10 10 20 20">
-                      <circle r="7" cy="20" cx="20"></circle>
-                    </svg>
-                  </div>
+                  <span className='text-white'>Loading...</span>
                 </div>
               ) : (
                 <ScrollArea className="h-88 px-5 py-3">
                   <Table className="relative table-fixed border-separate border-spacing-y-3">
                     <TableBody>
-                      {leaderboardState?.leaderboardHistory?.crash?.slice(0, 6).map((score, index) => {
-                        return (
-                          <TableRow
-                            key={index}
-                            className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
-                          >
-                            <TableCell className="w-3/12 text-center">
-                              <div className="flex items-center justify-center gap-2">
-                                {index + 1 <= 3 && (
-                                  <img
-                                    src={`/assets/medal/top${index + 1}.svg`}
-                                    className="h-5 w-5"
-                                  />
-                                )}
-                                <span>{index + 1}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="w-3/12">
-                              <div className="flex items-center gap-2">
-                                <span>{score.username}</span>
-                              </div>
-                            </TableCell>
-                            <TableCell className="w-3/12 text-center">
-                              {Number(
-                                (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                                (score.leaderboard?.crash?.kuji?.betAmount ?? 0)
-                              ).toFixed(2)}
-                            </TableCell>
-                            <TableCell className="w-3/12">
-                              <div className="flex items-center justify-center gap-1">
+                      {
+                        leaderboardState?.leaderboardHistory?.[active]?.map((score, index) => {
+                          return (
+                            <TableRow
+                              key={index}
+                              className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
+                            >
+                              <TableCell className="w-3/12 text-center">
+                                <div className="flex items-center justify-center gap-2">
+                                  {index + 1 <= 3 && (
+                                    <img
+                                      src={`/assets/medal/top${index + 1}.svg`}
+                                      className="h-5 w-5"
+                                    />
+                                  )}
+                                  <span>{index + 1}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="w-3/12">
+                                <div className="flex items-center gap-2">
+                                  <span>{score.username}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="w-3/12 text-center">
                                 {Number(
-                                  (score.leaderboard?.crash?.usk?.winAmount ??
-                                    0) +
-                                  (score.leaderboard?.crash?.kuji?.winAmount ??
-                                    0)
+                                  (score.leaderboard?.[active]?.usk?.betAmount ?? 0) +
+                                  (score.leaderboard?.[active]?.kuji?.betAmount ?? 0)
                                 ).toFixed(2)}
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                              </TableCell>
+                              <TableCell className="w-3/12">
+                                <div className="flex items-center justify-center gap-1">
+                                  {Number(
+                                    (score.leaderboard?.[active]?.usk?.winAmount ??
+                                      0) +
+                                    (score.leaderboard?.[active]?.kuji?.winAmount ??
+                                      0)
+                                  ).toFixed(2)}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      }
                     </TableBody>
                   </Table>
                   <ScrollBar orientation="horizontal" />
@@ -131,7 +131,7 @@ export default function Leaderboard() {
           </Card>
           {
             active === "crash" && (
-              <div className='flex w-6/12 transition-all ease-in-out'>
+              <div className='flex transition-all ease-in-out'>
                 <div className="relative rounded-md">
                   <img
                     src={CrashBanner}
@@ -156,7 +156,7 @@ export default function Leaderboard() {
           }
           {
             active === "coinflip" && (
-              <div className='flex w-6/12 transition-all ease-in-out'>
+              <div className='flex transition-all ease-in-out'>
                 <div className="relative rounded-md">
                   <img
                     src={CoinflipBanner}

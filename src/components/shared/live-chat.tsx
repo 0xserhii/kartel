@@ -14,6 +14,7 @@ import { Input } from '../ui/input';
 import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { getAccessToken } from '@/lib/axios';
+import { useInView } from 'react-intersection-observer';
 
 export type HistoryItemProps = {
   name: string;
@@ -26,14 +27,6 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
   return (
     <div className="flex items-center gap-1 px-3 py-1">
       <div className="relative">
-        {/* <span
-          className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white ${status === 'online'
-              ? 'bg-green'
-              : status === 'away'
-                ? 'bg-yellow'
-                : 'bg-red'
-            }`}
-        ></span> */}
       </div>
       <div className="flex flex-1 flex-col justify-between rounded-lg bg-[#4a278d4f] px-2 py-1">
         <div>
@@ -55,14 +48,18 @@ const LiveChat = () => {
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const userData = usePersistStore((store) => store.app.userData);
+  const { ref: lastMessageRef, inView } = useInView({
+    threshold: 0,
+    triggerOnce: false
+  });
   const toast = useToast();
-
-  const chatState = useAppSelector((state) => state.chat)
+  const chatState = useAppSelector((state) => state.chat);
+  const firstChatSentAt = chatState?.chatHistory?.length > 0 ? chatState.chatHistory[0].sentAt : null;
   const dispatch = useAppDispatch();
-
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);
   };
+  const [status, setStatus] = useState(false);
 
   const onEmojiClick = (emojiObject: EmojiClickData) => {
     setInputStr((prevInput) => prevInput + emojiObject.emoji);
@@ -94,12 +91,18 @@ const LiveChat = () => {
   };
 
   useEffect(() => {
+    setStatus(true);
+  }, [])
+
+  useEffect(() => {
     dispatch(chatActions.loginChatServer())
   }, [getAccessToken()]);
 
   useEffect(() => {
-    dispatch(chatActions.subscribeChatServer())
-  }, []);
+    if (status) {
+      dispatch(chatActions.subscribeChatServer());
+    }
+  }, [status]);
 
   useEffect(() => {
     if ((chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory.length) {
@@ -109,6 +112,12 @@ const LiveChat = () => {
       });
     }
   }, [chatState?.chatHistory]);
+
+  useEffect(() => {
+    if (inView && status) {
+      dispatch(chatActions.getChatHistory(firstChatSentAt));
+    }
+  }, [inView]);
 
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
@@ -128,6 +137,7 @@ const LiveChat = () => {
         <ScrollArea
           className={`flex flex-col items-stretch py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
         >
+          <div ref={lastMessageRef}></div>
           {(chatState?.chatHistory && Array.isArray(chatState?.chatHistory)) && chatState?.chatHistory?.map((chat, key) => (
             <React.Fragment key={key}>
               <HistoryItem
@@ -186,7 +196,7 @@ const LiveChat = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
