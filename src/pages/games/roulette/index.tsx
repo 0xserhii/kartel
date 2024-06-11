@@ -1,3 +1,6 @@
-export default function Roulette() {
-  return <div>this is the roulette page</div>;
+export default function RouletteGames() {
+  return (
+    <div className="flex flex-col gap-5 mt-3">
+    </div>
+  );
 }

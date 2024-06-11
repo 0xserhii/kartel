@@ -7,6 +7,12 @@ import CrashGame from '@/pages/games/crash';
 import CoinFlipGame from '@/pages/games/coin-flip';
 import Leaderboard from '@/pages/main/leader-board';
 import NotFound from '@/pages/not-found';
+import SlotsGames from '@/pages/games/slots';
+import BlackJackGames from '@/pages/games/blackjack';
+import RouletteGames from '@/pages/games/roulette';
+import HorseRacingGames from '@/pages/games/horse-race';
+import Settings from '@/pages/setting';
+import HelpSupport from '@/pages/help-support';
 
 // ----------------------------------------------------------------------
 
@@ -48,27 +54,27 @@ export default function AppRouter() {
         },
         {
           path: '/slots',
-          element: <CoinFlipGame />
+          element: <SlotsGames />
         },
         {
           path: '/black-jack',
-          element: <CoinFlipGame />
+          element: <BlackJackGames />
         },
         {
           path: '/roulette',
-          element: <CoinFlipGame />
+          element: <RouletteGames />
         },
         {
-          path: '/hourse-racing',
-          element: <CoinFlipGame />
+          path: '/horse-racing',
+          element: <HorseRacingGames />
         },
         {
           path: '/settings',
-          element: <CoinFlipGame />
+          element: <Settings />
         },
         {
           path: '/help-support',
-          element: <CoinFlipGame />
+          element: <HelpSupport />
         }
       ]
     }

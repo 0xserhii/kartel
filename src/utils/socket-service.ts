@@ -7,7 +7,7 @@ import {
   ILeaderboardClientToServerEvents,
   ILeaderboardServerToClientEvents
 } from '@/types/leader';
-// import { ICrashClientToServerEvents, ICrashServerToClientEvents } from "@/types/crash";
+
 import { Socket, io } from 'socket.io-client';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;

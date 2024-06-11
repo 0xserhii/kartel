@@ -1,3 +1,6 @@
-export default function Setting() {
-  return <div>this is the setting page</div>;
+export default function Settings() {
+  return (
+    <div className="mt-3">
+    </div>
+  );
 }
