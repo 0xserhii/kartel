@@ -115,6 +115,9 @@ export default function CrashGameSection() {
         denom: selectedToken.name
       };
       socket?.emit('join-crash-game', joinParams);
+    } else {
+      toast.error('Bet amount must be greater than 0');
+      return;
     }
     if (avaliableBet) {
       setAvaliableBet(false);
