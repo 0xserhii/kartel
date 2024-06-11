@@ -47,15 +47,15 @@ export type NetworkContext = {
 
 const Context = createContext<NetworkContext>({
   network: TESTNET,
-  setNetwork: () => { },
+  setNetwork: () => {},
   tmClient: null,
   query: null,
   rpc: '',
   rpcs: [],
-  setRpc: () => { },
+  setRpc: () => {},
   preferred: null,
-  unlock: () => { },
-  lock: () => { }
+  unlock: () => {},
+  lock: () => {}
 });
 
 const toClient = async (
@@ -98,15 +98,12 @@ export const NetworkContext: React.FC<
   const [latencies, setLatencies] = useState<Record<string, RPCConnection>>({});
 
   const tmClient = tm && tm[0];
-  console.log({ tm })
   useEffect(() => {
     if (preferred) {
-      console.log({ toClient })
       toClient(preferred)
         .then(setTmClient)
         .catch((err) => (onError ? onError(err) : console.error(err)));
     } else {
-      console.log({ RPCS })
       Promise.any(
         RPCS[network as NETWORK]?.map((x) => toClient(x, setLatencies))
       )

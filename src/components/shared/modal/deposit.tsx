@@ -17,7 +17,13 @@ import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
 import AESWrapper from '@/lib/encryption/aes-wrapper';
-import { TokenBalances, denoms, finance, initialBalance, token } from '@/constants/data';
+import {
+  TokenBalances,
+  denoms,
+  finance,
+  initialBalance,
+  token
+} from '@/constants/data';
 import { useAppSelector } from '@/store/redux';
 import LoadingIcon from '../loading-icon';
 
@@ -34,14 +40,9 @@ const DepositModal = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const aesWrapper = AESWrapper.getInstance()
+  const aesWrapper = AESWrapper.getInstance();
 
-  const {
-    signAndBroadcast,
-    account,
-    balances,
-    refreshBalances
-  } = useWallet();
+  const { signAndBroadcast, account, balances, refreshBalances } = useWallet();
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -74,8 +75,15 @@ const DepositModal = () => {
   };
 
   const handleDeposit = async () => {
-    const encryptedAddressRes: any = (await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/payments/admin-wallet`)).data.responseObject as string;
-    const walletAddress = await aesWrapper.decryptMessage(encryptedAddressRes.aesKey, encryptedAddressRes.encryptedAddress)
+    const encryptedAddressRes: any = (
+      await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/payments/admin-wallet`
+      )
+    ).data.responseObject as string;
+    const walletAddress = await aesWrapper.decryptMessage(
+      encryptedAddressRes.aesKey,
+      encryptedAddressRes.encryptedAddress
+    );
     if (
       Number(depositAmount) >
       Number(
@@ -209,18 +217,6 @@ const DepositModal = () => {
                 </span>
               </div>
             ))}
-          <div className="flex w-full flex-row items-center justify-between">
-            <span className="flex w-4/12 flex-row items-center gap-3 uppercase text-gray-300">
-              <img src={`/assets/tokens/kartel.svg`} className="h-5 w-5" />
-              kart
-            </span>
-            <span className="w-4/12 text-center text-gray-300">
-              {Number(0).toFixed(2)}
-            </span>
-            <span className="w-4/12 text-center text-white">
-              {Number(0).toFixed(2)}
-            </span>
-          </div>
         </div>
         <div className="flex flex-col gap-2">
           <span className="text-xs text-white">Token Amount</span>
@@ -270,7 +266,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

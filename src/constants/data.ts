@@ -168,7 +168,7 @@ export const token: Array<IToken> = [
 export type TokenBalances = {
   usk: number;
   kuji: number;
-}
+};
 
 export const initialBalance = { kuji: 0, usk: 0 };
 

@@ -135,9 +135,9 @@ const WalletConnectModal = () => {
                 ))}
               {item.name === 'Keplr' && loading.keplr && <LoadingIcon />}
               {item.name === 'Leap' && loading.leap && <LoadingIcon />}
-              {item.name === 'Cosmotation' &&
-                loading.cosmostation &&
-                <LoadingIcon />}
+              {item.name === 'Cosmotation' && loading.cosmostation && (
+                <LoadingIcon />
+              )}
             </button>
           ))}
         </div>

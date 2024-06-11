@@ -14,7 +14,7 @@ function subscribe(socket) {
         emit(leaderboardActions.getLeaderboardHistory(data.leaderboard));
       }
     );
-    return () => { };
+    return () => {};
   });
 }
 
