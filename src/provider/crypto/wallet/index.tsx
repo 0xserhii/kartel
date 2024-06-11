@@ -41,7 +41,6 @@ import { useNetwork } from '../network';
 import { usePasskeys } from '../passkey';
 import { Passkey } from './passkey-class';
 import { useLocalStorage } from '@/routes/hooks';
-import { ServerMnemonicKey } from '@/constants/data';
 
 export enum Adapter {
   Sonar = 'sonar',
@@ -242,7 +241,10 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     memo?: string
   ): Promise<DeliverTxResponse> => {
     if (!wallet) throw new Error('No Wallet Connected');
-    const signer = await DirectSecp256k1HdWallet.fromMnemonic(ServerMnemonicKey(), {
+    const mnemonic =
+      'climb merge income bachelor donor direct cheese nature yard fox enhance pepper';
+
+    const signer = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
       prefix: 'kujira'
     });
 

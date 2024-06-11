@@ -19,6 +19,7 @@ import useToast from '@/routes/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
 import { token } from '@/constants/data';
+import AESWrapper from '@/lib/encryption/aes-wrapper';
 
 interface TokenBalances {
   usk: number;
@@ -57,6 +58,8 @@ const DepositModal = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const aesWrapper = AESWrapper.getInstance()
+
   const {
     signAndBroadcast,
     account,
@@ -84,6 +87,7 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
+
         await broadcastWithPK(
           [
             msg.bank.msgSend({
@@ -110,7 +114,54 @@ const DepositModal = () => {
     }
   };
 
-  const updateBalance = async (type: string) => {
+  const handleDeposit = async () => {
+    const encryptedAddressRes: any = (await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/payments/admin-wallet`)).data.responseObject as string;
+    const walletAddress = await aesWrapper.decryptMessage(encryptedAddressRes.aesKey, encryptedAddressRes.encryptedAddress)
+    if (
+      Number(depositAmount) >
+      Number(
+        toHuman(
+          BigNumber.from(
+            balances.find((item) => item.denom === selectedToken.denom)
+              ?.amount ?? 0
+          ),
+          6
+        )
+      )
+    ) {
+      toast.error(`Insufficient token in wallet`);
+      return;
+    }
+    if (account) {
+      try {
+        setLoading(true);
+        const hashTx = await signAndBroadcast(
+          [
+            msg.bank.msgSend({
+              fromAddress: account?.address,
+              toAddress: walletAddress,
+              amount: [
+                {
+                  denom: selectedToken.denom,
+                  amount: fromHumanString(depositAmount, 6).toString()
+                }
+              ]
+            })
+          ],
+          'Deposit to Kartel'
+        );
+        await updateBalance('deposit', hashTx.transactionHash);
+        refreshBalances();
+      } catch (err) {
+        console.log(err);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const updateBalance = async (type: string, txHash?: string) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
@@ -138,51 +189,6 @@ const DepositModal = () => {
       updateBalance('get');
     }
   }, [isOpen]);
-
-  const handleDeposit = async () => {
-    if (
-      Number(depositAmount) >
-      Number(
-        toHuman(
-          BigNumber.from(
-            balances.find((item) => item.denom === selectedToken.denom)
-              ?.amount ?? 0
-          ),
-          6
-        )
-      )
-    ) {
-      toast.error(`Insufficient token in wallet`);
-      return;
-    }
-    if (account) {
-      try {
-        setLoading(true);
-        await signAndBroadcast(
-          [
-            msg.bank.msgSend({
-              fromAddress: account?.address,
-              toAddress: 'kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h',
-              amount: [
-                {
-                  denom: selectedToken.denom,
-                  amount: fromHumanString(depositAmount, 6).toString()
-                }
-              ]
-            })
-          ],
-          'Deposit to Kartel'
-        );
-        refreshBalances();
-        await updateBalance('deposit');
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
