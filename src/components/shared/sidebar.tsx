@@ -21,7 +21,6 @@ export default function Sidebar() {
       toast.error('Please login to deposit');
       return;
     }
-    console.log(account?.address)
     if (!account?.address || account?.address === '') {
       modal.open(ModalType.WALLETCONNECT);
       return;

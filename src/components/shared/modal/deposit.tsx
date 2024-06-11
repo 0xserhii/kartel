@@ -141,7 +141,12 @@ const DepositModal = () => {
         }
       );
       if (response.status === 200) {
-        setWalletData(response.data?.responseObject.wallet);
+        const walletDataRes = {
+          usk: response.data?.responseObject.wallet.usk,
+          kuji: response.data?.responseObject.wallet.kuji,
+          kart: response.data?.responseObject.wallet.kart
+        }
+        setWalletData(walletDataRes);
         if (type === 'deposit') {
           toast.success(`Deposit Successful`);
         } else if (type === 'withdraw') {
