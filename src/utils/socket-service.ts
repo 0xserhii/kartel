@@ -1,28 +1,19 @@
-import { IChatClientToServerEvents, IChatServerToClientEvents } from '@/types';
-import {
-  ICoinflipClientToServerEvents,
-  ICoinflipServerToClientEvents
-} from '@/types/coinflip';
-import {
-  ILeaderboardClientToServerEvents,
-  ILeaderboardServerToClientEvents
-} from '@/types/leader';
-// import { ICrashClientToServerEvents, ICrashServerToClientEvents } from "@/types/crash";
-import { Socket, io } from 'socket.io-client';
+import { IChatClientToServerEvents, IChatServerToClientEvents } from "@/types";
+import { ICoinflipClientToServerEvents, ICoinflipServerToClientEvents } from "@/types/coinflip";
+import { ILeaderboardClientToServerEvents, ILeaderboardServerToClientEvents } from "@/types/leader";
+import { Socket, io } from "socket.io-client";
+import customParser from 'socket.io-msgpack-parser'
+
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-const chatSocket: Socket<IChatServerToClientEvents, IChatClientToServerEvents> =
-  io(`${SERVER_URL}/chat`);
 
-const coinflipSocket: Socket<
-  ICoinflipServerToClientEvents,
-  ICoinflipClientToServerEvents
-> = io(`${SERVER_URL}/coinflip`);
+const createSocket = <ServerEvents, ClientEvents>(namespace: string): Socket<any, any> => {
+  return io(`${SERVER_URL}/${namespace}`, { parser: customParser });
+}
 
-const leaderboardSocket: Socket<
-  ILeaderboardServerToClientEvents,
-  ILeaderboardClientToServerEvents
-> = io(`${SERVER_URL}/leaderboard`);
+const chatSocket = createSocket<IChatServerToClientEvents, IChatClientToServerEvents>('chat');
+const coinflipSocket = createSocket<ICoinflipServerToClientEvents, ICoinflipClientToServerEvents>('coinflip');
+const leaderboardSocket = createSocket<ILeaderboardServerToClientEvents, ILeaderboardClientToServerEvents>('leaderboard');
 
 const KartelSocket = {
   chat: chatSocket,
@@ -30,4 +21,4 @@ const KartelSocket = {
   leaderboard: leaderboardSocket
 };
 
-export default KartelSocket;
+export default KartelSocket
