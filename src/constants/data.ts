@@ -170,7 +170,7 @@ export type TokenBalances = {
   kuji: number;
 };
 
-export const initialBalance = { kuji: 0, usk: 0 };
+export const initialBalance = { kuji: 0, usk: 0, kart: 0 };
 
 export const finance = ['Deposit', 'Withdraw'];
 
