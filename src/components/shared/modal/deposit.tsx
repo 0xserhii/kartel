@@ -16,7 +16,7 @@ import axios from 'axios';
 import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
-import { TokenBalances, finance, initialBalance, token } from '@/constants/data';
+import { TokenBalances, denoms, finance, initialBalance, token } from '@/constants/data';
 import { useAppSelector } from '@/store/redux';
 import LoadingIcon from '../loading-icon';
 
@@ -210,7 +210,7 @@ const DepositModal = () => {
                 <span className="w-4/12 text-center text-white">
                   {toHuman(
                     BigNumber.from(
-                      balances.find((item) => item.denom === selectedToken.denom)
+                      balances.find((item) => item.denom === denoms[tokenName])
                         ?.amount ?? 0
                     ),
                     6
