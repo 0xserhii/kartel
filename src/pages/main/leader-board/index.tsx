@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { leaderboardActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
+import LoadingIcon from '@/components/shared/loading-icon';
 
 const leaderboardTabs = [
   { title: 'Crash', value: 'crash' },
@@ -67,9 +68,7 @@ export default function Leaderboard() {
             </CardHeader>
             <CardContent className={`px-2 py-0 ${'h-[536px]'}`}>
               {loading ? (
-                <div className="flex h-full w-full items-center justify-center">
-                  <span className="text-white">Loading...</span>
-                </div>
+                <LoadingIcon />
               ) : (
                 <ScrollArea className="h-88 px-5 py-3">
                   <Table className="relative table-fixed border-separate border-spacing-y-3">

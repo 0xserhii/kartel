@@ -6,6 +6,7 @@ import { Adapter, useWallet } from '@/provider/crypto/wallet';
 import { useState } from 'react';
 import useToast from '@/hooks/use-toast';
 import { useAppSelector } from '@/store/redux';
+import LoadingIcon from '../loading-icon';
 
 interface ITokenList {
   name: string;
@@ -26,14 +27,6 @@ const tokenList: ITokenList[] = [
     image: '/assets/tokens/cosmostation.svg'
   }
 ];
-
-const SmallLoading = (
-  <div className="small-loading">
-    <svg viewBox="10 10 20 20">
-      <circle r="7" cy="20" cx="20"></circle>
-    </svg>
-  </div>
-);
 
 const CWalletLink = {
   keplr: 'https://www.keplr.app/download',
@@ -140,11 +133,11 @@ const WalletConnectModal = () => {
                 ) : (
                   <Download className="h-5 w-5 text-white" />
                 ))}
-              {item.name === 'Keplr' && loading.keplr && SmallLoading}
-              {item.name === 'Leap' && loading.leap && SmallLoading}
+              {item.name === 'Keplr' && loading.keplr && <LoadingIcon />}
+              {item.name === 'Leap' && loading.leap && <LoadingIcon />}
               {item.name === 'Cosmotation' &&
                 loading.cosmostation &&
-                SmallLoading}
+                <LoadingIcon />}
             </button>
           ))}
         </div>
