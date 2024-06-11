@@ -40,7 +40,6 @@ const DepositModal = () => {
     signAndBroadcast,
     account,
     balances,
-    broadcastWithPK,
     refreshBalances
   } = useWallet();
 
@@ -63,24 +62,8 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
-
-        await broadcastWithPK(
-          [
-            msg.bank.msgSend({
-              fromAddress: 'kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h',
-              toAddress: account.address,
-              amount: [
-                {
-                  denom: selectedToken.denom,
-                  amount: fromHumanString(depositAmount, 6).toString()
-                }
-              ]
-            })
-          ],
-          'Withdraw from Kartel'
-        );
-        refreshBalances();
         await updateBalance('withdraw');
+        refreshBalances();
       } catch (err) {
         console.log(err);
         setLoading(false);
@@ -144,7 +127,9 @@ const DepositModal = () => {
         {
           balanceType: selectedToken.name,
           actionType: type,
-          amount: Number(depositAmount)
+          amount: Number(depositAmount),
+          txHash,
+          address: account?.address
         }
       );
       if (response.status === 200) {
