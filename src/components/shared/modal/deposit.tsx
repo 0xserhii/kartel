@@ -16,23 +16,10 @@ import axios from 'axios';
 import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
-import { token } from '@/constants/data';
+import { TokenBalances, finance, initialBalance, token } from '@/constants/data';
 import { useAppSelector } from '@/store/redux';
 
-interface TokenBalances {
-  usk: number;
-  kuji: number;
-}
-
-const financial = ['Deposit', 'Withdraw'];
-const walletList = { kuji: 0, usk: 0 };
-
-const denoms = {
-  kuji: 'ukuji',
-  usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
-};
-
-const SmallLoading = (
+const LoadingIcon = (
   <div className="small-loading">
     <svg viewBox="10 10 20 20">
       <circle r="7" cy="20" cx="20"></circle>
@@ -48,8 +35,8 @@ const DepositModal = () => {
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState('');
   const [selectedToken, setSelectedToken] = useState(token[0]);
-  const [walletData, setWalletData] = useState<TokenBalances>(walletList);
-  const [selectedFinancial, setSelectedFinancial] = useState('Deposit');
+  const [walletData, setWalletData] = useState<TokenBalances>(initialBalance);
+  const [selectedFinance, setSelectedFinance] = useState('Deposit');
 
   const [loading, setLoading] = useState(false);
 
@@ -189,11 +176,11 @@ const DepositModal = () => {
           </div>
         </DialogHeader>
         <div className="flex flex-row items-center justify-center gap-5">
-          {financial.map((item, index) => (
+          {finance.map((item, index) => (
             <button
               key={index}
-              onClick={() => setSelectedFinancial(item)}
-              className={`${selectedFinancial === item ? ' border-white' : 'border-transparent'} border-b-2 p-2 text-white transition-all duration-300 ease-out`}
+              onClick={() => setSelectedFinance(item)}
+              className={`${selectedFinance === item ? ' border-white' : 'border-transparent'} border-b-2 p-2 text-white transition-all duration-300 ease-out`}
             >
               {item}
             </button>
@@ -230,7 +217,7 @@ const DepositModal = () => {
                 <span className="w-4/12 text-center text-white">
                   {toHuman(
                     BigNumber.from(
-                      balances.find((item) => item.denom === denoms[tokenName])
+                      balances.find((item) => item.denom === selectedToken.denom)
                         ?.amount ?? 0
                     ),
                     6
@@ -293,7 +280,7 @@ const DepositModal = () => {
               </DropdownMenu>
             </span>
           </div>
-          {selectedFinancial === 'Withdraw' && (
+          {selectedFinance === 'Withdraw' && (
             <div className="mt-2 flex flex-col gap-1">
               <span className="text-xs text-white">Wallet Address</span>
               <Input
@@ -310,12 +297,12 @@ const DepositModal = () => {
           className="w-full gap-2 bg-purple py-5 hover:bg-purple"
           type="submit"
           onClick={
-            selectedFinancial === 'Withdraw' ? handleWithdraw : handleDeposit
+            selectedFinance === 'Withdraw' ? handleWithdraw : handleDeposit
           }
           disabled={loading}
         >
-          {selectedFinancial}
-          {loading && SmallLoading}
+          {selectedFinance}
+          {loading && LoadingIcon}
         </Button>
       </DialogContent>
     </Dialog>
