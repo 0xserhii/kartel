@@ -173,3 +173,8 @@ export type TokenBalances = {
 export const initialBalance = { kuji: 0, usk: 0 };
 
 export const finance = ['Deposit', 'Withdraw'];
+
+export const denoms = {
+  kuji: 'ukuji',
+  usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
+};
