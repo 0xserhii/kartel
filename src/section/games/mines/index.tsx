@@ -19,7 +19,7 @@ import { useState } from 'react';
 
 export default function MinesGameSection() {
   const [betAmount, setBetAmount] = useState(0);
-  const [minesAmount, setMinesAmount] = useState(0);
+  const [minesAmount, setMinesAmount] = useState(1);
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [presetMineAmount, setPresetMineAmount] = useState(
     minesAmountPresets[0]
@@ -189,6 +189,8 @@ export default function MinesGameSection() {
                   <Input
                     type="number"
                     value={minesAmount}
+                    min={1}
+                    max={24}
                     onChange={handleMinesAmountChange}
                     className="border border-purple-0.5 text-white placeholder:text-gray-700"
                   />
