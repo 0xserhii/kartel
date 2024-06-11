@@ -13,7 +13,6 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { Slider } from '@/components/ui/slider';
 import { BetType, CrashHistoryData, FormattedPlayerBetType } from '@/types';
 import {
   ECrashSocketEvent,
@@ -316,9 +315,7 @@ export default function CrashGameSection() {
                           ? '/assets/games/crash/moving_car.gif'
                           : '/assets/games/crash/explosion.gif'
                       }
-                      className={cn(
-                        crashStatus === ECrashStatus.PROGRESS ? 'w-64' : 'w-96'
-                      )}
+                      className='w-64'
                       alt="crash-car"
                     />
                   </div>
@@ -396,7 +393,7 @@ export default function CrashGameSection() {
                       </Button>
                     </div>
                     <div
-                      className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-[29.3px]'}`}
+                      className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-5'}`}
                     >
                       <p className="w-6/12 text-sm uppercase text-[#556987]">
                         bet amount
@@ -476,20 +473,22 @@ export default function CrashGameSection() {
                             <span className="text-white">Auto Cashout</span>
                           </div>
                           <div className="flex w-full items-center justify-center gap-1">
-                            <Slider
-                              className={`w-10/12 ${!avaliableAutoCashout && 'opacity-35'}`}
-                              disabled={!avaliableAutoCashout}
-                              step={0.05}
-                              max={100}
-                              min={1}
-                              value={[autoCashoutAmount]}
-                              onValueChange={(value) =>
-                                setAutoCashoutAmount(value[0])
-                              }
-                            />
-                            <span className="w-2/12 text-end text-white">
-                              {autoCashoutAmount + 'x'}
-                            </span>
+                            <div className="relative w-full">
+                              <Input
+                                type="number"
+                                value={autoCashoutAmount}
+                                disabled={!avaliableAutoCashout}
+                                onChange={(e) =>
+                                  setAutoCashoutAmount(Number(e.target.value))
+                                }
+                                className="border border-purple-0.5 text-white placeholder:text-gray-7000"
+                                max={100}
+                                min={1}
+                              />
+                              <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                                Cashout
+                              </span>
+                            </div>
                           </div>
                         </div>
                       )}
