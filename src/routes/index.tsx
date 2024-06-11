@@ -1,17 +1,12 @@
-import NotFound from '@/pages/not-found';
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
-
-const DashboardLayout = lazy(
-  () => import('@/components/layout/dashboard-layout')
-);
-const SignUpPage = lazy(() => import('@/pages/auth/signup'));
-const SignInPage = lazy(() => import('@/pages/auth/signin'));
-const Home = lazy(() => import('@/pages/main/home'));
-const Leaderboard = lazy(() => import('@/pages/main/leader-board'));
-const CrashGame = lazy(() => import('@/pages/games/crash'));
-const CoinFlipGame = lazy(() => import('@/pages/games/coin-flip'));
-const MinesGame = lazy(() => import('@/pages/games/mines'));
+import DashboardLayout from '@/components/layout/dashboard-layout';
+import MinesGame from '@/pages/games/mines';
+import Home from '@/pages/main/home';
+import CrashGame from '@/pages/games/crash';
+import CoinFlipGame from '@/pages/games/coin-flip';
+import Leaderboard from '@/pages/main/leader-board';
+import NotFound from '@/pages/not-found';
 
 // ----------------------------------------------------------------------
 
@@ -80,16 +75,6 @@ export default function AppRouter() {
   ];
 
   const publicRoutes = [
-    {
-      path: '/login',
-      element: <SignInPage />,
-      index: true
-    },
-    {
-      path: '/register',
-      element: <SignUpPage />,
-      index: true
-    },
     {
       path: '/404',
       element: <NotFound />
