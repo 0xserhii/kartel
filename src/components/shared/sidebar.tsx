@@ -8,18 +8,25 @@ import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 import { useAppSelector } from '@/store/redux';
 import useToast from '@/hooks/use-toast';
+import { useWallet } from '@/provider/crypto/wallet';
 
 export default function Sidebar() {
   const modal = useModal();
   const toast = useToast();
+  const { account } = useWallet();
   const userData = useAppSelector((store: any) => store.user.userData);
 
   const handleDeposit = async () => {
     if (userData?.username === '') {
       toast.error('Please login to deposit');
-    } else {
-      modal.open(ModalType.DEPOSIT);
+      return;
     }
+    console.log(account?.address)
+    if (!account?.address || account?.address === '') {
+      modal.open(ModalType.WALLETCONNECT);
+      return;
+    }
+    modal.open(ModalType.DEPOSIT);
   };
 
   return (
