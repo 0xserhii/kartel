@@ -6,12 +6,20 @@ import Deposit from '/assets/deposit-icon.svg';
 import { ScrollArea } from '../ui/scroll-area';
 import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
+import { useAppSelector } from '@/store/redux';
+import useToast from '@/hooks/use-toast';
 
 export default function Sidebar() {
   const modal = useModal();
+  const toast = useToast();
+  const userData = useAppSelector((store: any) => store.user.userData);
 
   const handleDeposit = async () => {
-    modal.open(ModalType.DEPOSIT);
+    if (userData?.username === '') {
+      toast.error('Please login to deposit');
+    } else {
+      modal.open(ModalType.DEPOSIT);
+    }
   };
 
   return (

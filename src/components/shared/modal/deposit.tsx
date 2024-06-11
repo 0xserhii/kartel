@@ -18,14 +18,7 @@ import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
 import { TokenBalances, finance, initialBalance, token } from '@/constants/data';
 import { useAppSelector } from '@/store/redux';
-
-const LoadingIcon = (
-  <div className="small-loading">
-    <svg viewBox="10 10 20 20">
-      <circle r="7" cy="20" cx="20"></circle>
-    </svg>
-  </div>
-);
+import LoadingIcon from '../loading-icon';
 
 const DepositModal = () => {
   const modal = useModal();
@@ -302,7 +295,7 @@ const DepositModal = () => {
           disabled={loading}
         >
           {selectedFinance}
-          {loading && LoadingIcon}
+          {loading && <LoadingIcon />}
         </Button>
       </DialogContent>
     </Dialog>
