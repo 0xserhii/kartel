@@ -14,7 +14,6 @@ import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { getAccessToken } from '@/utils/axios';
 import { useInView } from 'react-intersection-observer';
 
-
 export type HistoryItemProps = {
   name: string;
   time: string;
@@ -107,7 +106,7 @@ const LiveChat = () => {
       setTimeout(() => {
         ref.current?.scrollIntoView({
           behavior: 'smooth',
-          block: 'center',
+          block: 'center'
         });
       }, 200);
     }

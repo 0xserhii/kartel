@@ -5,14 +5,10 @@ import dotenv from 'dotenv';
 import obfuscator from 'rollup-plugin-obfuscator';
 import babel from 'vite-plugin-babel';
 
-
 dotenv.config();
 
 export default defineConfig({
-  plugins: [
-    react(),
-    babel()
-  ],
+  plugins: [react(), babel()],
   server: {
     port: 3000,
     host: '0.0.0.0'
@@ -25,8 +21,8 @@ export default defineConfig({
       },
       mangle: true,
       output: {
-        comments: false, // Remove comments
-      },
+        comments: false // Remove comments
+      }
     },
     rollupOptions: {
       plugins: [
@@ -52,7 +48,7 @@ export default defineConfig({
             stringArray: true,
             stringArrayEncoding: ['rc4'],
             stringArrayThreshold: 0.75,
-            unicodeEscapeSequence: false,
+            unicodeEscapeSequence: false
           }
         })
       ]

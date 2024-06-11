@@ -1,13 +1,7 @@
-import {
-  AccountData,
-  DirectSecp256k1HdWallet,
-  EncodeObject
-} from '@cosmjs/proto-signing';
+import { AccountData, EncodeObject } from '@cosmjs/proto-signing';
 import {
   Coin,
   DeliverTxResponse,
-  GasPrice,
-  SigningStargateClient,
   assertIsDeliverTxSuccess
 } from '@cosmjs/stargate';
 import { ChainInfo } from '@keplr-wallet/types';
@@ -24,8 +18,7 @@ import {
   ReadOnly,
   Sonar,
   Station,
-  Xfi,
-  registry
+  Xfi
 } from 'kujira.js';
 import {
   FC,
@@ -79,18 +72,18 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => { },
-  disconnect: () => { },
+  connect: async () => {},
+  disconnect: () => {},
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
     throw new Error('Not Implemented');
   },
   delegations: null,
-  refreshBalances: () => { },
-  refreshDelegations: () => { },
+  refreshBalances: () => {},
+  refreshDelegations: () => {},
   feeDenom: 'ukuji',
-  setFeeDenom: () => { },
+  setFeeDenom: () => {},
   chainInfo: {} as ChainInfo,
   adapter: null
 });
@@ -156,9 +149,9 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           setBalances((prev) =>
             b.denom
               ? {
-                ...prev,
-                [b.denom]: BigNumber.from(b.amount)
-              }
+                  ...prev,
+                  [b.denom]: BigNumber.from(b.amount)
+                }
               : prev
           );
         });
@@ -226,7 +219,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     assertIsDeliverTxSuccess(res);
     return res;
   };
-
 
   const sonarRequest = (uri: string) => {
     console.log(uri);

@@ -15,7 +15,7 @@ const sagaMiddleware = createSagaMiddleware();
 
 const userPersistConfig = {
   key: 'root',
-  storage,
+  storage
 };
 
 const persistedUserReducer = persistReducer(userPersistConfig, userReducer);
@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   leaderboard: leaderboardReducer,
   coinflip: coinflipReducer,
-  modal: modalReducer,
+  modal: modalReducer
 });
 
 const store = configureStore({
@@ -33,9 +33,9 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST'],
-      },
-    }).concat(sagaMiddleware),
+        ignoredActions: ['persist/PERSIST']
+      }
+    }).concat(sagaMiddleware)
 });
 
 sagaMiddleware.run(rootSaga);
