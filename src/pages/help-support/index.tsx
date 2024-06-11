@@ -1,3 +1,6 @@
 export default function HelpSupport() {
-  return <div>this is the help support page</div>;
+  return (
+    <div className="mt-3">
+    </div>
+  );
 }

@@ -1,3 +1,6 @@
 export default function SlotsGames() {
-  return <div>this is the slot games page</div>;
+  return (
+    <div className='flex flex-col gap-5 mt-3'>
+    </div>
+  );
 }

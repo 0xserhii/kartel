@@ -47,7 +47,7 @@ export const navItems: NavItemGroup[] = [
       },
       {
         title: 'Horse Racing Game',
-        href: '/hourse-racing',
+        href: '/horse-racing',
         icon: '/assets/icons/horserace.svg',
         label: 'horse racing game'
       }
