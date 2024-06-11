@@ -4,7 +4,7 @@ import Modal from './components/shared/modal';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from 'react-redux';
-import store from '@/store/redux'
+import store from '@/store/redux';
 import { WalletContext } from './provider/crypto/wallet';
 import { NetworkContext } from './provider/crypto/network';
 import { PasskeyContext } from './provider/crypto/passkey';

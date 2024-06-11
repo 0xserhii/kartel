@@ -1,7 +1,4 @@
-
-import {
-    eventChannel
-} from 'redux-saga';
+import { eventChannel } from 'redux-saga';
 
 import {
     put,
@@ -15,33 +12,36 @@ import {
 } from 'redux-saga/effects';
 
 import { chatActions } from '../actions';
-import { getAccessToken } from '@/lib/axios';
-import KartelSocket from '@/lib/socket-service';
+import { getAccessToken } from '@/utils/axios';
+import KartelSocket from '@/utils/socket-service';
 import { EChatSocketEvent, IChat } from '@/types';
 import { EChatSocketAction } from '../reducers/chat.type';
-
 
 let socketTask;
 
 function subscribe(socket) {
-    return eventChannel(emit => {
+    return eventChannel((emit) => {
         socket.on(EChatSocketEvent.RECEIVE_MSG, (msg: IChat) => {
             emit(chatActions.receiveMsg(msg));
         });
 
-        socket.on(EChatSocketEvent.RECEIVE_CHAT_HISTORY, (history: {
-            message: string;
-            chatHistories: IChat[];
-        }) => {
-            emit(chatActions.receiveChatHistory(history.chatHistories));
-        });
+        socket.on(
+            EChatSocketEvent.RECEIVE_CHAT_HISTORY,
+            (history: { message: string; chatHistories: IChat[] }) => {
+                emit(chatActions.receiveChatHistory(history.chatHistories));
+            }
+        );
 
         return () => { };
     });
 }
 
 function* getChatHistory(socket, action) {
-    yield call([socket, socket.emit], EChatSocketEvent.GET_CHAT_HISTORY, action.payload);
+    yield call(
+        [socket, socket.emit],
+        EChatSocketEvent.GET_CHAT_HISTORY,
+        action.payload
+    );
 }
 
 function* login(socket) {
@@ -62,7 +62,7 @@ function* getChatHistorySaga(action) {
         yield delay(100);
         yield fork(getChatHistory, KartelSocket.chat, action);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
 
@@ -71,7 +71,7 @@ function* subscribeSaga(action) {
         yield fork(read, KartelSocket.chat);
         yield delay(100);
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
 
@@ -80,7 +80,7 @@ function* loginChanelSaga() {
         yield delay(500);
         socketTask = yield fork(login, KartelSocket.chat);
     } catch (e) {
-        console.log(e)
+        console.log(e);
     }
 }
 
@@ -95,7 +95,7 @@ function* stopChanelSaga() {
 
 function* sendMsgSaga(action) {
     yield delay(500);
-    KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload)
+    KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload);
 }
 
 const sagas = [
@@ -103,7 +103,7 @@ const sagas = [
     takeLatest(EChatSocketAction.LOGIN_CHAT, loginChanelSaga),
     takeLatest(EChatSocketAction.GET_CHAT_HISTORY, getChatHistorySaga),
     takeLatest(EChatSocketAction.DISCONNECT_CHAT, stopChanelSaga),
-    takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga),
+    takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga)
 ];
 
 export default sagas;

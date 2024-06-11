@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { NavItem, NavItemGroup } from '@/types';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -8,7 +8,7 @@ import {
   CollapsibleTrigger
 } from '../ui/collapsible';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { usePathname } from '@/routes/hooks';
+import { usePathname } from '@/hooks';
 
 type DashboardNavProps = {
   items: NavItemGroup[];

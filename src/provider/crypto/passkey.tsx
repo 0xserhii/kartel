@@ -6,7 +6,7 @@ import {
   useContext,
   useState
 } from 'react';
-import { useLocalStorage } from '@/routes/hooks';
+import { useLocalStorage } from '@/hooks';
 
 const STORE_KEY = 'authn-web';
 const RP_NAME = 'Kujira Passkey';

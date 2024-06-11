@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@/routes/hooks';
+import { useLocalStorage } from '@/hooks';
 import {
   HttpBatchClient,
   StatusResponse,

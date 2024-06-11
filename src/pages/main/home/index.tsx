@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import InvitedFriends from '/assets/invitefriends.jpg';
 import BlackJack from '/assets/blackjack.jpg';
 import BlackJackTitle from '/assets/blackjack-title.png';
-import InviteTitle from '/assets/invite-title.png'
+import InviteTitle from '/assets/invite-title.png';
 import HorseRacing from '/assets/horseracing.jpg';
 import HorseRacingTitle from '/assets/horserace-title.png';
 import Roulette from '/assets/roulette.jpg';
@@ -11,22 +11,42 @@ import RouletteTitle from '/assets/roulette-title.png';
 import Slots from '/assets/slots.jpg';
 import SlotsTitle from '/assets/slots-title.png';
 import Playnow from '/assets/playnow.svg';
-import ComingSoonTitle from '/assets/coming-soon.png'
+import ComingSoonTitle from '/assets/coming-soon.png';
 
 const casinoGameSrc = [
-  { name: "crash", bgSrc: "/assets/crash.jpg", titleSrc: "/assets/crash-title.png", href: "/crash" },
-  { name: "coinflip", bgSrc: "/assets/coinflip.jpg", titleSrc: "/assets/coinflip-title.png", href: "/coin-flip" },
-  { name: "mines", bgSrc: "/assets/mines.jpg", titleSrc: "/assets/mines-title.svg", href: "/mines" }
-]
+  {
+    name: 'crash',
+    bgSrc: '/assets/crash.jpg',
+    titleSrc: '/assets/crash-title.png',
+    href: '/crash'
+  },
+  {
+    name: 'coinflip',
+    bgSrc: '/assets/coinflip.jpg',
+    titleSrc: '/assets/coinflip-title.png',
+    href: '/coin-flip'
+  },
+  {
+    name: 'mines',
+    bgSrc: '/assets/mines.jpg',
+    titleSrc: '/assets/mines-title.svg',
+    href: '/mines'
+  }
+];
 
 type TCasinoGames = {
   bannerSrc: string;
   titleSrc: string;
   linkTo: string;
   altText: string;
-}
+};
 
-const CasinoGames = ({ bannerSrc, titleSrc, linkTo, altText }: TCasinoGames) => {
+const CasinoGames = ({
+  bannerSrc,
+  titleSrc,
+  linkTo,
+  altText
+}: TCasinoGames) => {
   return (
     <div className="h-full w-4/12">
       <div className="relative h-full rounded-md">
@@ -37,20 +57,20 @@ const CasinoGames = ({ bannerSrc, titleSrc, linkTo, altText }: TCasinoGames) => 
         />
         <img
           src={titleSrc}
-          alt={altText + "title"}
+          alt={altText + 'title'}
           className="absolute right-2 top-2 w-24"
         />
         <Link to={linkTo}>
           <img
             src={Playnow}
             alt="Play Now"
-            className="absolute bottom-5 left-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:transition-all hover:scale-[1.1]"
+            className="absolute bottom-5 left-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:scale-[1.1] hover:transition-all"
           />
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default function Home() {
   return (
@@ -61,13 +81,17 @@ export default function Home() {
             casino
           </span>
           <div className="flex h-full w-full flex-row justify-between gap-8">
-            {
-              casinoGameSrc.map((item, index) => {
-                return (
-                  <CasinoGames key={index} bannerSrc={item.bgSrc} titleSrc={item.titleSrc} linkTo={item.href} altText={item.name} />
-                )
-              })
-            }
+            {casinoGameSrc.map((item, index) => {
+              return (
+                <CasinoGames
+                  key={index}
+                  bannerSrc={item.bgSrc}
+                  titleSrc={item.titleSrc}
+                  linkTo={item.href}
+                  altText={item.name}
+                />
+              );
+            })}
           </div>
           <div className="flex h-full w-full flex-row gap-6">
             <div className="relative w-full rounded-md">
@@ -79,7 +103,7 @@ export default function Home() {
               <img
                 src={InviteTitle}
                 alt="title"
-                className="absolute bottom-2.5 left-7 w-64 rounded-md cursor-pointer ease-in-out hover:transition-all hover:scale-[1.1]"
+                className="absolute bottom-2.5 left-7 w-64 cursor-pointer rounded-md ease-in-out hover:scale-[1.1] hover:transition-all"
               />
             </div>
           </div>
@@ -94,7 +118,7 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className='absolute top-5 left-5 flex flex-col gap-2'>
+                <div className="absolute left-5 top-5 flex flex-col gap-2">
                   <img
                     src={BlackJackTitle}
                     alt="title"
@@ -113,7 +137,7 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className='absolute top-5 left-5 flex flex-col gap-2'>
+                <div className="absolute left-5 top-5 flex flex-col gap-2">
                   <img
                     src={HorseRacingTitle}
                     alt="title"
@@ -134,7 +158,7 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className='absolute top-5 left-5 flex flex-col gap-2'>
+                <div className="absolute left-5 top-5 flex flex-col gap-2">
                   <img
                     src={RouletteTitle}
                     alt="title"
@@ -153,7 +177,7 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className='absolute top-5 left-5 flex flex-col gap-2'>
+                <div className="absolute left-5 top-5 flex flex-col gap-2">
                   <img
                     src={SlotsTitle}
                     alt="title"

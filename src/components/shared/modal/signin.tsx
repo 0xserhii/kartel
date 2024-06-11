@@ -7,15 +7,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
+import useModal from '@/hooks/use-modal';
 import { z } from 'zod';
-import useToast from '@/routes/hooks/use-toast';
+import useToast from '@/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { axiosPost, setAccessToken } from '@/lib/axios';
-import { BACKEND_API_ENDPOINT } from '@/lib/constant';
+import { axiosPost, setAccessToken } from '@/utils/axios';
+import { BACKEND_API_ENDPOINT } from '@/utils/constant';
 import {
   Form,
   FormControl,
@@ -23,7 +22,9 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { usePersistStore } from '@/store/zustand/persist';
+import { useDispatch } from 'react-redux';
+import { userActions } from '@/store/redux/actions';
+import { useAppSelector } from '@/store/redux';
 
 const SignInSchema = z.object({
   email: z
@@ -44,14 +45,9 @@ const SignInDefaultValue = {
 const SignInModal = () => {
   const toast = useToast();
   const modal = useModal();
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
-  const setUserData = usePersistStore((store) => store.actions.setUserData);
-
-  const isOpen = openModal && type === ModalType.LOGIN;
-
+  const modalState = useAppSelector((state: any) => state.modal);
+  const dispatch = useDispatch();
+  const isOpen = modalState.open && modalState.type === ModalType.LOGIN;
   const signInForm = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: SignInDefaultValue
@@ -79,7 +75,7 @@ const SignInModal = () => {
       ]);
       if (resSignIn?.responseObject?.auth?.accessToken) {
         setAccessToken(resSignIn?.responseObject?.auth?.accessToken);
-        await setUserData(resSignIn?.responseObject?.user);
+        await dispatch(userActions.userData(resSignIn?.responseObject?.user));
         toast.success('SignIn Success');
         modal.close(ModalType.LOGIN);
         return;
@@ -90,6 +86,7 @@ const SignInModal = () => {
       toast.error('SignIn Failed');
     }
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">

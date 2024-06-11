@@ -7,10 +7,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import useRootStore from '@/store/zustand/root';
 import { ModalType } from '@/types/modal';
-import useModal from '@/routes/hooks/use-modal';
-import useToast from '@/routes/hooks/use-toast';
+import useModal from '@/hooks/use-modal';
+import useToast from '@/hooks/use-toast';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,8 +20,9 @@ import {
   FormItem,
   FormMessage
 } from '@/components/ui/form';
-import { axiosPost } from '@/lib/axios';
-import { BACKEND_API_ENDPOINT } from '@/lib/constant';
+import { axiosPost } from '@/utils/axios';
+import { BACKEND_API_ENDPOINT } from '@/utils/constant';
+import { useAppSelector } from '@/store/redux';
 
 const SignUpSchema = z
   .object({
@@ -55,11 +55,8 @@ const SignUpDefaultValue = {
 };
 
 const SignUpModal = () => {
-  const [openModal, type] = useRootStore((store) => [
-    store.state.modal.open,
-    store.state.modal.type
-  ]);
-  const isOpen = openModal && type === ModalType.SIGNUP;
+  const { open, type } = useAppSelector((state: any) => state.modal);
+  const isOpen = open && type === ModalType.SIGNUP;
   const modal = useModal();
   const toast = useToast();
 

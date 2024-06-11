@@ -1,7 +1,7 @@
 import MovingBackgroundVideo from '../../../../public/assets/games/crash/moving_background.mp4';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { cn, formatMillisecondsShort } from '@/lib/utils';
+import { cn, formatMillisecondsShort } from '@/utils/utils';
 import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -15,10 +15,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Slider } from '@/components/ui/slider';
 import { BetType, CrashHistoryData, FormattedPlayerBetType } from '@/types';
-import { ECrashSocketEvent, ICrashClientToServerEvents, ICrashServerToClientEvents } from '@/types/crash';
+import {
+  ECrashSocketEvent,
+  ICrashClientToServerEvents,
+  ICrashServerToClientEvents
+} from '@/types/crash';
 import { ECrashStatus } from '@/constants/status';
-import { getAccessToken } from '@/lib/axios';
-import useToast from '@/routes/hooks/use-toast';
+import { getAccessToken } from '@/utils/axios';
+import useToast from '@/hooks/use-toast';
 import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -50,7 +54,8 @@ export default function CrashGameSection() {
   const [totalAmount, setTotalAmount] = useState<any>();
   const [round, setRound] = useState(roundArray[0]);
   const [selectMode, setSelectMode] = useState(betMode[0]);
-  const [avaliableAutoCashout, setAvaliableAutoCashout] = useState<boolean>(false);
+  const [avaliableAutoCashout, setAvaliableAutoCashout] =
+    useState<boolean>(false);
   const isAutoMode = selectMode === 'auto';
   const [crTick, setCrTick] = useState({ prev: 1, cur: 1 });
   const [prepareTime, setPrepareTime] = useState(0);
@@ -103,11 +108,16 @@ export default function CrashGameSection() {
   const handleStartBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
       const joinParams = {
-        target: avaliableAutoCashout ? Number(autoCashoutAmount) * 100 : 1000000,
+        target: avaliableAutoCashout
+          ? Number(autoCashoutAmount) * 100
+          : 1000000,
         betAmount: Number(betAmount).valueOf(),
-        denom: selectedToken.name,
+        denom: selectedToken.name
       };
       socket?.emit('join-crash-game', joinParams);
+    } else {
+      toast.error('Bet amount must be greater than 0');
+      return;
     }
     if (avaliableBet) {
       setAvaliableBet(false);
@@ -143,7 +153,7 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === "Autobet has been canceled.") {
+      if (data === 'Autobet has been canceled.') {
         setAutoBet(true);
       } else {
         setAutoBet(false);
@@ -152,7 +162,7 @@ export default function CrashGameSection() {
     socket?.on('auto-crashgame-join-success', handleJoinSuccess);
     return () => {
       socket?.off('auto-crashgame-join-success', handleJoinSuccess);
-    }
+    };
   }, [socket, toast]);
 
   useEffect(() => {
@@ -189,9 +199,12 @@ export default function CrashGameSection() {
       playCrashBgVideo();
     });
 
-    crashSocket.on(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, (historyData: any) => {
-      setCrashHistoryData(historyData);
-    });
+    crashSocket.on(
+      ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY,
+      (historyData: any) => {
+        setCrashHistoryData(historyData);
+      }
+    );
 
     crashSocket.on(ECrashSocketEvent.GAME_END, (data) => {
       setCrashStatus(ECrashStatus.END);
@@ -200,21 +213,24 @@ export default function CrashGameSection() {
       crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
     });
 
-    crashSocket.on(ECrashSocketEvent.GAME_BETS, (bets: FormattedPlayerBetType[]) => {
-      setBetData((prev: BetType[]) => [...bets, ...prev]);
-      const totalUsk = bets
-        .filter((bet) => bet.denom === 'usk')
-        .reduce((acc, item) => acc + item.betAmount, 0);
+    crashSocket.on(
+      ECrashSocketEvent.GAME_BETS,
+      (bets: FormattedPlayerBetType[]) => {
+        setBetData((prev: BetType[]) => [...bets, ...prev]);
+        const totalUsk = bets
+          .filter((bet) => bet.denom === 'usk')
+          .reduce((acc, item) => acc + item.betAmount, 0);
 
-      const totalKuji = bets
-        .filter((bet) => bet.denom === 'kuji')
-        .reduce((acc, item) => acc + item.betAmount, 0);
+        const totalKuji = bets
+          .filter((bet) => bet.denom === 'kuji')
+          .reduce((acc, item) => acc + item.betAmount, 0);
 
-      setTotalAmount((prevAmounts) => ({
-        usk: (prevAmounts?.usk || 0) + totalUsk,
-        kuji: (prevAmounts?.kuji || 0) + totalKuji
-      }));
-    });
+        setTotalAmount((prevAmounts) => ({
+          usk: (prevAmounts?.usk || 0) + totalUsk,
+          kuji: (prevAmounts?.kuji || 0) + totalKuji
+        }));
+      }
+    );
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
@@ -357,16 +373,16 @@ export default function CrashGameSection() {
                 </div>
                 <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                   <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
-                    <div className='flex flex-row items-center justify-end'>
+                    <div className="flex flex-row items-center justify-end">
                       <Button
-                        className="h-12 bg-purple py-3 px-3 w-6/12 uppercase hover:bg-purple"
+                        className="h-12 w-6/12 bg-purple px-3 py-3 uppercase hover:bg-purple"
                         disabled={
-                          isAutoMode ? false : (
-                            (crashStatus !== ECrashStatus.PREPARE &&
+                          isAutoMode
+                            ? false
+                            : (crashStatus !== ECrashStatus.PREPARE &&
                               !avaliableBet) ||
                             (crashStatus !== ECrashStatus.PROGRESS &&
                               avaliableBet)
-                          )
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -379,13 +395,15 @@ export default function CrashGameSection() {
                             : 'Place Bet'}
                       </Button>
                     </div>
-                    <div className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-[29.3px]'}`}>
-                      <p className="text-sm uppercase text-[#556987] w-6/12">
+                    <div
+                      className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-[29.3px]'}`}
+                    >
+                      <p className="w-6/12 text-sm uppercase text-[#556987]">
                         bet amount
                       </p>
                       <div className="relative">
                         <Input
-                          type='number'
+                          type="number"
                           value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
@@ -393,7 +411,10 @@ export default function CrashGameSection() {
                         />
                         <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                           <DropdownMenu>
-                            <DropdownMenuTrigger asChild disabled={isAutoMode && !autoBet}>
+                            <DropdownMenuTrigger
+                              asChild
+                              disabled={isAutoMode && !autoBet}
+                            >
                               <div className="flex cursor-pointer items-center gap-2 uppercase">
                                 <img
                                   src={selectedToken.src}
@@ -444,10 +465,15 @@ export default function CrashGameSection() {
                       {!isAutoMode && (
                         <div className="flex flex-col justify-between gap-3">
                           <div className="flex flex-row items-center justify-start gap-2">
-                            <Checkbox id="terms" className="text-[#049DD9]" checked={avaliableAutoCashout} onClick={() => setAvaliableAutoCashout(!avaliableAutoCashout)} />
-                            <span className="text-white">
-                              Auto Cashout
-                            </span>
+                            <Checkbox
+                              id="terms"
+                              className="text-[#049DD9]"
+                              checked={avaliableAutoCashout}
+                              onClick={() =>
+                                setAvaliableAutoCashout(!avaliableAutoCashout)
+                              }
+                            />
+                            <span className="text-white">Auto Cashout</span>
                           </div>
                           <div className="flex w-full items-center justify-center gap-1">
                             <Slider
@@ -462,7 +488,7 @@ export default function CrashGameSection() {
                               }
                             />
                             <span className="w-2/12 text-end text-white">
-                              {autoCashoutAmount + "x"}
+                              {autoCashoutAmount + 'x'}
                             </span>
                           </div>
                         </div>
@@ -473,7 +499,7 @@ export default function CrashGameSection() {
                             <div className="relative w-full">
                               <Input
                                 disabled={isAutoMode && !autoBet}
-                                type='number'
+                                type="number"
                                 value={autoCashoutPoint}
                                 onChange={handleAutoCashoutPointChange}
                                 min={1.05}

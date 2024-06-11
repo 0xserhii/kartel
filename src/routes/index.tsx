@@ -5,10 +5,10 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
 );
+const SignUpPage = lazy(() => import('@/pages/auth/signup'));
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const Home = lazy(() => import('@/pages/main/home'));
 const Leaderboard = lazy(() => import('@/pages/main/leader-board'));
-const SignUpPage = lazy(() => import('@/pages/auth/signup'));
 const CrashGame = lazy(() => import('@/pages/games/crash'));
 const CoinFlipGame = lazy(() => import('@/pages/games/coin-flip'));
 const MinesGame = lazy(() => import('@/pages/games/mines'));

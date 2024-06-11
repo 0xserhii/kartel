@@ -8,26 +8,39 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { removeAllTokens } from '@/lib/axios';
+import { getAccessToken, removeAllTokens } from '@/utils/axios';
 import { useWallet } from '@/provider/crypto/wallet';
-import useModal from '@/routes/hooks/use-modal';
-import { usePersistStore } from '@/store/zustand/persist';
+import useToast from '@/hooks/use-toast';
+import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
+import { useDispatch } from 'react-redux';
+import { userActions } from '@/store/redux/actions';
+import { useAppSelector } from '@/store/redux';
 
 export default function UserNav() {
   const modal = useModal();
-  const userData = usePersistStore((store) => store.app.userData);
-  const initUserData = usePersistStore((store) => store.actions.init);
-  const { disconnect } = useWallet();
+  const dispatch = useDispatch();
+  const toast = useToast();
+  const userData = useAppSelector((store: any) => store.user.userData);
+  const { disconnect, account } = useWallet();
+  const token = getAccessToken();
 
   const handleLogout = async () => {
-    await initUserData();
-    disconnect();
-    removeAllTokens();
+    if (token) {
+      await dispatch(userActions.initUserData());
+      disconnect();
+      removeAllTokens();
+      toast.success('Logout Successfully');
+    }
   };
 
-  const connectWallet = async () => {
-    modal.open(ModalType.WALLETCONNECT);
+  const toggleWalletConnection = async () => {
+    if (account) {
+      disconnect();
+      toast.success('Wallet Disconnected');
+    } else {
+      modal.open(ModalType.WALLETCONNECT);
+    }
   };
 
   return (
@@ -59,10 +72,12 @@ export default function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={connectWallet}>Connect Wallet</DropdownMenuItem>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Billing</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
+          <DropdownMenuItem onClick={toggleWalletConnection}>
+            {account ? 'Disconnect Wallet' : 'Connect Wallet'}
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
