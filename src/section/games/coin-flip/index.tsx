@@ -171,6 +171,16 @@ const CoinFlipSection = () => {
     });
   }, [coinAmount, selectedHeads]);
 
+  useEffect(() => {
+    if (!isRolling && coinflipState.gameStatus) {
+      const timer = setTimeout(() => {
+        dispatch(coinflipActions.resetGameState());
+      }, 7000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isRolling, coinflipState.gameStatus, dispatch]);
+
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       {isEarned && (
