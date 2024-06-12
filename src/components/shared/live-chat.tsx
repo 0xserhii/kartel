@@ -57,7 +57,7 @@ const LiveChat = () => {
   const toggleIsOpened = (isOpened: boolean) => {
     setEmojiIsOpened(!isOpened);
   };
-  const [status, setStatus] = useState(false);
+  const [getMoreChat, setGetMoreChat] = useState(false);
 
   const onEmojiClick = (emojiObject: EmojiClickData) => {
     setInputStr((prevInput) => prevInput + emojiObject.emoji);
@@ -82,7 +82,6 @@ const LiveChat = () => {
     const message = inputStr;
     try {
       dispatch(chatActions.sendMsg(message));
-      setStatus(true);
       setInputStr('');
     } catch (error) {
       console.log(error);
@@ -98,23 +97,28 @@ const LiveChat = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      chatState?.chatHistory &&
-      Array.isArray(chatState?.chatHistory) &&
-      chatState?.chatHistory.length
-    ) {
-      setTimeout(() => {
-        ref.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-      }, 200);
+    if (getMoreChat) {
+      setGetMoreChat(false)
+    } else {
+      if (
+        chatState?.chatHistory &&
+        Array.isArray(chatState?.chatHistory) &&
+        chatState?.chatHistory.length > 0
+      ) {
+        setTimeout(() => {
+          ref.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end'
+          });
+        }, 200);
+      }
     }
-  }, [status]);
+  }, [chatState?.chatHistory]);
 
   useEffect(() => {
     if (inView) {
       dispatch(chatActions.getChatHistory(firstChatSentAt));
+      setGetMoreChat(true);
     }
   }, [inView]);
 
