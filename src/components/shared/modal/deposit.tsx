@@ -102,6 +102,11 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
+        const kujiraBalance = balances.filter(item => item.denom === denoms.kuji)?.[0]?.amount ?? 0;
+        if (Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055) {
+          toast.error(`Insufficient Kujira balance for Fee`);
+          return;
+        }
         const hashTx = await signAndBroadcast(
           [
             msg.bank.msgSend({
@@ -120,7 +125,7 @@ const DepositModal = () => {
         await updateBalance('deposit', hashTx.transactionHash);
         refreshBalances();
       } catch (err) {
-        console.log(err);
+        console.warn("txerror", err);
         setLoading(false);
       } finally {
         setLoading(false);
