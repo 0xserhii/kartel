@@ -169,7 +169,7 @@ const DepositModal = () => {
       <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
         <DialogHeader className="flex flex-row">
           <div className="flex w-full flex-row items-center justify-center">
-            <img src="/assets/logo.svg" className="h-20 w-20" />
+            <img src="/assets/logo.png" className="h-32 w-36" />
           </div>
         </DialogHeader>
         <div className="flex flex-row items-center justify-center gap-5">

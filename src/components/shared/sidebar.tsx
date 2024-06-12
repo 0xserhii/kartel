@@ -1,7 +1,7 @@
 import { navItems } from '@/constants/data';
 import DashboardNav from './dashboard-nav';
 import { Link } from 'react-router-dom';
-import Logo from '/assets/logo.svg';
+import Logo from '/assets/logo.png';
 import Deposit from '/assets/deposit-icon.svg';
 import { ScrollArea } from '../ui/scroll-area';
 import useModal from '@/hooks/use-modal';
@@ -34,7 +34,7 @@ export default function Sidebar() {
         <div className="flex w-full flex-col items-center justify-between">
           <div className="flex w-full flex-col items-center gap-8">
             <Link to="/" className="pt-1">
-              <img src={Logo} />
+              <img src={Logo} alt="Logo" className="h-32 w-36" />
             </Link>
             <DashboardNav items={navItems} />
           </div>
