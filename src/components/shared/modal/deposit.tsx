@@ -142,9 +142,9 @@ const DepositModal = () => {
       );
       if (response.status === 200) {
         const walletDataRes = {
-          usk: response.data?.responseObject.wallet.usk,
-          kuji: response.data?.responseObject.wallet.kuji,
-          kart: response.data?.responseObject.wallet.kart
+          usk: response.data?.responseObject.wallet.usk ?? 0,
+          kuji: response.data?.responseObject.wallet.kuji ?? 0,
+          kart: response.data?.responseObject.wallet.kart ?? 0
         }
         setWalletData(walletDataRes);
         if (type === 'deposit') {
