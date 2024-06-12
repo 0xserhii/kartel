@@ -118,18 +118,16 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className="absolute left-5 top-5 flex flex-col gap-2">
-                  <img
-                    src={BlackJackTitle}
-                    alt="title"
-                    className="w-52 rounded-md"
-                  />
-                  <img
-                    src={ComingSoonTitle}
-                    alt="title"
-                    className="w-36 rounded-md"
-                  />
-                </div>
+                <img
+                  src={BlackJackTitle}
+                  alt="title"
+                  className="absolute w-48 rounded-md top-5 right-5"
+                />
+                <img
+                  src={ComingSoonTitle}
+                  alt="title"
+                  className="absolute w-36 rounded-md bottom-5 left-5"
+                />
               </div>
               <div className="relative w-6/12">
                 <img
@@ -137,18 +135,16 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className="absolute left-5 top-5 flex flex-col gap-2">
-                  <img
-                    src={HorseRacingTitle}
-                    alt="title"
-                    className="w-80 rounded-md"
-                  />
-                  <img
-                    src={ComingSoonTitle}
-                    alt="title"
-                    className="w-36 rounded-md"
-                  />
-                </div>
+                <img
+                  src={HorseRacingTitle}
+                  alt="title"
+                  className="w-80 rounded-md absolute right-5 top-5"
+                />
+                <img
+                  src={ComingSoonTitle}
+                  alt="title"
+                  className="absolute w-36 rounded-md left-5 bottom-5"
+                />
               </div>
             </div>
             <div className="flex h-full w-full flex-row justify-between gap-6">
@@ -158,18 +154,16 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className="absolute left-5 top-5 flex flex-col gap-2">
-                  <img
-                    src={RouletteTitle}
-                    alt="title"
-                    className="w-52 rounded-md"
-                  />
-                  <img
-                    src={ComingSoonTitle}
-                    alt="title"
-                    className="w-36 rounded-md"
-                  />
-                </div>
+                <img
+                  src={RouletteTitle}
+                  alt="title"
+                  className="absolute w-48 rounded-md right-5 top-5"
+                />
+                <img
+                  src={ComingSoonTitle}
+                  alt="title"
+                  className="absolute w-36 rounded-md left-5 bottom-5"
+                />
               </div>
               <div className="relative w-6/12">
                 <img
@@ -177,23 +171,21 @@ export default function Home() {
                   alt="Banner Image"
                   className="aspect-auto w-full rounded-lg"
                 />
-                <div className="absolute left-5 top-5 flex flex-col gap-2">
-                  <img
-                    src={SlotsTitle}
-                    alt="title"
-                    className="w-32 rounded-md"
-                  />
-                  <img
-                    src={ComingSoonTitle}
-                    alt="title"
-                    className="w-36 rounded-md"
-                  />
-                </div>
+                <img
+                  src={SlotsTitle}
+                  alt="title"
+                  className="w-28 rounded-md absolute right-5 top-5"
+                />
+                <img
+                  src={ComingSoonTitle}
+                  alt="title"
+                  className="w-36 rounded-md absolute left-5 bottom-5"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </ScrollArea>
+    </ScrollArea >
   );
 }
