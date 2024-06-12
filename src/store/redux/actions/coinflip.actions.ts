@@ -66,3 +66,10 @@ export function startCoinflipgame(data: {
     payload: data
   };
 }
+
+export function resetGameState() {
+  return {
+    type: ECoinflipSocketAction.RESET_GAME_STATE,
+    payload: null
+  };
+}

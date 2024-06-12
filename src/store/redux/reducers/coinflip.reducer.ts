@@ -52,6 +52,9 @@ export default function coinflipReducer(
     case ECoinflipSocketAction.COINFLIP_GAME_STATUS:
       return { ...state, gameStatus: false };
 
+    case ECoinflipSocketAction.RESET_GAME_STATE:
+      return { ...state, gameStatus: false, gameData: initialState.gameData };
+
     default:
       return state;
   }
