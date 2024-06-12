@@ -160,7 +160,7 @@ export const token: Array<IToken> = [
   { name: 'kuji', src: '/assets/tokens/kuji.png', denom: 'ukuji' },
   {
     name: 'kart',
-    src: '/assets/tokens/kartel.svg',
+    src: '/assets/tokens/kart.png',
     denom: 'kartel'
   }
 ];
@@ -168,13 +168,15 @@ export const token: Array<IToken> = [
 export type TokenBalances = {
   usk: number;
   kuji: number;
+  kart: number;
 };
 
-export const initialBalance = { kuji: 0, usk: 0, kart: 0 };
+export const initialBalance = { usk: 0, kuji: 0, kart: 0 };
 
 export const finance = ['Deposit', 'Withdraw'];
 
 export const denoms = {
   kuji: 'ukuji',
-  usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk'
+  usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk',
+  kart: ''
 };
