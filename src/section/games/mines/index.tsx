@@ -9,9 +9,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
+  defaulMine,
   minesAmountPresets,
   multiplerArray,
-  sampleMine,
   token
 } from '@/constants/data';
 import { EMinesStatus } from '@/constants/status';
@@ -26,27 +26,25 @@ export default function MinesGameSection() {
   const [betAmount, setBetAmount] = useState(0);
   const [minesAmount, setMinesAmount] = useState(2);
   const [selectedToken, setSelectedToken] = useState(token[0]);
-  const [presetMineAmount, setPresetMineAmount] = useState(minesAmountPresets[0]);
   const [probabilities, setProbabilities] = useState<number[]>([]);
   const [selectedProbability, setSelectedProbability] = useState<number>(0);
-  const [minesStatus, setMinesStatus] = useState(sampleMine.map(() => false));
+  const [minesStatus, setMinesStatus] = useState(defaulMine.map(() => false));
   const [isGameOver, setIsGameOver] = useState(false);
   const [mineStatus, setMineStatus] = useState(EMinesStatus.NONE);
   const dispatch = useAppDispatch();
   const minesState = useAppSelector((state: any) => state.mines);
-  const [mineImages, setMineImages] = useState(Array(sampleMine.length).fill('mystery'));
+  const [mineImages, setMineImages] = useState(Array(defaulMine.length).fill('mystery'));
   const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
 
   const resetGame = () => {
     setBetAmount(0);
     setMinesAmount(2);
     setSelectedToken(token[0]);
-    setPresetMineAmount(minesAmountPresets[0]);
     setSelectedProbability(0);
-    setMinesStatus(sampleMine.map(() => false));
+    setMinesStatus(defaulMine.map(() => false));
     setIsGameOver(false);
     setMineStatus(EMinesStatus.NONE);
-    setMineImages(Array(sampleMine.length).fill('mystery'));
+    setMineImages(Array(defaulMine.length).fill('mystery'));
     setLastClickedIndex(null);
   };
 
@@ -85,7 +83,6 @@ export default function MinesGameSection() {
 
   const handleMinePresetsAmount = (item) => {
     setMinesAmount(item);
-    setPresetMineAmount(item);
   };
 
   const handleMinesClick = async (index) => {
@@ -102,8 +99,7 @@ export default function MinesGameSection() {
 
   const handleMinesGame = () => {
     if (mineStatus === EMinesStatus.NONE) {
-      if (betAmount > 0 && betAmount < 100 && minesAmount > 0 && minesAmount < 25) {
-        console.log("game started ...")
+      if (betAmount > 0 && betAmount <= 100 && minesAmount > 0 && minesAmount < 25) {
         setMineStatus(EMinesStatus.START);
         dispatch(
           minesActions.startMinesgame({
@@ -113,14 +109,19 @@ export default function MinesGameSection() {
           })
         );
       } else {
-        console.log("bet amount is not correct")
         toast.error('Please fill all required fields.');
       }
     }
     else {
-      console.log("cash out the game >>>>>>>>> main")
-      dispatch(minesActions.cashoutgame);
       setMineStatus(EMinesStatus.NONE);
+      dispatch(minesActions.cashoutgame());
+      const gameover = setTimeout(() => {
+        setIsGameOver(true);
+        setTimeout(() => {
+          resetGame();
+        }, 3000);
+      }, 1000);
+      return () => clearTimeout(gameover);
     }
   }
 
@@ -144,18 +145,17 @@ export default function MinesGameSection() {
         const newMineImages = [...mineImages];
         if (minesState.gameResult) {
           newMineImages[lastClickedIndex] = 'star';
-          // dispatch(minesActions.minesgameRolled(null));
         } else {
           newMineImages[lastClickedIndex] = 'bomb';
-          // dispatch(minesActions.minesgameRolled(null));
+          setLastClickedIndex(null);
+          setIsGameOver(true);
         }
         dispatch(minesActions.minesgameRolled(null));
         setMineImages(newMineImages);
         if (!minesState.gameResult) {
           const gameOverTimer = setTimeout(() => {
-            console.log("over");
-            setIsGameOver(true);
-          }, 300);
+            resetGame();
+          }, 2000);
           return () => clearTimeout(gameOverTimer);
         }
       }
@@ -165,21 +165,10 @@ export default function MinesGameSection() {
   }, [minesState.gameResult, lastClickedIndex, mineImages]);
 
   useEffect(() => {
-    let timeoutId;
-    if (minesState.gameResult !== null && lastClickedIndex !== null) {
-      if (!minesState.gameResult) {
-        setIsGameOver(true);
-        timeoutId = setTimeout(() => {
-          resetGame();
-        }, 5000);
-      }
-    }
-    return () => clearTimeout(timeoutId);
-  }, [minesState.gameResult, lastClickedIndex]);
-
-  useEffect(() => {
-    console.log(minesState.gameResult)
-  }, [minesState.gameResult])
+    if (minesState.error !== '')
+      toast.error(minesState.error);
+    resetGame();
+  }, [minesState.error])
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)] flex">
@@ -202,20 +191,21 @@ export default function MinesGameSection() {
           </div>
         </div>
         <div className="flex items-center justify-center">
-          {isGameOver && (
+          {isGameOver &&
             <span className="absolute top-10 text-center text-xl font-bold uppercase text-[#df8002]">
-              game over
+              {(minesState.earned === null ? ("Game over"
+              ) : `WON ${minesState.earned}`)}
             </span>
-          )}
+          }
         </div>
         <div className="flex flex-col gap-12 mt-20">
           <div className="relative flex flex-row justify-around">
             <div className='w-6/12'>
               {Array.from({ length: 5 }, (_, rowIndex) => (
                 <div className="flex justify-center gap-3" key={rowIndex}>
-                  {sampleMine.slice(rowIndex * 5, (rowIndex + 1) * 5).map((mine, index) => (
+                  {defaulMine.slice(rowIndex * 5, (rowIndex + 1) * 5).map((mine, index) => (
                     <button
-                      disabled={isGameOver}
+                      disabled={mineStatus === EMinesStatus.NONE}
                       className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''}`}
                       key={index}
                       onClick={() => {
@@ -247,6 +237,7 @@ export default function MinesGameSection() {
                     type="number"
                     value={betAmount}
                     onChange={handleBetAmountChange}
+                    disabled={mineStatus !== EMinesStatus.NONE}
                     className="border border-purple-0.5 text-white placeholder:text-gray-700"
                   />
                   <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
@@ -285,6 +276,7 @@ export default function MinesGameSection() {
                 <div className="grid grid-cols-4 gap-5">
                   {multiplerArray.map((item, index) => (
                     <Button
+                      disabled={mineStatus !== EMinesStatus.NONE}
                       className="rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white"
                       key={index}
                       onClick={() => handleMultiplierClick(item)}
@@ -305,6 +297,7 @@ export default function MinesGameSection() {
                       value={minesAmount}
                       min={2}
                       max={24}
+                      disabled={mineStatus !== EMinesStatus.NONE}
                       onChange={handleMinesAmountChange}
                       className="border border-purple-0.5 text-white placeholder:text-gray-700"
                     />
@@ -318,7 +311,8 @@ export default function MinesGameSection() {
                   <div className="grid grid-cols-5 gap-5">
                     {minesAmountPresets.map((item, index) => (
                       <Button
-                        className={`rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white ${item === presetMineAmount ? 'bg-purple text-white hover:bg-purple' : ''}`}
+                        disabled={mineStatus !== EMinesStatus.NONE}
+                        className={`rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white`}
                         key={index}
                         onClick={() => handleMinePresetsAmount(item)}
                       >
@@ -329,8 +323,12 @@ export default function MinesGameSection() {
                 </div>
               </div>
             </div>
-            <Button className="w-72 bg-purple py-5 hover:bg-purple" onClick={handleMinesGame}>
-              {mineStatus === EMinesStatus.NONE ? 'Start Bet' : 'Cash Out'}
+            <Button
+              className="w-72 bg-purple py-5 hover:bg-purple"
+              onClick={handleMinesGame}
+              disabled={mineStatus !== EMinesStatus.NONE && lastClickedIndex === null}
+            >
+              {!isGameOver ? 'Start Bet' : 'Cash Out'}
             </Button>
           </div>
         </div>

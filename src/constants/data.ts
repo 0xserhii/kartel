@@ -107,7 +107,7 @@ export const minesAmountPresets = [2, 3, 5, 10, 24];
 
 export const minesImageSrc = ['mystery', 'star', 'bomb'];
 
-export const sampleMine = [
+export const defaulMine = [
   true,
   true,
   true,

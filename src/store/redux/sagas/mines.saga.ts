@@ -30,6 +30,10 @@ function subscribe(socket) {
       emit(minesActions.receiveError(data));
     });
 
+    socket.on(EMinesSocketEvent.MINESGAME_ENDED, (data) => {
+      emit(minesActions.gameWon(data));
+    });
+
     return () => {
     };
   });
@@ -75,14 +79,12 @@ function* stopChanelSaga() {
 }
 
 function* cashoutMinesgameSaga(action) {
-  // yield delay(300);
-  console.log("cashed out the game ...... ", action.payload);
-  // KartelSocket.mines.emit(EMinesSocketEvent.MINES_CASHOUT);
+  yield delay(300);
+  KartelSocket.mines.emit(EMinesSocketEvent.MINES_CASHOUT);
 }
 
 function* rollingMinesgameSaga(action) {
   yield delay(500);
-  console.log(action.payload);
   KartelSocket.mines.emit(
     EMinesSocketEvent.MINES_ROLLING,
     action.payload
@@ -91,7 +93,6 @@ function* rollingMinesgameSaga(action) {
 
 function* startMinesgameSaga(action) {
   yield delay(300);
-  console.log(action.payload)
   KartelSocket.mines.emit(EMinesSocketEvent.CREATE_NEW_MINESGAME, action.payload);
 }
 

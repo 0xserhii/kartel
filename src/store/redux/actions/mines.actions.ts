@@ -28,6 +28,13 @@ export function minesgameRolling(position: number) {
   };
 }
 
+export function gameWon(data: { winAmount: number | null, mines: number[] }) {
+  return {
+    type: EMinesSocketAction.GAME_WON,
+    payload: data
+  };
+}
+
 export function disconnectMinesServer() {
   return {
     type: EMinesSocketAction.DISCONNECT_MINES,
@@ -47,7 +54,6 @@ export function startMinesgame(data: {
 }
 
 export function cashoutgame() {
-  console.log("cash out game >>>>>>>>>>> reducer")
   return {
     type: EMinesSocketAction.CASHOUT_MINESGAME,
     payload: null
@@ -69,7 +75,6 @@ export function resetGameState() {
 }
 
 export function minesgameRolled(data: boolean | null) {
-  console.log(data)
   return {
     type: EMinesSocketAction.MINESGAME_ROLLED,
     payload: data

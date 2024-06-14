@@ -5,13 +5,17 @@ interface IMinesState {
   gameResult: null | boolean;
   rolling: boolean;
   error: string;
+  earned: number;
+  mines: number[];
 }
 
 const initialState = {
   loginStatus: false,
   gameResult: null,
   rolling: false,
-  error: ''
+  error: '',
+  earned: 0,
+  mines: []
 };
 
 export default function minesReducer(
@@ -27,12 +31,13 @@ export default function minesReducer(
       return { ...state, rolling: true };
 
     case EMinesSocketAction.MINESGAME_ROLLED:
-      console.log(action.payload);
       return { ...state, gameResult: action.payload };
 
     case EMinesSocketAction.RECEIVE_ERROR:
-      console.log(action.payload);
       return { ...state, error: action.payload };
+
+    case EMinesSocketAction.GAME_WON:
+      return { ...state, earned: action.payload.winAmount, mines: action.payload.mines };
 
     default:
       return state;
