@@ -45,7 +45,7 @@ function subscribe(socket) {
       }
     );
 
-    return () => {};
+    return () => { };
   });
 }
 
@@ -65,7 +65,7 @@ function* read(socket) {
 function* subscribeSaga() {
   try {
     yield fork(read, KartelSocket.coinflip);
-    yield delay(100);
+    yield delay(200);
   } catch (error) {
     console.log(error);
   }

@@ -5,6 +5,7 @@ import leaderboardReducer from './leaderboard.reducer';
 import coinflipReducer from './coinflip.reducer';
 import modalReducer from './modal.reducer';
 import userReducer from './user.reducer';
+import minesReducer from './mines.reducer';
 
 export default () => {
   return combineReducers({
@@ -12,6 +13,7 @@ export default () => {
     leaderboard: leaderboardReducer,
     coinflip: coinflipReducer,
     modal: modalReducer,
-    user: userReducer
+    user: userReducer,
+    mines: minesReducer
   });
 };

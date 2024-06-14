@@ -25,19 +25,27 @@ const chatSocket = createSocket<
   IChatServerToClientEvents,
   IChatClientToServerEvents
 >('chat');
+
 const coinflipSocket = createSocket<
   ICoinflipServerToClientEvents,
   ICoinflipClientToServerEvents
 >('coinflip');
+
 const leaderboardSocket = createSocket<
   ILeaderboardServerToClientEvents,
   ILeaderboardClientToServerEvents
 >('leaderboard');
 
+const minesSocket = createSocket<
+  ILeaderboardServerToClientEvents,
+  ILeaderboardClientToServerEvents
+>('mines');
+
 const KartelSocket = {
   chat: chatSocket,
   coinflip: coinflipSocket,
-  leaderboard: leaderboardSocket
+  leaderboard: leaderboardSocket,
+  mines: minesSocket
 };
 
 export default KartelSocket;

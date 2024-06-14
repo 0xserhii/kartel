@@ -32,7 +32,7 @@ function subscribe(socket) {
       }
     );
 
-    return () => {};
+    return () => { };
   });
 }
 
@@ -59,7 +59,7 @@ function* read(socket) {
 
 function* getChatHistorySaga(action) {
   try {
-    yield delay(100);
+    yield delay(200);
     yield fork(getChatHistory, KartelSocket.chat, action);
   } catch (error) {
     console.log(error);
@@ -69,7 +69,7 @@ function* getChatHistorySaga(action) {
 function* subscribeSaga(action) {
   try {
     yield fork(read, KartelSocket.chat);
-    yield delay(100);
+    yield delay(200);
   } catch (error) {
     console.log(error);
   }

@@ -138,22 +138,24 @@ const LiveChat = () => {
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
         <ScrollArea
-          className={`flex flex-col items-stretch py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
+          className={`py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
         >
-          <div ref={lastMessageRef}></div>
-          {chatState?.chatHistory &&
-            Array.isArray(chatState?.chatHistory) &&
-            chatState?.chatHistory?.map((chat, key) => (
-              <React.Fragment key={key}>
-                <HistoryItem
-                  name={chat.user?.username}
-                  avatar={chat.user?.avatar}
-                  time={formatTime(chat.sentAt.toString())}
-                  message={chat.message}
-                />
-                <div ref={ref}></div>
-              </React.Fragment>
-            ))}
+          <div className='flex flex-col'>
+            <div ref={lastMessageRef}></div>
+            {chatState?.chatHistory &&
+              Array.isArray(chatState?.chatHistory) &&
+              chatState?.chatHistory?.map((chat, key) => (
+                <React.Fragment key={key}>
+                  <HistoryItem
+                    name={chat.user?.username}
+                    avatar={chat.user?.avatar}
+                    time={formatTime(chat.sentAt.toString())}
+                    message={chat.message}
+                  />
+                  <div ref={ref}></div>
+                </React.Fragment>
+              ))}
+          </div>
         </ScrollArea>
       </div>
       <div className="w-full bg-purple-0.15 px-2 text-gray-400">

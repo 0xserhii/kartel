@@ -11,7 +11,8 @@ input::-webkit-inner-spin-button {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 1px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -21,6 +22,10 @@ input::-webkit-inner-spin-button {
 ::-webkit-scrollbar-thumb {
   background: #4b34a766;
   border-radius: 10px;
+}
+
+#scrollarea>div {
+  display: flex !important;
 }
 
 @layer base {
@@ -168,7 +173,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.Toastify__toast > button > svg {
+.Toastify__toast>button>svg {
   display: none;
 }
 
