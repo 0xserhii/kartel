@@ -36,6 +36,7 @@ export default function MinesGameSection() {
   const minesState = useAppSelector((state: any) => state.mines);
   const [mineImages, setMineImages] = useState(Array(defaulMine.length).fill('mystery'));
   const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
+  const [clickedIndices, setClickedIndices] = useState<Set<number>>(new Set());
 
   const resetGame = () => {
     setBetAmount(0);
@@ -94,6 +95,7 @@ export default function MinesGameSection() {
     if (isGameOver) return;
     setLastClickedIndex(index);
     setMineStatus(EMinesStatus.CLICKED);
+    setClickedIndices(prev => new Set(prev.add(index)));
     await dispatch(minesActions.rollingMinesgame(index));
     const propability = setTimeout(() => {
       setSelectedProbability(prev => prev + 1);
@@ -154,6 +156,11 @@ export default function MinesGameSection() {
           setLastClickedIndex(null);
           setIsGameOver(true);
         }
+        setClickedIndices(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(lastClickedIndex);
+          return newSet;
+        });
         dispatch(minesActions.minesgameRolled(null));
         setMineImages(newMineImages);
         if (!minesState.gameResult) {
@@ -209,7 +216,7 @@ export default function MinesGameSection() {
                 <div className="flex justify-center gap-5" key={rowIndex}>
                   {defaulMine.slice(rowIndex * 5, (rowIndex + 1) * 5).map((mine, index) => (
                     <button
-                      className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''}`}
+                      className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''} ${clickedIndices.has(rowIndex * 5 + index) ? 'ripple-animation' : ''}`}
                       key={index}
                       onClick={() => {
                         if (!minesStatus[rowIndex * 5 + index]) {
