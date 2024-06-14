@@ -86,15 +86,18 @@ export default function MinesGameSection() {
   };
 
   const handleMinesClick = async (index) => {
-    if (isGameOver) return;
-    if (minesState.error !== '') {
-      toast.error(minesState.error);
-      return
+    if (mineStatus === EMinesStatus.NONE) {
+      toast.error('Please press "Start Bet"');
+      return;
     }
+    if (isGameOver) return;
     setLastClickedIndex(index);
     setMineStatus(EMinesStatus.CLICKED);
     await dispatch(minesActions.rollingMinesgame(index));
-    setSelectedProbability(prev => prev + 1);
+    const propability = setTimeout(() => {
+      setSelectedProbability(prev => prev + 1);
+    }, 1500);
+    return () => clearTimeout(propability);
   };
 
   const handleMinesGame = () => {
@@ -109,7 +112,7 @@ export default function MinesGameSection() {
           })
         );
       } else {
-        toast.error('Please fill all required fields.');
+        toast.error('Invalid Token Amount');
       }
     }
     else {
@@ -168,13 +171,13 @@ export default function MinesGameSection() {
     if (minesState.error !== '')
       toast.error(minesState.error);
     resetGame();
-  }, [minesState.error])
+  }, [minesState.error]);
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)] flex">
       <div className='w-full flex flex-col gap-3'>
         <div className='flex justify-center items-center'>
-          <div className="flex flex-row scroll-smooth w-[35vw] gap-0.5 overflow-hidden p-1 bg-darkBlue2 rounded-lg">
+          <div className="flex flex-row scroll-smooth w-[35vw] gap-1.5 overflow-hidden p-1 bg-darkBlue2 rounded-lg mt-5">
             {probabilities.map((item, index) => (
               <div key={index}
                 ref={el => {
@@ -192,20 +195,19 @@ export default function MinesGameSection() {
         </div>
         <div className="flex items-center justify-center">
           {isGameOver &&
-            <span className="absolute top-10 text-center text-xl font-bold uppercase text-[#df8002]">
+            <span className="absolute top-16 text-center text-xl font-bold uppercase text-[#df8002]">
               {(minesState.earned === null ? ("Game over"
               ) : `WON ${minesState.earned}`)}
             </span>
           }
         </div>
-        <div className="flex flex-col gap-12 mt-20">
+        <div className="flex flex-col gap-12 mt-12">
           <div className="relative flex flex-row justify-around">
             <div className='w-6/12'>
               {Array.from({ length: 5 }, (_, rowIndex) => (
-                <div className="flex justify-center gap-3" key={rowIndex}>
+                <div className="flex justify-center gap-5" key={rowIndex}>
                   {defaulMine.slice(rowIndex * 5, (rowIndex + 1) * 5).map((mine, index) => (
                     <button
-                      disabled={mineStatus === EMinesStatus.NONE}
                       className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''}`}
                       key={index}
                       onClick={() => {
@@ -226,7 +228,7 @@ export default function MinesGameSection() {
               ))}
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center gap-12">
+          <div className="flex flex-col items-center justify-center gap-10">
             <div className="flex justify-center gap-6">
               <div className="flex flex-col gap-4">
                 <p className="w-6/12 text-sm uppercase text-[#556987]">
@@ -324,11 +326,14 @@ export default function MinesGameSection() {
               </div>
             </div>
             <Button
-              className="w-72 bg-purple py-5 hover:bg-purple"
+              className="w-72 bg-purple py-7 hover:bg-purple flex flex-col"
               onClick={handleMinesGame}
               disabled={mineStatus !== EMinesStatus.NONE && lastClickedIndex === null}
             >
-              {!isGameOver ? 'Start Bet' : 'Cash Out'}
+              {mineStatus === EMinesStatus.NONE ? 'Start Bet' : 'Cash Out'}
+              <span className='text-sm'>
+                {selectedProbability === 0 ? "" : `$${(probabilities[selectedProbability - 1] * betAmount).toFixed(2)}`}
+              </span>
             </Button>
           </div>
         </div>
