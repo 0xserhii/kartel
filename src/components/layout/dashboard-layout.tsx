@@ -41,7 +41,7 @@ export default function DashboardLayout({
             setLivechatOpen={setLiveChatOpen}
           />
           <div
-            className={`transform shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'} ${!open ? 'hidden' : ''}`}
+            className={`hidden lg:flex transform shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100 w-[278px]' : 'translate-x-full opacity-0 w-0'}`}
           >
             <LiveChat />
           </div>

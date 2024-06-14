@@ -26,30 +26,9 @@ import { useWindowSize } from '@/hooks';
 import Confetti from 'react-confetti';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { coinflipActions } from '@/store/redux/actions';
+import { probabilityXOrMoreHeads } from '@/utils/utils';
 
-const probabilityXOrMoreHeads = async (
-  x: number,
-  n: number
-): Promise<number> => {
-  const factorial = (n: number): number => {
-    let result = 1;
-    for (let i = 2; i <= n; i++) {
-      result *= i;
-    }
-    return result;
-  };
-  const binomialCoefficient = (n: number, k: number): number => {
-    return factorial(n) / (factorial(k) * factorial(n - k));
-  };
-  const binomialProbability = (n: number, k: number, p: number): number => {
-    return binomialCoefficient(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
-  };
-  let probability = 0;
-  for (let k = x; k <= n; k++) {
-    probability += binomialProbability(n, k, 0.5);
-  }
-  return probability;
-};
+
 
 const CoinFlipSection = () => {
   const toast = useToast();
@@ -192,7 +171,7 @@ const CoinFlipSection = () => {
           recycle={false}
         />
       )}
-      <div className="mt-9 flex flex-col items-center justify-center">
+      <div className="w-full mt-9 flex flex-col items-center justify-center">
         <div className="flex flex-col">
           <div className="flex h-64 flex-col items-center justify-around">
             {coinflipState.gameStatus && (

@@ -103,34 +103,36 @@ export const multiplerArray = [1 / 2, 2, 4, 8];
 
 export const roundArray = [5, 10, 15, 20, 10000];
 
-export const minesAmountPresets = [1, 3, 5, 10, 24];
+export const minesAmountPresets = [2, 3, 5, 10, 24];
 
-export const sampleMine = [
-  true,
-  false,
-  true,
-  false,
-  true,
-  false,
-  false,
-  false,
-  false,
-  false,
+export const minesImageSrc = ['mystery', 'star', 'bomb'];
+
+export const defaulMine = [
   true,
   true,
   true,
   true,
-  false,
-  false,
-  false,
   true,
   true,
   true,
-  false,
-  false,
   true,
-  false,
-  false
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true,
+  true
 ];
 
 export const coinSide = [false, true];
@@ -161,7 +163,7 @@ export const token: Array<IToken> = [
   {
     name: 'kart',
     src: '/assets/tokens/kart.png',
-    denom: 'kartel'
+    denom: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel'
   }
 ];
 
@@ -178,5 +180,5 @@ export const finance = ['Deposit', 'Withdraw'];
 export const denoms = {
   kuji: 'ukuji',
   usk: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk',
-  kart: ''
+  kart: 'factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel'
 };

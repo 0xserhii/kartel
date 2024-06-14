@@ -16,5 +16,7 @@ export enum ECOINFLIPStatus {
 export enum EMinesStatus {
   START = 'START',
   END = 'END',
-  NONE = 'NONE'
+  NONE = 'NONE',
+  CLICKED = 'CLICKED',
+  ROLLING = 'ROLLING'
 }

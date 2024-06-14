@@ -16,6 +16,7 @@ const initialState: any = {
 
 const userReducer = (state: any = initialState, action: UserAction): any => {
   switch (action.type) {
+
     case USER_DATA:
       return {
         userData: {
@@ -24,8 +25,10 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
           _id: action.payload._id
         }
       };
+
     case INIT_USER_DATA:
       return { userData: { username: '', userEmail: '', _id: '' } };
+
     default:
       return state;
   }
