@@ -21,6 +21,7 @@ import { minesActions } from '@/store/redux/actions';
 import { getAccessToken } from '@/utils/axios';
 import { calculateMiningProbabilities } from '@/utils/utils';
 import { useEffect, useState } from 'react';
+
 export default function MinesGameSection() {
   const toast = useToast();
   const [betAmount, setBetAmount] = useState(0);
@@ -87,7 +88,7 @@ export default function MinesGameSection() {
 
   const handleMinesClick = async (index) => {
     if (mineStatus === EMinesStatus.NONE) {
-      toast.error('Please press "Start Bet"');
+      toast.error('Click "Start Bet"');
       return;
     }
     if (isGameOver) return;
@@ -96,7 +97,7 @@ export default function MinesGameSection() {
     await dispatch(minesActions.rollingMinesgame(index));
     const propability = setTimeout(() => {
       setSelectedProbability(prev => prev + 1);
-    }, 1500);
+    }, 1800);
     return () => clearTimeout(propability);
   };
 

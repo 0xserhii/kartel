@@ -172,7 +172,7 @@ const DepositModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
-        <DialogHeader className="flex flex-row">
+        <DialogHeader className="flex flex-row mb-[-25px]">
           <div className="flex w-full flex-row items-center justify-center">
             <img src="/assets/logo.png" className="h-32 w-36" />
           </div>
