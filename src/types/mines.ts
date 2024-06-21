@@ -18,6 +18,7 @@ export interface IMinesServerToClientEvents {
 }
 
 export interface IMinesClientToServerEvents {
+  auth: (token: string) => void;
   [EMinesSocketEvent.CREATE_NEW_MINESGAME]: (data: {
     betAmount: number;
     denom: string;
