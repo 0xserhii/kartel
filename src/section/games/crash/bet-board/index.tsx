@@ -31,6 +31,12 @@ const BetBoard = ({
               {totalAmount?.kuji.toFixed(3) ?? '0.000'}
             </p>
           </span>
+          <span className="flex flex-row items-center gap-2">
+            <img src="/assets/tokens/kart.png" className="h-6 w-6" />
+            <p className="text-lg text-[#049DD9]">
+              {totalAmount?.kart.toFixed(3) ?? '0.000'}
+            </p>
+          </span>
         </div>
       </div>
       <Card className=" border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
