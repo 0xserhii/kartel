@@ -99,7 +99,7 @@ export default function MinesGameSection() {
     await dispatch(minesActions.rollingMinesgame(index));
     const propability = setTimeout(() => {
       setSelectedProbability(prev => prev + 1);
-    }, 1800);
+    }, 1000);
     return () => clearTimeout(propability);
   };
 
@@ -170,7 +170,7 @@ export default function MinesGameSection() {
           return () => clearTimeout(gameOverTimer);
         }
       }
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [minesState.gameResult, lastClickedIndex, mineImages]);
