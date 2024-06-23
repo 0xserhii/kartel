@@ -37,6 +37,7 @@ export default function MinesGameSection() {
   const [mineImages, setMineImages] = useState(Array(defaulMine.length).fill('mystery'));
   const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
   const [clickedIndices, setClickedIndices] = useState<Set<number>>(new Set());
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const resetGame = () => {
     setBetAmount(0);
@@ -48,6 +49,7 @@ export default function MinesGameSection() {
     setMineStatus(EMinesStatus.NONE);
     setMineImages(Array(defaulMine.length).fill('mystery'));
     setLastClickedIndex(null);
+    setClickedIndices(new Set());
   };
 
   const handleBetAmountChange = (event) => {
@@ -92,7 +94,8 @@ export default function MinesGameSection() {
       toast.error('Click "Start Bet"');
       return;
     }
-    if (isGameOver) return;
+    if (isGameOver || isProcessing) return;
+    setIsProcessing(true);
     setLastClickedIndex(index);
     setMineStatus(EMinesStatus.CLICKED);
     setClickedIndices(prev => new Set(prev.add(index)));
@@ -100,7 +103,9 @@ export default function MinesGameSection() {
     const propability = setTimeout(() => {
       setSelectedProbability(prev => prev + 1);
     }, 1000);
-    return () => clearTimeout(propability);
+    return () => {
+      clearTimeout(propability);
+    };
   };
 
   const handleMinesGame = () => {
@@ -119,14 +124,14 @@ export default function MinesGameSection() {
       }
     }
     else {
-      setMineStatus(EMinesStatus.NONE);
       dispatch(minesActions.cashoutgame());
       const gameover = setTimeout(() => {
         setIsGameOver(true);
         setTimeout(() => {
+          setMineStatus(EMinesStatus.NONE);
           resetGame();
-        }, 3000);
-      }, 1000);
+        }, 2000);
+      }, 500);
       return () => clearTimeout(gameover);
     }
   }
@@ -161,6 +166,7 @@ export default function MinesGameSection() {
           newSet.delete(lastClickedIndex);
           return newSet;
         });
+        setIsProcessing(false);
         dispatch(minesActions.minesgameRolled(null));
         setMineImages(newMineImages);
         if (!minesState.gameResult) {
@@ -176,9 +182,11 @@ export default function MinesGameSection() {
   }, [minesState.gameResult, lastClickedIndex, mineImages]);
 
   useEffect(() => {
-    if (minesState.error !== '')
+    if (minesState.error !== '') {
       toast.error(minesState.error);
-    resetGame();
+      console.log(minesState.error);
+      resetGame();
+    }
   }, [minesState.error]);
 
   return (
@@ -216,10 +224,10 @@ export default function MinesGameSection() {
                 <div className="flex justify-center gap-5" key={rowIndex}>
                   {defaulMine.slice(rowIndex * 5, (rowIndex + 1) * 5).map((mine, index) => (
                     <button
-                      className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''} ${clickedIndices.has(rowIndex * 5 + index) ? 'ripple-animation' : ''}`}
+                      className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''} ${clickedIndices.has(rowIndex * 5 + index) ? 'ripple-animation cursor-wait' : ''}`}
                       key={index}
                       onClick={() => {
-                        if (!minesStatus[rowIndex * 5 + index]) {
+                        if (!minesStatus[rowIndex * 5 + index] && !isProcessing) {
                           handleMinesClick(rowIndex * 5 + index);
                         }
                       }}
