@@ -100,8 +100,10 @@ export default function Leaderboard() {
                                 {Number(
                                   (score.leaderboard?.[active]?.usk
                                     ?.betAmount ?? 0) +
-                                    (score.leaderboard?.[active]?.kuji
-                                      ?.betAmount ?? 0)
+                                  (score.leaderboard?.[active]?.kuji
+                                    ?.betAmount ?? 0) +
+                                  (score.leaderboard?.[active]?.kart
+                                    ?.betAmount ?? 0)
                                 ).toFixed(2)}
                               </TableCell>
                               <TableCell className="w-1/5">
@@ -109,8 +111,10 @@ export default function Leaderboard() {
                                   {Number(
                                     (score.leaderboard?.[active]?.usk
                                       ?.winAmount ?? 0) +
-                                      (score.leaderboard?.[active]?.kuji
-                                        ?.winAmount ?? 0)
+                                    (score.leaderboard?.[active]?.kuji
+                                      ?.winAmount ?? 0) +
+                                    (score.leaderboard?.[active]?.kart
+                                      ?.winAmount ?? 0)
                                   ).toFixed(2)}
                                 </div>
                               </TableCell>
@@ -122,12 +126,18 @@ export default function Leaderboard() {
                                         (score.leaderboard?.[active]?.usk
                                           ?.winAmount ?? 0) +
                                         (score.leaderboard?.[active]?.kuji
+                                          ?.winAmount ?? 0) +
+                                        (score.leaderboard?.[active]?.kart
                                           ?.winAmount ?? 0);
+
                                       const betAmount =
                                         (score.leaderboard?.[active]?.usk
                                           ?.betAmount ?? 0) +
                                         (score.leaderboard?.[active]?.kuji
+                                          ?.betAmount ?? 0) +
+                                        (score.leaderboard?.[active]?.kart
                                           ?.betAmount ?? 0);
+
                                       const profit = (
                                         winAmount - betAmount
                                       ).toFixed(2);
