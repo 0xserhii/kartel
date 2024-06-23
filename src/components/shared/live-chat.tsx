@@ -9,10 +9,11 @@ import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
 import useToast from '@/hooks/use-toast';
 import { Input } from '../ui/input';
-import { chatActions } from '@/store/redux/actions';
+import { chatActions, userActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { getAccessToken } from '@/utils/axios';
+import { getAccessToken, removeAllTokens } from '@/utils/axios';
 import { useInView } from 'react-intersection-observer';
+import { useWallet } from '@/provider/crypto/wallet';
 
 export type HistoryItemProps = {
   name: string;
@@ -44,6 +45,7 @@ const LiveChat = () => {
   const [inputStr, setInputStr] = useState('');
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { disconnect } = useWallet();
   const userData = useAppSelector((store: any) => store.user.userData);
   const { ref: lastMessageRef, inView } = useInView({
     threshold: 0,
@@ -90,7 +92,12 @@ const LiveChat = () => {
 
   useEffect(() => {
     dispatch(chatActions.loginChatServer());
-  }, [getAccessToken()]);
+    if (chatState.error !== "") {
+      dispatch(userActions.initUserData());
+      disconnect();
+      removeAllTokens();
+    }
+  }, [getAccessToken(), chatState.error]);
 
   useEffect(() => {
     dispatch(chatActions.subscribeChatServer());

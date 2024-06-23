@@ -189,7 +189,8 @@ export default function CrashGameSection() {
       setBetCashout([]);
       setTotalAmount({
         usk: 0,
-        kuji: 0
+        kuji: 0,
+        kart: 0
       });
     });
 
@@ -225,9 +226,14 @@ export default function CrashGameSection() {
           .filter((bet) => bet.denom === 'kuji')
           .reduce((acc, item) => acc + item.betAmount, 0);
 
+        const totalKart = bets
+          .filter((bet) => bet.denom === 'kart')
+          .reduce((acc, item) => acc + item.betAmount, 0);
+
         setTotalAmount((prevAmounts) => ({
           usk: (prevAmounts?.usk || 0) + totalUsk,
-          kuji: (prevAmounts?.kuji || 0) + totalKuji
+          kuji: (prevAmounts?.kuji || 0) + totalKuji,
+          kart: (prevAmounts?.kart || 0) + totalKart,
         }));
       }
     );

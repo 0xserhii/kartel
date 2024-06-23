@@ -4,11 +4,13 @@ import { EChatSocketAction } from './chat.type';
 export interface IChatState {
   chatHistory: IChat[];
   loginStatus: boolean;
+  error: string;
 }
 
 const initialState = {
   chatHistory: [],
-  loginStatus: false
+  loginStatus: false,
+  error: ""
 };
 
 export default function chatReducer(state = initialState, action): IChatState {
@@ -23,6 +25,12 @@ export default function chatReducer(state = initialState, action): IChatState {
       return {
         ...state,
         chatHistory: [...state.chatHistory, action.payload as IChat]
+      };
+
+    case EChatSocketAction.ERROR:
+      return {
+        ...state,
+        error: action.payload
       };
 
     case EChatSocketAction.LOGIN_CHAT:
