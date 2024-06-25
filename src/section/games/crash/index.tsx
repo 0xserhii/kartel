@@ -213,27 +213,35 @@ export default function CrashGameSection() {
       setAvaliableBet(false);
       crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
     });
+    const calculateTotals = (bets) => {
+      const totals = { usk: 0, kuji: 0, kart: 0 };
+      bets.forEach((bet) => {
+        if (totals[bet.denom] !== undefined) {
+          totals[bet.denom] += bet.betAmount;
+        }
+      });
+      return totals;
+    };
+
+    crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
+      setBetData(data.players);
+      const totals = calculateTotals(data.players);
+      setTotalAmount((prevAmounts) => ({
+        usk: (prevAmounts?.usk || 0) + totals.usk,
+        kuji: (prevAmounts?.kuji || 0) + totals.kuji,
+        kart: (prevAmounts?.kart || 0) + totals.kart,
+      }));
+    });
 
     crashSocket.on(
       ECrashSocketEvent.GAME_BETS,
       (bets: FormattedPlayerBetType[]) => {
         setBetData((prev: BetType[]) => [...bets, ...prev]);
-        const totalUsk = bets
-          .filter((bet) => bet.denom === 'usk')
-          .reduce((acc, item) => acc + item.betAmount, 0);
-
-        const totalKuji = bets
-          .filter((bet) => bet.denom === 'kuji')
-          .reduce((acc, item) => acc + item.betAmount, 0);
-
-        const totalKart = bets
-          .filter((bet) => bet.denom === 'kart')
-          .reduce((acc, item) => acc + item.betAmount, 0);
-
+        const totals = calculateTotals(bets);
         setTotalAmount((prevAmounts) => ({
-          usk: (prevAmounts?.usk || 0) + totalUsk,
-          kuji: (prevAmounts?.kuji || 0) + totalKuji,
-          kart: (prevAmounts?.kart || 0) + totalKart,
+          usk: (prevAmounts?.usk || 0) + totals.usk,
+          kuji: (prevAmounts?.kuji || 0) + totals.kuji,
+          kart: (prevAmounts?.kart || 0) + totals.kart,
         }));
       }
     );
