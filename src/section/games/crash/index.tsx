@@ -194,7 +194,7 @@ export default function CrashGameSection() {
       });
     });
 
-    crashSocket.on(ECrashSocketEvent.GAME_START, (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_START, () => {
       setCrashStatus(ECrashStatus.PROGRESS);
       setCrTick({ prev: 1, cur: 1 });
       playCrashBgVideo();
@@ -207,7 +207,7 @@ export default function CrashGameSection() {
       }
     );
 
-    crashSocket.on(ECrashSocketEvent.GAME_END, (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_END, () => {
       setCrashStatus(ECrashStatus.END);
       stopCrashBgVideo();
       setAvaliableBet(false);
@@ -251,7 +251,7 @@ export default function CrashGameSection() {
       setAutoBet(true);
     });
 
-    crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, (data) => {
+    crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, () => {
       setAvaliableBet(true);
     });
 
