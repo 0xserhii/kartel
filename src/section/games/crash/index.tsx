@@ -338,7 +338,7 @@ export default function CrashGameSection() {
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
-                    Starting...
+                    Loading...
                   </div>
                 </div>
               )}
