@@ -102,7 +102,7 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
-        const kujiraBalance = balances.filter(item => item.denom === denoms.kuji)?.[0]?.amount ?? 0;
+        const kujiraBalance = balances.filter(item => item.denom === denoms.usk)?.[0]?.amount ?? 0;
         if (Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055) {
           toast.error(`Insufficient Kujira balance for Fee`);
           return;
@@ -148,7 +148,6 @@ const DepositModal = () => {
       if (response.status === 200) {
         const walletDataRes = {
           usk: response.data?.responseObject.wallet.usk ?? 0,
-          kuji: response.data?.responseObject.wallet.kuji ?? 0,
           kart: response.data?.responseObject.wallet.kart ?? 0
         }
         setWalletData(walletDataRes);

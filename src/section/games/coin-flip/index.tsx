@@ -46,6 +46,20 @@ const CoinFlipSection = () => {
   const [isRolling, setIsRolling] = useState(false);
   const { width, height } = useWindowSize();
 
+  const resetGameState = () => {
+    setBetAmount(0);
+    setCoinAmount(1);
+    setSelectedHeads(1);
+    setSelectedSide(true);
+    setSelectedToken(token[0]);
+    setAutobetAmount(0);
+    setIsRolling(false);
+    setIsEarned(false);
+    setProbability(0);
+    dispatch(coinflipActions.resetGameState());
+    setIsEarned(false);
+  };
+
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
     const reqTest = new RegExp(`^\\d*\\.?\\d{0,2}$`);
@@ -75,7 +89,7 @@ const CoinFlipSection = () => {
     if (betAmount > 0 && betAmount < 10000) {
       if (coinflipState.msg) {
         toast.error(coinflipState.msg);
-        setIsRolling(false);
+        resetGameState();
       } else {
         dispatch(coinflipActions.updategameState());
         dispatch(
@@ -126,7 +140,7 @@ const CoinFlipSection = () => {
   useEffect(() => {
     if (coinflipState.msg) {
       toast.error(coinflipState.msg);
-      setIsRolling(false);
+      resetGameState();
     }
   }, [coinflipState.msg]);
 
@@ -153,12 +167,12 @@ const CoinFlipSection = () => {
   useEffect(() => {
     if (!isRolling && coinflipState.gameStatus) {
       const timer = setTimeout(() => {
-        dispatch(coinflipActions.resetGameState());
+        resetGameState();
       }, 7000);
 
       return () => clearTimeout(timer);
     }
-  }, [isRolling, coinflipState.gameStatus, dispatch]);
+  }, [isRolling, coinflipState.gameStatus]);
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
@@ -228,10 +242,10 @@ const CoinFlipSection = () => {
                   <span className="text-sm text-gray200">Auto Bet</span>
                   <div className="flex w-full flex-row items-center justify-between rounded-lg border border-purple-0.5 px-5 py-3">
                     <Slider
-                      className={`w-10/12 cursor-pointer ${isRolling && 'opacity-25'}`}
+                      className={`w-10/12 cursor-pointer opacity-25`}
                       value={[autobetAmount]}
                       onValueChange={(value) => setAutobetAmount(value[0])}
-                      disabled={isRolling}
+                      disabled
                     />
                     <span className="text-sm text-white">{autobetAmount}</span>
                   </div>
