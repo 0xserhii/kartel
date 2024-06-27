@@ -11,7 +11,6 @@ import SlotsGames from '@/pages/games/slots';
 import BlackJackGames from '@/pages/games/blackjack';
 import RouletteGames from '@/pages/games/roulette';
 import HorseRacingGames from '@/pages/games/horse-race';
-import Settings from '@/pages/setting';
 import HelpSupport from '@/pages/help-support';
 
 // ----------------------------------------------------------------------
@@ -67,10 +66,6 @@ export default function AppRouter() {
         {
           path: '/horse-racing',
           element: <HorseRacingGames />
-        },
-        {
-          path: '/settings',
-          element: <Settings />
         },
         {
           path: '/help-support',
