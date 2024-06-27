@@ -1,5 +1,8 @@
-import MinesGameSection from '@/section/games/mines';
+// import MinesGameSection from '@/section/games/mines';
 
 export default function MinesGame() {
-  return <MinesGameSection />;
+  return (
+    <></>
+    // <MinesGameSection />;
+  )
 }

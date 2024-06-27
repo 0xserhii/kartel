@@ -60,13 +60,23 @@ const CasinoGames = ({
           alt={altText + 'title'}
           className="absolute right-2 top-2 w-24"
         />
-        <Link to={linkTo}>
-          <img
-            src={Playnow}
-            alt="Play Now"
-            className="absolute bottom-5 left-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:scale-[1.1] hover:transition-all"
-          />
-        </Link>
+        {
+          linkTo === '/crash' ? (
+            <Link to={linkTo}>
+              <img
+                src={Playnow}
+                alt="Play Now"
+                className="absolute bottom-5 left-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:scale-[1.1] hover:transition-all"
+              />
+            </Link>
+          ) : (
+            <img
+              src={ComingSoonTitle}
+              alt="title"
+              className="absolute w-36 rounded-md left-5 bottom-5"
+            />
+          )
+        }
       </div>
     </div>
   );
