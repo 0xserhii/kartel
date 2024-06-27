@@ -57,12 +57,6 @@ export const navItems: NavItemGroup[] = [
     title: 'Others',
     items: [
       {
-        title: 'Settings',
-        href: '/settings',
-        icon: '/assets/icons/setting.svg',
-        label: 'settings'
-      },
-      {
         title: 'Help & Support',
         href: 'https://t.me/thekartelprojectchat',
         icon: '/assets/icons/support.svg',
