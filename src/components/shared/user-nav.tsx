@@ -72,9 +72,6 @@ export default function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem onClick={toggleWalletConnection}>
             {account ? 'Disconnect Wallet' : 'Connect Wallet'}
           </DropdownMenuItem>

@@ -30,6 +30,7 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
   return (
     <Link
       key={item.href}
+      target={item.href.includes('https://') ? '_blank' : undefined}
       className={cn(
         'flex transform items-center rounded-[6px] bg-dark-blue px-6 py-[10.5px] text-gray300 transition-colors duration-300 hover:bg-purple hover:text-gray100',
         isActive && 'bg-purple text-white'

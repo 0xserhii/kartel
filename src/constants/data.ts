@@ -64,7 +64,7 @@ export const navItems: NavItemGroup[] = [
       },
       {
         title: 'Help & Support',
-        href: '/help-support',
+        href: 'https://t.me/thekartelprojectchat',
         icon: '/assets/icons/support.svg',
         label: 'Help & Support'
       }
@@ -75,7 +75,7 @@ export const navItems: NavItemGroup[] = [
 export const tabItems = [
   { name: 'home', path: '/' },
   { name: 'leaderboard', path: '/leader-board' },
-  { name: 'dashboard', path: '/dashboard' }
+  // { name: 'dashboard', path: '/dashboard' }
 ];
 
 export type Employee = {
