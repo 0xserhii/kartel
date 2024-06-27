@@ -14,7 +14,7 @@ import LoadingIcon from '@/components/shared/loading-icon';
 
 const leaderboardTabs = [
   { title: 'Crash', value: 'crash' },
-  // { title: 'Coinflip', value: 'coinflip' }
+  { title: 'Coinflip', value: 'coinflip' }
 ];
 
 export default function Leaderboard() {
