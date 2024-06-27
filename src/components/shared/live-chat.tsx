@@ -145,9 +145,8 @@ const LiveChat = () => {
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
         <ScrollArea
-          className={`py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
-        >
-          <div className='flex flex-col'>
+          className={`py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}>
+          <div className='flex flex-col w-full'>
             <div ref={lastMessageRef}></div>
             {chatState?.chatHistory &&
               Array.isArray(chatState?.chatHistory) &&

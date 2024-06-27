@@ -184,7 +184,6 @@ export default function MinesGameSection() {
   useEffect(() => {
     if (minesState.error !== '') {
       toast.error(minesState.error);
-      console.log(minesState.error);
       resetGame();
     }
   }, [minesState.error]);

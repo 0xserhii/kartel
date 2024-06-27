@@ -1,4 +1,4 @@
-import MovingBackgroundVideo from '../../../../public/assets/games/crash/moving_background.mp4';
+import MovingBackgroundVideo from '/assets/games/crash/moving_background.mp4';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { cn, formatMillisecondsShort } from '@/utils/utils';
