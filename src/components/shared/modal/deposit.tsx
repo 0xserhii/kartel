@@ -125,7 +125,7 @@ const DepositModal = () => {
         await updateBalance('deposit', hashTx.transactionHash);
         refreshBalances();
       } catch (err) {
-        console.warn("txerror", err);
+        console.warn("tx_error", err);
         setLoading(false);
       } finally {
         setLoading(false);

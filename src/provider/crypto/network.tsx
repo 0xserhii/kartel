@@ -47,15 +47,15 @@ export type NetworkContext = {
 
 const Context = createContext<NetworkContext>({
   network: TESTNET,
-  setNetwork: () => {},
+  setNetwork: () => { },
   tmClient: null,
   query: null,
   rpc: '',
   rpcs: [],
-  setRpc: () => {},
+  setRpc: () => { },
   preferred: null,
-  unlock: () => {},
-  lock: () => {}
+  unlock: () => { },
+  lock: () => { }
 });
 
 const toClient = async (
@@ -135,6 +135,7 @@ export const NetworkContext: React.FC<
     () => (tmClient ? kujiraQueryClient({ client: tmClient }) : null),
     [tmClient]
   );
+
   switch (tm) {
     case null:
       return <NoConnection network={network} setNetwork={setNetwork} />;
@@ -200,7 +201,7 @@ export const useNetwork = (): [
     setNetwork,
     tmClient,
     query,
-    rpc,
+    // rpc,
     setRpc,
     preferred,
     lock,
@@ -214,7 +215,7 @@ export const useNetwork = (): [
       chainInfo: CHAIN_INFO[network],
       tmClient,
       query,
-      rpc,
+      rpc: 'https://kujira-testnet-rpc.polkachu.com',
       rpcs,
       setRpc,
       preferred,

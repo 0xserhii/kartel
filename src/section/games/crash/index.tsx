@@ -1,4 +1,4 @@
-import MovingBackgroundVideo from '../../../../public/assets/games/crash/moving_background.mp4';
+import MovingBackgroundVideo from '/assets/games/crash/moving_background.mp4';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { cn, formatMillisecondsShort } from '@/utils/utils';
@@ -194,7 +194,7 @@ export default function CrashGameSection() {
       });
     });
 
-    crashSocket.on(ECrashSocketEvent.GAME_START, (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_START, () => {
       setCrashStatus(ECrashStatus.PROGRESS);
       setCrTick({ prev: 1, cur: 1 });
       playCrashBgVideo();
@@ -207,7 +207,7 @@ export default function CrashGameSection() {
       }
     );
 
-    crashSocket.on(ECrashSocketEvent.GAME_END, (data) => {
+    crashSocket.on(ECrashSocketEvent.GAME_END, () => {
       setCrashStatus(ECrashStatus.END);
       stopCrashBgVideo();
       setAvaliableBet(false);
@@ -251,7 +251,7 @@ export default function CrashGameSection() {
       setAutoBet(true);
     });
 
-    crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, (data) => {
+    crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, () => {
       setAvaliableBet(true);
     });
 
@@ -338,7 +338,7 @@ export default function CrashGameSection() {
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
-                    Starting...
+                    Loading...
                   </div>
                 </div>
               )}
