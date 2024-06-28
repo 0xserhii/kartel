@@ -25,7 +25,7 @@ import useToast from '@/hooks/use-toast';
 import { useWindowSize } from '@/hooks';
 import Confetti from 'react-confetti';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { coinflipActions } from '@/store/redux/actions';
+import { coinflipActions, userActions } from '@/store/redux/actions';
 import { probabilityXOrMoreHeads } from '@/utils/utils';
 
 
@@ -92,6 +92,10 @@ const CoinFlipSection = () => {
         resetGameState();
       } else {
         dispatch(coinflipActions.updategameState());
+        dispatch(userActions.siteBalanceStatus(true));
+        const balanceTimeout = setTimeout(() => {
+          dispatch(userActions.siteBalanceStatus(false));
+        }, 2000);
         dispatch(
           coinflipActions.startCoinflipgame({
             betAmount: Number(betAmount) ?? 0.1,
@@ -103,6 +107,7 @@ const CoinFlipSection = () => {
         );
         setIsRolling(true);
         setIsEarned(false);
+        return () => clearTimeout(balanceTimeout);
       }
     } else {
       toast.error('Bet Amount should be between 0.1 and 10000');

@@ -100,8 +100,6 @@ export default function Leaderboard() {
                                 {Number(
                                   (score.leaderboard?.[active]?.usk
                                     ?.betAmount ?? 0) +
-                                  (score.leaderboard?.[active]?.kuji
-                                    ?.betAmount ?? 0) +
                                   (score.leaderboard?.[active]?.kart
                                     ?.betAmount ?? 0)
                                 ).toFixed(2)}
@@ -110,8 +108,6 @@ export default function Leaderboard() {
                                 <div className="flex items-center justify-center gap-1">
                                   {Number(
                                     (score.leaderboard?.[active]?.usk
-                                      ?.winAmount ?? 0) +
-                                    (score.leaderboard?.[active]?.kuji
                                       ?.winAmount ?? 0) +
                                     (score.leaderboard?.[active]?.kart
                                       ?.winAmount ?? 0)
@@ -125,15 +121,11 @@ export default function Leaderboard() {
                                       const winAmount =
                                         (score.leaderboard?.[active]?.usk
                                           ?.winAmount ?? 0) +
-                                        (score.leaderboard?.[active]?.kuji
-                                          ?.winAmount ?? 0) +
                                         (score.leaderboard?.[active]?.kart
                                           ?.winAmount ?? 0);
 
                                       const betAmount =
                                         (score.leaderboard?.[active]?.usk
-                                          ?.betAmount ?? 0) +
-                                        (score.leaderboard?.[active]?.kuji
                                           ?.betAmount ?? 0) +
                                         (score.leaderboard?.[active]?.kart
                                           ?.betAmount ?? 0);
