@@ -26,6 +26,8 @@ import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSpring, animated } from '@react-spring/web';
+import { useAppDispatch } from '@/store/redux';
+import { userActions } from '@/store/redux/actions';
 
 const GrowingNumber = ({ start, end }) => {
   const { number: numberValue } = useSpring({
@@ -65,6 +67,7 @@ export default function CrashGameSection() {
   const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>(
     []
   );
+  const dispatch = useAppDispatch();
 
   const updatePrepareCountDown = () => {
     setPrepareTime((prev) => prev - 100);
@@ -106,6 +109,11 @@ export default function CrashGameSection() {
 
   const handleStartBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
+      dispatch(userActions.siteBalanceStatus(true));
+      const balanceTimeout = setTimeout(() => {
+        dispatch(userActions.siteBalanceStatus(false));
+      }, 2000);
+
       const joinParams = {
         target: avaliableAutoCashout
           ? Number(autoCashoutAmount) * 100
@@ -114,6 +122,7 @@ export default function CrashGameSection() {
         denom: selectedToken.name
       };
       socket?.emit('join-crash-game', joinParams);
+      return () => clearTimeout(balanceTimeout);
     }
     if (!(betAmount > 0)) {
       toast.error('Bet amount must be greater than 0');
@@ -128,6 +137,10 @@ export default function CrashGameSection() {
   const handleAutoBet = async () => {
     if (autoBet) {
       if (betAmount > 0) {
+        dispatch(userActions.siteBalanceStatus(true));
+        const balanceTimeout = setTimeout(() => {
+          dispatch(userActions.siteBalanceStatus(false));
+        }, 2000);
         const joinParams = {
           cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
           count: Number(round).valueOf(),
@@ -135,6 +148,7 @@ export default function CrashGameSection() {
           denom: selectedToken.name
         };
         socket?.emit('auto-crashgame-bet', joinParams);
+        return () => clearTimeout(balanceTimeout);
       } else {
         setAutoBet(false);
       }
