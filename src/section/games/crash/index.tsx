@@ -561,6 +561,7 @@ export default function CrashGameSection() {
                 betData={betData}
                 betCashout={betCashout}
                 totalAmount={totalAmount}
+                crashStatus={crashStatus}
               />
             </div>
           </div>

@@ -34,6 +34,7 @@ const CoinFlipSection = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const coinflipState = useAppSelector((state: any) => state.coinflip);
+  const siteBalanceStatus = useAppSelector((store: any) => store.user.siteBalanceStatus);
   const [betAmount, setBetAmount] = useState(0);
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [selectedSide, setSelectedSide] = useState(true);
@@ -92,10 +93,7 @@ const CoinFlipSection = () => {
         resetGameState();
       } else {
         dispatch(coinflipActions.updategameState());
-        dispatch(userActions.siteBalanceStatus(true));
-        const balanceTimeout = setTimeout(() => {
-          dispatch(userActions.siteBalanceStatus(false));
-        }, 2000);
+        dispatch(userActions.siteBalanceStatus(!siteBalanceStatus));
         dispatch(
           coinflipActions.startCoinflipgame({
             betAmount: Number(betAmount) ?? 0.1,
@@ -107,7 +105,6 @@ const CoinFlipSection = () => {
         );
         setIsRolling(true);
         setIsEarned(false);
-        return () => clearTimeout(balanceTimeout);
       }
     } else {
       toast.error('Bet Amount should be between 0.1 and 10000');
@@ -222,7 +219,7 @@ const CoinFlipSection = () => {
               })}
             </div>
           </div>
-          <div className="2xl:px-30 flex flex-col items-center justify-center gap-5 px-64 py-7 lg:px-28">
+          <div className="2xl:px-30 flex flex-col items-center justify-center gap-5 px-30 py-7 lg:px-28">
             <span className="mt-2 text-sm text-white ">
               {probability}% Chance
             </span>
