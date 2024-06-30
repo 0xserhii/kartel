@@ -2,7 +2,7 @@ import { NavItemGroup } from '@/types';
 
 export const navItems: NavItemGroup[] = [
   {
-    title: 'Casino',
+    title: 'Mini Games',
     items: [
       {
         title: 'Crash',
@@ -25,7 +25,7 @@ export const navItems: NavItemGroup[] = [
     ]
   },
   {
-    title: 'Mini games',
+    title: 'Casino',
     items: [
       {
         title: 'Slots',

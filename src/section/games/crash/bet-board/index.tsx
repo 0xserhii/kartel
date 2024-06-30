@@ -1,19 +1,22 @@
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
+import { ECrashStatus } from '@/constants/status';
 import { BetType } from '@/types';
 
 const BetBoard = ({
   betData,
   betCashout,
-  totalAmount
+  totalAmount,
+  crashStatus
 }: {
   betData: BetType[];
   betCashout: BetType[];
   totalAmount: any;
+  crashStatus: ECrashStatus;
 }) => {
   return (
-    <div className="flex h-full w-full flex-col gap-5 md:w-7/12">
+    <div className="flex w-full flex-col gap-5 md:w-7/12">
       <div className="flex flex-row items-center justify-between py-1.5">
         <span className="text-lg uppercase text-gray-400">
           {betData.length} players
@@ -47,7 +50,7 @@ const BetBoard = ({
           </Table>
         </CardHeader>
         <CardContent className="px-2 py-0">
-          <ScrollArea className="px-5 py-3 lg:h-[295px]">
+          <ScrollArea className="px-5 py-3 h-[295px]">
             <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-y-hidden ">
               <TableBody>
                 {betData
@@ -76,7 +79,13 @@ const BetBoard = ({
                               (item) => item.playerID === player.playerID
                             )?.stoppedAt ?? 0) / 100
                           ).toFixed(2) + 'x') ||
-                          'betting'}
+                          (crashStatus === ECrashStatus.END ? (
+                            <span className='text-purple'>
+                              failed
+                            </span>
+                          ) : (
+                            <span>betting</span>
+                          ))}
                       </TableCell>
                       <TableCell className="w-1/6 text-center">
                         <div className="flex w-full flex-row items-center justify-center gap-1 text-center">
@@ -89,26 +98,34 @@ const BetBoard = ({
                         </div>
                       </TableCell>
                       <TableCell className="w-1/6 text-center">
-                        {betCashout?.find(
-                          (item) => item.playerID === player.playerID
-                        )?.stoppedAt ? (
-                          <div className="flex flex-row items-center justify-center gap-1">
-                            <img
-                              src={`/assets/tokens/${betCashout.find((item) => item.playerID === player.playerID)?.denom}.png`}
-                              alt="Multiplier"
-                              className="h-4 w-4"
-                            />
-                            {(
-                              ((betCashout?.find(
-                                (item) => item.playerID === player.playerID
-                              )?.stoppedAt ?? 0) /
-                                100) *
-                              player.betAmount
-                            ).toFixed(2)}
-                          </div>
-                        ) : (
-                          <span>betting</span>
-                        )}
+                        {
+                          betCashout?.find(
+                            (item) => item.playerID === player.playerID
+                          )?.stoppedAt ? (
+                            <div className="flex flex-row items-center justify-center gap-1">
+                              <img
+                                src={`/assets/tokens/${betCashout.find((item) => item.playerID === player.playerID)?.denom}.png`}
+                                alt="Multiplier"
+                                className="h-4 w-4"
+                              />
+                              {(
+                                ((betCashout?.find(
+                                  (item) => item.playerID === player.playerID
+                                )?.stoppedAt ?? 0) /
+                                  100) *
+                                player.betAmount
+                              ).toFixed(2)}
+                            </div>
+                          ) : (
+                            crashStatus === ECrashStatus.END ? (
+                              <span className='text-purple'>
+                                failed
+                              </span>
+                            ) : (
+                              <span>betting</span>
+                            )
+                          )
+                        }
                       </TableCell>
                     </TableRow>
                   ))}

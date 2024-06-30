@@ -56,26 +56,30 @@ export default function Header() {
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
       <Heading />
       <div className='flex flex-row gap-5'>
-        <div className='flex flex-row gap-5'>
-          <div className='flex flex-row items-center gap-2'>
-            <img
-              src={`/assets/tokens/usk.png`}
-              className="h-7 w-7"
-            />
-            <span className="w-4/12 text-center text-gray-300">
-              {Number(walletData.usk).toFixed(2) ?? 0}
-            </span>
-          </div>
-          <div className='flex flex-row items-center gap-2'>
-            <img
-              src={`/assets/tokens/kart.png`}
-              className="h-7 w-7"
-            />
-            <span className="w-4/12 text-center text-gray-300">
-              {Number(walletData.kart).toFixed(2) ?? 0}
-            </span>
-          </div>
-        </div>
+        {
+          userData?.username !== '' && (
+            <div className='flex flex-row gap-5'>
+              <div className='flex flex-row items-center gap-2'>
+                <img
+                  src={`/assets/tokens/usk.png`}
+                  className="h-7 w-7"
+                />
+                <span className="w-4/12 text-center text-gray-300">
+                  {Number(walletData.usk).toFixed(2) ?? 0}
+                </span>
+              </div>
+              <div className='flex flex-row items-center gap-2'>
+                <img
+                  src={`/assets/tokens/kart.png`}
+                  className="h-7 w-7"
+                />
+                <span className="w-4/12 text-center text-gray-300">
+                  {Number(walletData.kart).toFixed(2) ?? 0}
+                </span>
+              </div>
+            </div>
+          )
+        }
         <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
           {userData?.username !== '' ? (
             <div className="flex items-center gap-4">
