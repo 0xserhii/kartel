@@ -20,7 +20,7 @@ export default function DashboardLayout({
     <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
       <div className='flex items-center justify-center lg:hidden absolute w-full h-full z-20 backdrop-blur-lg'>
         <p className='text-white text-center text-2xl font-bold'>
-          This application is optimized for desktop use.
+          This application is only available on PC
         </p>
       </div>
       <div className='absolute left-0 top-0 -z-10 h-full w-full bg-[url("/assets/bg-01.png")] bg-cover bg-top bg-no-repeat bg-blend-multiply' />
