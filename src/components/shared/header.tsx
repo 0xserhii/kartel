@@ -7,22 +7,25 @@ import authBtn from '/assets/auth-btn.svg';
 import useModal from '@/hooks/use-modal';
 import { ModalType } from '@/types/modal';
 import { useOpen } from '@/provider/chat-provider';
-import { useAppSelector } from '@/store/redux';
+import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { initialBalance, token } from '@/constants/data';
 import { useWallet } from '@/provider/crypto/wallet';
+import { subscribeUserServer } from '@/store/redux/actions/user.action';
 
 export default function Header() {
   const modal = useModal();
   const { open, setOpen } = useOpen();
   const userData = useAppSelector((store: any) => store.user.userData);
-  const siteBalanceStatus = useAppSelector((store: any) => store.user.siteBalanceStatus);
+  const siteBalance = useAppSelector((store: any) => store.user.wallet);
+  const dispatch = useAppDispatch();
   const { account } = useWallet();
+  const [walletData, setWalletData] = useState(initialBalance);
+
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN);
   };
-  const [walletData, setWalletData] = useState(initialBalance);
 
   const getSiteBalance = async (type: string, txHash?: string) => {
     try {
@@ -49,37 +52,34 @@ export default function Header() {
   };
 
   useEffect(() => {
-    getSiteBalance('get');
-  }, [siteBalanceStatus]);
+    if (userData?.username !== '') {
+      getSiteBalance('get');
+    }
+  }, [siteBalance]);
+
+  useEffect(() => {
+    dispatch(subscribeUserServer());
+  }, []);
 
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
       <Heading />
       <div className='flex flex-row gap-5'>
-        {
-          userData?.username !== '' && (
-            <div className='flex flex-row gap-5'>
-              <div className='flex flex-row items-center gap-2'>
+        {userData?.username && (
+          <div className='flex flex-row gap-5'>
+            {['usk', 'kart'].map((token) => (
+              <div key={token} className='flex flex-row items-center gap-2'>
                 <img
-                  src={`/assets/tokens/usk.png`}
+                  src={`/assets/tokens/${token}.png`}
                   className="h-7 w-7"
                 />
                 <span className="w-4/12 text-center text-gray-300">
-                  {Number(walletData.usk).toFixed(2) ?? 0}
+                  {Number(siteBalance?.denom === token ? siteBalance.value : walletData[token]).toFixed(2) ?? 0}
                 </span>
               </div>
-              <div className='flex flex-row items-center gap-2'>
-                <img
-                  src={`/assets/tokens/kart.png`}
-                  className="h-7 w-7"
-                />
-                <span className="w-4/12 text-center text-gray-300">
-                  {Number(walletData.kart).toFixed(2) ?? 0}
-                </span>
-              </div>
-            </div>
-          )
-        }
+            ))}
+          </div>
+        )}
         <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
           {userData?.username !== '' ? (
             <div className="flex items-center gap-4">

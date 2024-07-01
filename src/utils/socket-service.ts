@@ -7,6 +7,8 @@ import {
   ILeaderboardClientToServerEvents,
   ILeaderboardServerToClientEvents
 } from '@/types/leader';
+import { IMinesClientToServerEvents, IMinesServerToClientEvents } from '@/types/mines';
+import { IUserClientToServerEvents, IUserServerToClientEvents } from '@/types/user';
 import { Socket, io } from 'socket.io-client';
 // import customParser from 'socket.io-msgpack-parser'
 
@@ -37,14 +39,20 @@ const leaderboardSocket = createSocket<
 >('leaderboard');
 
 const minesSocket = createSocket<
-  ILeaderboardServerToClientEvents,
-  ILeaderboardClientToServerEvents
+  IMinesServerToClientEvents,
+  IMinesClientToServerEvents
 >('mines');
+
+const userSocket = createSocket<
+  IUserServerToClientEvents,
+  IUserClientToServerEvents
+>('crash');
 
 const KartelSocket = {
   chat: chatSocket,
   coinflip: coinflipSocket,
   leaderboard: leaderboardSocket,
+  user: userSocket,
   mines: minesSocket
 };
 

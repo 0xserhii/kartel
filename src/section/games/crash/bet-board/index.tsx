@@ -79,13 +79,7 @@ const BetBoard = ({
                               (item) => item.playerID === player.playerID
                             )?.stoppedAt ?? 0) / 100
                           ).toFixed(2) + 'x') ||
-                          (crashStatus === ECrashStatus.END ? (
-                            <span className='text-purple'>
-                              failed
-                            </span>
-                          ) : (
-                            <span>betting</span>
-                          ))}
+                          (crashStatus === ECrashStatus.END ? 'bang' : 'betting')}
                       </TableCell>
                       <TableCell className="w-1/6 text-center">
                         <div className="flex w-full flex-row items-center justify-center gap-1 text-center">
@@ -102,12 +96,7 @@ const BetBoard = ({
                           betCashout?.find(
                             (item) => item.playerID === player.playerID
                           )?.stoppedAt ? (
-                            <div className="flex flex-row items-center justify-center gap-1">
-                              <img
-                                src={`/assets/tokens/${betCashout.find((item) => item.playerID === player.playerID)?.denom}.png`}
-                                alt="Multiplier"
-                                className="h-4 w-4"
-                              />
+                            <span className='text-[#049DD9] font-semibold'>
                               {(
                                 ((betCashout?.find(
                                   (item) => item.playerID === player.playerID
@@ -115,11 +104,11 @@ const BetBoard = ({
                                   100) *
                                 player.betAmount
                               ).toFixed(2)}
-                            </div>
+                            </span>
                           ) : (
                             crashStatus === ECrashStatus.END ? (
                               <span className='text-purple'>
-                                failed
+                                {"-" + player.betAmount}
                               </span>
                             ) : (
                               <span>betting</span>

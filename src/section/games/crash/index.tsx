@@ -109,10 +109,6 @@ export default function CrashGameSection() {
 
   const handleStartBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
-      dispatch(userActions.siteBalanceStatus(true));
-      const balanceTimeout = setTimeout(() => {
-        dispatch(userActions.siteBalanceStatus(false));
-      }, 2000);
 
       const joinParams = {
         target: avaliableAutoCashout
@@ -122,7 +118,6 @@ export default function CrashGameSection() {
         denom: selectedToken.name
       };
       socket?.emit('join-crash-game', joinParams);
-      return () => clearTimeout(balanceTimeout);
     }
     if (!(betAmount > 0)) {
       toast.error('Bet amount must be greater than 0');
@@ -137,10 +132,6 @@ export default function CrashGameSection() {
   const handleAutoBet = async () => {
     if (autoBet) {
       if (betAmount > 0) {
-        dispatch(userActions.siteBalanceStatus(true));
-        const balanceTimeout = setTimeout(() => {
-          dispatch(userActions.siteBalanceStatus(false));
-        }, 2000);
         const joinParams = {
           cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
           count: Number(round).valueOf(),
@@ -148,7 +139,6 @@ export default function CrashGameSection() {
           denom: selectedToken.name
         };
         socket?.emit('auto-crashgame-bet', joinParams);
-        return () => clearTimeout(balanceTimeout);
       } else {
         setAutoBet(false);
       }
@@ -245,6 +235,10 @@ export default function CrashGameSection() {
         kuji: (prevAmounts?.kuji || 0) + totals.kuji,
         kart: (prevAmounts?.kart || 0) + totals.kart,
       }));
+    });
+
+    crashSocket.on(ECrashSocketEvent.UPDATE_WALLET, (walletValue, denom) => {
+      dispatch(userActions.siteBalanceUpdate({ value: walletValue, denom: denom }));
     });
 
     crashSocket.on(
@@ -361,13 +355,11 @@ export default function CrashGameSection() {
                   <span className="ms-2 inline-flex h-3 w-3 items-center justify-center rounded-full bg-[#0BA544] text-xs font-semibold text-blue-800" />
                   <p className="text-sm text-gray-300">Network status</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-10 gap-2">
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={cn(
-                        'rounded-lg border border-[#1D1776] bg-dark-blue px-2 py-1 text-center text-xs text-gray-300'
-                      )}
+                      className={`rounded-lg px-2 py-1 text-center bg-dark-blue text-xs text-gray-300 ${(item.crashPoint / 100) > 1 && (item.crashPoint / 100) < 2 ? 'bg-dark-blue' : (item.crashPoint / 100) > 3 ? 'bg-[#3bc117]' : 'bg-purple-light'}`}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
                     </span>

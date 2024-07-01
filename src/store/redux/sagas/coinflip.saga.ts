@@ -11,7 +11,7 @@ import {
   delay
 } from 'redux-saga/effects';
 
-import { coinflipActions } from '../actions';
+import { coinflipActions, userActions } from '../actions';
 import { getAccessToken } from '@/utils/axios';
 import KartelSocket from '@/utils/socket-service';
 import { ECoinflipSocketEvent } from '@/types/coinflip';
@@ -23,6 +23,10 @@ function subscribe(socket) {
   return eventChannel((emit) => {
     socket.on(ECoinflipSocketEvent.GAME_CREATION_ERROR, (msg: string) => {
       emit(coinflipActions.receiveMsg(msg));
+    });
+
+    socket.on(ECoinflipSocketEvent.UPDATE_WALLET, (walletValue, denom) => {
+      emit(userActions.siteBalanceUpdate({ value: walletValue, denom: denom }));
     });
 
     socket.on(ECoinflipSocketEvent.COINFLIPGAME_JOIN_SUCCESS, () => {

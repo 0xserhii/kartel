@@ -24,6 +24,7 @@ module.exports = {
         white: '#ffffff',
         'blue-border': '#1D1776',
         purple: '#ff149d',
+        'purple-light': '#ff149db3',
         'purple-0.15': 'rgba(75,52,167, 0.15)',
         'purple-0.5': 'rgba(75,52,167, 0.5)',
         pink: '#F205B3',
