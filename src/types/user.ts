@@ -5,3 +5,11 @@ export interface IChatUser {
   hasVerifiedAccount: boolean;
   createdAt: Date;
 }
+
+export interface IUserServerToClientEvents {
+  "update-wallet": (wallet, denom) => void;
+}
+
+export interface IUserClientToServerEvents {
+
+}

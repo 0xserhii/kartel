@@ -34,7 +34,6 @@ const CoinFlipSection = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const coinflipState = useAppSelector((state: any) => state.coinflip);
-  const siteBalanceStatus = useAppSelector((store: any) => store.user.siteBalanceStatus);
   const [betAmount, setBetAmount] = useState(0);
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [selectedSide, setSelectedSide] = useState(true);
@@ -93,7 +92,6 @@ const CoinFlipSection = () => {
         resetGameState();
       } else {
         dispatch(coinflipActions.updategameState());
-        dispatch(userActions.siteBalanceStatus(!siteBalanceStatus));
         dispatch(
           coinflipActions.startCoinflipgame({
             betAmount: Number(betAmount) ?? 0.1,
@@ -152,6 +150,7 @@ const CoinFlipSection = () => {
 
   useEffect(() => {
     dispatch(coinflipActions.subscribeCoinflipServer());
+    dispatch(userActions.siteBalanceUpdate({ value: 0, denom: '' }));
   }, []);
 
   useEffect(() => {

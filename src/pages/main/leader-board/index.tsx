@@ -29,7 +29,7 @@ export default function Leaderboard() {
     }
     dispatch(leaderboardActions.subscribeLeaderboardServer());
   }, []);
-
+  console.log(leaderboardState);
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="flex flex-col items-stretch gap-8 p-12">

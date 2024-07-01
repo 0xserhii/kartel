@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { MenuIcon, MessageSquareText } from 'lucide-react';
+import { MenuIcon } from 'lucide-react';
 import Sidebar from '../shared/sidebar';
 import Header from '../shared/header';
 import MobileSidebar from '../shared/mobile-sidebar';
 import MobileLivechat from '../shared/mobile-livechat';
 import LiveChat from '../shared/live-chat';
 import { useOpen } from '@/provider/chat-provider';
+
 export default function DashboardLayout({
   children
 }: {
@@ -17,6 +18,11 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
+      <div className='flex items-center justify-center lg:hidden absolute w-full h-full z-20 backdrop-blur-lg'>
+        <p className='text-white text-center text-2xl font-bold'>
+          This application is optimized for desktop use.
+        </p>
+      </div>
       <div className='absolute left-0 top-0 -z-10 h-full w-full bg-[url("/assets/bg-01.png")] bg-cover bg-top bg-no-repeat bg-blend-multiply' />
       <MobileSidebar
         sidebarOpen={sidebarOpen}
@@ -45,10 +51,10 @@ export default function DashboardLayout({
           >
             <LiveChat />
           </div>
-          <MessageSquareText
+          {/* <MessageSquareText
             className="fixed bottom-8 right-8 z-50 block h-14 w-14 cursor-pointer rounded-full bg-gray50 bg-opacity-15 p-3 text-lg text-gray50 bg-blend-multiply shadow-lg lg:hidden "
             onClick={() => setLiveChatOpen(true)}
-          />
+          /> */}
         </main>
       </div>
     </div>
