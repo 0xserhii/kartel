@@ -95,14 +95,12 @@ const BetBoard = ({
                         {
                           betCashout?.find(
                             (item) => item.playerID === player.playerID
-                          )?.stoppedAt ? (
+                          )?.winningAmount ? (
                             <span className='text-[#049DD9] font-semibold'>
                               {(
-                                ((betCashout?.find(
+                                (betCashout?.find(
                                   (item) => item.playerID === player.playerID
-                                )?.stoppedAt ?? 0) /
-                                  100) *
-                                player.betAmount
+                                )?.winningAmount ?? 0)
                               ).toFixed(2)}
                             </span>
                           ) : (
