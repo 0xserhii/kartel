@@ -23,7 +23,6 @@ export function initUserData() {
 }
 
 export function siteBalanceUpdate(wallet: { value: number, denom: string }) {
-  console.log(wallet)
   return {
     type: SITE_BALANCE_UPDATE,
     payload: wallet
