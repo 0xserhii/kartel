@@ -45,6 +45,7 @@ const CoinFlipSection = () => {
   const [isEarned, setIsEarned] = useState(false);
   const [isRolling, setIsRolling] = useState(false);
   const { width, height } = useWindowSize();
+  const [calculatedProbability, setCalculatedProbability] = useState(0);
 
   const resetGameState = () => {
     setBetAmount(0);
@@ -73,6 +74,12 @@ const CoinFlipSection = () => {
       setBetAmount(0);
     }
   };
+
+  useEffect(() => {
+    probabilityXOrMoreHeads(selectedHeads, betAmount).then((probability) => {
+      setCalculatedProbability(probability);
+    });
+  }, [selectedHeads, betAmount]);
 
   const handleMultiplierClick = (multiplier) => {
     const newValue = betAmount * multiplier;
@@ -192,7 +199,7 @@ const CoinFlipSection = () => {
             {coinflipState.gameStatus && (
               <span className="absolute top-3 text-xl font-bold uppercase text-[#df8002]">
                 {isEarned
-                  ? `You Won ${coinflipState.winAmount.toFixed(2)}`
+                  ? `You Won ${((betAmount / calculatedProbability) * (1 - 0.05)).toFixed(2)}`
                   : `You Lost`}
               </span>
             )}
