@@ -40,9 +40,3 @@ export const additionAdmin = Joi.object({
 });
 
 export const full = Joi.object().concat(main).concat(addition);
-
-export const withDraw = Joi.object({
-  amount: Joi.number().required(),
-  currency: Joi.string().required(),
-  address: Joi.string().required(),
-});

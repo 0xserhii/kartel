@@ -1,4 +1,4 @@
-import { IPaymentModel } from '.';
+import { IPaymentModel, TUpdateBalance } from '.';
 import { FilterQuery } from "mongoose";
 
 import { CustomError } from "@/utils/helpers";
@@ -7,6 +7,10 @@ import ILocalization from "@/utils/localizations/localizations.interface";
 import { PaymentService } from "./payment.service";
 import { IAuthInfo } from '../auth/auth.types';
 import UserService from '../user/user.service';
+import AESWrapper from '@/utils/encryption/aes-wrapper';
+import logger from '@/utils/logger';
+import { ADMIN_WALLET_ADDRESS } from '@/config';
+import { CDENOM_TOKENS } from '@/constant/crypto';
 
 
 export class PaymentController {
@@ -99,7 +103,6 @@ export class PaymentController {
     if (!payment) {
       throw new CustomError(404, "Payment not found");
     }
-
     return payment;
   };
 
@@ -110,10 +113,55 @@ export class PaymentController {
     };
   };
 
-  public userBalanceDeposit = async ({ userId }: IAuthInfo) => {
-    const user = await this.userService.getItemById(userId);
-    return {
-      balance: user.wallet,
-    };
+  public getAddress = async () => {
+    try {
+      const address = ADMIN_WALLET_ADDRESS ?? '';
+      const aesKey = AESWrapper.generateKey();
+      const encryptedAddress = AESWrapper.createAesMessage(aesKey, address);
+      return {
+        encryptedAddress,
+        aesKey: aesKey.toString('base64')
+      };
+    } catch (ex) {
+      const errorMessage = `Error encrypting address: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return {
+        error: errorMessage
+      };
+    }
+  };
+
+  public userBalanceDeposit = async ({ amount, currency, address, txHash }, { userId }: IAuthInfo) => {
+    console.log("balance deposit >>>>>>>>>>>>>>>>>> ");
+    try {
+      if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
+        throw new CustomError(409, 'Balance type is not supported');
+      }
+      const user = await this.userService.getItemById(userId);
+      const updateParams = `wallet.${currency}`;
+
+      const walletValue = user?.wallet?.[currency] ?? 0;
+      let updateValue = 0;
+
+      // user deposit crypto to admin wallet
+      console.log("wallet value >>>>>>>>> ", walletValue);
+
+      const resPayment = await this.paymentService.userBalanceDeposit({
+        address: address,
+        txHash: txHash ?? '',
+        amount: amount,
+        tokenType: currency,
+      });
+
+      console.log("update value >>>>>>>>> ", resPayment);
+      if (!resPayment) {
+        throw new CustomError(409, 'unable deposit');
+      }
+      updateValue = walletValue + amount;
+      return await this.userService.updateUserBalance(userId, updateParams, updateValue);
+    } catch (error) {
+      console.log(error);
+      throw new CustomError(409, 'updating balance error');
+    }
   };
 }

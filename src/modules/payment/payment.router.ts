@@ -15,7 +15,6 @@ export default class PaymentRouter extends BaseRouter {
 
   constructor() {
     super();
-
     this.paymentController = new PaymentController();
     this.routes();
   }
@@ -46,19 +45,26 @@ export default class PaymentRouter extends BaseRouter {
     this.router.post(
       "/withdraw",
       checkPermissions(),
-      // validateSchema(validatePayment.withDraw, mapProperty.getBody),
-      // actionHandler(this.paymentController.userBalanceWithdraw, [
-      //   mapProperty.getBody,
-      //   mapProperty.getUserInfo,
-      // ])
+      validateSchema(validatePayment.withDraw, mapProperty.getBody),
+      actionHandler(this.paymentController.userBalanceWithdraw, [
+        mapProperty.getBody,
+        mapProperty.getUserInfo,
+      ])
+    );
+
+    this.router.get(
+      "/admin-wallet",
+      actionHandler(this.paymentController.getAddress, mapProperty.getUserInfo)
     );
 
     this.router.post(
       "/deposit",
       checkPermissions(),
-      // actionHandler(this.userController.userBalanceDeposit, [
-      //   mapProperty.getUserInfo,
-      // ])
+      validateSchema(validatePayment.deposit, mapProperty.getBody),
+      actionHandler(this.paymentController.userBalanceDeposit, [
+        mapProperty.getBody,
+        mapProperty.getUserInfo,
+      ])
     );
 
     this.router.put(

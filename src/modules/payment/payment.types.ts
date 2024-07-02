@@ -1,13 +1,31 @@
-import { Document, SchemaTimestampsConfig } from "mongoose";
+export type TransactionDetails = {
+  sender: string;
+  receiver: string;
+  amount: string;
+  denom: string;
+};
 
-import { EXAMPLE_ENUM } from ".";
-
-export interface IExampleObject {
-  name: string;
-  type: EXAMPLE_ENUM;
+export enum ETokenType {
+  usk = 'usk',
+  kart = 'kart',
 }
 
-export interface IExample
-  extends IExampleObject,
-  Document,
-  SchemaTimestampsConfig { }
+export type TWithDrawProps = {
+  amount: number;
+  tokenType: ETokenType;
+  address: string;
+};
+
+export type TCheckDepositParam = {
+  amount: number;
+  tokenType: ETokenType;
+  address: string;
+  txHash: string;
+};
+
+export type TUpdateBalance = {
+  balanceType: ETokenType;
+  amount: number;
+  txHash?: string;
+  address: string;
+};

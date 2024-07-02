@@ -14,3 +14,16 @@ export const UpdatePaymentSchema = Joi.object({
   name: Joi.string(),
   // type: validations.byEnum(EXAMPLE_ENUM),
 });
+
+export const withDraw = Joi.object({
+  amount: Joi.number().required(),
+  currency: Joi.string().required(),
+  address: Joi.string().required(),
+});
+
+export const deposit = Joi.object({
+  amount: Joi.number().required(),
+  currency: Joi.string().required(),
+  address: Joi.string().required(),
+  txHash: Joi.string().required(),
+});
