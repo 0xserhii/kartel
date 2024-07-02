@@ -76,11 +76,13 @@ const DepositModal = () => {
   };
 
   const handleDeposit = async () => {
+    console.log("deposit")
     const encryptedAddressRes: any = (
       await axiosGet(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/payments/admin-wallet`
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/admin-wallet`
       )
-    ).data.responseObject as string;
+    );
+
     const walletAddress = await aesWrapper.decryptMessage(
       encryptedAddressRes.aesKey,
       encryptedAddressRes.encryptedAddress
@@ -123,7 +125,8 @@ const DepositModal = () => {
           ],
           'Deposit to Kartel'
         );
-        await updateBalance('deposit', hashTx.transactionHash);
+        console.log(hashTx);
+        await updateBalance(hashTx.transactionHash);
         refreshBalances();
       } catch (err) {
         console.warn("tx_error", err);
@@ -134,14 +137,13 @@ const DepositModal = () => {
     }
   };
 
-  const updateBalance = async (type: string, txHash?: string) => {
+  const updateBalance = async (txHash?: string) => {
     try {
       const response = await axiosPost([
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/${userData._id}/balance`,
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/deposit`,
         {
           data: {
-            balanceType: selectedToken.name,
-            actionType: type,
+            currency: selectedToken.name,
             amount: Number(depositAmount),
             txHash,
             address: account?.address
@@ -154,11 +156,7 @@ const DepositModal = () => {
           kart: response.data?.responseObject.wallet.kart ?? 0
         }
         setWalletData(walletDataRes);
-        if (type === 'deposit') {
-          toast.success(`Deposit Successful`);
-        } else if (type === 'withdraw') {
-          toast.success(`Withdraw Successful`);
-        }
+        toast.success(`Deposit Successful`);
       }
     } catch (error) {
       console.error('Failed to update balance:', error);
@@ -167,7 +165,7 @@ const DepositModal = () => {
 
   useEffect(() => {
     if (isOpen) {
-      updateBalance('get');
+      // updateBalance('get');
     }
   }, [isOpen]);
 
