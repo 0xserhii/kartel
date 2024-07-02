@@ -8,16 +8,16 @@ import BaseService from "@/utils/base/service";
 import { Auth } from "@/utils/db";
 import createToken from "@/utils/jwt/create-token";
 
-import { IAuth, IGenerateParams, IUpdateOrCreate } from "./auth.types";
+import { IAuthModel, IGenerateParams, IUpdateOrCreate } from "./auth.types";
 
-export default class AuthService extends BaseService<IAuth> {
+export default class AuthService extends BaseService<IAuthModel> {
   constructor() {
     super(Auth);
   }
 
   updateOrCreate = async (params: IUpdateOrCreate, refreshToken: string) => {
     const isAuthExist = await this.exists(params);
-    let doc: IAuth;
+    let doc: IAuthModel;
 
     if (!isAuthExist) {
       doc = await this.create({ ...params, refreshToken });

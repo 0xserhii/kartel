@@ -2,6 +2,7 @@ import {
   FilterQuery,
   Model,
   ObjectId,
+  PipelineStage,
   QueryOptions,
   UpdateQuery,
 } from "mongoose";
@@ -79,6 +80,11 @@ export default class BaseService<ISchema> {
 
   async getCount(search?: FilterQuery<ISchema>): Promise<number> {
     return this.database.countDocuments(search);
+  }
+
+  async aggregateByPipeline(query: PipelineStage[]): Promise<Array<any>> {
+    const result = await this.database.aggregate(query);
+    return result;
   }
 
   async update(

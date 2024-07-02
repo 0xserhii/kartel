@@ -1,10 +1,10 @@
 // Import Dependencies
-import mongoose, { Document, model } from 'mongoose';
-import { IUserBotModel } from './user-bot.interface';
+import mongoose, { Document, model } from "mongoose";
+import { IUserBotModel } from "./user-bot.interface";
 const { Schema, Types } = mongoose;
 
 // Setup User Schema
-const UserBotSchema = new Schema({
+const UserBotSchema = new Schema<IUserBotModel>({
   // Authentication related fields
   provider: { type: String },
   providerId: { type: String },
@@ -66,7 +66,7 @@ const UserBotSchema = new Schema({
   // Unix ms timestamp when the ban will end, 0 = no ban
   banExpires: {
     type: String,
-    default: '0',
+    default: "0",
   },
 
   // Unix ms timestamps when the self-exclude will end, 0 = no ban
@@ -84,7 +84,7 @@ const UserBotSchema = new Schema({
   // Unix ms timestamp when the mute will end, 0 = no mute
   muteExpires: {
     type: String,
-    default: '0',
+    default: "0",
   },
 
   // If user has restricted transactions
@@ -102,7 +102,7 @@ const UserBotSchema = new Schema({
   // UserID of the user who affiliated
   _affiliatedBy: {
     type: Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     default: null,
   },
 
@@ -186,7 +186,6 @@ const UserBotSchema = new Schema({
   },
 });
 
-
 export interface UseroDocumentType extends Document, IUserBotModel { }
 
-export default model<IUserBotModel>('UserBot', UserBotSchema);
+export default model<IUserBotModel>("UserBot", UserBotSchema);

@@ -1,7 +1,6 @@
-import { ObjectId, Types } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 
-export interface IMinesGameDocument extends Document {
-  _id: Types.ObjectId;
+export interface IMinesGameModel extends Document {
   betAmount: number;
   denom: string;
   betMinesCount: number;

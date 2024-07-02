@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-export interface IRaceGame extends Document {
+export interface IRaceGameModel extends Document {
   active: boolean;
   prize: number;
   endingDate: Date;

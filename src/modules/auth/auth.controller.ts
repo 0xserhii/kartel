@@ -3,14 +3,13 @@ import jwt, { UserJwtPayload } from "jsonwebtoken";
 
 import { REFRESH_TOKEN_SECRET } from "@/config";
 import UserService from "@/modules/user/user.service";
-import { IUserDocumentModel } from "@/modules/user/user.interface";
+import { IUserModel } from "@/modules/user/user.interface";
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { PLATFORM } from "./auth.constant";
 import AuthService from "./auth.service";
-import { IAuth } from "./auth.types";
+import { IAuthModel } from "./auth.types";
 import { ROLE } from "../user/user.constant";
 
 export default class AuthController {
@@ -31,7 +30,7 @@ export default class AuthController {
 
   // email signUp
   signUp = async (
-    data: Partial<IUserDocumentModel> & { email: string }
+    data: Partial<IUserModel> & { email: string }
   ) => {
     try {
       const user = await this.userService.getItem({ userEmail: data.email.toLowerCase() });
@@ -39,7 +38,7 @@ export default class AuthController {
         throw new CustomError(409, this.localizations.ERRORS.USER.USER_ALREADY_EXIST);
       }
 
-      let newUser: Partial<IUserDocumentModel>;
+      let newUser: Partial<IUserModel>;
 
       try {
         data.userEmail = data.email.toLowerCase();
@@ -76,7 +75,7 @@ export default class AuthController {
       await this.service.updateOrInsert({ userId: newUser._id }, {
         userId: newUser._id,
         refreshToken: authParams.refreshToken,
-      } as IAuth);
+      } as IAuthModel);
 
       // @ts-ignore
       delete newUser.password;
@@ -173,7 +172,7 @@ export default class AuthController {
       platform: platform,
       userId: user._id,
       refreshToken: authParams.refreshToken,
-    } as IAuth);
+    } as IAuthModel);
 
     return {
       status: 201,
@@ -198,7 +197,7 @@ export default class AuthController {
     return { message: "Success" };
   };
 
-  setAuth = async (user: IUserDocumentModel) => {
+  setAuth = async (user: IUserModel) => {
     const auth = this.service.generate({
       userId: user._id,
       role: user.role,

@@ -1,5 +1,5 @@
 import { IVIPLevelType } from '../user/user.types';
-import { ICoinflipGameDocument } from './coinflip-game.interface';
+import { ICoinflipGameModel } from './coinflip-game.interface';
 
 export interface ICoinPlayer {
   _id: string;
@@ -10,7 +10,7 @@ export interface ICoinPlayer {
   isBot?: boolean;
 }
 
-export interface IParsedGame extends ICoinflipGameDocument {
+export interface IParsedGame extends ICoinflipGameModel {
   ownPrivateGame: boolean;
   inviteLink: string;
 }

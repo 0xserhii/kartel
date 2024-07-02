@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 // Declare RaceEntry interface
-export interface IRaceEntry extends Document {
+export interface IRaceEntryModel extends Document {
     value: number;
     _user: mongoose.Types.ObjectId;
     user_level: string;

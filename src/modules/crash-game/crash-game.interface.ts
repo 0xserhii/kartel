@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
+import { Document } from "mongoose";
 
-export interface ICrashGameDocument extends Document {
-  _id: mongoose.Types.ObjectId;
+export interface ICrashGameModel extends Document {
   crashPoint?: number; // Optional as per schema
   players: Record<string, any>; // Required as per schema
   refundedPlayers?: any[]; // Optional as per schema
@@ -17,7 +16,39 @@ export type TAutoCrashBetPayload = {
   betAmount: number;
   cashoutPoint: number;
   count: number;
-  denom: string
+  denom: string;
+};
+export interface VIPLevelType {
+  name: string;
+  wagerNeeded?: number;
+  rakebackPercentage?: number;
+  levelName?: string;
+  levelColor?: string;
 }
 
-export type TJoinGamePayload = { target: number; betAmount: number; denom: string }
+export interface BetType {
+  playerID: string;
+  username: string;
+  avatar?: string;
+  betAmount: number;
+  denom: string;
+  status: number;
+  level: VIPLevelType;
+  stoppedAt?: number;
+  autoCashOut: number;
+  winningAmount?: number;
+  forcedCashout?: boolean;
+  createdAt?: Date;
+}
+
+export interface IUpdateParams {
+  $set: {
+    [key: string]: BetType;
+  };
+}
+
+export type TJoinGamePayload = {
+  target: number;
+  betAmount: number;
+  denom: string;
+};

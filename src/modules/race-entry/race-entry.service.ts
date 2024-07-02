@@ -3,9 +3,9 @@ import BaseService from "@/utils/base/service";
 import { RaceEntry } from "@/utils/db";
 
 // need add types
-import { IRaceEntry } from "./race-entry.interface";
+import { IRaceEntryModel } from "./race-entry.interface";
 
-export class RaceEntryService extends BaseService<IRaceEntry> {
+export class RaceEntryService extends BaseService<IRaceEntryModel> {
   constructor() {
     super(RaceEntry);
   }

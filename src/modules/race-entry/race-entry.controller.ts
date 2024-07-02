@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { RaceEntryService, IRaceEntry } from ".";
+import { RaceEntryService, IRaceEntryModel } from ".";
 
 export class RaceEntryController {
   // Services
@@ -20,7 +20,7 @@ export class RaceEntryController {
   }
 
   public getAll = async () => {
-    const raceEntryFilter = <FilterQuery<IRaceEntry>>{};
+    const raceEntryFilter = <FilterQuery<IRaceEntryModel>>{};
     const [item, count] = await Promise.all([
       this.raceEntryService.get(raceEntryFilter),
       this.raceEntryService.getCount(raceEntryFilter),

@@ -1,11 +1,11 @@
-import { ObjectId, Types } from "mongoose";
+import { ObjectId, Document } from "mongoose";
 
-export interface ICoinflipGameDocument extends Document {
-  _id: Types.ObjectId;
+export interface ICoinflipGameModel extends Document {
   betAmount: number;
   denom: string;
   betCoinsCount: number;
   betSide: boolean;
+  isBotCalled: boolean;
   betSideCount: number;
   privateSeed?: string;
   privateHash: string;

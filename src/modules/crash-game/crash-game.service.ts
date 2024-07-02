@@ -1,10 +1,10 @@
 // need add model to mongo index file
 import BaseService from "@/utils/base/service";
 import { CrashGame } from "@/utils/db";
-import { ICrashGameDocument } from "./crash-game.interface";
+import { ICrashGameModel } from "./crash-game.interface";
 import { CGAME_STATES } from "./crash-game.constant";
 
-export class CrashGameService extends BaseService<ICrashGameDocument> {
+export class CrashGameService extends BaseService<ICrashGameModel> {
   constructor() {
     super(CrashGame);
   }

@@ -8,7 +8,7 @@ import ILocalization from "@/utils/localizations/localizations.interface";
 
 import { ROLE, STATUS } from "./user.constant";
 import UserService from "./user.service";
-import { IUserDocumentModel } from "./user.interface";
+import { IUserModel } from "./user.interface";
 
 export default class UserController {
   private userService: UserService;
@@ -20,14 +20,14 @@ export default class UserController {
     this.localizations = localizations["en"];
   }
 
-  editUserForAdmin = async (id: string, user: IUserDocumentModel) => {
+  editUserForAdmin = async (id: string, user: IUserModel) => {
     const updatedUser = await this.userService.updateById(id, user, {
       password: 0,
     });
     return { status: 200, payload: updatedUser };
   };
 
-  editUser = async (user: IUserDocumentModel, { userId }: IAuthInfo) => {
+  editUser = async (user: IUserModel, { userId }: IAuthInfo) => {
     let updatedUser;
 
     try {
@@ -62,7 +62,7 @@ export default class UserController {
       { value: offset, default: 0 },
       { value: limit, default: 10 }
     );
-    const filter: FilterQuery<IUserDocumentModel> = {};
+    const filter: FilterQuery<IUserModel> = {};
 
     if (text) {
       const regexp = new RegExp(text.split(/ +/).join("| ?"), "i");
@@ -94,7 +94,7 @@ export default class UserController {
 
   getUserById = async (id: string, { userId, role }: IAuthInfo, _UTC) => {
     if (
-      role.filter((item) => item === ROLE.ADMIN).length === 0 &&
+      role === ROLE.ADMIN &&
       id !== userId.toString()
     ) {
       throw new CustomError(403, this.localizations.ERRORS.OTHER.FORBIDDEN);

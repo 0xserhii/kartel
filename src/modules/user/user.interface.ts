@@ -1,15 +1,14 @@
-import mongoose, { ObjectId } from "mongoose";
-import { ROLE, STATUS } from "./user.constant";
+import mongoose, { Document } from "mongoose";
 
 interface LeaderboardEntry {
   betAmount: number;
   winAmount: number;
 }
 
-export interface IUserDocumentModel extends Document {
-  _id: ObjectId;
+export interface IUserModel extends Document {
   provider: string;
-  role: ROLE;
+  role: string;
+  status: string;
   providerId: string;
   username: string;
   userEmail: string;
@@ -29,7 +28,6 @@ export interface IUserDocumentModel extends Document {
     coinflip: number;
     mines: number;
   };
-  status: STATUS;
   muteExpires: string;
   transactionsLocked: boolean;
   betsLocked: boolean;
@@ -57,4 +55,3 @@ export const getId = (req) => {
 
   return req.params.id;
 };
-

@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 import { WalletTransactionService } from "./wallet-transaction.service";
-import { IWalletTransactionDocumentModel } from "./wallet-transaction.interface";
+import { IWalletTransactionModel } from "./wallet-transaction.interface";
 
 
 export class WalletTransactionController {
@@ -21,7 +21,7 @@ export class WalletTransactionController {
   }
 
   public getAll = async () => {
-    const walletTransactionFilter = <FilterQuery<IWalletTransactionDocumentModel>>{};
+    const walletTransactionFilter = <FilterQuery<IWalletTransactionModel>>{};
     const [item, count] = await Promise.all([
       this.walletTransactionService.get(walletTransactionFilter),
       this.walletTransactionService.getCount(walletTransactionFilter),

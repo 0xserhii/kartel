@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { RaceGameService, IRaceGame } from ".";
+import { RaceGameService, IRaceGameModel } from ".";
 
 export class RaceGameController {
   // Services
@@ -20,7 +20,7 @@ export class RaceGameController {
   }
 
   public getAll = async () => {
-    const raceGameFilter = <FilterQuery<IRaceGame>>{};
+    const raceGameFilter = <FilterQuery<IRaceGameModel>>{};
     const [item, count] = await Promise.all([
       this.raceGameService.get(raceGameFilter),
       this.raceGameService.getCount(raceGameFilter),

@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { CrashGameService, ICrashGameDocument } from ".";
+import { CrashGameService, ICrashGameModel } from ".";
 
 export class CrashGameController {
   // Services
@@ -20,7 +20,7 @@ export class CrashGameController {
   }
 
   public getAll = async () => {
-    const crashGameFilter = <FilterQuery<ICrashGameDocument>>{};
+    const crashGameFilter = <FilterQuery<ICrashGameModel>>{};
     const [item, count] = await Promise.all([
       this.crashGameService.get(crashGameFilter),
       this.crashGameService.getCount(crashGameFilter),

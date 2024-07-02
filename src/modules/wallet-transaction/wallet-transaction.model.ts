@@ -1,6 +1,6 @@
 // Import Dependencies
-import mongoose, { model } from 'mongoose';
-import { IWalletTransactionDocumentModel } from './wallet-transaction.interface';
+import mongoose, { model } from "mongoose";
+import { IWalletTransactionModel } from "./wallet-transaction.interface";
 const { Schema, SchemaTypes } = mongoose;
 
 // Setup WalletTransaction Schema
@@ -18,42 +18,42 @@ const WalletTransactionSchema = new Schema({
   extraData: {
     coinflipGameId: {
       type: SchemaTypes.ObjectId,
-      ref: 'CoinflipGame',
+      ref: "CoinflipGame",
     },
     crashGameId: {
       type: SchemaTypes.ObjectId,
-      ref: 'CrashGame',
+      ref: "CrashGame",
     },
     transactionId: {
       type: SchemaTypes.ObjectId,
-      ref: 'CryptoTransaction',
+      ref: "CryptoTransaction",
     },
     couponId: {
       type: SchemaTypes.ObjectId,
-      ref: 'CouponCode',
+      ref: "CouponCode",
     },
     affiliatorId: {
       type: SchemaTypes.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     modifierId: {
       type: SchemaTypes.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
     raceId: {
       type: SchemaTypes.ObjectId,
-      ref: 'Race',
+      ref: "Race",
     },
     triviaGameId: {
       type: SchemaTypes.ObjectId,
-      ref: 'Trivia',
+      ref: "Trivia",
     },
   },
 
   // What user does this belong to
   _user: {
     type: SchemaTypes.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 
   // When document was inserted
@@ -63,4 +63,7 @@ const WalletTransactionSchema = new Schema({
   },
 });
 
-export default model<IWalletTransactionDocumentModel>('WalletTransaction', WalletTransactionSchema);
+export default model<IWalletTransactionModel>(
+  "WalletTransaction",
+  WalletTransactionSchema
+);
