@@ -3,7 +3,6 @@ import { Router } from "express";
 import actionHandler from "@/middleware/action-handler";
 import checkPermissions from "@/middleware/check-permissions";
 import validateSchema from "@/middleware/validate-schema";
-import { ROLE } from "@/modules/user/user.constant";
 import * as mapProperty from "@/utils/interfaces";
 
 import AuthController from "./auth.controller";
@@ -23,19 +22,14 @@ export default class AuthRouter {
     this.router.post(
       "/sign-up",
       validateSchema(validate.signUp, mapProperty.getBody),
-      actionHandler(this.authController.signUp, [
-        mapProperty.getBody,
-      ])
+      actionHandler(this.authController.signUp, [mapProperty.getBody])
     );
 
     this.router.post(
       "/sign-in",
       validateSchema(validate.signIn, mapProperty.getBody),
-      actionHandler(
-        this.authController.signIn,
-        [mapProperty.getBody],
-      )
-    )
+      actionHandler(this.authController.signIn, [mapProperty.getBody])
+    );
 
     this.router.post(
       "/update-token",

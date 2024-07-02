@@ -1,5 +1,6 @@
 // Require Dependencies
 import mongoose, { model } from "mongoose";
+
 import { IRaceEntryModel } from "./race-entry.interface";
 const SchemaTypes = mongoose.Schema.Types;
 

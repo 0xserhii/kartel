@@ -3,9 +3,9 @@ import { FilterQuery } from "mongoose";
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
-import { WalletTransactionService } from "./wallet-transaction.service";
-import { IWalletTransactionModel } from "./wallet-transaction.interface";
 
+import { IWalletTransactionModel } from "./wallet-transaction.interface";
+import { WalletTransactionService } from "./wallet-transaction.service";
 
 export class WalletTransactionController {
   // Services
@@ -34,7 +34,9 @@ export class WalletTransactionController {
   };
 
   public getByName = async (name) => {
-    const walletTransaction = await this.walletTransactionService.getItem({ name });
+    const walletTransaction = await this.walletTransactionService.getItem({
+      name,
+    });
 
     // need add to localizations
     if (!walletTransaction) {
@@ -45,7 +47,8 @@ export class WalletTransactionController {
   };
 
   public getById = async (walletTransactionId) => {
-    const walletTransaction = await this.walletTransactionService.getItemById(walletTransactionId);
+    const walletTransaction =
+      await this.walletTransactionService.getItemById(walletTransactionId);
 
     // need add to localizations
     if (!walletTransaction) {
@@ -69,7 +72,10 @@ export class WalletTransactionController {
 
   public update = async ({ id }, walletTransactionData) => {
     try {
-      const walletTransaction = await this.walletTransactionService.updateById(id, walletTransactionData);
+      const walletTransaction = await this.walletTransactionService.updateById(
+        id,
+        walletTransactionData
+      );
 
       // need add to localizations
       if (!walletTransaction) {
@@ -89,7 +95,8 @@ export class WalletTransactionController {
   };
 
   public delete = async ({ id }) => {
-    const walletTransaction = await this.walletTransactionService.deleteById(id);
+    const walletTransaction =
+      await this.walletTransactionService.deleteById(id);
 
     // need add to localizations
     if (!walletTransaction) {

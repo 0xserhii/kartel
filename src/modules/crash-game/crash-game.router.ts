@@ -4,9 +4,7 @@ import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
 
-import {
-  CrashGameController,
-} from ".";
+import { CrashGameController } from ".";
 
 export default class CrashGameRouter extends BaseRouter {
   private crashGameController: CrashGameController;
@@ -42,7 +40,7 @@ export default class CrashGameRouter extends BaseRouter {
 
     this.router.get(
       "/:id",
-      checkPermissions(),
+      checkPermissions()
       // validateSchema(
       //   validations.byId,
       //   mapPropertyExample.getIdFromParamsWithMe
@@ -56,7 +54,7 @@ export default class CrashGameRouter extends BaseRouter {
 
     this.router.put(
       "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
+      checkPermissions({ roles: [ROLE.ADMIN] })
       // validateSchema(UpdateExampleSchema, mapProperty.getBody),
       // actionHandler(this.exampleController.update, [
       //   mapProperty.getNameFromParam,
@@ -67,7 +65,10 @@ export default class CrashGameRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.crashGameController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.crashGameController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

@@ -14,19 +14,13 @@
     // "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
+      "@/*": ["src/*"],
     },
     "outDir": "./dist",
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "checkJs": false,
   },
-  "include": [
-    "src/"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["src/"],
+  "exclude": ["node_modules"],
 }

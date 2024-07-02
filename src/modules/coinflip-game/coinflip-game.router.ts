@@ -4,9 +4,7 @@ import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
 
-import {
-  CoinflipGameController,
-} from ".";
+import { CoinflipGameController } from ".";
 
 export default class CoinflipGameRouter extends BaseRouter {
   private coinflipGameController: CoinflipGameController;
@@ -50,7 +48,7 @@ export default class CoinflipGameRouter extends BaseRouter {
       // ),
       // validateSchema(CreateExampleSchema, mapProperty.getBody),
       actionHandler(
-        this.coinflipGameController.getById,
+        this.coinflipGameController.getById
         // mapPropertyExample.getIdFromParamsWithMe
       )
     );
@@ -68,7 +66,10 @@ export default class CoinflipGameRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.coinflipGameController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.coinflipGameController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

@@ -8,9 +8,6 @@ import * as mapProperty from "@/utils/interfaces";
 import * as validations from "@/utils/validations";
 
 import { ROLE } from "./user-bot.constant";
-import UserController from "./user-bot.controller";
-import * as mapPropertyUser from "./user-bot.interface";
-import * as validateUser from "./user-bot.validate";
 import UserBotController from "./user-bot.controller";
 
 export default class UserBotRouter extends BaseRouter {

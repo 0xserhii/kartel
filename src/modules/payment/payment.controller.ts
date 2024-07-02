@@ -1,13 +1,13 @@
-import { IPaymentModel } from '.';
 import { FilterQuery } from "mongoose";
 
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
-import { PaymentService } from "./payment.service";
-import { IAuthInfo } from '../auth/auth.types';
-import UserService from '../user/user.service';
 
+import { IAuthInfo } from "../auth/auth.types";
+import UserService from "../user/user.service";
+import { IPaymentModel } from ".";
+import { PaymentService } from "./payment.service";
 
 export class PaymentController {
   // Services
@@ -103,7 +103,10 @@ export class PaymentController {
     return payment;
   };
 
-  public userBalanceWithdraw = async ({ amount, currency, address }, { userId }: IAuthInfo) => {
+  public userBalanceWithdraw = async (
+    { amount, currency, address },
+    { userId }: IAuthInfo
+  ) => {
     const user = await this.userService.getItemById(userId);
     return {
       balance: user.wallet,

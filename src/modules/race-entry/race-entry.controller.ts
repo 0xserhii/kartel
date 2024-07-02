@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { RaceEntryService, IRaceEntryModel } from ".";
+import { IRaceEntryModel, RaceEntryService } from ".";
 
 export class RaceEntryController {
   // Services
@@ -68,7 +68,10 @@ export class RaceEntryController {
 
   public update = async ({ id }, raceEntryData) => {
     try {
-      const raceEntry = await this.raceEntryService.updateById(id, raceEntryData);
+      const raceEntry = await this.raceEntryService.updateById(
+        id,
+        raceEntryData
+      );
 
       // need add to localizations
       if (!raceEntry) {

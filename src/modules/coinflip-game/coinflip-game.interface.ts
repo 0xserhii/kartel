@@ -1,4 +1,4 @@
-import { ObjectId, Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 
 export interface ICoinflipGameModel extends Document {
   betAmount: number;

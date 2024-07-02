@@ -4,7 +4,6 @@ import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-import * as validations from "@/utils/validations";
 
 import {
   CreateMinesGameSchema,
@@ -52,7 +51,7 @@ export default class MinesGameRouter extends BaseRouter {
       //   validations.byId,
       //   mapPropertyExample.getIdFromParamsWithMe
       // ),
-      validateSchema(CreateMinesGameSchema, mapProperty.getBody),
+      validateSchema(CreateMinesGameSchema, mapProperty.getBody)
       // actionHandler(
       //   this.minesGameController.getById,
       //   mapPropertyExample.getIdFromParamsWithMe
@@ -72,7 +71,10 @@ export default class MinesGameRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.minesGameController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.minesGameController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

@@ -1,5 +1,6 @@
 // Import Dependencies
 import mongoose, { Document, model } from "mongoose";
+
 import { IUserBotModel } from "./user-bot.interface";
 const { Schema, Types } = mongoose;
 
@@ -186,6 +187,6 @@ const UserBotSchema = new Schema<IUserBotModel>({
   },
 });
 
-export interface UseroDocumentType extends Document, IUserBotModel { }
+export interface UseroDocumentType extends Document, IUserBotModel {}
 
 export default model<IUserBotModel>("UserBot", UserBotSchema);

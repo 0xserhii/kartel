@@ -9,5 +9,5 @@ export interface IExampleObject {
 
 export interface IExample
   extends IExampleObject,
-  Document,
-  SchemaTimestampsConfig { }
+    Document,
+    SchemaTimestampsConfig {}

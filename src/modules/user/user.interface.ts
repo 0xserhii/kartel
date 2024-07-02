@@ -47,7 +47,6 @@ export interface IUserModel extends Document {
   createdAt: Date;
 }
 
-
 export const getId = (req) => {
   if (req.params.id === "me") {
     return req?.user?.userId || "000000000000000000000000";

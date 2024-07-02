@@ -5,8 +5,8 @@ export enum EXAMPLE_ENUM {
 
 export enum EChatHistoryEvents {
   auth = "auth",
-  getChatHistory = 'get-chat-history',
-  sendMessage = 'message',
-  notifyError = 'notify-error',
+  getChatHistory = "get-chat-history",
+  sendMessage = "message",
+  notifyError = "notify-error",
   disconnect = "disconnect",
-};
+}

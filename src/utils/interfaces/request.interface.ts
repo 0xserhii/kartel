@@ -20,7 +20,7 @@ export const isMobile = (req: Request) => {
 };
 
 export const getBody = (req: Request) => {
-  return req.body
+  return req.body;
 };
 
 interface RequestWithuser extends Request {

@@ -44,7 +44,8 @@ export class CoinflipGameController {
   };
 
   public getById = async (coinflipGameId) => {
-    const coinflipGame = await this.coinflipGameService.getItemById(coinflipGameId);
+    const coinflipGame =
+      await this.coinflipGameService.getItemById(coinflipGameId);
 
     // need add to localizations
     if (!coinflipGame) {
@@ -68,7 +69,10 @@ export class CoinflipGameController {
 
   public update = async ({ id }, coinflipGameData) => {
     try {
-      const coinflipGame = await this.coinflipGameService.updateById(id, coinflipGameData);
+      const coinflipGame = await this.coinflipGameService.updateById(
+        id,
+        coinflipGameData
+      );
 
       // need add to localizations
       if (!coinflipGame) {

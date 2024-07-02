@@ -38,8 +38,9 @@ export default function checkPermissions({
         : null;
 
       // Set user role as member by default
-      user.role = ROLE.MEMBER
+      user.role = ROLE.MEMBER;
       console.log(user.role, user.status);
+
       if (user?.role) {
         if (roles.includes(user.role as ROLE)) {
           return next();

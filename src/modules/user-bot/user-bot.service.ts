@@ -5,9 +5,8 @@ import BaseService from "@/utils/base/service";
 import { UserBot } from "@/utils/db";
 import { validateFunc } from "@/utils/validations";
 
-import { IUser } from "./user-bot.types";
-import * as validateUser from "./user-bot.validate";
 import { IUserBotModel } from "./user-bot.interface";
+import * as validateUser from "./user-bot.validate";
 
 export default class UserBotService extends BaseService<IUserBotModel> {
   constructor() {

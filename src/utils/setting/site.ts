@@ -23,48 +23,54 @@ const getCrashState = () => CRASH_ENABLED;
 
 // Create reducers
 const toggleMaintenance = () => {
-    MAINTENANCE_ENABLED = !MAINTENANCE_ENABLED;
-    return true;
+  MAINTENANCE_ENABLED = !MAINTENANCE_ENABLED;
+  return true;
 };
+
 const toggleLogin = () => {
-    LOGIN_ENABLED = !LOGIN_ENABLED;
-    return true;
+  LOGIN_ENABLED = !LOGIN_ENABLED;
+  return true;
 };
+
 const toggleDeposits = () => {
-    DEPOSITS_ENABLED = !DEPOSITS_ENABLED;
-    return true;
+  DEPOSITS_ENABLED = !DEPOSITS_ENABLED;
+  return true;
 };
+
 const toggleWithdraws = () => {
-    WITHDRAWS_ENABLED = !WITHDRAWS_ENABLED;
-    return true;
+  WITHDRAWS_ENABLED = !WITHDRAWS_ENABLED;
+  return true;
 };
+
 const toggleCoinflip = () => {
-    COINFLIP_ENABLED = !COINFLIP_ENABLED;
-    return true;
+  COINFLIP_ENABLED = !COINFLIP_ENABLED;
+  return true;
 };
+
 const toggleCrash = () => {
-    CRASH_ENABLED = !CRASH_ENABLED;
-    return true;
+  CRASH_ENABLED = !CRASH_ENABLED;
+  return true;
 };
+
 const toggleMines = () => {
-    MINES_ENABLED = !MINES_ENABLED;
-    return true;
+  MINES_ENABLED = !MINES_ENABLED;
+  return true;
 };
 
 // Export functions
 export {
-    getCoinflipState,
-    getCrashState,
-    getDepositState,
-    getLoginState,
-    getMaintenanceState,
-    getMinesState,
-    getWithdrawState,
-    toggleCoinflip,
-    toggleCrash,
-    toggleDeposits,
-    toggleLogin,
-    toggleMaintenance,
-    toggleMines,
-    toggleWithdraws,
+  getCoinflipState,
+  getCrashState,
+  getDepositState,
+  getLoginState,
+  getMaintenanceState,
+  getMinesState,
+  getWithdrawState,
+  toggleCoinflip,
+  toggleCrash,
+  toggleDeposits,
+  toggleLogin,
+  toggleMaintenance,
+  toggleMines,
+  toggleWithdraws,
 };

@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { RevenueLogService, IRevenueLogModel } from ".";
+import { IRevenueLogModel, RevenueLogService } from ".";
 
 export class RevenueLogController {
   // Services
@@ -68,7 +68,10 @@ export class RevenueLogController {
 
   public update = async ({ id }, revenueLogData) => {
     try {
-      const revenueLog = await this.revenueLogService.updateById(id, revenueLogData);
+      const revenueLog = await this.revenueLogService.updateById(
+        id,
+        revenueLogData
+      );
 
       // need add to localizations
       if (!revenueLog) {

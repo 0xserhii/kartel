@@ -1,5 +1,6 @@
 // Require Dependencies
-import mongoose, { SchemaTypes, model } from "mongoose";
+import mongoose, { model, SchemaTypes } from "mongoose";
+
 import { IAutoCrashBetModel } from "./auto-crash-bet.interface";
 
 // Setup autobet CrashGame Schema

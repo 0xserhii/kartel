@@ -5,6 +5,6 @@ export enum EXAMPLE_ENUM {
 
 export enum ELeaderboardEvents {
   leaderboardHistoryFetch = "leaderboard-fetch-all",
-  notifyError = 'notify-error',
+  notifyError = "notify-error",
   disconnect = "disconnect",
-};
+}
