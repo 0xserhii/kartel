@@ -14,7 +14,7 @@ export default async (
   if (req.token) {
     req.user = {
       userId: req.token.userId as ObjectId,
-      role: req.token.role as ROLE[],
+      role: req.token.role as ROLE,
       status: req.token.status as STATUS,
       deviceId: req.token.deviceId as string,
       platform: req.token.platform as PLATFORM,

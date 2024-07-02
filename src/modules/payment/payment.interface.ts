@@ -1,3 +1,4 @@
+import Joi from "joi";
 import { ObjectId } from "mongoose";
 
 export interface IPaymentDocumentType extends Document {

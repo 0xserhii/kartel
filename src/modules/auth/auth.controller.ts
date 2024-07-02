@@ -50,13 +50,13 @@ export default class AuthController {
         if (data.password) {
           data.password = await bcrypt.hash(data.password, 10);
         }
-
-        data.role = [ROLE.MEMBER]
+        data.role = ROLE.MEMBER
         newUser = await this.userService.updateOrInsert(
           { userEmail: data.userEmail },
           data
         );
       } catch (error) {
+        console.log(error);
         if (error.code == 11000) {
           throw new CustomError(
             409,

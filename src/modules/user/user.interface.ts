@@ -9,7 +9,7 @@ interface LeaderboardEntry {
 export interface IUserDocumentModel extends Document {
   _id: ObjectId;
   provider: string;
-  role: ROLE[];
+  role: ROLE;
   providerId: string;
   username: string;
   userEmail: string;

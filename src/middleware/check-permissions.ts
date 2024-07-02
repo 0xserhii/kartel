@@ -38,37 +38,31 @@ export default function checkPermissions({
         : null;
 
       // Set user role as member by default
-      user.role = [ROLE.MEMBER]
-      if (user?.role && user.role) {
-        if (
-          roles.filter((item) => user.role.includes(item)).length > 0
-        ) {
-          if (
-            user.role.filter((item) => user.role.includes(item)).length ===
-            0
-          ) {
-            return res.status(401).json({
-              error: localizations.ERRORS.AUTH.USE_NEW_TOKEN,
-              oldUser: req.user,
-              newUser: {
-                userId: user._id,
-                role: user.role,
-                status: user.status,
-              },
-            });
-          }
-
+      user.role = ROLE.MEMBER
+      console.log(user.role, user.status);
+      if (user?.role) {
+        if (roles.includes(user.role)) {
           return next();
+        } else {
+          return res.status(401).json({
+            error: localizations.ERRORS.AUTH.USE_NEW_TOKEN,
+            oldUser: req.user,
+            newUser: {
+              userId: user._id,
+              role: user.role,
+              status: user.status,
+            },
+          });
         }
+      } else {
+        return res.status(403).json({
+          error: localizations.ERRORS.OTHER.FORBIDDEN,
+          oldUser: req.user,
+          newUser: user
+            ? { userId: user._id, role: user.role, status: user.status }
+            : null,
+        });
       }
-
-      return res.status(403).json({
-        error: localizations.ERRORS.OTHER.FORBIDDEN,
-        oldUser: req.user,
-        newUser: user
-          ? { userId: user._id, role: user.role, status: user.status }
-          : null,
-      });
     } catch (error) {
       res.status(error.status || 400).json({ error: error.message });
     }

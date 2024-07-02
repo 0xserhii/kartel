@@ -4,7 +4,7 @@ import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-import * as validations from "@/utils/validations";
+import * as validatePayment from "./payment.validate";
 
 import {
   PaymentController,
@@ -43,18 +43,22 @@ export default class PaymentRouter extends BaseRouter {
       )
     );
 
-    this.router.get(
-      "/:id",
+    this.router.post(
+      "/withdraw",
       checkPermissions(),
-      // validateSchema(
-      //   validations.byId,
-      //   mapProperty.getIdFromParamsWithMe
-      // ),
-      // validateSchema(CreatePaymentSchema, mapProperty.getBody),
-      // actionHandler(
-      //   this.exampleController.getById,
-      //   mapPropertyExample.getIdFromParamsWithMe
-      // )
+      // validateSchema(validatePayment.withDraw, mapProperty.getBody),
+      // actionHandler(this.paymentController.userBalanceWithdraw, [
+      //   mapProperty.getBody,
+      //   mapProperty.getUserInfo,
+      // ])
+    );
+
+    this.router.post(
+      "/deposit",
+      checkPermissions(),
+      // actionHandler(this.userController.userBalanceDeposit, [
+      //   mapProperty.getUserInfo,
+      // ])
     );
 
     this.router.put(
