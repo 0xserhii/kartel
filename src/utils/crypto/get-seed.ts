@@ -18,7 +18,7 @@ const getPublicSeed = async (): Promise<string> => {
     const block = await rpc.get_block(blockNumber || 1);
     return block.id;
   } catch (error) {
-    logger.error("[SEED]::: Error get public seed", error);
+    logger.error("[SEED]::: Error get public seed" + error);
   }
 };
 
@@ -29,7 +29,7 @@ const getCrypto = async (crypto: string, mod: any): Promise<any> => {
     } as any);
     return res;
   } catch (error) {
-    logger.error("[SEED]::: Error get crypto", error);
+    logger.error("[SEED]::: Error get crypto" + error);
   }
 };
 

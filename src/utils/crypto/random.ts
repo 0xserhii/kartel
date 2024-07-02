@@ -28,7 +28,7 @@ const buildPrivateHash = async (seed: string): Promise<string> => {
     const hash = crypto.createHash("sha256").update(seed).digest("hex");
     return hash;
   } catch (error) {
-    logger.error("[RANDOM]::: Error building private hash", error);
+    logger.error("[RANDOM]::: Error building private hash" + error);
     return "";
   }
 };
@@ -43,7 +43,7 @@ const generatePrivateSeedHashPair = async (): Promise<{
     const hash = await buildPrivateHash(seed);
     return { seed, hash };
   } catch (error) {
-    logger.error("[RANDOM]::: Error generating private seed hash pair", error);
+    logger.error("[RANDOM]::: Error generating private seed hash pair" + error);
     return { seed: "", hash: "" };
   }
 };
@@ -93,7 +93,7 @@ const generateCoinflipRandom = async (
     // Resolve promise and return data
     return { publicSeed, module };
   } catch (error) {
-    logger.error("[RANDOM]::: Error generating coinflip random", error);
+    logger.error("[RANDOM]::: Error generating coinflip random" + error);
     return { publicSeed: "", module: 0 };
   }
 };
@@ -111,7 +111,7 @@ const generateCrashRandom = async (
     // Resolve promise and return data
     return { publicSeed, crashPoint };
   } catch (error) {
-    logger.error("[RANDOM]::: Error generating crash random", error);
+    logger.error("[RANDOM]::: Error generating crash random" + error);
   }
 };
 
@@ -168,7 +168,7 @@ const generateMinesRandom = async (
     // Resolve promise and return data
     return { publicSeed, mines: Array.from(mines) };
   } catch (error) {
-    logger.error("[RANDOM]::: Error generating mine random", error);
+    logger.error("[RANDOM]::: Error generating mine random" + error);
     return { publicSeed: "", mines: [] };
   }
 };

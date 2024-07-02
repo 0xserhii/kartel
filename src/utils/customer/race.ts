@@ -113,7 +113,7 @@ async function checkAndEnterRace(
       return;
     }
   } catch (error) {
-    logger.error("[RACE]::: Error entering race", error);
+    logger.error("[RACE]::: Error entering race" + error);
   }
 }
 
@@ -135,7 +135,7 @@ async function checkAndApplyRakeToRace(_rakeValue: number) {
       return;
     }
   } catch (error) {
-    logger.error("[RACE]::: Error applying rakeback", error);
+    logger.error("[RACE]::: Error applying rakeback" + error);
   }
 }
 

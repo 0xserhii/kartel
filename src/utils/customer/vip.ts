@@ -111,7 +111,7 @@ const checkAndApplyRakeback = async (
 
     // Resolve to continue successfully
   } catch (error) {
-    logger.error("[VIP]::: Error applying rakeback", error);
+    logger.error("[VIP]::: Error applying rakeback" + error);
   }
 };
 
