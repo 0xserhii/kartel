@@ -88,7 +88,7 @@ export default function Home() {
       <div className="flex flex-col items-stretch gap-8 p-12">
         <div className="flex flex-col items-stretch gap-6">
           <span className="text-xl font-semibold uppercase text-gray300">
-            casino
+            games
           </span>
           <div className="flex h-full w-full flex-row justify-between gap-8">
             {casinoGameSrc.map((item, index) => {
@@ -119,7 +119,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col gap-8">
             <span className="text-xl font-semibold uppercase text-gray300">
-              games
+              casino
             </span>
             <div className="flex h-full w-full flex-row justify-between gap-6">
               <div className="relative w-6/12">
