@@ -5,17 +5,21 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 import { PaymentService } from "./payment.service";
+import { IAuthInfo } from '../auth/auth.types';
+import UserService from '../user/user.service';
 
 
 export class PaymentController {
   // Services
   private paymentService: PaymentService;
+  private userService: UserService;
 
   // Diff services
   private localizations: ILocalization;
 
   constructor() {
     this.paymentService = new PaymentService();
+    this.userService = new UserService();
 
     this.localizations = localizations["en"];
   }
@@ -97,5 +101,19 @@ export class PaymentController {
     }
 
     return payment;
+  };
+
+  public userBalanceWithdraw = async ({ amount, currency, address }, { userId }: IAuthInfo) => {
+    const user = await this.userService.getItemById(userId);
+    return {
+      balance: user.wallet,
+    };
+  };
+
+  public userBalanceDeposit = async ({ userId }: IAuthInfo) => {
+    const user = await this.userService.getItemById(userId);
+    return {
+      balance: user.wallet,
+    };
   };
 }

@@ -132,20 +132,6 @@ export default class UserController {
     };
   };
 
-  userBalanceWithdraw = async ({ amount, currency, address }, { userId }: IAuthInfo) => {
-    const user = await this.userService.getItemById(userId);
-    return {
-      balance: user.wallet,
-    };
-  };
-
-  userBalanceDeposit = async ({ userId }: IAuthInfo) => {
-    const user = await this.userService.getItemById(userId);
-    return {
-      balance: user.wallet,
-    };
-  };
-
   private _diff<T1, T2, T>(a1: Array<T | T1>, a2: Array<T | T2>) {
     return (<Array<T1 | T2>>a1.filter((i) => !a2.includes(<T>i))).concat(
       <Array<T2>>a2.filter((i) => !a1.includes(<T>i))
