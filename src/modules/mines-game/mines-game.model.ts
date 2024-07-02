@@ -1,16 +1,17 @@
 // Require Dependencies
-import mongoose, { model } from 'mongoose';
-import { IMinesGameDocument } from './mines-game.interface';
+import mongoose, { model } from "mongoose";
+import { IMinesGameModel } from "./mines-game.interface";
+import { number } from "joi";
 
 const SchemaTypes = mongoose.SchemaTypes;
 
 // Setup MinesGame Schema
-const MinesGameSchema = new mongoose.Schema({
+const MinesGameSchema = new mongoose.Schema<IMinesGameModel>({
   // Basic fields
   betAmount: Number, // User bet amount
   denom: {
     type: String,
-    default: 'usk',
+    default: "usk",
   },
   betMinesCount: {
     // User bet number of mines
@@ -29,7 +30,7 @@ const MinesGameSchema = new mongoose.Schema({
   },
   probabilities: {
     // probabilities of every mining step
-    type: Array,
+    type: [Number],
     default: [],
   },
 
@@ -41,18 +42,18 @@ const MinesGameSchema = new mongoose.Schema({
     default: null,
   },
   mines: {
-    type: Array,
+    type: [Number],
     default: [],
   },
   results: {
-    type: Array,
+    type: [Number],
     default: [],
   },
 
   // UserID of who created this game
   user: {
     type: SchemaTypes.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 
   // Game status
@@ -75,4 +76,4 @@ const MinesGameSchema = new mongoose.Schema({
   },
 });
 
-export default model<IMinesGameDocument>('MinesGame', MinesGameSchema);
+export default model<IMinesGameModel>("MinesGame", MinesGameSchema);

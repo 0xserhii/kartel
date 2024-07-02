@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { ChatHistoryService, IChatHistoryDocument } from ".";
+import { ChatHistoryService, IChatHistoryModel } from ".";
 
 export class ChatHistoryController {
   // Services
@@ -20,7 +20,7 @@ export class ChatHistoryController {
   }
 
   public getAll = async () => {
-    const chatHistoryFilter = <FilterQuery<IChatHistoryDocument>>{};
+    const chatHistoryFilter = <FilterQuery<IChatHistoryModel>>{};
     const [item, count] = await Promise.all([
       this.chatHistoryService.get(chatHistoryFilter),
       this.chatHistoryService.getCount(chatHistoryFilter),

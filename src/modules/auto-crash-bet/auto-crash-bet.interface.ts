@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
-import { IUserDocumentModel } from "../user/user.interface";
+import mongoose, { Document } from "mongoose";
+import { IUserModel } from "../user/user.interface";
 
 export interface IAutoCrashBetModel extends Document {
   _id: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId | IUserDocumentModel;
+  user: mongoose.Types.ObjectId | IUserModel;
   betAmount: number;
   denom: string;
   cashoutPoint: number;

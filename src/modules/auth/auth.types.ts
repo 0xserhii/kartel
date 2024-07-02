@@ -7,7 +7,7 @@ import { PLATFORM } from "./auth.constant";
 export interface IAuthInfo {
   deviceId?: string;
   platform?: PLATFORM;
-  role: ROLE[];
+  role: ROLE;
   status: STATUS;
   userId: ObjectId;
 }
@@ -19,12 +19,12 @@ export interface IUpdateOrCreate {
 export interface IGenerateParams {
   deviceId?: string;
   platform?: PLATFORM;
-  role: ROLE[];
+  role: ROLE;
   status: STATUS;
   userId: ObjectId;
 }
 
-export interface IAuth extends Document {
+export interface IAuthModel extends Document {
   userId: ObjectId;
   deviceId: string;
   platform: PLATFORM;

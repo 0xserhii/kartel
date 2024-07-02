@@ -3,9 +3,9 @@ import BaseService from "@/utils/base/service";
 import { CoinflipGame } from "@/utils/db";
 
 // need add types
-import { ICoinflipGameDocument } from "./coinflip-game.interface";
+import { ICoinflipGameModel } from "./coinflip-game.interface";
 
-export class CoinflipGameService extends BaseService<ICoinflipGameDocument> {
+export class CoinflipGameService extends BaseService<ICoinflipGameModel> {
   constructor() {
     super(CoinflipGame);
   }

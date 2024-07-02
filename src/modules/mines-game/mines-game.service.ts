@@ -3,9 +3,9 @@ import BaseService from "@/utils/base/service";
 import { MinesGame } from "@/utils/db";
 
 // need add types
-import { IMinesGameDocument } from "./mines-game.interface";
+import { IMinesGameModel } from "./mines-game.interface";
 
-export class MinesGameService extends BaseService<IMinesGameDocument> {
+export class MinesGameService extends BaseService<IMinesGameModel> {
   constructor() {
     super(MinesGame);
   }

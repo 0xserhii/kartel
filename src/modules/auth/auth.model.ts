@@ -1,9 +1,9 @@
 import { model, Schema } from "mongoose";
 
 import * as AuthConstant from "./auth.constant";
-import { IAuth } from "./auth.types";
+import { IAuthModel } from "./auth.types";
 
-const AuthSchema = new Schema<IAuth>(
+const AuthSchema = new Schema<IAuthModel>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -21,4 +21,4 @@ const AuthSchema = new Schema<IAuth>(
   { versionKey: false, timestamps: true }
 );
 
-export default model<IAuth>("Auth", AuthSchema, "auths");
+export default model<IAuthModel>("Auth", AuthSchema, "auths");

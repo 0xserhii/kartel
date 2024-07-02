@@ -3,9 +3,9 @@ import BaseService from "@/utils/base/service";
 import { ChatHistory } from "@/utils/db";
 
 // need add types
-import { IChatHistoryDocument } from "./chat-history.interface";
+import { IChatHistoryModel } from "./chat-history.interface";
 
-export class ChatHistoryService extends BaseService<IChatHistoryDocument> {
+export class ChatHistoryService extends BaseService<IChatHistoryModel> {
   constructor() {
     super(ChatHistory);
   }

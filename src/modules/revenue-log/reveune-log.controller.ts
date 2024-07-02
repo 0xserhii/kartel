@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { RevenueLogService, IRevenueLog } from ".";
+import { RevenueLogService, IRevenueLogModel } from ".";
 
 export class RevenueLogController {
   // Services
@@ -20,7 +20,7 @@ export class RevenueLogController {
   }
 
   public getAll = async () => {
-    const revenueLogFilter = <FilterQuery<IRevenueLog>>{};
+    const revenueLogFilter = <FilterQuery<IRevenueLogModel>>{};
     const [item, count] = await Promise.all([
       this.revenueLogService.get(revenueLogFilter),
       this.revenueLogService.getCount(revenueLogFilter),

@@ -1,9 +1,9 @@
 // Require Dependencies
-import mongoose, { Document, Model, model } from 'mongoose';
-import { ICrashGameDocument } from './crash-game.interface';
+import mongoose, { Document, Model, model } from "mongoose";
+import { ICrashGameModel } from "./crash-game.interface";
 
 // Setup CrashGame Schema
-const CrashGameSchema = new mongoose.Schema(
+const CrashGameSchema = new mongoose.Schema<ICrashGameModel>(
   {
     // Basic fields
     crashPoint: Number,
@@ -50,4 +50,4 @@ const CrashGameSchema = new mongoose.Schema(
   }
 );
 
-export default model<ICrashGameDocument>("CrashGame", CrashGameSchema)
+export default model<ICrashGameModel>("CrashGame", CrashGameSchema);

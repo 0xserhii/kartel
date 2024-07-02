@@ -1,16 +1,17 @@
 // Require Dependencies
-import mongoose, { model } from 'mongoose';
+import mongoose, { model } from "mongoose";
+import { IRaceEntryModel } from "./race-entry.interface";
 const SchemaTypes = mongoose.Schema.Types;
 
 // Setup RaceEntry Schema
-const RaceEntrySchema = new mongoose.Schema({
+const RaceEntrySchema = new mongoose.Schema<IRaceEntryModel>({
   // How much user has contributed to this race
   value: Number,
 
   // Who owns this entry
   _user: {
     type: SchemaTypes.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 
   user_level: {
@@ -32,7 +33,7 @@ const RaceEntrySchema = new mongoose.Schema({
   // What race is this entry for
   _race: {
     type: SchemaTypes.ObjectId,
-    ref: 'Race',
+    ref: "Race",
   },
 
   // When race was created
@@ -42,4 +43,4 @@ const RaceEntrySchema = new mongoose.Schema({
   },
 });
 
-export default model('RaceEntry', RaceEntrySchema);
+export default model<IRaceEntryModel>("RaceEntry", RaceEntrySchema);
