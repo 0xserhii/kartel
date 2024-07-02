@@ -107,10 +107,35 @@ export class PaymentController {
   };
 
   public userBalanceWithdraw = async ({ amount, currency, address }, { userId }: IAuthInfo) => {
-    const user = await this.userService.getItemById(userId);
-    return {
-      balance: user.wallet,
-    };
+    try {
+      if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
+        throw new CustomError(409, 'Balance type is not supported');
+      }
+      const user = await this.userService.getItemById(userId);
+      const updateParams = `wallet.${currency}`;
+      const walletValue = user?.wallet?.[currency] ?? 0;
+      let updateValue = 0;
+      if (walletValue < amount) {
+        throw new CustomError(409, 'not enough token balances');
+      } else {
+
+        // user withdraw crypto to admin wallet
+        const resPayment = await this.paymentService.balanceWithdraw({
+          address: address,
+          amount: amount,
+          tokenType: currency,
+        });
+
+        if (!resPayment) {
+          throw new CustomError(409, 'unable withdraw');
+        }
+        updateValue = walletValue - amount;
+        return await this.userService.updateUserBalance(userId, updateParams, updateValue);
+      }
+    } catch (error) {
+      console.log(error);
+      throw new CustomError(409, 'updating balance error');
+    }
   };
 
   public getAddress = async () => {
@@ -132,7 +157,6 @@ export class PaymentController {
   };
 
   public userBalanceDeposit = async ({ amount, currency, address, txHash }, { userId }: IAuthInfo) => {
-    console.log("balance deposit >>>>>>>>>>>>>>>>>> ");
     try {
       if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
         throw new CustomError(409, 'Balance type is not supported');
@@ -144,16 +168,13 @@ export class PaymentController {
       let updateValue = 0;
 
       // user deposit crypto to admin wallet
-      console.log("wallet value >>>>>>>>> ", walletValue);
-
-      const resPayment = await this.paymentService.userBalanceDeposit({
+      const resPayment = await this.paymentService.balanceDeposit({
         address: address,
         txHash: txHash ?? '',
         amount: amount,
         tokenType: currency,
       });
 
-      console.log("update value >>>>>>>>> ", resPayment);
       if (!resPayment) {
         throw new CustomError(409, 'unable deposit');
       }

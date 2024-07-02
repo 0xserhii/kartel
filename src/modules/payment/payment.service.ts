@@ -1,12 +1,14 @@
-import { IClient, IPaymentModel, PaymentController, TCheckDepositParam, TransactionDetails, fromHumanString } from '.';
+import { IClient, IPaymentModel, TCheckDepositParam, TWithDrawProps, TransactionDetails, fromHumanString } from '.';
 // need add model to mongo index file
 import BaseService from "@/utils/base/service";
 import { Payment } from "@/utils/db";
 import logger from '@/utils/logger';
-import { ADMIN_WALLET_ADDRESS, BLOCKCHAIN_RPC_ENDPOINT } from '@/config';
+import { ADMIN_WALLET_ADDRESS, ADMIN_WALLET_MNEMONIC, BLOCKCHAIN_RPC_ENDPOINT } from '@/config';
+import { assertIsDeliverTxSuccess, GasPrice, SigningStargateClient } from '@cosmjs/stargate';
 import { HttpBatchClient, Tendermint37Client } from '@cosmjs/tendermint-rpc';
-import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
+import { kujiraQueryClient, registry, msg } from 'kujira.js';
 import { CDENOM_TOKENS } from '@/constant/crypto';
+import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
 
 export class PaymentService extends BaseService<IPaymentModel> {
 
@@ -109,7 +111,41 @@ export class PaymentService extends BaseService<IPaymentModel> {
     }
   }
 
-  public userBalanceDeposit = async (data) => {
+  public withDrawToUser = async (payload: TWithDrawProps) => {
+    try {
+      const mnemonic = ADMIN_WALLET_MNEMONIC;
+      const signer = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+        prefix: 'kujira',
+      });
+
+      const [account] = await signer.getAccounts();
+      const client = await SigningStargateClient.connectWithSigner(BLOCKCHAIN_RPC_ENDPOINT, signer, {
+        registry,
+        gasPrice: GasPrice.fromString('0.034ukuji'),
+      });
+      const msgs = [
+        msg.bank.msgSend({
+          fromAddress: ADMIN_WALLET_ADDRESS,
+          toAddress: payload.address,
+          amount: [
+            {
+              denom: CDENOM_TOKENS[payload.tokenType],
+              amount: fromHumanString(payload.amount.toString(), 6).toString(),
+            },
+          ],
+        }),
+      ];
+      const res = await client.signAndBroadcast(account.address, msgs, 'auto', 'withdraw to user in kartel casino');
+      // console.log('widthDrawResult', { res });
+      assertIsDeliverTxSuccess(res);
+      return res.transactionHash;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  public balanceDeposit = async (data) => {
     try {
       const checkParam = {
         amount: data.amount,
@@ -138,5 +174,24 @@ export class PaymentService extends BaseService<IPaymentModel> {
     }
   };
 
+  public balanceWithdraw = async (data) => {
+    try {
+      const txHash = await this.withDrawToUser(data);
+      if (!txHash) {
+        return null;
+      }
+      const newPayment = await this.create({
+        walletAddress: data.address,
+        amount: data.amount,
+        txHash: data.txHash,
+      });
+
+      return newPayment;
+    } catch (ex) {
+      const errorMessage = `Error finding all payments: $${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return null;
+    }
+  }
 
 }

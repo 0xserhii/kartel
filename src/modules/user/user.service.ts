@@ -33,7 +33,6 @@ export default class UserService extends BaseService<IUserModel> {
     return this.updateById(id, { password });
   }
 
-
   async updateUserBalance(
     userId: ObjectId,
     updateParams: string,
@@ -59,7 +58,7 @@ export default class UserService extends BaseService<IUserModel> {
       if (!updatedUser) {
         return 'User update Failed';
       }
-      return updatedUser;
+      return { status: "success", data: updatedUser.wallet };
     } catch (ex) {
       const errorMessage = `Error updating User`;
       logger.error(errorMessage);
