@@ -61,7 +61,7 @@ const CasinoGames = ({
           className="absolute right-2 top-2 w-24"
         />
         {
-          linkTo !== '/mines' ? (
+          linkTo == '/crash' ? (
             <Link to={linkTo}>
               <img
                 src={Playnow}

@@ -1,3 +1,9 @@
 export default function HorseRacingGames() {
-  return <div className="mt-3 flex flex-col gap-5"></div>;
+  return (
+    <div className='flex items-center justify-center w-full h-full z-20 backdrop-blur-lg'>
+      <p className='text-white text-center text-5xl font-bold'>
+        Coming Soon
+      </p>
+    </div>
+  );
 }

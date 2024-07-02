@@ -26,8 +26,9 @@ import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSpring, animated } from '@react-spring/web';
-import { useAppDispatch } from '@/store/redux';
+import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { userActions } from '@/store/redux/actions';
+import useSound from 'use-sound';
 
 const GrowingNumber = ({ start, end }) => {
   const { number: numberValue } = useSpring({
@@ -43,6 +44,7 @@ export default function CrashGameSection() {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const crashBgVideoPlayer = useRef<HTMLVideoElement>(null);
   const toast = useToast();
+  const dispatch = useAppDispatch();
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [betData, setBetData] = useState<BetType[]>([]);
   const [betAmount, setBetAmount] = useState(0);
@@ -55,19 +57,16 @@ export default function CrashGameSection() {
   const [totalAmount, setTotalAmount] = useState<any>();
   const [round, setRound] = useState(roundArray[0]);
   const [selectMode, setSelectMode] = useState(betMode[0]);
-  const [avaliableAutoCashout, setAvaliableAutoCashout] =
-    useState<boolean>(false);
+  const [avaliableAutoCashout, setAvaliableAutoCashout] = useState<boolean>(false);
   const isAutoMode = selectMode === 'auto';
   const [crTick, setCrTick] = useState({ prev: 1, cur: 1 });
   const [prepareTime, setPrepareTime] = useState(0);
-  const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
-    ECrashStatus.NONE
-  );
+  const [crashStatus, setCrashStatus] = useState<ECrashStatus>(ECrashStatus.NONE);
   const [downIntervalId, setDownIntervalId] = useState(0);
-  const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>(
-    []
-  );
-  const dispatch = useAppDispatch();
+  const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>([]);
+  const settings = useAppSelector((store: any) => store.settings);
+  const [play, { stop, sound }] = useSound('/assets/audio/car_running.mp3', { volume: 0.5, loop: true });
+  const [playExplosion, { stop: stopExplosion, sound: explosionSound }] = useSound('/assets/audio/explosion.mp3', { volume: 0.25 });
 
   const updatePrepareCountDown = () => {
     setPrepareTime((prev) => prev - 100);
@@ -147,6 +146,8 @@ export default function CrashGameSection() {
       socket?.emit('cancel-auto-bet');
     }
   };
+
+
 
   useEffect(() => {
     if (socket) {
@@ -276,13 +277,35 @@ export default function CrashGameSection() {
   }, []);
 
   useEffect(() => {
+    let intervalId: number | undefined;
+
     if (crashStatus === ECrashStatus.PREPARE) {
-      const intervalId = window.setInterval(updatePrepareCountDown, 100);
+      intervalId = window.setInterval(updatePrepareCountDown, 100);
       setDownIntervalId(intervalId);
     } else {
       clearInterval(downIntervalId);
     }
-  }, [crashStatus]);
+
+    if (crashStatus === ECrashStatus.PROGRESS && settings.isAudioPlay) {
+      if (!sound?.playing()) {
+        play();
+      }
+    } else if (crashStatus === ECrashStatus.END && settings.isAudioPlay) {
+      stop();
+      if (!explosionSound?.playing()) {
+        playExplosion();
+      }
+    } else {
+      stop();
+      stopExplosion();
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      stop();
+      stopExplosion();
+    };
+  }, [crashStatus, settings.isAudioPlay]);
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
@@ -359,7 +382,7 @@ export default function CrashGameSection() {
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center bg-dark-blue text-xs text-gray-300 ${(item.crashPoint / 100) > 1 && (item.crashPoint / 100) < 2 ? 'bg-dark-blue' : (item.crashPoint / 100) > 3 ? 'bg-[#3bc117]' : 'bg-purple-light'}`}
+                      className={`rounded-lg px-2 py-1 text-center bg-dark-blue text-xs text-gray-300 ${(item.crashPoint / 100) > 1 && (item.crashPoint / 100) < 2 ? 'bg-dark-blue' : (item.crashPoint / 100) > 5 ? 'bg-[#3bc117]' : 'bg-purple-light'}`}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
                     </span>

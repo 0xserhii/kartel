@@ -1,6 +1,6 @@
 import Heading from './heading';
 import UserNav from './user-nav';
-import { MessageSquareMore } from 'lucide-react';
+import { MessageSquareMore, Volume2, VolumeX } from 'lucide-react';
 import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
@@ -12,14 +12,18 @@ import { useEffect, useState } from 'react';
 import { initialBalance } from '@/constants/data';
 import { subscribeUserServer } from '@/store/redux/actions/user.action';
 import { axiosGet } from '@/utils/axios';
+import { settingsActions } from '@/store/redux/actions';
+import useSound from 'use-sound';
 
 export default function Header() {
   const modal = useModal();
   const { open, setOpen } = useOpen();
   const userData = useAppSelector((store: any) => store.user.userData);
   const siteBalance = useAppSelector((store: any) => store.user.wallet);
+  const settings = useAppSelector((store: any) => store.settings);
   const dispatch = useAppDispatch();
   const [walletData, setWalletData] = useState(initialBalance);
+  const [play, { stop }] = useSound('/assets/audio/background_audio.mp3', { volume: 0.25, loop: true });
 
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN);
@@ -38,6 +42,10 @@ export default function Header() {
     }
   };
 
+  const handleAudio = () => {
+    dispatch(settingsActions.audioPlay(!settings.isAudioPlay))
+  }
+
   useEffect(() => {
     if (userData?.username !== '') {
       getSiteBalance();
@@ -47,6 +55,14 @@ export default function Header() {
   useEffect(() => {
     dispatch(subscribeUserServer());
   }, []);
+
+  useEffect(() => {
+    if (settings.isAudioPlay) {
+      play();
+    } else {
+      stop();
+    }
+  }, [settings.isAudioPlay])
 
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
@@ -69,7 +85,11 @@ export default function Header() {
         )}
         <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
           {userData?.username !== '' ? (
-            <div className="flex items-center gap-4">
+            <div className="flex flex-row items-center gap-4">
+              {
+                settings.isAudioPlay ? <Volume2 className='text-purple cursor-pointer' onClick={handleAudio} /> : <VolumeX className='text-white cursor-pointer' onClick={handleAudio} />
+              }
+              <Separator orientation={'vertical'} className="h-6" />
               <Button
                 className="hidden bg-transparent px-0 hover:bg-transparent lg:block"
                 onClick={() => setOpen(!open)}

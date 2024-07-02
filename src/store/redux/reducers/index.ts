@@ -6,6 +6,7 @@ import coinflipReducer from './coinflip.reducer';
 import modalReducer from './modal.reducer';
 import userReducer from './user.reducer';
 import minesReducer from './mines.reducer';
+import settingsReducer from './settings.reducer';
 
 export default () => {
   return combineReducers({
@@ -14,6 +15,7 @@ export default () => {
     coinflip: coinflipReducer,
     modal: modalReducer,
     user: userReducer,
-    mines: minesReducer
+    mines: minesReducer,
+    settings: settingsReducer
   });
 };

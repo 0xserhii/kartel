@@ -44,7 +44,7 @@ const BetBoard = ({
                 <TableCell className="w-6/12 text-start">User</TableCell>
                 <TableCell className="w-1/6">Cash Out</TableCell>
                 <TableCell className="w-1/6 text-center">Bet Amount</TableCell>
-                <TableCell className="w-1/6 text-center">Profit</TableCell>
+                <TableCell className="w-1/6 text-center">Return</TableCell>
               </TableRow>
             </TableBody>
           </Table>
