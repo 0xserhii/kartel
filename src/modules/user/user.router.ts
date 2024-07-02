@@ -1,9 +1,7 @@
 import actionHandler from "@/middleware/action-handler";
-import addDirForUpload from "@/middleware/add-dirForUpload";
 import checkPermissions from "@/middleware/check-permissions";
 import validateSchema from "@/middleware/validate-schema";
 import { BaseRouter } from "@/utils/base";
-import { fileHelpers } from "@/utils/helpers";
 import * as mapProperty from "@/utils/interfaces";
 import * as validations from "@/utils/validations";
 
@@ -73,6 +71,5 @@ export default class UserRouter extends BaseRouter {
     //     mapProperty.getUserInfo,
     //   ])
     // );
-
   }
 }

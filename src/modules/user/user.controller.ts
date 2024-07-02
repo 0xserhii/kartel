@@ -7,8 +7,8 @@ import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
 import { ROLE, STATUS } from "./user.constant";
-import UserService from "./user.service";
 import { IUserModel } from "./user.interface";
+import UserService from "./user.service";
 
 export default class UserController {
   private userService: UserService;
@@ -93,10 +93,7 @@ export default class UserController {
   };
 
   getUserById = async (id: string, { userId, role }: IAuthInfo, _UTC) => {
-    if (
-      role === ROLE.ADMIN &&
-      id !== userId.toString()
-    ) {
+    if (role === ROLE.ADMIN && id !== userId.toString()) {
       throw new CustomError(403, this.localizations.ERRORS.OTHER.FORBIDDEN);
     }
 
@@ -109,7 +106,7 @@ export default class UserController {
     }
 
     return {
-      user: user
+      user: user,
     };
   };
 

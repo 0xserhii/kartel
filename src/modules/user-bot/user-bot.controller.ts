@@ -7,9 +7,8 @@ import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
 import { ROLE, STATUS } from "./user-bot.constant";
-import UserService from "./user-bot.service";
-import { IUser } from "./user-bot.types";
 import UserBotService from "./user-bot.service";
+import { IUser } from "./user-bot.types";
 
 export default class UserBotController {
   private userBotService: UserBotService;
@@ -74,9 +73,7 @@ export default class UserBotController {
     }
 
     const [users, count] = await Promise.all([
-      this.userBotService.get(
-        filter,
-      ),
+      this.userBotService.get(filter, {}, range),
       this.userBotService.getCount(filter),
     ]);
 
@@ -92,10 +89,7 @@ export default class UserBotController {
   };
 
   getUserById = async (id: string, { userId, role }: IAuthInfo, _UTC) => {
-    if (
-      role.filter((item) => item === ROLE.ADMIN).length === 0 &&
-      id !== userId.toString()
-    ) {
+    if (role === ROLE.ADMIN && id !== userId.toString()) {
       throw new CustomError(403, this.localizations.ERRORS.OTHER.FORBIDDEN);
     }
 

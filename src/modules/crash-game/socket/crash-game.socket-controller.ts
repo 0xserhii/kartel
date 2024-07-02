@@ -1,36 +1,37 @@
+import _ from "lodash";
 import mongoose, { FilterQuery, ObjectId } from "mongoose";
+import { Namespace } from "socket.io";
 
+import { CDENOM_TOKENS } from "@/constant/crypto";
+import { AutoCrashBetService } from "@/modules/auto-crash-bet";
+import { RevenueLogService } from "@/modules/revenue-log";
+import UserService from "@/modules/user/user.service";
+import UserBotService from "@/modules/user-bot/user-bot.service";
+import { WalletTransactionService } from "@/modules/wallet-transaction";
+import {
+    generateCrashRandom,
+    generatePrivateSeedHashPair,
+} from "@/utils/crypto/random";
+import { checkAndEnterRace } from "@/utils/customer/race";
+import { getVipLevelFromWager } from "@/utils/customer/vip";
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
-import _ from "lodash";
-import { CrashGameService } from "../crash-game.service";
-import { ICrashGameModel } from "../crash-game.interface";
+import logger from "@/utils/logger";
+
 import {
     CBET_STATES,
     CCrash_Config,
     CGAME_STATES,
     CTime,
 } from "../crash-game.constant";
-import logger from "@/utils/logger";
-import UserService from "@/modules/user/user.service";
-import { WalletTransactionService } from "@/modules/wallet-transaction";
-import { Namespace } from "socket.io";
-import {
-    generateCrashRandom,
-    generatePrivateSeedHashPair,
-} from "@/utils/crypto/random";
+import { ICrashGameModel } from "../crash-game.interface";
+import { CrashGameService } from "../crash-game.service";
 import {
     IBetType,
     IGameStateType,
     TFormattedPlayerBetType,
 } from "../crash-game.types";
-import UserBotService from "@/modules/user-bot/user-bot.service";
-import { CDENOM_TOKENS } from "@/constant/crypto";
-import { getVipLevelFromWager } from "@/utils/customer/vip";
-import { checkAndEnterRace } from "@/utils/customer/race";
-import { AutoCrashBetService } from "@/modules/auto-crash-bet";
-import { RevenueLogService } from "@/modules/revenue-log";
 
 export class CrashGameSocketController {
     // Services
@@ -172,11 +173,17 @@ export class CrashGameSocketController {
         return this.crashGameService.getUnfinishedGames();
     };
 
+    public getGameStatus = async () => {
+        return this.gameStatus;
+    };
+
     public refundGame = async (gameId: ObjectId) => {
         const game = await this.crashGameService.getItemById(gameId);
+
         if (!game) {
             return null;
         }
+
         const refundedPlayers = [];
 
         for (const playerID in game.players) {
@@ -326,6 +333,7 @@ export class CrashGameSocketController {
 
                 for (const autoBetPlayer of autoBetPlayers) {
                     const { user, betAmount, denom, cashoutPoint, count } = autoBetPlayer;
+
                     if (user?._id) {
                         this.gameStatus.pending[String(user._id)] = {
                             betAmount,
@@ -335,7 +343,7 @@ export class CrashGameSocketController {
                         };
                         this.gameStatus.pendingCount++;
                         logger.info(
-                            this.logoPrefix + `autobet :::`,
+                            this.logoPrefix + `autobet :::` +
                             autoBetPlayer.user._id
                         );
 
@@ -367,7 +375,7 @@ export class CrashGameSocketController {
 
                         // If user can afford this bet
                         if (
-                            (user!.wallet?.get(denom) ?? 0) < parseFloat(betAmount.toFixed(2))
+                            (user!.wallet?.[denom] ?? 0) < parseFloat(betAmount.toFixed(2))
                         ) {
                             await this.autoCrashBetService.deleteById(autoBetPlayer._id);
                             delete this.gameStatus.pending[user.id];
@@ -398,16 +406,16 @@ export class CrashGameSocketController {
                         });
 
                         const newWalletValue =
-                            (user!.wallet?.get(denom) || 0) -
+                            (user!.wallet?.[denom] || 0) -
                             Math.abs(parseFloat(betAmount.toFixed(2)));
                         const newWagerValue =
-                            (user!.wager?.get(denom) || 0) +
+                            (user!.wager?.[denom] || 0) +
                             Math.abs(parseFloat(betAmount.toFixed(2)));
                         const newWagerNeededForWithdrawValue =
-                            (user!.wagerNeededForWithdraw?.get(denom) || 0) +
+                            (user!.wagerNeededForWithdraw?.[denom] || 0) +
                             Math.abs(parseFloat(betAmount.toFixed(2)));
                         const newLeaderboardValue =
-                            (user!.leaderboard?.get("crash")?.get(denom)?.betAmount || 0) +
+                            (user!.leaderboard?.["crash"]?.[denom]?.betAmount || 0) +
                             Math.abs(parseFloat(betAmount.toFixed(2)));
 
                         // Remove bet amount from user's balance
@@ -440,8 +448,8 @@ export class CrashGameSocketController {
                         );
 
                         // Calculate house edge
-                        const houseRake =
-                            parseFloat(betAmount.toFixed(2)) * CCrash_Config.houseEdge;
+                        // const houseRake =
+                        //   parseFloat(betAmount.toFixed(2)) * CCrash_Config.houseEdge;
 
                         // Apply 5% rake to current race prize pool
                         // await checkAndApplyRakeToRace(houseRake * 0.05);
@@ -463,7 +471,7 @@ export class CrashGameSocketController {
                             username: user.username,
                             avatar: user.avatar,
                             level: getVipLevelFromWager(
-                                user!.wager ? user!.wager.get(denom) ?? 0 : 0
+                                user!.wager ? user!.wager?.[denom] ?? 0 : 0
                             ),
                             status: CBET_STATES.Playing,
                             forcedCashout: true,
@@ -483,6 +491,7 @@ export class CrashGameSocketController {
 
                         const formattedBet = this.formatPlayerBet(newBet);
                         this.gameStatus.pendingBets.push(formattedBet);
+
                         this.emitPlayerBets();
 
                         return this.crashSocketNamespace
@@ -492,7 +501,7 @@ export class CrashGameSocketController {
                 }
             } catch (error) {
                 logger.error(
-                    this.logoPrefix + "Error while starting a crash game with auto bets:",
+                    this.logoPrefix + "Error while starting a crash game with auto bets:" +
                     error
                 );
             }
@@ -504,7 +513,6 @@ export class CrashGameSocketController {
                 const selectedBotPlayers = allBots
                     .sort(() => 0.5 - Math.random())
                     .slice(0, randomNumberOfPlayers);
-
                 for (const botPlayer of selectedBotPlayers) {
                     const { _id, username, avatar, wager } = botPlayer;
                     const betAmount = this.getRandomBetAmount();
@@ -566,28 +574,24 @@ export class CrashGameSocketController {
 
                         const formattedBet = this.formatPlayerBet(newBet);
                         this.gameStatus.pendingBets.push(formattedBet);
-                        return this.emitPlayerBets();
+                        this.emitPlayerBets();
                     }, delay);
                 }
             } catch (error) {
-                logger.error(this.logoPrefix + "Error Crash", error);
+                logger.error(this.logoPrefix + "Error Crash" + error);
                 this.gameStatus.pendingCount--;
             }
 
             this.emitStarting();
         } catch (error) {
-            logger.error(this.logoPrefix + "Error running game: ", error);
+            logger.error(this.logoPrefix + "Error running game: " + error);
         }
     };
 
     public emitPlayerBets = () => {
-        const _emitPendingBets = () => {
-            const bets = this.gameStatus.pendingBets;
-            this.gameStatus.pendingBets = [];
-
-            this.crashSocketNamespace.emit("game-bets", bets);
-        };
-        return _.throttle(_emitPendingBets, 600);
+        const bets = this.gameStatus.pendingBets;
+        this.gameStatus.pendingBets = [];
+        this.crashSocketNamespace.emit("game-bets", bets);
     };
 
     public formatPlayerBet = (bet: IBetType): TFormattedPlayerBetType => {
@@ -605,6 +609,7 @@ export class CrashGameSocketController {
             formatted.stoppedAt = bet.stoppedAt;
             formatted.winningAmount = bet.winningAmount;
         }
+
         return formatted;
     };
 
@@ -625,6 +630,7 @@ export class CrashGameSocketController {
 
         const loop = (): NodeJS.Timeout => {
             const ids: string[] = Object.keys(this.gameStatus.pending);
+
             if (this.gameStatus.pendingCount > 0) {
                 logger.info(
                     this.logoPrefix +
@@ -731,7 +737,10 @@ export class CrashGameSocketController {
     public runCashOuts = (elapsed: number) => {
         _.each(this.gameStatus.players, (bet) => {
             // Check if bet is still active
-            if (bet.status !== CBET_STATES.Playing) return;
+            if (bet.status !== CBET_STATES.Playing) {
+                return;
+            }
+
             // Check if the auto cashout is reached or max profit is reached
             if (
                 bet.autoCashOut >= 101 &&
@@ -810,19 +819,25 @@ export class CrashGameSocketController {
         cb: (err: Error | null, result?: any) => void
     ) => {
         logger.info(this.logoPrefix + `Doing cashout for ${playerID}`);
+
         // Check if bet is still active
-        if (this.gameStatus.players[playerID].status !== CBET_STATES.Playing)
+        if (this.gameStatus.players[playerID].status !== CBET_STATES.Playing) {
             return;
+        }
 
         // Update player state
         this.gameStatus.players[playerID].status = CBET_STATES.CashedOut;
         this.gameStatus.players[playerID].stoppedAt = elapsed;
-        if (forced) this.gameStatus.players[playerID].forcedCashout = true;
+
+        if (forced) {
+            this.gameStatus.players[playerID].forcedCashout = true;
+        }
 
         const bet = this.gameStatus.players[playerID];
 
         // Calculate winning amount
         let winningAmount = 0;
+
         if (bet.autoCashOut !== undefined && bet.stoppedAt !== undefined) {
             winningAmount = parseFloat(
                 (
@@ -842,7 +857,9 @@ export class CrashGameSocketController {
 
         this.gameStatus.players[playerID].winningAmount = winningAmount;
 
-        if (cb) cb(null, this.gameStatus.players[playerID]);
+        if (cb) {
+            cb(null, this.gameStatus.players[playerID]);
+        }
 
         const { status, stoppedAt } = this.gameStatus.players[playerID];
         const userdata = this.gameStatus.players[playerID];
@@ -860,12 +877,12 @@ export class CrashGameSocketController {
 
         if (user) {
             // Get the current value from the wallet map
-            const currentValue = user.wallet.get(bet.denom) || 0;
+            const currentValue = user.wallet?.[bet.denom] || 0;
 
             // Increment the value
             const newValue = currentValue + Math.abs(winningAmount);
             const newLeaderboardValue =
-                (user.leaderboard?.get("crash")?.get(bet.denom)?.winAmount || 0) +
+                (user.leaderboard?.["crash"]?.[bet.denom]?.winAmount || 0) +
                 Math.abs(winningAmount);
 
             console.log("winningAmount :", bet.stoppedAt, elapsed, winningAmount);
@@ -884,12 +901,17 @@ export class CrashGameSocketController {
             // Add revenue to the site wallet
             const revenueId = process.env.REVENUE_ID;
             const siteUser = await this.userService.getItemById(revenueId);
+
             if (siteUser) {
                 let newSiteWalletValue = 0;
-                if (siteUser?.wallet)
+
+                if (siteUser?.wallet) {
                     newSiteWalletValue =
-                        siteUser?.wallet.get(bet.denom) || 0 + houseAmount;
-                else newSiteWalletValue = houseAmount;
+                        siteUser?.wallet?.[bet.denom] || 0 + houseAmount;
+                } else {
+                    newSiteWalletValue = houseAmount;
+                }
+
                 await this.userService.updateById(revenueId, {
                     $set: {
                         [`wallet.${bet.denom}`]: newSiteWalletValue,
@@ -898,7 +920,9 @@ export class CrashGameSocketController {
             } else {
                 logger.error(this.logoPrefix + "Couldn't find site user!");
             }
+
             const siteuser = await this.userService.getItemById(revenueId);
+
             // revenue log
             if (siteUser) {
                 const newRevenuePayload = {
@@ -908,7 +932,7 @@ export class CrashGameSocketController {
                     // Balance
                     revenue: houseAmount,
                     denom: bet.denom,
-                    lastBalance: siteuser!.wallet.get(bet.denom),
+                    lastBalance: siteuser!.wallet?.[bet.denom],
                 };
                 await this.reveneuLogService.create(newRevenuePayload);
             }

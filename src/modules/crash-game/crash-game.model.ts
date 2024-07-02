@@ -1,5 +1,6 @@
 // Require Dependencies
-import mongoose, { Document, Model, model } from "mongoose";
+import mongoose, { model } from "mongoose";
+
 import { ICrashGameModel } from "./crash-game.interface";
 
 // Setup CrashGame Schema

@@ -1,4 +1,5 @@
 import mongoose, { Document } from "mongoose";
+
 import { IUserModel } from "../user/user.interface";
 
 export interface IAutoCrashBetModel extends Document {

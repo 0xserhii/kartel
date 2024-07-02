@@ -28,12 +28,7 @@ export default {
   ],
   components: {
     parameters: deviceParameters,
-    schemas: Object.assign(
-      {},
-      userSchema,
-      authSchema,
-      {}
-    ),
+    schemas: Object.assign({}, userSchema, authSchema, {}),
     securitySchemes: {
       bearerAuth: {
         type: "http",
@@ -47,9 +42,5 @@ export default {
       bearerAuth: ["read", "write"],
     },
   ],
-  paths: Object.assign(
-    {},
-    userSwagger,
-    authSwagger,
-  ),
+  paths: Object.assign({}, userSwagger, authSwagger),
 };

@@ -12,7 +12,7 @@ export interface IPaymentModel extends Document {
 }
 
 
-export interface Client {
+export interface IClient {
   tmClient: Tendermint37Client;
   querier: ReturnType<typeof kujiraQueryClient>;
 }

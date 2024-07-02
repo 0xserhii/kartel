@@ -1,8 +1,9 @@
 import { Server } from "socket.io";
 
 import logger from "@/utils/logger";
-import CrashGameSocketListener from "./modules/crash-game/socket/crash-game.listener";
+
 import CoinflipGameSocketListener from "./modules/coinflip-game/socket/coinflip-game.listener";
+import CrashGameSocketListener from "./modules/crash-game/socket/crash-game.listener";
 
 class SocketServer {
     private socketServer: Server;
@@ -19,7 +20,7 @@ class SocketServer {
 
             logger.info("Socket server started");
         } catch (error) {
-            logger.error("Error starting socket server", error);
+            logger.error("Error starting socket server" + error);
         }
     }
 }

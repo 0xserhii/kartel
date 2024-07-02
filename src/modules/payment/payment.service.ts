@@ -5,8 +5,9 @@ import { Payment } from "@/utils/db";
 import logger from '@/utils/logger';
 import { ADMIN_WALLET_ADDRESS, BLOCKCHAIN_RPC_ENDPOINT } from '@/config';
 import { HttpBatchClient, Tendermint37Client } from '@cosmjs/tendermint-rpc';
-import { KujiraQueryClient, kujiraQueryClient } from 'kujira.js';
+import { kujiraQueryClient } from 'kujira.js';
 import { CDENOM_TOKENS } from '@/constant/crypto';
+
 
 export class PaymentService extends BaseService<IPaymentModel> {
 

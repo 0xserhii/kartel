@@ -44,7 +44,8 @@ export class ChatHistoryController {
   };
 
   public getById = async (chatHistoryId) => {
-    const chatHistory = await this.chatHistoryService.getItemById(chatHistoryId);
+    const chatHistory =
+      await this.chatHistoryService.getItemById(chatHistoryId);
 
     // need add to localizations
     if (!chatHistory) {
@@ -68,7 +69,10 @@ export class ChatHistoryController {
 
   public update = async ({ id }, chatHistoryData) => {
     try {
-      const chatHistory = await this.chatHistoryService.updateById(id, chatHistoryData);
+      const chatHistory = await this.chatHistoryService.updateById(
+        id,
+        chatHistoryData
+      );
 
       // need add to localizations
       if (!chatHistory) {

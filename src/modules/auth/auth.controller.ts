@@ -2,15 +2,15 @@ import bcrypt from "bcryptjs";
 import jwt, { UserJwtPayload } from "jsonwebtoken";
 
 import { REFRESH_TOKEN_SECRET } from "@/config";
-import UserService from "@/modules/user/user.service";
 import { IUserModel } from "@/modules/user/user.interface";
+import UserService from "@/modules/user/user.service";
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
+import { ROLE } from "../user/user.constant";
 import AuthService from "./auth.service";
 import { IAuthModel } from "./auth.types";
-import { ROLE } from "../user/user.constant";
 
 export default class AuthController {
   private service: AuthService;
@@ -29,13 +29,17 @@ export default class AuthController {
   }
 
   // email signUp
-  signUp = async (
-    data: Partial<IUserModel> & { email: string }
-  ) => {
+  signUp = async (data: Partial<IUserModel> & { email: string }) => {
     try {
-      const user = await this.userService.getItem({ userEmail: data.email.toLowerCase() });
+      const user = await this.userService.getItem({
+        userEmail: data.email.toLowerCase(),
+      });
+
       if (user) {
-        throw new CustomError(409, this.localizations.ERRORS.USER.USER_ALREADY_EXIST);
+        throw new CustomError(
+          409,
+          this.localizations.ERRORS.USER.USER_ALREADY_EXIST
+        );
       }
 
       let newUser: Partial<IUserModel>;
@@ -43,19 +47,22 @@ export default class AuthController {
       try {
         data.userEmail = data.email.toLowerCase();
         data.wallet = new Map<string, number>([
-          ['usk', 1000],
-          ['kart', 1000],
-        ])
+          ["usk", 1000],
+          ["kart", 1000],
+        ]);
+
         if (data.password) {
           data.password = await bcrypt.hash(data.password, 10);
         }
-        data.role = ROLE.MEMBER
+
+        data.role = ROLE.MEMBER;
         newUser = await this.userService.updateOrInsert(
           { userEmail: data.userEmail },
           data
         );
       } catch (error) {
         console.log(error);
+
         if (error.code == 11000) {
           throw new CustomError(
             409,
@@ -96,9 +103,7 @@ export default class AuthController {
   };
 
   // email signIn
-  signIn = async (
-    { email, password }
-  ) => {
+  signIn = async ({ email, password }) => {
     const userEmail = email.toLowerCase();
 
     const foundUser = await this.userService.getItem({ userEmail });
@@ -123,7 +128,7 @@ export default class AuthController {
       payload: {
         auth,
         user: foundUser,
-        paymentInformation
+        paymentInformation,
       },
     };
   };

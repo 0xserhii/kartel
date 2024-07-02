@@ -5,9 +5,9 @@ import BaseService from "@/utils/base/service";
 import { User } from "@/utils/db";
 import { validateFunc } from "@/utils/validations";
 
-import * as validateUser from "./user.validate";
 import { IUserModel } from "./user.interface";
 import logger from "@/utils/logger";
+import * as validateUser from "./user.validate";
 
 export default class UserService extends BaseService<IUserModel> {
   constructor() {

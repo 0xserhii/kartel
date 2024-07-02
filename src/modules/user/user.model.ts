@@ -1,6 +1,7 @@
 // Import Dependencies
-import mongoose from 'mongoose';
-import { IUserModel } from './user.interface';
+import mongoose from "mongoose";
+
+import { IUserModel } from "./user.interface";
 
 // Destructure Schema Types
 const { Schema, Types } = mongoose;
@@ -57,7 +58,7 @@ const UserSchema = new Schema<IUserModel>({
 
   role: {
     type: String,
-    default: 'user',
+    default: "user",
   },
 
   // Whether the user has verified their account (via mobile phone or csgo loyalty badge) normal it is false
@@ -81,7 +82,7 @@ const UserSchema = new Schema<IUserModel>({
   // Unix ms timestamp when the ban will end, 0 = no ban
   banExpires: {
     type: String,
-    default: '0',
+    default: "0",
   },
 
   // Unix ms timestamps when the self-exclude will end, 0 = no ban
@@ -103,7 +104,7 @@ const UserSchema = new Schema<IUserModel>({
   // Unix ms timestamp when the mute will end, 0 = no mute
   muteExpires: {
     type: String,
-    default: '0',
+    default: "0",
   },
 
   // If user has restricted transactions
@@ -126,7 +127,7 @@ const UserSchema = new Schema<IUserModel>({
   // UserID of the user who affiliated
   _affiliatedBy: {
     type: Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     default: null,
   },
 
@@ -242,6 +243,6 @@ const UserSchema = new Schema<IUserModel>({
 });
 
 // Create and export the new model
-const User = mongoose.model<IUserModel>('User', UserSchema);
+const User = mongoose.model<IUserModel>("User", UserSchema);
 
 export default User;

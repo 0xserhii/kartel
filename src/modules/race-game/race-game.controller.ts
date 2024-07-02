@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { RaceGameService, IRaceGameModel } from ".";
+import { IRaceGameModel, RaceGameService } from ".";
 
 export class RaceGameController {
   // Services

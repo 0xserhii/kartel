@@ -9,4 +9,4 @@ export class ChatHistoryService extends BaseService<IChatHistoryModel> {
   constructor() {
     super(ChatHistory);
   }
-};
+}

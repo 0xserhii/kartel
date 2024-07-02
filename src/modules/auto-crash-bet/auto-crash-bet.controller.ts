@@ -44,7 +44,8 @@ export class AutoCrashBetController {
   };
 
   public getById = async (autoCrashBetId) => {
-    const autoCrashBet = await this.autoCrashBetService.getItemById(autoCrashBetId);
+    const autoCrashBet =
+      await this.autoCrashBetService.getItemById(autoCrashBetId);
 
     // need add to localizations
     if (!autoCrashBet) {
@@ -68,7 +69,10 @@ export class AutoCrashBetController {
 
   public update = async ({ id }, autoCrashBetData) => {
     try {
-      const autoCrashBet = await this.autoCrashBetService.updateById(id, autoCrashBetData);
+      const autoCrashBet = await this.autoCrashBetService.updateById(
+        id,
+        autoCrashBetData
+      );
 
       // need add to localizations
       if (!autoCrashBet) {

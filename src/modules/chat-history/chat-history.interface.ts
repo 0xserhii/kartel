@@ -1,4 +1,4 @@
-import { ObjectId, Types, Document } from "mongoose";
+import { Document, ObjectId, Types } from "mongoose";
 
 export interface IChatHistoryModel extends Document {
   _id: Types.ObjectId;

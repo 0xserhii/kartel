@@ -1,6 +1,6 @@
 import { model, Schema, Types as SchemaTypes } from "mongoose";
-import { IRaceGameModel } from "./race-game.interface";
 
+import { IRaceGameModel } from "./race-game.interface";
 
 // Setup Race Schema
 const RaceSchema = new Schema<IRaceGameModel>({

@@ -1,5 +1,5 @@
-import { IVIPLevelType } from '../user/user.types';
-import { ICoinflipGameModel } from './coinflip-game.interface';
+import { IVIPLevelType } from "../user/user.types";
+import { ICoinflipGameModel } from "./coinflip-game.interface";
 
 export interface ICoinPlayer {
   _id: string;

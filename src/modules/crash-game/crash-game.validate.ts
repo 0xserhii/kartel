@@ -2,7 +2,6 @@ import Joi from "joi";
 
 import * as validations from "@/utils/validations";
 
-
 export const CreateCrashGameSchema = Joi.object({
   name: Joi.string(),
 });

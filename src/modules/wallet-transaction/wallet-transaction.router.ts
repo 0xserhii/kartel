@@ -1,14 +1,10 @@
 import actionHandler from "@/middleware/action-handler";
 import checkPermissions from "@/middleware/check-permissions";
-import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-import * as validations from "@/utils/validations";
 
-import {
-  WalletTransactionController,
-} from ".";
+import { WalletTransactionController } from ".";
 
 export default class WalletTransactionRouter extends BaseRouter {
   private walletTransactionController: WalletTransactionController;
@@ -31,7 +27,10 @@ export default class WalletTransactionRouter extends BaseRouter {
       "/",
       checkPermissions({ roles: [ROLE.ADMIN] }),
       // validateSchema(CreatePaymentSchema, mapProperty.getBody),
-      actionHandler(this.walletTransactionController.create, mapProperty.getBody)
+      actionHandler(
+        this.walletTransactionController.create,
+        mapProperty.getBody
+      )
     );
 
     this.router.get(
@@ -45,7 +44,7 @@ export default class WalletTransactionRouter extends BaseRouter {
 
     this.router.get(
       "/:id",
-      checkPermissions(),
+      checkPermissions()
       // validateSchema(
       //   validations.byId,
       //   mapProperty.getIdFromParamsWithMe
@@ -70,7 +69,10 @@ export default class WalletTransactionRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.walletTransactionController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.walletTransactionController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

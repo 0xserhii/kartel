@@ -1,4 +1,4 @@
-import { IPaymentModel, TUpdateBalance } from '.';
+import { IPaymentModel } from '.';
 import { FilterQuery } from "mongoose";
 
 import { CustomError } from "@/utils/helpers";
@@ -11,7 +11,6 @@ import AESWrapper from '@/utils/encryption/aes-wrapper';
 import logger from '@/utils/logger';
 import { ADMIN_WALLET_ADDRESS } from '@/config';
 import { CDENOM_TOKENS } from '@/constant/crypto';
-
 
 export class PaymentController {
   // Services
@@ -106,7 +105,10 @@ export class PaymentController {
     return payment;
   };
 
-  public userBalanceWithdraw = async ({ amount, currency, address }, { userId }: IAuthInfo) => {
+  public userBalanceWithdraw = async (
+    { amount, currency, address },
+    { userId }: IAuthInfo
+  ) => {
     const user = await this.userService.getItemById(userId);
     return {
       balance: user.wallet,

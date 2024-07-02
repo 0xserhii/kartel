@@ -1,5 +1,6 @@
 // Import Dependencies
 import mongoose, { model } from "mongoose";
+
 import { IPaymentModel } from "./payment.interface";
 
 // Destructure Schema Types

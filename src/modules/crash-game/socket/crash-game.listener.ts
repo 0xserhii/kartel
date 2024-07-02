@@ -1,23 +1,26 @@
+import jwt, { JwtPayload } from "jsonwebtoken";
 import mongoose from "mongoose";
-import { Namespace, Server, Socket, Event as SocketEvent } from "socket.io";
+import { Event as SocketEvent, Namespace, Server, Socket } from "socket.io";
+import _ from 'lodash';
+import { TOKEN_SECRET } from "@/config";
+import { ESOCKET_NAMESPACE } from "@/constant/enum";
+import { AutoCrashBetService } from "@/modules/auto-crash-bet";
+import { IUserModel } from "@/modules/user/user.interface";
+import UserService from "@/modules/user/user.service";
+import { WalletTransactionService } from "@/modules/wallet-transaction";
+import { getVipLevelFromWager } from "@/utils/customer/vip";
+import logger from "@/utils/logger";
+import { getCrashState } from "@/utils/setting/site";
+import throttleConnections from "@/utils/socket/throttler";
+
 import { CGAME_STATES, ECrashGameEvents } from "../crash-game.constant";
 import {
     IUpdateParams,
     TAutoCrashBetPayload,
     TJoinGamePayload,
 } from "../crash-game.interface";
-import { ESOCKET_NAMESPACE } from "@/constant/enum";
-import logger from "@/utils/logger";
-import { CrashGameSocketController } from "./crash-game.socket-controller";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { TOKEN_SECRET } from "@/config";
-import UserService from "@/modules/user/user.service";
 import { CrashGameService } from "../crash-game.service";
-import { AutoCrashBetService } from "@/modules/auto-crash-bet";
-import { getCrashState } from "@/utils/setting/site";
-import { getVipLevelFromWager } from "@/utils/customer/vip";
-import { WalletTransactionService } from "@/modules/wallet-transaction";
-import { IUserModel } from "@/modules/user/user.interface";
+import { CrashGameSocketController } from "./crash-game.socket-controller";
 
 class CrashGameSocketListener {
     private rootSocketServer: Server;
@@ -26,18 +29,28 @@ class CrashGameSocketListener {
     private crashGameSocketController: CrashGameSocketController;
     private loggedIn = false;
     private user: IUserModel | null = null;
+    // Services
     private userService: UserService;
     private crashGameService: CrashGameService;
     private autoCrashBetService: AutoCrashBetService;
     private walletTransactionService: WalletTransactionService;
 
     constructor(socketServer: Server) {
+        // Socket init
         this.rootSocketServer = socketServer;
         this.socketServer = socketServer.of(ESOCKET_NAMESPACE.crash);
 
+        // Controller init
         this.crashGameSocketController = new CrashGameSocketController();
         this.crashGameSocketController.setSocketNamespace(this.socketServer);
 
+        // Service init
+        this.userService = new UserService();
+        this.crashGameService = new CrashGameService();
+        this.autoCrashBetService = new AutoCrashBetService();
+        this.walletTransactionService = new WalletTransactionService();
+
+        // Function init
         this.initializeListener();
         this.subscribeListener();
     }
@@ -81,6 +94,9 @@ class CrashGameSocketListener {
             socket.use((packet: SocketEvent, next: (err?: any) => void) =>
                 this.banStatusCheckMiddleware(packet, next, socket)
             );
+
+            // Throttle connections
+            socket.use(throttleConnections(socket));
         });
     }
 
@@ -93,10 +109,14 @@ class CrashGameSocketListener {
         }
     };
 
-    private initializeSubscribe = async (socket: Socket) => { };
+    private initializeSubscribe = async (socket: Socket) => {
+        const gameStatus = await this.crashGameSocketController.getGameStatus()
+        const players = await _.map(gameStatus.players, (p) => this.crashGameSocketController.formatPlayerBet(p));
+        socket.emit('game-status', { players, gameStatus });
+    };
 
     private banStatusCheckMiddleware = async (
-        packet: SocketEvent,
+        _packet: SocketEvent,
         next: (err?: any) => void,
         socket: Socket
     ) => {
@@ -133,7 +153,6 @@ class CrashGameSocketListener {
             const decoded = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
 
             const user = await this.userService.getItem({ _id: decoded.userId });
-
             if (user) {
                 if (parseInt(user.banExpires) > new Date().getTime()) {
                     this.loggedIn = false;
@@ -141,14 +160,16 @@ class CrashGameSocketListener {
                     return socket.emit("user banned");
                 } else {
                     this.loggedIn = true;
+                    this.user = user;
+
                     socket.join(String(user._id));
                     this.crashGameSocketController.gameStatus.connectedUsers[
                         user._id.toString()
                     ] = socket;
-                    // socket.emit("notify-success", "Successfully authenticated!");
+                    logger.info(this.logoPrefix + "User connect " + user._id)
+                    return socket.emit("notify-success", "Successfully authenticated!");
                 }
             }
-            // return socket.emit("alert success", "Socket Authenticated!");
         } catch (error) {
             this.loggedIn = false;
             console.log("error handle", error);
@@ -186,25 +207,31 @@ class CrashGameSocketListener {
             count: number;
             denom: string;
         }) => {
-            if (!this.loggedIn)
+            if (!this.loggedIn) {
                 return socket.emit("bet-cashout-error", "You are not logged in!");
+            }
+
             try {
                 const { betAmount, cashoutPoint, count, denom } = data;
                 const userId = this.user!._id.toString();
                 const dbUser = await this.userService.getItem({ _id: userId });
+
                 if (dbUser!.selfExcludes.crash > Date.now()) {
                     return socket.emit(
                         "game-join-error",
                         "You have self-excluded yourself for another 1 hour!"
                     );
                 }
+
                 const bet = await this.autoCrashBetService.getItem({ user: userId });
+
                 if (bet && bet.status && bet.count > 0) {
                     return socket.emit(
                         "game-join-error",
                         "You already have a bet in progress!"
                     );
                 }
+
                 await this.autoCrashBetService.create({
                     user: new mongoose.Types.ObjectId(userId),
                     betAmount,
@@ -229,10 +256,13 @@ class CrashGameSocketListener {
 
     private cancelAutoBetHandler = async (socket: Socket) => {
         try {
-            if (!this.loggedIn)
+            if (!this.loggedIn) {
                 return socket.emit("notify-error", "You are not logged in!");
+            }
+
             const userId = this.user!._id.toString();
             const bet = await this.autoCrashBetService.getItem({ user: userId });
+
             if (bet) {
                 await this.autoCrashBetService.delete({ _id: bet._id });
                 return socket.emit(
@@ -251,15 +281,17 @@ class CrashGameSocketListener {
     };
 
     private betCashoutHandler = async (socket: Socket) => {
-        if (!this.loggedIn)
+        if (!this.loggedIn) {
             return socket.emit("bet-cashout-error", "You are not logged in!");
+        }
 
         // Check if game is running
         if (
             this.crashGameSocketController.gameStatus.status !==
             CGAME_STATES.InProgress
-        )
+        ) {
             return socket.emit("bet-cashout-error", "There is no game in progress!");
+        }
 
         // Calculate the current multiplier
         const elapsed =
@@ -268,15 +300,20 @@ class CrashGameSocketListener {
         let at = this.crashGameSocketController.growthFunc(elapsed);
 
         // Check if cashout is over 1x
-        if (at < 101)
+        if (at < 101) {
             return socket.emit("bet-cashout-error", "The minimum cashout is 1.01x!");
+        }
 
         // Find bet from state
         const bet =
-            this.crashGameSocketController.gameStatus.players[this.user!._id.toString()];
+            this.crashGameSocketController.gameStatus.players[
+            this.user!._id.toString()
+            ];
 
         // Check if bet exists
-        if (!bet) return socket.emit("bet-cashout-error", "Coudn't find your bet!");
+        if (!bet) {
+            return socket.emit("bet-cashout-error", "Coudn't find your bet!");
+        }
 
         // Check if the current multiplier is over the auto cashout
         if (bet.autoCashOut > 100 && bet.autoCashOut <= at) {
@@ -284,12 +321,14 @@ class CrashGameSocketListener {
         }
 
         // Check if current multiplier is even possible
-        if (at > this.crashGameSocketController.gameStatus.crashPoint!)
+        if (at > this.crashGameSocketController.gameStatus.crashPoint!) {
             return socket.emit("bet-cashout-error", "The game has already ended!");
+        }
 
         // Check if user already cashed out
-        if (bet.status !== this.crashGameSocketController.betStatus.Playing)
+        if (bet.status !== this.crashGameSocketController.betStatus.Playing) {
             return socket.emit("bet-cashout-error", "You have already cashed out!");
+        }
 
         // Send cashout request to handler
         this.crashGameSocketController.doCashOut(
@@ -298,8 +337,8 @@ class CrashGameSocketListener {
             false,
             (err, result) => {
                 if (err) {
-                    logger.info(
-                        `Crash >> There was an error while trying to cashout a player`,
+                    logger.error(
+                        `Crash >> There was an error while trying to cashout a player` +
                         err
                     );
                     return socket.emit(
@@ -320,8 +359,10 @@ class CrashGameSocketListener {
         }
 
         const userId = this.user!._id.toString();
-        if (typeof betAmount !== "number" || isNaN(betAmount))
+
+        if (typeof betAmount !== "number" || isNaN(betAmount)) {
             return socket.emit("game-join-error", "Invalid betAmount type!");
+        }
 
         // Get crash enabled status
         const isEnabled = getCrashState();
@@ -333,19 +374,23 @@ class CrashGameSocketListener {
                 "Crash is currently disabled! Contact admins for more information."
             );
         }
+
         if (
             this.crashGameSocketController.gameStatus.status !== CGAME_STATES.Starting
-        )
+        ) {
             return socket.emit("game-join-error", "Game is currently in progress!");
+        }
+
         // Check if user already betted
         if (
             this.crashGameSocketController.gameStatus.pending[userId] ||
             this.crashGameSocketController.gameStatus.players[userId]
-        )
+        ) {
             return socket.emit(
                 "game-join-error",
                 "You have already joined this game!"
             );
+        }
 
         let autoCashOut = -1;
 
@@ -387,7 +432,7 @@ class CrashGameSocketListener {
 
             // If user can afford this bet
             if (
-                (dbUser!.wallet?.get(denom) ?? 0) < parseFloat(betAmount.toFixed(2))
+                (dbUser!.wallet?.[denom] ?? 0) < parseFloat(betAmount.toFixed(2))
             ) {
                 delete this.crashGameSocketController.gameStatus.pending[userId];
                 this.crashGameSocketController.gameStatus.pendingCount--;
@@ -395,16 +440,16 @@ class CrashGameSocketListener {
             }
 
             const newWalletValue =
-                (dbUser!.wallet?.get(denom) || 0) -
+                (dbUser!.wallet?.[denom] || 0) -
                 Math.abs(parseFloat(betAmount.toFixed(2)));
             const newWagerValue =
-                (dbUser!.wager?.get(denom) || 0) +
+                (dbUser!.wager?.[denom] || 0) +
                 Math.abs(parseFloat(betAmount.toFixed(2)));
             const newWagerNeededForWithdrawValue =
-                (dbUser!.wagerNeededForWithdraw?.get(denom) || 0) +
+                (dbUser!.wagerNeededForWithdraw?.[denom] || 0) +
                 Math.abs(parseFloat(betAmount.toFixed(2)));
             const newLeaderboardValue =
-                (dbUser!.leaderboard?.get("crash")?.get(denom)?.betAmount || 0) +
+                (dbUser!.leaderboard?.["crash"]?.[denom]?.betAmount || 0) +
                 Math.abs(parseFloat(betAmount.toFixed(2)));
 
             // Remove bet amount from user's balance
@@ -440,7 +485,7 @@ class CrashGameSocketListener {
                 username: this.user!.username,
                 avatar: this.user!.avatar,
                 level: getVipLevelFromWager(
-                    dbUser!.wager ? dbUser!.wager.get(denom) ?? 0 : 0
+                    dbUser!.wager ? dbUser!.wager?.[denom] ?? 0 : 0
                 ),
                 status: this.crashGameSocketController.betStatus.Playing,
                 forcedCashout: false,

@@ -14,13 +14,13 @@ export const CCoinFlip_Config = {
 export enum ECoinflipGameEvents {
   auth = "auth",
   createCoinflipGame = "create-new-coinflipgame",
-  newConflipGame = 'new-coinflip-game',
-  coinflipGameRolling = 'conflip-game-rolling',
-  coinflipRolled = 'conflip-game-rolled',
+  newConflipGame = "new-coinflip-game",
+  coinflipGameRolling = "conflip-game-rolling",
+  coinflipRolled = "conflip-game-rolled",
   autoCoinflipBet = "auto-coinflipgame-bet",
   cancelAutoBet = "cancel-auto-bet",
-  notifyError = 'notify-error',
-  gameCreationError = 'game-create-error',
-  updateWallet = 'update-wallet',
+  notifyError = "notify-error",
+  gameCreationError = "game-create-error",
+  updateWallet = "update-wallet",
   disconnect = "disconnect",
-};
+}

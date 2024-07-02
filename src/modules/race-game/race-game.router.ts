@@ -4,7 +4,6 @@ import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-import * as validations from "@/utils/validations";
 
 import {
   CreateRaceGameSchema,
@@ -52,7 +51,7 @@ export default class RaceGameRouter extends BaseRouter {
       //   validations.byId,
       //   mapPropertyExample.getIdFromParamsWithMe
       // ),
-      validateSchema(CreateRaceGameSchema, mapProperty.getBody),
+      validateSchema(CreateRaceGameSchema, mapProperty.getBody)
       // actionHandler(
       //   this.raceGameController.getById,
       //   mapPropertyExample.getIdFromParamsWithMe
@@ -72,7 +71,10 @@ export default class RaceGameRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.raceGameController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.raceGameController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

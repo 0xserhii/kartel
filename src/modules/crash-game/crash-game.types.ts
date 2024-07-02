@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
-import { Socket } from 'socket.io';
-import { IVIPLevelType } from '../user/user.types';
+import mongoose from "mongoose";
+import { Socket } from "socket.io";
+
+import { IVIPLevelType } from "../user/user.types";
 
 export interface IGameStateType {
   _id: mongoose.Types.ObjectId | null;
@@ -43,8 +44,24 @@ export interface IPendingBetType {
 
 export type TFormattedPlayerBetType = Pick<
   IBetType,
-  'playerID' | 'username' | 'avatar' | 'betAmount' | 'denom' | 'status' | 'level' | 'stoppedAt' | 'winningAmount'
+  | "playerID"
+  | "username"
+  | "avatar"
+  | "betAmount"
+  | "denom"
+  | "status"
+  | "level"
+  | "stoppedAt"
+  | "winningAmount"
 >;
 
 export interface IFormattedGameHistoryType
-  extends Pick<IGameStateType, '_id' | 'privateHash' | 'privateSeed' | 'publicSeed' | 'crashPoint' | 'createdAt'> { }
+  extends Pick<
+    IGameStateType,
+    | "_id"
+    | "privateHash"
+    | "privateSeed"
+    | "publicSeed"
+    | "crashPoint"
+    | "createdAt"
+  > {}

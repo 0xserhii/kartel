@@ -4,9 +4,7 @@ import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
 
-import {
-  LeaderboardController,
-} from ".";
+import { LeaderboardController } from ".";
 
 export default class LeaderboardRouter extends BaseRouter {
   private leaderboardController: LeaderboardController;
@@ -50,7 +48,7 @@ export default class LeaderboardRouter extends BaseRouter {
       // ),
       // validateSchema(CreateExampleSchema, mapProperty.getBody),
       actionHandler(
-        this.leaderboardController.getById,
+        this.leaderboardController.getById
         // mapPropertyExample.getIdFromParamsWithMe
       )
     );
@@ -68,7 +66,10 @@ export default class LeaderboardRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.leaderboardController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.leaderboardController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }
