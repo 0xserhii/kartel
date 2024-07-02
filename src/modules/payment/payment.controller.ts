@@ -1,4 +1,4 @@
-import { IPaymentDocumentType } from '.';
+import { IPaymentModel } from '.';
 import { FilterQuery } from "mongoose";
 
 import { CustomError } from "@/utils/helpers";
@@ -21,7 +21,7 @@ export class PaymentController {
   }
 
   public getAll = async () => {
-    const paymentFilter = <FilterQuery<IPaymentDocumentType>>{};
+    const paymentFilter = <FilterQuery<IPaymentModel>>{};
     const [item, count] = await Promise.all([
       this.paymentService.get(paymentFilter),
       this.paymentService.getCount(paymentFilter),

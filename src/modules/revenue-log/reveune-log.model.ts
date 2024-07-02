@@ -1,4 +1,4 @@
-import { IRevenueLog } from '.';
+import { IRevenueLogModel } from '.';
 // Require Dependencies
 import mongoose, { model } from 'mongoose';
 
@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 // Setup TransactionHis Schema
-const RevenueSchema = new Schema({
+const RevenueSchema = new Schema<IRevenueLogModel>({
   // Winner id
   userid: {
     type: Schema.Types.ObjectId,
@@ -49,4 +49,4 @@ const RevenueSchema = new Schema({
   },
 });
 
-export default model<IRevenueLog>('RevenueLog', RevenueSchema);
+export default model<IRevenueLogModel>('RevenueLog', RevenueSchema);

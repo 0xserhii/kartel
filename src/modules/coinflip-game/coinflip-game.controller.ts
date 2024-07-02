@@ -4,7 +4,7 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { CoinflipGameService, ICoinflipGameDocument } from ".";
+import { CoinflipGameService, ICoinflipGameModel } from ".";
 
 export class CoinflipGameController {
   // Services
@@ -20,7 +20,7 @@ export class CoinflipGameController {
   }
 
   public getAll = async () => {
-    const coinflipGameFilter = <FilterQuery<ICoinflipGameDocument>>{};
+    const coinflipGameFilter = <FilterQuery<ICoinflipGameModel>>{};
     const [item, count] = await Promise.all([
       this.coinflipGameService.get(coinflipGameFilter),
       this.coinflipGameService.getCount(coinflipGameFilter),

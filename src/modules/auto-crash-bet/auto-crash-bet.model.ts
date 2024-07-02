@@ -1,14 +1,14 @@
 // Require Dependencies
-import mongoose, { SchemaTypes, model } from 'mongoose';
-import { IAutoCrashBetModel } from './auto-crash-bet.interface';
+import mongoose, { SchemaTypes, model } from "mongoose";
+import { IAutoCrashBetModel } from "./auto-crash-bet.interface";
 
 // Setup autobet CrashGame Schema
-const AutoCrashBetSchema = new mongoose.Schema(
+const AutoCrashBetSchema = new mongoose.Schema<IAutoCrashBetModel>(
   {
     // Basic fields
     user: {
       type: SchemaTypes.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
 
     // Game Betting Amount
@@ -19,7 +19,7 @@ const AutoCrashBetSchema = new mongoose.Schema(
 
     denom: {
       type: String,
-      default: 'usk',
+      default: "usk",
     },
 
     // Game auto cashout point
@@ -51,4 +51,8 @@ const AutoCrashBetSchema = new mongoose.Schema(
   }
 );
 
-export default model<IAutoCrashBetModel>('AutoCrashBet', AutoCrashBetSchema, "autoCrashBet");
+export default model<IAutoCrashBetModel>(
+  "AutoCrashBet",
+  AutoCrashBetSchema,
+  "autoCrashBet"
+);

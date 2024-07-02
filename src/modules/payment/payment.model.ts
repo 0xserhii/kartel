@@ -1,12 +1,12 @@
 // Import Dependencies
-import mongoose, { model } from 'mongoose';
-import { IPaymentDocumentType } from './payment.interface';
+import mongoose, { model } from "mongoose";
+import { IPaymentModel } from "./payment.interface";
 
 // Destructure Schema Types
 const { Schema } = mongoose;
 
 // Setup Payment Schema
-const PaymentSchema = new Schema<IPaymentDocumentType>({
+const PaymentSchema = new Schema<IPaymentModel>({
   // Authentication related fields
   userId: { type: String },
   walletAddress: { type: String },
@@ -19,4 +19,4 @@ const PaymentSchema = new Schema<IPaymentDocumentType>({
   },
 });
 
-export default model<IPaymentDocumentType>('Payment', PaymentSchema);
+export default model<IPaymentModel>("Payment", PaymentSchema);

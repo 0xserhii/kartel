@@ -1,4 +1,4 @@
-import { IUserDocumentModel } from "./user.interface";
+import { IUserModel } from "./user.interface";
 
 export interface IVIPLevelType {
   name: string;
@@ -9,9 +9,9 @@ export interface IVIPLevelType {
 }
 
 
-export type TChatUser = Pick<IUserDocumentModel, '_id' | 'username' | 'avatar' | 'hasVerifiedAccount' | 'createdAt'>;
+export type TChatUser = Pick<IUserModel, '_id' | 'username' | 'avatar' | 'hasVerifiedAccount' | 'createdAt'>;
 
 export type TLeaderboardUserType = Pick<
-  IUserDocumentModel,
+  IUserModel,
   '_id' | 'username' | 'userEmail' | 'leaderboard' | 'avatar' | 'createdAt' | 'hasVerifiedAccount' | 'rank'
 >;

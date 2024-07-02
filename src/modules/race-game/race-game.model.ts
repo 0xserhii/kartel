@@ -1,12 +1,9 @@
-import { IRaceGame } from './race-game.interface';
-// Import Dependencies
-import mongoose, { model } from 'mongoose';
+import { model, Schema, Types as SchemaTypes } from "mongoose";
+import { IRaceGameModel } from "./race-game.interface";
 
-// Destructure Schema Types
-const { Schema, Types: SchemaTypes } = mongoose;
 
 // Setup Race Schema
-const RaceSchema = new Schema({
+const RaceSchema = new Schema<IRaceGameModel>({
   // Basic fields
   active: Boolean,
   prize: Number,
@@ -17,7 +14,7 @@ const RaceSchema = new Schema({
     type: [
       {
         type: SchemaTypes.ObjectId,
-        ref: 'User',
+        ref: "User",
       },
     ],
     default: [],
@@ -30,4 +27,4 @@ const RaceSchema = new Schema({
   },
 });
 
-export default model<IRaceGame>('RaceGame', RaceSchema);
+export default model<IRaceGameModel>("RaceGame", RaceSchema);

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
-export interface IWalletTransactionDocumentModel extends Document {
+export interface IWalletTransactionModel extends Document {
   amount: number;
   denom: string;
   reason: string;

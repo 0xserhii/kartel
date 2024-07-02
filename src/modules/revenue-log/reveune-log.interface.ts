@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export declare interface IRevenueLog {
+export declare interface IRevenueLogModel {
   userid: mongoose.Types.ObjectId;
   revenueType: number;
   revenue: number;

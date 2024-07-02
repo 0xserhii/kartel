@@ -1,12 +1,12 @@
 // Import Dependencies
 import mongoose from 'mongoose';
-import { IUserDocumentModel } from './user.interface';
+import { IUserModel } from './user.interface';
 
 // Destructure Schema Types
 const { Schema, Types } = mongoose;
 
 // Setup User Schema
-const UserSchema = new Schema<IUserDocumentModel>({
+const UserSchema = new Schema<IUserModel>({
   // Authentication related fields
   provider: { type: String },
   providerId: { type: String },
@@ -242,6 +242,6 @@ const UserSchema = new Schema<IUserDocumentModel>({
 });
 
 // Create and export the new model
-const User = mongoose.model<IUserDocumentModel>('User', UserSchema);
+const User = mongoose.model<IUserModel>('User', UserSchema);
 
 export default User;

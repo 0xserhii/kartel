@@ -1,19 +1,19 @@
 // Import Dependencies
-import mongoose, { SchemaTypes, model } from 'mongoose';
-import { IChatHistoryDocument } from './chat-history.interface';
+import mongoose, { SchemaTypes, model } from "mongoose";
+import { IChatHistoryModel } from "./chat-history.interface";
 
 // Destructure Schema Types
 const { Schema } = mongoose;
 
 // Setup Race Schema
-const ChatHistorySchema = new Schema({
+const ChatHistorySchema = new Schema<IChatHistoryModel>({
   // Basic fields
   message: String,
 
   // Sender
   user: {
     type: SchemaTypes.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 
   // When this chat history was created
@@ -23,4 +23,4 @@ const ChatHistorySchema = new Schema({
   },
 });
 
-export default model<IChatHistoryDocument>('ChatHistory', ChatHistorySchema);
+export default model<IChatHistoryModel>("ChatHistory", ChatHistorySchema);

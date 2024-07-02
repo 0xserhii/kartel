@@ -24,7 +24,7 @@ export interface IGenerateParams {
   userId: ObjectId;
 }
 
-export interface IAuth extends Document {
+export interface IAuthModel extends Document {
   userId: ObjectId;
   deviceId: string;
   platform: PLATFORM;

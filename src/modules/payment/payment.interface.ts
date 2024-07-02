@@ -1,8 +1,6 @@
-import Joi from "joi";
-import { ObjectId } from "mongoose";
+import { Document } from "mongoose";
 
-export interface IPaymentDocumentType extends Document {
-  _id: ObjectId;
+export interface IPaymentModel extends Document {
   userId?: string;
   walletAddress?: string;
   type: string;

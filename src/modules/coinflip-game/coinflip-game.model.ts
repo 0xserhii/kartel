@@ -1,16 +1,16 @@
 // Require Dependencies
-import mongoose, { Document, Model, ObjectId, Types, model } from 'mongoose';
-import { ICoinflipGameDocument } from './coinflip-game.interface';
+import mongoose, { Document, Model, ObjectId, Types, model } from "mongoose";
+import { ICoinflipGameModel } from "./coinflip-game.interface";
 
 const SchemaTypes = mongoose.SchemaTypes;
 
 // Setup CoinflipGame Schema
-const CoinflipGameSchema = new mongoose.Schema({
+const CoinflipGameSchema = new mongoose.Schema<ICoinflipGameModel>({
   // Basic fields
   betAmount: Number, // User bet amount
   denom: {
     type: String,
-    default: 'usk',
+    default: "usk",
   },
   betCoinsCount: {
     // User bet number of coins
@@ -20,7 +20,7 @@ const CoinflipGameSchema = new mongoose.Schema({
   betSide: {
     // User bet side  0: front, 1: back
     type: Boolean,
-    default: 0,
+    default: false,
   },
   betSideCount: {
     // User bet number of the selected side of coins
@@ -48,7 +48,7 @@ const CoinflipGameSchema = new mongoose.Schema({
   // UserID of who created this game
   user: {
     type: SchemaTypes.ObjectId,
-    ref: 'User',
+    ref: "User",
   },
 
   // Indicates if the bot was called or not
@@ -77,4 +77,4 @@ const CoinflipGameSchema = new mongoose.Schema({
   },
 });
 
-export default model<ICoinflipGameDocument>('CoinflipGame', CoinflipGameSchema);
+export default model<ICoinflipGameModel>("CoinflipGame", CoinflipGameSchema);

@@ -1,6 +1,6 @@
 import { IChatEmitHistory } from "@/modules/chat-history";
 import { ICoinPlayer } from "@/modules/coinflip-game";
-import { IBetType, ICrashGameDocument, IFormattedGameHistoryType, IPendingBetType, TFormattedPlayerBetType } from "@/modules/crash-game";
+import { IBetType, ICrashGameModel, IFormattedGameHistoryType, IPendingBetType, TFormattedPlayerBetType } from "@/modules/crash-game";
 import { TChatUser, TLeaderboardUserType } from "@/modules/user/user.types";
 import { Types } from "mongoose";
 
@@ -67,7 +67,7 @@ export interface IServerToClientEvents {
     'game-end': (data: { game: IFormattedGameHistoryType }) => void;
     'game-tick': (data: number) => void;
     'crashgame-join-success': (data: TFormattedPlayerBetType) => void;
-    'previous-crashgame-history': (history: Pick<ICrashGameDocument, '_id' | 'crashPoint' | 'players'>[]) => void;
+    'previous-crashgame-history': (history: Pick<ICrashGameModel, '_id' | 'crashPoint' | 'players'>[]) => void;
     'auto-crashgame-join-success': (data: string) => void;
     connection_kicked: () => void;
 

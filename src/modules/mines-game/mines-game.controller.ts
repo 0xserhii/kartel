@@ -5,7 +5,7 @@ import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
 import { MinesGameService } from "./mines-game.service";
-import { IMinesGameDocument } from "./mines-game.interface";
+import { IMinesGameModel } from "./mines-game.interface";
 
 export class MinesGameController {
   // Services
@@ -21,7 +21,7 @@ export class MinesGameController {
   }
 
   public getAll = async () => {
-    const minesGameFilter = <FilterQuery<IMinesGameDocument>>{};
+    const minesGameFilter = <FilterQuery<IMinesGameModel>>{};
     const [item, count] = await Promise.all([
       this.minesGameService.get(minesGameFilter),
       this.minesGameService.getCount(minesGameFilter),

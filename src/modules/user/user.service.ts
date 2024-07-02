@@ -6,14 +6,14 @@ import { User } from "@/utils/db";
 import { validateFunc } from "@/utils/validations";
 
 import * as validateUser from "./user.validate";
-import { IUserDocumentModel } from "./user.interface";
+import { IUserModel } from "./user.interface";
 
-export default class UserService extends BaseService<IUserDocumentModel> {
+export default class UserService extends BaseService<IUserModel> {
   constructor() {
     super(User);
   }
 
-  async create(user: IUserDocumentModel) {
+  async create(user: IUserModel) {
     const error = validateFunc(validateUser.full, user);
 
     if (error) {
