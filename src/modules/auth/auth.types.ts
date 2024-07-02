@@ -1,14 +1,12 @@
 import { Document, ObjectId } from "mongoose";
 
-import { ROLE, STATUS } from "@/modules/user/user.constant";
-
 import { PLATFORM } from "./auth.constant";
 
 export interface IAuthInfo {
   deviceId?: string;
   platform?: PLATFORM;
-  role: ROLE;
-  status: STATUS;
+  role: string;
+  status: string;
   userId: ObjectId;
 }
 
@@ -19,8 +17,8 @@ export interface IUpdateOrCreate {
 export interface IGenerateParams {
   deviceId?: string;
   platform?: PLATFORM;
-  role: ROLE;
-  status: STATUS;
+  role: string;
+  status: string;
   userId: ObjectId;
 }
 

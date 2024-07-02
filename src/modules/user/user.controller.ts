@@ -94,7 +94,7 @@ export default class UserController {
 
   getUserById = async (id: string, { userId, role }: IAuthInfo, _UTC) => {
     if (
-      role.filter((item) => item === ROLE.ADMIN).length === 0 &&
+      role === ROLE.ADMIN &&
       id !== userId.toString()
     ) {
       throw new CustomError(403, this.localizations.ERRORS.OTHER.FORBIDDEN);

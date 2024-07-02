@@ -8,7 +8,6 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { PLATFORM } from "./auth.constant";
 import AuthService from "./auth.service";
 import { IAuthModel } from "./auth.types";
 import { ROLE } from "../user/user.constant";
@@ -173,7 +172,7 @@ export default class AuthController {
       platform: platform,
       userId: user._id,
       refreshToken: authParams.refreshToken,
-    } as IAuth);
+    } as IAuthModel);
 
     return {
       status: 201,

@@ -8,6 +8,7 @@ interface LeaderboardEntry {
 export interface IUserModel extends Document {
   provider: string;
   role: string;
+  status: string;
   providerId: string;
   username: string;
   userEmail: string;
