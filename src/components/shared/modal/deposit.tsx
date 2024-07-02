@@ -26,6 +26,7 @@ import {
 } from '@/constants/data';
 import { useAppSelector } from '@/store/redux';
 import LoadingIcon from '../loading-icon';
+import { axiosGet, axiosPost } from '@/utils/axios';
 
 const DepositModal = () => {
   const modal = useModal();
@@ -76,7 +77,7 @@ const DepositModal = () => {
 
   const handleDeposit = async () => {
     const encryptedAddressRes: any = (
-      await axios.get(
+      await axiosGet(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/payments/admin-wallet`
       )
     ).data.responseObject as string;
@@ -135,16 +136,18 @@ const DepositModal = () => {
 
   const updateBalance = async (type: string, txHash?: string) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
+      const response = await axiosPost([
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/${userData._id}/balance`,
         {
-          balanceType: selectedToken.name,
-          actionType: type,
-          amount: Number(depositAmount),
-          txHash,
-          address: account?.address
+          data: {
+            balanceType: selectedToken.name,
+            actionType: type,
+            amount: Number(depositAmount),
+            txHash,
+            address: account?.address
+          }
         }
-      );
+      ]);
       if (response.status === 200) {
         const walletDataRes = {
           usk: response.data?.responseObject.wallet.usk ?? 0,

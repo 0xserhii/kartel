@@ -9,10 +9,9 @@ import { ModalType } from '@/types/modal';
 import { useOpen } from '@/provider/chat-provider';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { initialBalance, token } from '@/constants/data';
-import { useWallet } from '@/provider/crypto/wallet';
+import { initialBalance } from '@/constants/data';
 import { subscribeUserServer } from '@/store/redux/actions/user.action';
+import { axiosGet } from '@/utils/axios';
 
 export default function Header() {
   const modal = useModal();
@@ -20,32 +19,20 @@ export default function Header() {
   const userData = useAppSelector((store: any) => store.user.userData);
   const siteBalance = useAppSelector((store: any) => store.user.wallet);
   const dispatch = useAppDispatch();
-  const { account } = useWallet();
   const [walletData, setWalletData] = useState(initialBalance);
 
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN);
   };
 
-  const getSiteBalance = async (type: string, txHash?: string) => {
+  const getSiteBalance = async () => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
-        {
-          balanceType: token[0].name,
-          actionType: type,
-          amount: 0,
-          txHash,
-          address: account?.address
-        }
-      );
-      if (response.status === 200) {
-        const walletDataRes = {
-          usk: response.data?.responseObject.wallet.usk ?? 0,
-          kart: response.data?.responseObject.wallet.kart ?? 0
-        }
-        setWalletData(walletDataRes);
+      const response = await axiosGet(`${import.meta.env.VITE_SERVER_URL}/api/v1/user/balance`,)
+      const walletDataRes = {
+        usk: response?.balance?.usk ?? 0,
+        kart: response?.balance?.kart ?? 0
       }
+      setWalletData(walletDataRes);
     } catch (error) {
       console.error('Failed to get balance:', error);
     }
@@ -53,7 +40,7 @@ export default function Header() {
 
   useEffect(() => {
     if (userData?.username !== '') {
-      getSiteBalance('get');
+      getSiteBalance();
     }
   }, [siteBalance]);
 
