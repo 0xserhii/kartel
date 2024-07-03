@@ -38,14 +38,6 @@ export default class UserService extends BaseService<IUserModel> {
     updateParams: string,
     updatefield: number
   ) {
-    console.log({
-      data: {
-        userId,
-        updateParams,
-        updatefield,
-      },
-    });
-
     try {
       await this.update(
         { _id: userId },

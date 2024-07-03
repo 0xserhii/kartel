@@ -120,18 +120,22 @@ export class PaymentController {
         throw new CustomError(409, 'not enough token balances');
       } else {
 
-        // user withdraw crypto to admin wallet
-        const resPayment = await this.paymentService.balanceWithdraw({
-          address: address,
-          amount: amount,
-          tokenType: currency,
-        });
-
-        if (!resPayment) {
-          throw new CustomError(409, 'unable withdraw');
-        }
         updateValue = walletValue - amount;
-        return await this.userService.updateUserBalance(userId, updateParams, updateValue);
+        let updatedUser = await this.userService.updateUserBalance(userId, updateParams, updateValue)
+        // user withdraw crypto to admin wallet
+        try {
+          const resPayment = await this.paymentService.balanceWithdraw({
+            address: address,
+            amount: amount,
+            tokenType: currency,
+          });
+          if (!resPayment) {
+            throw new CustomError(409, 'unable withdraw');
+          }
+        } catch {
+          updatedUser = await this.userService.updateUserBalance(userId, updateParams, walletValue)
+        }
+        return updatedUser;
       }
     } catch (error) {
       console.log(error);

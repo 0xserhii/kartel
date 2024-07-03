@@ -19,60 +19,13 @@ export default class WalletTransactionRouter extends BaseRouter {
   public routes(): void {
     this.router.get(
       "/",
-      checkPermissions(),
-      actionHandler(this.walletTransactionController.getAll)
-    );
-
-    this.router.post(
-      "/",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      // validateSchema(CreatePaymentSchema, mapProperty.getBody),
-      actionHandler(
-        this.walletTransactionController.create,
-        mapProperty.getBody
-      )
-    );
-
-    this.router.get(
-      "/name/:name",
-      checkPermissions(),
-      actionHandler(
-        this.walletTransactionController.getByName,
-        mapProperty.getNameFromParam
-      )
+      actionHandler(this.walletTransactionController.getAll)
     );
 
     this.router.get(
       "/:id",
-      checkPermissions()
-      // validateSchema(
-      //   validations.byId,
-      //   mapProperty.getIdFromParamsWithMe
-      // ),
-      // validateSchema(CreatePaymentSchema, mapProperty.getBody),
-      // actionHandler(
-      //   this.exampleController.getById,
-      //   mapPropertyExample.getIdFromParamsWithMe
-      // )
-    );
-
-    this.router.put(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      // validateSchema(UpdatePaymentSchema, mapProperty.getBody),
-      actionHandler(this.walletTransactionController.update, [
-        mapProperty.getNameFromParam,
-        mapProperty.getBody,
-      ])
-    );
-
-    this.router.delete(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(
-        this.walletTransactionController.delete,
-        mapProperty.getNameFromParam
-      )
+      checkPermissions({ roles: [ROLE.ADMIN] })
     );
   }
 }

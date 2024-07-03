@@ -7,10 +7,11 @@ import path from "path";
 import { Server as SocketIOServer } from "socket.io";
 import { fileURLToPath } from "url";
 
-import { ALLOW_HOSTS, PORT } from "@/config";
+import { ALLOW_HOSTS, PORT, SOCKET_ALLOW_HOSTS } from "@/config";
 import authorize from "@/middleware/authorize";
 import { errorHandler, routeNotFound } from "@/middleware/error-handler";
 import logger from "@/middleware/logger";
+import customParser from 'socket.io-msgpack-parser'
 
 import { CronJobs } from "./cron";
 import RootRouter from "./root.router";
@@ -46,12 +47,17 @@ app.use([routeNotFound, errorHandler]);
 const httpServer = new Server(app);
 
 const socketServer = new SocketIOServer(httpServer, {
-  cors: { origin: "*", methods: ["GET", "POST"] },
+  cors: {
+    origin: SOCKET_ALLOW_HOSTS,
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+  parser: customParser
 });
 
 new SocketServer(socketServer);
 app.set("socketio", socketServer);
 
-CronJobs.userSubscriptionCron.start();
+CronJobs.customerUpdateCron.start();
 
 httpServer.listen(PORT, () => console.info("Server listening on port " + PORT));

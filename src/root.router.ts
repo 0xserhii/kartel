@@ -4,16 +4,14 @@ import swaggerUi from "swagger-ui-express";
 import AuthRouter from "./modules/auth/auth.router";
 import AutoCrashBetRouter from "./modules/auto-crash-bet/auto-crash-bet.router";
 import ChatHistoryRouter from "./modules/chat-history/chat-history.router";
-import CoinflipGameRouter from "./modules/coinflip-game/coinflip-game.router";
 import CrashGameRouter from "./modules/crash-game/crash-game.router";
 import LogsRouter from "./modules/logs/logs.router";
-import MinesGameRouter from "./modules/mines-game/mines-game.router";
 import PaymentRouter from "./modules/payment/payment.router";
 import RevenueLogRouter from "./modules/revenue-log/reveune-log.router";
 import UserRouter from "./modules/user/user.router";
 import UserBotRouter from "./modules/user-bot/user-bot.router";
 import WalletTransactionRouter from "./modules/wallet-transaction/wallet-transaction.router";
-import swaggerSetup from "./utils/swagger/swagger.setup";
+// import swaggerSetup from "./utils/swagger/swagger.setup";
 
 export default class RootRouter {
   public router: Router;
@@ -25,15 +23,13 @@ export default class RootRouter {
   }
 
   public routes(): void {
-    this.router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
+    // this.router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
     this.router.use("/auth", new AuthRouter().router);
     this.router.use("/auto-crash-bet", new AutoCrashBetRouter().router);
     this.router.use("/logs", new LogsRouter().router);
     this.router.use("/chat-history", new ChatHistoryRouter().router);
-    this.router.use("/coinflip-game", new CoinflipGameRouter().router);
     this.router.use("/crash-game", new CrashGameRouter().router);
-    this.router.use("/mines-game", new MinesGameRouter().router);
     this.router.use(
       "/wallet-transaction",
       new WalletTransactionRouter().router

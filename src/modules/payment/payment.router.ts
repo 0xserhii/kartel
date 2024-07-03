@@ -20,24 +20,8 @@ export default class PaymentRouter extends BaseRouter {
   public routes(): void {
     this.router.get(
       "/",
-      checkPermissions(),
-      actionHandler(this.paymentController.getAll)
-    );
-
-    this.router.post(
-      "/",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      // validateSchema(CreatePaymentSchema, mapProperty.getBody),
-      actionHandler(this.paymentController.create, mapProperty.getBody)
-    );
-
-    this.router.get(
-      "/name/:name",
-      checkPermissions(),
-      actionHandler(
-        this.paymentController.getByName,
-        mapProperty.getNameFromParam
-      )
+      actionHandler(this.paymentController.getAll)
     );
 
     this.router.post(
@@ -65,20 +49,5 @@ export default class PaymentRouter extends BaseRouter {
       ])
     );
 
-    this.router.put(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      // validateSchema(UpdatePaymentSchema, mapProperty.getBody),
-      actionHandler(this.paymentController.update, [
-        mapProperty.getNameFromParam,
-        mapProperty.getBody,
-      ])
-    );
-
-    this.router.delete(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.paymentController.delete, mapProperty.getNameFromParam)
-    );
   }
 }

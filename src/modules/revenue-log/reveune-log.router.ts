@@ -24,57 +24,8 @@ export default class RevenueLogRouter extends BaseRouter {
   public routes(): void {
     this.router.get(
       "/",
-      checkPermissions(),
+      checkPermissions({ roles: [ROLE.ADMIN] }),
       actionHandler(this.revenueLogController.getAll)
-    );
-
-    this.router.post(
-      "/",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      validateSchema(CreateRevenueLogSchema, mapProperty.getBody),
-      actionHandler(this.revenueLogController.create, mapProperty.getBody)
-    );
-
-    this.router.get(
-      "/name/:name",
-      checkPermissions(),
-      actionHandler(
-        this.revenueLogController.getByName,
-        mapProperty.getNameFromParam
-      )
-    );
-
-    this.router.get(
-      "/:id",
-      checkPermissions(),
-      // validateSchema(
-      //   validations.byId,
-      //   mapProperty.getIdFromParamsWithMe
-      // ),
-      validateSchema(CreateRevenueLogSchema, mapProperty.getBody)
-      // actionHandler(
-      //   this.revenueLogController.getById,
-      //   mapProperty.getIdFromParamsWithMe
-      // )
-    );
-
-    this.router.put(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      validateSchema(UpdateRevenueLogSchema, mapProperty.getBody),
-      actionHandler(this.revenueLogController.update, [
-        mapProperty.getNameFromParam,
-        mapProperty.getBody,
-      ])
-    );
-
-    this.router.delete(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(
-        this.revenueLogController.delete,
-        mapProperty.getNameFromParam
-      )
     );
   }
 }

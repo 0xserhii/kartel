@@ -11,6 +11,7 @@ import ILocalization from "@/utils/localizations/localizations.interface";
 import { ROLE } from "../user/user.constant";
 import AuthService from "./auth.service";
 import { IAuthModel } from "./auth.types";
+import logger from "@/utils/logger";
 
 export default class AuthController {
   private service: AuthService;
@@ -61,7 +62,7 @@ export default class AuthController {
           data
         );
       } catch (error) {
-        console.log(error);
+        logger.log(error);
 
         if (error.code == 11000) {
           throw new CustomError(

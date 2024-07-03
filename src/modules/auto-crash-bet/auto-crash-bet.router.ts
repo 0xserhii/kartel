@@ -20,57 +20,8 @@ export default class AutoCrashBetRouter extends BaseRouter {
   public routes(): void {
     this.router.get(
       "/",
-      checkPermissions(),
+      checkPermissions({ roles: [ROLE.ADMIN] }),
       actionHandler(this.autoCrashBetController.getAll)
-    );
-
-    this.router.post(
-      "/",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      // validateSchema(CreateExampleSchema, mapProperty.getBody),
-      actionHandler(this.autoCrashBetController.create, mapProperty.getBody)
-    );
-
-    this.router.get(
-      "/name/:name",
-      checkPermissions(),
-      actionHandler(
-        this.autoCrashBetController.getByName,
-        mapProperty.getNameFromParam
-      )
-    );
-
-    this.router.get(
-      "/:id",
-      checkPermissions()
-      // validateSchema(
-      //   validations.byId,
-      //   mapPropertyExample.getIdFromParamsWithMe
-      // ),
-      // validateSchema(CreateExampleSchema, mapProperty.getBody),
-      // actionHandler(
-      //   this.autoCrashBetController.getById,
-      //   mapPropertyExample.getIdFromParamsWithMe
-      // )
-    );
-
-    this.router.put(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      // validateSchema(UpdateExampleSchema, mapProperty.getBody),
-      actionHandler(this.autoCrashBetController.update, [
-        mapProperty.getNameFromParam,
-        mapProperty.getBody,
-      ])
-    );
-
-    this.router.delete(
-      "/:name",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(
-        this.autoCrashBetController.delete,
-        mapProperty.getNameFromParam
-      )
     );
   }
 }
