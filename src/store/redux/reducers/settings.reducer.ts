@@ -10,7 +10,7 @@ interface SettingsAction {
 }
 
 const initialState: any = {
-    isAudioPlay: true
+    isAudioPlay: false
 };
 
 const settingsReducer = (state: any = initialState, action: SettingsAction): any => {

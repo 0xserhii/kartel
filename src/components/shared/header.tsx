@@ -82,7 +82,7 @@ export default function Header() {
             ))}
           </div>
         )}
-        <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
+        <div className="ml-4 mr-8 flex items-center gap-5 md:ml-6">
           {
             settings.isAudioPlay ? <Volume2 className='text-purple cursor-pointer' onClick={handleAudio} /> : <VolumeX className='text-white cursor-pointer' onClick={handleAudio} />
           }
