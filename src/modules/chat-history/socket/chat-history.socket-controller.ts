@@ -103,17 +103,17 @@ class ChatHistorySocketHandler {
     }
   };
 
-  public disconnectHandler = async () => {};
+  public disconnectHandler = async () => { };
 
   public getChatHistoryHandler = async (sentAt: Date) => {
     let previousChatHistory;
 
     if (sentAt) {
       previousChatHistory =
-        await this.chatHistoryService.fetchEarlierChatHistories(sentAt, 12);
+        await this.chatHistoryService.fetchEarlierChatHistories(sentAt, 5);
     } else {
       previousChatHistory =
-        await this.chatHistoryService.fetchEarlierChatHistories(new Date(), 12);
+        await this.chatHistoryService.fetchEarlierChatHistories(new Date(), 15);
     }
 
     if (previousChatHistory?.length > 0) {

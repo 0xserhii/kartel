@@ -18,7 +18,7 @@ export class ChatHistoryService extends BaseService<IChatHistoryModel> {
   ): Promise<IChatEmitHistory[] | []> => {
     try {
       const chatHistories = await this.aggregateByPipeline([
-        { $match: { sentAt: { $lt: date } } },
+        { $match: { sentAt: { $lt: new Date(date) } } },
         { $sort: { sentAt: -1 } },
         { $limit: limit },
         {
