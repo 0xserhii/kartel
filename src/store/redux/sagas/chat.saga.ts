@@ -102,7 +102,7 @@ function* stopChanelSaga() {
 
 function* sendMsgSaga(action) {
   yield delay(500);
-  KartelSocket.chat.emit(EChatSocketEvent.RECEIVE_MSG, action.payload);
+  KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload);
 }
 
 const sagas = [
@@ -110,7 +110,7 @@ const sagas = [
   takeLatest(EChatSocketAction.LOGIN_CHAT, loginChanelSaga),
   takeLatest(EChatSocketAction.GET_CHAT_HISTORY, getChatHistorySaga),
   takeLatest(EChatSocketAction.DISCONNECT_CHAT, stopChanelSaga),
-  takeEvery(EChatSocketAction.RECEIVE_MSG, sendMsgSaga)
+  takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga)
 ];
 
 export default sagas;
