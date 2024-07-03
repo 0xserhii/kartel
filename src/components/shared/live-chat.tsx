@@ -13,7 +13,6 @@ import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { getAccessToken } from '@/utils/axios';
 import { useInView } from 'react-intersection-observer';
-import { useWallet } from '@/provider/crypto/wallet';
 
 export type HistoryItemProps = {
   name: string;
@@ -45,7 +44,6 @@ const LiveChat = () => {
   const [inputStr, setInputStr] = useState('');
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { disconnect } = useWallet();
   const userData = useAppSelector((store: any) => store.user.userData);
   const { ref: lastMessageRef, inView } = useInView({
     threshold: 0,
@@ -100,7 +98,7 @@ const LiveChat = () => {
 
   useEffect(() => {
     if (getMoreChat) {
-      setGetMoreChat(false)
+      setGetMoreChat(false);
     } else {
       if (
         chatState?.chatHistory &&
@@ -140,8 +138,9 @@ const LiveChat = () => {
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
         <ScrollArea
-          className={`py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}>
-          <div className='flex flex-col w-full'>
+          className={`py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
+        >
+          <div className="flex w-full flex-col">
             <div ref={lastMessageRef}></div>
             {chatState?.chatHistory &&
               Array.isArray(chatState?.chatHistory) &&

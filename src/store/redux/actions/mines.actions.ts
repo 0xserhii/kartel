@@ -28,7 +28,7 @@ export function minesgameRolling(position: number) {
   };
 }
 
-export function gameWon(data: { winAmount: number | null, mines: number[] }) {
+export function gameWon(data: { winAmount: number | null; mines: number[] }) {
   return {
     type: EMinesSocketAction.GAME_WON,
     payload: data

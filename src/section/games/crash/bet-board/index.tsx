@@ -15,7 +15,6 @@ const BetBoard = ({
   totalAmount: any;
   crashStatus: ECrashStatus;
 }) => {
-  console.log(betData);
   return (
     <div className="flex w-full flex-col gap-5 md:w-7/12">
       <div className="flex flex-row items-center justify-between py-1.5">
@@ -51,7 +50,7 @@ const BetBoard = ({
           </Table>
         </CardHeader>
         <CardContent className="px-2 py-0">
-          <ScrollArea className="px-5 py-3 h-[295px]">
+          <ScrollArea className="h-[295px] px-5 py-3">
             <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-y-hidden ">
               <TableBody>
                 {betData
@@ -80,7 +79,9 @@ const BetBoard = ({
                               (item) => item.playerID === player.playerID
                             )?.stoppedAt ?? 0) / 100
                           ).toFixed(2) + 'x') ||
-                          (crashStatus === ECrashStatus.END ? 'bang' : 'betting')}
+                          (crashStatus === ECrashStatus.END
+                            ? 'bang'
+                            : 'betting')}
                       </TableCell>
                       <TableCell className="w-1/6 text-center">
                         <div className="flex w-full flex-row items-center justify-center gap-1 text-center">
@@ -93,27 +94,23 @@ const BetBoard = ({
                         </div>
                       </TableCell>
                       <TableCell className="w-1/6 text-center">
-                        {
-                          betCashout?.find(
-                            (item) => item.playerID === player.playerID
-                          )?.winningAmount ? (
-                            <span className='text-[#049DD9] font-semibold'>
-                              {(
-                                (betCashout?.find(
-                                  (item) => item.playerID === player.playerID
-                                )?.winningAmount ?? 0)
-                              ).toFixed(2)}
-                            </span>
-                          ) : (
-                            crashStatus === ECrashStatus.END ? (
-                              <span className='text-purple'>
-                                {"-" + player.betAmount}
-                              </span>
-                            ) : (
-                              <span>betting</span>
-                            )
-                          )
-                        }
+                        {betCashout?.find(
+                          (item) => item.playerID === player.playerID
+                        )?.winningAmount ? (
+                          <span className="font-semibold text-[#049DD9]">
+                            {(
+                              betCashout?.find(
+                                (item) => item.playerID === player.playerID
+                              )?.winningAmount ?? 0
+                            ).toFixed(2)}
+                          </span>
+                        ) : crashStatus === ECrashStatus.END ? (
+                          <span className="text-purple">
+                            {'-' + player.betAmount}
+                          </span>
+                        ) : (
+                          <span>betting</span>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}

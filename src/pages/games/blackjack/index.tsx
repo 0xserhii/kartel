@@ -1,9 +1,7 @@
 export default function BlackJackGames() {
   return (
-    <div className='flex items-center justify-center w-full h-full z-20 backdrop-blur-lg'>
-      <p className='text-white text-center text-5xl font-bold'>
-        Coming Soon
-      </p>
+    <div className="z-20 flex h-full w-full items-center justify-center backdrop-blur-lg">
+      <p className="text-center text-5xl font-bold text-white">Coming Soon</p>
     </div>
   );
 }

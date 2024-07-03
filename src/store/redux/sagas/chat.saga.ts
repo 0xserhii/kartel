@@ -32,14 +32,11 @@ function subscribe(socket) {
       }
     );
 
-    socket.on(
-      EChatSocketEvent.NOTIFY_ERROR,
-      (error: string) => {
-        emit(chatActions.receiveError(error));
-      }
-    );
+    socket.on(EChatSocketEvent.NOTIFY_ERROR, (error: string) => {
+      emit(chatActions.receiveError(error));
+    });
 
-    return () => { };
+    return () => {};
   });
 }
 

@@ -34,7 +34,9 @@ export default function MinesGameSection() {
   const [mineStatus, setMineStatus] = useState(EMinesStatus.NONE);
   const dispatch = useAppDispatch();
   const minesState = useAppSelector((state: any) => state.mines);
-  const [mineImages, setMineImages] = useState(Array(defaulMine.length).fill('mystery'));
+  const [mineImages, setMineImages] = useState(
+    Array(defaulMine.length).fill('mystery')
+  );
   const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
   const [clickedIndices, setClickedIndices] = useState<Set<number>>(new Set());
   const [isProcessing, setIsProcessing] = useState(false);
@@ -98,10 +100,10 @@ export default function MinesGameSection() {
     setIsProcessing(true);
     setLastClickedIndex(index);
     setMineStatus(EMinesStatus.CLICKED);
-    setClickedIndices(prev => new Set(prev.add(index)));
+    setClickedIndices((prev) => new Set(prev.add(index)));
     await dispatch(minesActions.rollingMinesgame(index));
     const propability = setTimeout(() => {
-      setSelectedProbability(prev => prev + 1);
+      setSelectedProbability((prev) => prev + 1);
     }, 1000);
     return () => {
       clearTimeout(propability);
@@ -110,20 +112,24 @@ export default function MinesGameSection() {
 
   const handleMinesGame = () => {
     if (mineStatus === EMinesStatus.NONE) {
-      if (betAmount > 0 && betAmount <= 100 && minesAmount > 0 && minesAmount < 25) {
+      if (
+        betAmount > 0 &&
+        betAmount <= 100 &&
+        minesAmount > 0 &&
+        minesAmount < 25
+      ) {
         setMineStatus(EMinesStatus.START);
         dispatch(
           minesActions.startMinesgame({
             betAmount: Number(betAmount),
             denom: selectedToken.name,
-            betMinesCount: minesAmount,
+            betMinesCount: minesAmount
           })
         );
       } else {
         toast.error('Invalid Token Amount');
       }
-    }
-    else {
+    } else {
       dispatch(minesActions.cashoutgame());
       const gameover = setTimeout(() => {
         setIsGameOver(true);
@@ -134,7 +140,7 @@ export default function MinesGameSection() {
       }, 500);
       return () => clearTimeout(gameover);
     }
-  }
+  };
 
   useEffect(() => {
     const result = calculateMiningProbabilities(minesAmount, 25) as number[];
@@ -161,7 +167,7 @@ export default function MinesGameSection() {
           setLastClickedIndex(null);
           setIsGameOver(true);
         }
-        setClickedIndices(prev => {
+        setClickedIndices((prev) => {
           const newSet = new Set(prev);
           newSet.delete(lastClickedIndex);
           return newSet;
@@ -189,56 +195,66 @@ export default function MinesGameSection() {
   }, [minesState.error]);
 
   return (
-    <ScrollArea className="h-[calc(100vh-64px)] flex">
-      <div className='w-full flex flex-col gap-3'>
-        <div className='flex justify-center items-center'>
-          <div className="flex flex-row scroll-smooth w-[35vw] gap-1.5 overflow-hidden p-1 bg-darkBlue2 rounded-lg mt-5">
+    <ScrollArea className="flex h-[calc(100vh-64px)]">
+      <div className="flex w-full flex-col gap-3">
+        <div className="flex items-center justify-center">
+          <div className="mt-5 flex w-[35vw] flex-row gap-1.5 overflow-hidden scroll-smooth rounded-lg bg-darkBlue2 p-1">
             {probabilities.map((item, index) => (
-              <div key={index}
-                ref={el => {
+              <div
+                key={index}
+                ref={(el) => {
                   if (selectedProbability === index + 1 && el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    el.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'nearest',
+                      inline: 'center'
+                    });
                   }
                 }}
-                className={`text-xs py-1 px-2.5 rounded-lg border border-[#1D1776] bg-dark-blue font-semibold text-gray500 hover:bg-dark-blue ${selectedProbability === index + 1 ? 'bg-purple text-white' : ''}`}
+                className={`rounded-lg border border-[#1D1776] bg-dark-blue px-2.5 py-1 text-xs font-semibold text-gray500 hover:bg-dark-blue ${selectedProbability === index + 1 ? 'bg-purple text-white' : ''}`}
               >
                 x{item > 1000 ? `${(item / 1000).toFixed(2)}k` : item}
               </div>
-            ))
-            }
+            ))}
           </div>
         </div>
         <div className="flex items-center justify-center">
-          {isGameOver &&
+          {isGameOver && (
             <span className="absolute top-16 text-center text-xl font-bold uppercase text-[#df8002]">
-              {(minesState.earned === null ? ("Game over"
-              ) : `WON ${minesState.earned}`)}
+              {minesState.earned === null
+                ? 'Game over'
+                : `WON ${minesState.earned}`}
             </span>
-          }
+          )}
         </div>
-        <div className="flex flex-col gap-12 mt-12">
+        <div className="mt-12 flex flex-col gap-12">
           <div className="relative flex flex-row justify-around">
-            <div className='w-6/12'>
+            <div className="w-6/12">
               {Array.from({ length: 5 }, (_, rowIndex) => (
                 <div className="flex justify-center gap-5" key={rowIndex}>
-                  {defaulMine.slice(rowIndex * 5, (rowIndex + 1) * 5).map((mine, index) => (
-                    <button
-                      className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''} ${clickedIndices.has(rowIndex * 5 + index) ? 'ripple-animation cursor-wait' : ''}`}
-                      key={index}
-                      onClick={() => {
-                        if (!minesStatus[rowIndex * 5 + index] && !isProcessing) {
-                          handleMinesClick(rowIndex * 5 + index);
-                        }
-                      }}
-                      aria-label={`Mine at position ${index + 1}`}
-                    >
-                      <img
-                        src={`/assets/games/mines/${mineImages[rowIndex * 5 + index]}.svg`}
-                        alt={`Mine ${mineImages[rowIndex * 5 + index]}`}
-                        className="group h-20 w-20 hover:transition-all"
-                      />
-                    </button>
-                  ))}
+                  {defaulMine
+                    .slice(rowIndex * 5, (rowIndex + 1) * 5)
+                    .map((mine, index) => (
+                      <button
+                        className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''} ${clickedIndices.has(rowIndex * 5 + index) ? 'ripple-animation cursor-wait' : ''}`}
+                        key={index}
+                        onClick={() => {
+                          if (
+                            !minesStatus[rowIndex * 5 + index] &&
+                            !isProcessing
+                          ) {
+                            handleMinesClick(rowIndex * 5 + index);
+                          }
+                        }}
+                        aria-label={`Mine at position ${index + 1}`}
+                      >
+                        <img
+                          src={`/assets/games/mines/${mineImages[rowIndex * 5 + index]}.svg`}
+                          alt={`Mine ${mineImages[rowIndex * 5 + index]}`}
+                          className="group h-20 w-20 hover:transition-all"
+                        />
+                      </button>
+                    ))}
                 </div>
               ))}
             </div>
@@ -269,7 +285,9 @@ export default function MinesGameSection() {
                         <DropdownMenuRadioGroup
                           value={selectedToken.name}
                           onValueChange={(value) => {
-                            const newToken = token.find((t) => t.name === value);
+                            const newToken = token.find(
+                              (t) => t.name === value
+                            );
                             if (newToken) {
                               setSelectedToken(newToken);
                             }
@@ -341,13 +359,17 @@ export default function MinesGameSection() {
               </div>
             </div>
             <Button
-              className="w-72 bg-purple py-7 hover:bg-purple flex flex-col"
+              className="flex w-72 flex-col bg-purple py-7 hover:bg-purple"
               onClick={handleMinesGame}
-              disabled={mineStatus !== EMinesStatus.NONE && lastClickedIndex === null}
+              disabled={
+                mineStatus !== EMinesStatus.NONE && lastClickedIndex === null
+              }
             >
               {mineStatus === EMinesStatus.NONE ? 'Start Bet' : 'Cash Out'}
-              <span className='text-sm'>
-                {selectedProbability === 0 ? "" : `$${(probabilities[selectedProbability - 1] * betAmount).toFixed(2)}`}
+              <span className="text-sm">
+                {selectedProbability === 0
+                  ? ''
+                  : `$${(probabilities[selectedProbability - 1] * betAmount).toFixed(2)}`}
               </span>
             </Button>
           </div>

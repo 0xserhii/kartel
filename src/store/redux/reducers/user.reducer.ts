@@ -4,10 +4,9 @@ export const SITE_BALANCE_UPDATE = 'SITE_BALANCE_UPDATE';
 export const SUBSCRIBE_USER = 'SUBSCRIBE_USER';
 export const DISCONNECT_USER = 'DISCONNECT_USER';
 
-
 export interface UserState {
   userData: { username: string; userEmail: string; _id: string };
-  wallet: { value: number, denom: string; }
+  wallet: { value: number; denom: string };
 }
 
 interface UserAction {
@@ -22,7 +21,6 @@ const initialState: any = {
 
 const userReducer = (state: any = initialState, action: UserAction): any => {
   switch (action.type) {
-
     case USER_DATA:
       return {
         userData: {
@@ -36,7 +34,10 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
       return { userData: { username: '', userEmail: '', _id: '' } };
 
     case SITE_BALANCE_UPDATE:
-      return { ...state, wallet: { value: action.payload.value, denom: action.payload.denom } }
+      return {
+        ...state,
+        wallet: { value: action.payload.value, denom: action.payload.denom }
+      };
 
     default:
       return state;

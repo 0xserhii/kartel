@@ -18,12 +18,12 @@ const sagaMiddleware = createSagaMiddleware();
 
 const userPersistConfig = {
   key: 'user',
-  storage: storage,
+  storage: storage
 };
 
 const settingsPersistConfig = {
   key: 'settings',
-  storage: storage,
+  storage: storage
 };
 
 const rootReducer = combineReducers({
@@ -40,10 +40,8 @@ const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/PAUSE', 'persist/PURGE', 'persist/FLUSH', 'persist/REGISTER']
-      }
-    }).concat(sagaMiddleware),
+      serializableCheck: false
+    }).concat(sagaMiddleware)
 });
 
 sagaMiddleware.run(rootSaga);

@@ -51,7 +51,7 @@ export const calculateMiningProbabilities = (x: number, n: number) => {
       } else {
         probabilities.push(probabilities[i - 1] / probabilityOfSafeStep);
       }
-      out[i] = Math.floor((probabilities[i] * (1 - feePercentage)) * 100) / 100;
+      out[i] = Math.floor(probabilities[i] * (1 - feePercentage) * 100) / 100;
       remainingSafeSpots--; // Reduce the number of safe spots as they are discovered
     }
     return out;

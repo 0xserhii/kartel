@@ -18,8 +18,8 @@ export default function DashboardLayout({
 
   return (
     <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
-      <div className='flex items-center justify-center lg:hidden absolute w-full h-full z-20 backdrop-blur-lg'>
-        <p className='text-white text-center text-2xl font-bold'>
+      <div className="absolute z-20 flex h-full w-full items-center justify-center backdrop-blur-lg lg:hidden">
+        <p className="text-center text-2xl font-bold text-white">
           This application is only available on PC
         </p>
       </div>
@@ -47,7 +47,7 @@ export default function DashboardLayout({
             setLivechatOpen={setLiveChatOpen}
           />
           <div
-            className={`hidden lg:flex transform shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100 w-[278px]' : 'translate-x-full opacity-0 w-0'}`}
+            className={`hidden transform shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out lg:flex ${open ? 'w-[278px] translate-x-0 opacity-100' : 'w-0 translate-x-full opacity-0'}`}
           >
             <LiveChat />
           </div>

@@ -24,7 +24,7 @@ input::-webkit-inner-spin-button {
   border-radius: 10px;
 }
 
-#scrollarea>div {
+#scrollarea > div {
   display: flex !important;
 }
 
@@ -173,7 +173,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.Toastify__toast>button>svg {
+.Toastify__toast > button > svg {
   display: none;
 }
 

@@ -155,7 +155,7 @@ const SignInModal = () => {
                 </a>
               </div>
               <Button
-                className="capitalize w-full bg-purple py-5 hover:bg-purple"
+                className="w-full bg-purple py-5 capitalize hover:bg-purple"
                 type="submit"
               >
                 login

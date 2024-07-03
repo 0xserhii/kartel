@@ -12,7 +12,10 @@ export interface IMinesServerToClientEvents {
   [EMinesSocketEvent.LOGIN]: (token: string) => void;
   [EMinesSocketEvent.CREATE_NEW_MINESGAME]: (data: number[]) => void;
   [EMinesSocketEvent.MINESGAME_ROLLED]: (data: boolean) => void;
-  [EMinesSocketEvent.MINESGAME_ENDED]: (data: { winAmount: number | null, mines: number[] }) => void;
+  [EMinesSocketEvent.MINESGAME_ENDED]: (data: {
+    winAmount: number | null;
+    mines: number[];
+  }) => void;
   [EMinesSocketEvent.GAME_CREATION_ERROR]: (data: string) => void;
   [EMinesSocketEvent.MINES_CASHOUT]: () => void;
 }

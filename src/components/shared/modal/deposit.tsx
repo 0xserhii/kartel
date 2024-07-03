@@ -31,7 +31,7 @@ import { userActions } from '@/store/redux/actions';
 type TWalletData = {
   usk: number;
   kart: number;
-}
+};
 
 const DepositModal = () => {
   const modal = useModal();
@@ -81,10 +81,8 @@ const DepositModal = () => {
   };
 
   const handleDeposit = async () => {
-    const encryptedAddressRes: any = (
-      await axiosGet(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/admin-wallet`
-      )
+    const encryptedAddressRes: any = await axiosGet(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/admin-wallet`
     );
 
     const walletAddress = await aesWrapper.decryptMessage(
@@ -109,8 +107,12 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
-        const kujiraBalance = balances.filter(item => item.denom === denoms.usk)?.[0]?.amount ?? 0;
-        if (Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055) {
+        const kujiraBalance =
+          balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
+          0;
+        if (
+          Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055
+        ) {
           toast.error(`Insufficient Kujira balance for Fee`);
           return;
         }
@@ -129,11 +131,10 @@ const DepositModal = () => {
           ],
           'Deposit to Kartel'
         );
-        console.log({ hashTx })
         await updateBalance(hashTx.transactionHash);
         refreshBalances();
       } catch (err) {
-        console.warn("tx_error", err);
+        console.warn('tx_error', err);
         setLoading(false);
       } finally {
         setLoading(false);
@@ -154,20 +155,24 @@ const DepositModal = () => {
           }
         }
       ]);
-      if (response.status === "success") {
+      if (response.status === 'success') {
         const walletDataRes: TWalletData = {
           usk: response.data?.usk ?? 0,
           kart: response.data?.kart ?? 0
-        }
+        };
         setWalletData(walletDataRes);
-        dispatch(userActions.siteBalanceUpdate({
-          value: walletDataRes.usk,
-          denom: denoms.usk
-        }));
-        dispatch(userActions.siteBalanceUpdate({
-          value: walletDataRes.kart,
-          denom: denoms.kart
-        }));
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.usk,
+            denom: denoms.usk
+          })
+        );
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.kart,
+            denom: denoms.kart
+          })
+        );
         toast.success(`Deposit Successful`);
       }
     } catch (error) {
@@ -187,20 +192,24 @@ const DepositModal = () => {
           }
         }
       ]);
-      if (response.status === "success") {
+      if (response.status === 'success') {
         const walletDataRes: TWalletData = {
           usk: response.data?.usk ?? 0,
           kart: response.data?.kart ?? 0
-        }
+        };
         setWalletData(walletDataRes);
-        dispatch(userActions.siteBalanceUpdate({
-          value: walletDataRes.usk,
-          denom: denoms.usk
-        }));
-        dispatch(userActions.siteBalanceUpdate({
-          value: walletDataRes.kart,
-          denom: denoms.kart
-        }));
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.usk,
+            denom: denoms.usk
+          })
+        );
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.kart,
+            denom: denoms.kart
+          })
+        );
         toast.success(`Withdraw Successful`);
       }
     } catch (error) {
@@ -210,11 +219,13 @@ const DepositModal = () => {
 
   const getSiteBalance = async () => {
     try {
-      const response = await axiosGet(`${import.meta.env.VITE_SERVER_URL}/api/v1/user/balance`,)
+      const response = await axiosGet(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/balance`
+      );
       const walletDataRes = {
         usk: response?.balance?.usk ?? 0,
         kart: response?.balance?.kart ?? 0
-      }
+      };
       setWalletData(walletDataRes);
     } catch (error) {
       console.error('Failed to get balance:', error);
@@ -230,7 +241,7 @@ const DepositModal = () => {
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
-        <DialogHeader className="flex flex-row mb-[-25px]">
+        <DialogHeader className="mb-[-25px] flex flex-row">
           <div className="flex w-full flex-row items-center justify-center">
             <img src="/assets/logo.png" className="h-32 w-36" />
           </div>
@@ -334,7 +345,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

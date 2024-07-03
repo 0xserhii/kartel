@@ -7,9 +7,7 @@ export interface IChatUser {
 }
 
 export interface IUserServerToClientEvents {
-  "update-wallet": (wallet, denom) => void;
+  'update-wallet': (wallet, denom) => void;
 }
 
-export interface IUserClientToServerEvents {
-
-}
+export interface IUserClientToServerEvents {}

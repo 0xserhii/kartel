@@ -16,7 +16,7 @@ function subscribe(socket) {
         emit(leaderboardActions.getLeaderboardHistory(data.leaderboard));
       }
     );
-    return () => { };
+    return () => {};
   });
 }
 
@@ -43,7 +43,7 @@ function* stopChannelSaga() {
     KartelSocket.leaderboard.off();
     KartelSocket.leaderboard.disconnect();
   }
-  yield (socketTask)
+  yield socketTask;
 }
 
 const sagas = [

@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from '@/store/redux';
 import LoadingIcon from '@/components/shared/loading-icon';
 
 const leaderboardTabs = [
-  { title: 'Crash', value: 'crash' },
+  { title: 'Crash', value: 'crash' }
   // { title: 'Coinflip', value: 'coinflip' }
 ];
 
@@ -99,8 +99,8 @@ export default function Leaderboard() {
                                 {Number(
                                   (score.leaderboard?.[active]?.usk
                                     ?.betAmount ?? 0) +
-                                  (score.leaderboard?.[active]?.kart
-                                    ?.betAmount ?? 0)
+                                    (score.leaderboard?.[active]?.kart
+                                      ?.betAmount ?? 0)
                                 ).toFixed(2)}
                               </TableCell>
                               <TableCell className="w-1/5">
@@ -108,8 +108,8 @@ export default function Leaderboard() {
                                   {Number(
                                     (score.leaderboard?.[active]?.usk
                                       ?.winAmount ?? 0) +
-                                    (score.leaderboard?.[active]?.kart
-                                      ?.winAmount ?? 0)
+                                      (score.leaderboard?.[active]?.kart
+                                        ?.winAmount ?? 0)
                                   ).toFixed(2)}
                                 </div>
                               </TableCell>

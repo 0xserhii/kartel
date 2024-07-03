@@ -6,5 +6,10 @@ import coinflipSagas from './coinflip.saga';
 import minesSagas from './mines.saga';
 
 export default function* rootSaga() {
-  yield all([...chatSagas, ...leaderboardSagas, ...coinflipSagas, ...minesSagas]);
+  yield all([
+    ...chatSagas,
+    ...leaderboardSagas,
+    ...coinflipSagas,
+    ...minesSagas
+  ]);
 }

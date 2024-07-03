@@ -23,7 +23,6 @@ export default function minesReducer(
   action
 ): IMinesState {
   switch (action.type) {
-
     case EMinesSocketAction.LOGIN_MINES:
       return { ...state, loginStatus: true };
 
@@ -37,7 +36,11 @@ export default function minesReducer(
       return { ...state, error: action.payload };
 
     case EMinesSocketAction.GAME_WON:
-      return { ...state, earned: action.payload.winAmount, mines: action.payload.mines };
+      return {
+        ...state,
+        earned: action.payload.winAmount,
+        mines: action.payload.mines
+      };
 
     default:
       return state;

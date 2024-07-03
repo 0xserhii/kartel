@@ -74,9 +74,9 @@ export function resetGameState() {
   };
 }
 
-export function siteBalanceUpdate(wallet: { value: number, denom: string }) {
+export function siteBalanceUpdate(wallet: { value: number; denom: string }) {
   return {
     type: ECoinflipSocketAction.SITE_BALANCE_UPDATE,
     payload: wallet
-  }
+  };
 }

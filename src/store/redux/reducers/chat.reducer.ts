@@ -10,7 +10,7 @@ export interface IChatState {
 const initialState = {
   chatHistory: [],
   loginStatus: false,
-  error: ""
+  error: ''
 };
 
 export default function chatReducer(state = initialState, action): IChatState {
