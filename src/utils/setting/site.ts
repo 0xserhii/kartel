@@ -19,7 +19,7 @@ const getDepositState = () => DEPOSITS_ENABLED;
 const getWithdrawState = () => WITHDRAWS_ENABLED;
 const getCoinflipState = () => COINFLIP_ENABLED;
 const getMinesState = () => MINES_ENABLED;
-const getCrashState = () => CRASH_ENABLED;
+const getSiteCrashState = () => CRASH_ENABLED;
 
 // Create reducers
 const toggleMaintenance = () => {
@@ -60,7 +60,7 @@ const toggleMines = () => {
 // Export functions
 export {
   getCoinflipState,
-  getCrashState,
+  getSiteCrashState,
   getDepositState,
   getLoginState,
   getMaintenanceState,

@@ -113,7 +113,6 @@ export default class AuthController {
     }
 
     const { password: userPassword } = foundUser;
-
     const invalid: boolean = await bcrypt.compare(password, userPassword);
 
     if (!invalid) {
