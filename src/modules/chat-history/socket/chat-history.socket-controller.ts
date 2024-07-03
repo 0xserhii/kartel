@@ -8,6 +8,7 @@ import { TChatUser } from "@/modules/user/user.types";
 import logger from "@/utils/logger";
 
 import { ChatHistoryService } from "../chat-history.service";
+import { EChatHistoryEvents } from "../chat-history.constant";
 
 class ChatHistorySocketHandler {
   private socket: Socket;
@@ -93,7 +94,7 @@ class ChatHistorySocketHandler {
         sentAt: newChatHistory?.sentAt,
       };
 
-      this.socketNameSpace.emit("message", emitData);
+      this.socketNameSpace.emit(EChatHistoryEvents.b2fMessage, emitData);
     } catch (error) {
       logger.error(this.logoPrefix + "Send message error occured" + error);
       return this.socket.emit(
@@ -115,7 +116,6 @@ class ChatHistorySocketHandler {
       previousChatHistory =
         await this.chatHistoryService.fetchEarlierChatHistories(new Date(), 15);
     }
-
     if (previousChatHistory?.length > 0) {
       this.socket.emit("send-chat-history", {
         message: "success",

@@ -6,7 +6,8 @@ export enum EXAMPLE_ENUM {
 export enum EChatHistoryEvents {
   auth = "auth",
   getChatHistory = "get-chat-history",
-  sendMessage = "message",
+  b2fMessage = "backend-frontend-message",
+  f2bMessage = "frontend-backend-message",
   notifyError = "notify-error",
   disconnect = "disconnect",
 }

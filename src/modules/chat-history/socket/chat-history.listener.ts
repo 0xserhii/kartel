@@ -28,7 +28,7 @@ class ChatHistorySocketListener {
         chatHistorySocketHandler.getChatHistoryHandler(sentAt);
       });
       // Send message handler
-      socket.on(EChatHistoryEvents.sendMessage, async (message: string) => {
+      socket.on(EChatHistoryEvents.f2bMessage, async (message: string) => {
         chatHistorySocketHandler.sendMessageHandler(message);
       });
       // Disconnect Handler
