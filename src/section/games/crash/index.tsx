@@ -171,6 +171,21 @@ export default function CrashGameSection() {
   }, [socket, toast]);
 
   useEffect(() => {
+    const handleJoinSuccess = (data) => {
+      toast.success(data);
+      if (data === 'Autobet has been canceled.') {
+        setAutoBet(true);
+      } else {
+        setAutoBet(false);
+      }
+    };
+    socket?.on('auto-crashgame-join-success', handleJoinSuccess);
+    return () => {
+      socket?.off('auto-crashgame-join-success', handleJoinSuccess);
+    };
+  }, [socket, toast]);
+
+  useEffect(() => {
     const crashSocket: Socket<
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
@@ -382,7 +397,7 @@ export default function CrashGameSection() {
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center bg-dark-blue text-xs text-gray-300 ${(item.crashPoint / 100) > 1 && (item.crashPoint / 100) < 2 ? 'bg-dark-blue' : (item.crashPoint / 100) > 5 ? 'bg-[#3bc117]' : 'bg-purple-light'}`}
+                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${(item.crashPoint / 100) > 20 ? 'bg-purple-light' : 'bg-dark-blue'}`}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
                     </span>
@@ -448,7 +463,7 @@ export default function CrashGameSection() {
                           value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
-                          disabled={isAutoMode && !autoBet || crashStatus === ECrashStatus.PROGRESS}
+                          disabled={isAutoMode && !autoBet}
                         />
                         <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                           <DropdownMenu>
