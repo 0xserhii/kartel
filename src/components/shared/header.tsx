@@ -1,7 +1,6 @@
 import Heading from './heading';
 import UserNav from './user-nav';
 import { MessageSquareMore, Volume2, VolumeX } from 'lucide-react';
-import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
 import useModal from '@/hooks/use-modal';
@@ -9,11 +8,12 @@ import { ModalType } from '@/types/modal';
 import { useOpen } from '@/provider/chat-provider';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { useEffect, useState } from 'react';
-import { initialBalance } from '@/constants/data';
+import { initialBalance, token } from '@/constants/data';
 import { subscribeUserServer } from '@/store/redux/actions/user.action';
-import { axiosGet } from '@/utils/axios';
 import { settingsActions } from '@/store/redux/actions';
 import useSound from 'use-sound';
+import axios from 'axios';
+import { useWallet } from '@/provider/crypto/wallet';
 
 export default function Header() {
   const modal = useModal();
@@ -22,25 +22,38 @@ export default function Header() {
   const siteBalance = useAppSelector((store: any) => store.user.wallet);
   const settings = useAppSelector((store: any) => store.settings);
   const dispatch = useAppDispatch();
+  const { account } = useWallet();
   const [walletData, setWalletData] = useState(initialBalance);
-  const [play, { stop }] = useSound('/assets/audio/background_audio.mp3', { volume: 0.25, loop: true });
+  const [play, { stop }] = useSound('/assets/audio/background_audio.mp3', { volume: 0.5, loop: true });
 
   const handleSignIn = async () => {
     modal.open(ModalType.LOGIN);
   };
 
-  const getSiteBalance = async () => {
+  const getSiteBalance = async (type: string, txHash?: string) => {
     try {
-      const response = await axiosGet(`${import.meta.env.VITE_SERVER_URL}/api/v1/user/balance`,)
-      const walletDataRes = {
-        usk: response?.balance?.usk ?? 0,
-        kart: response?.balance?.kart ?? 0
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
+        {
+          balanceType: token[0].name,
+          actionType: type,
+          amount: 0,
+          txHash,
+          address: account?.address
+        }
+      );
+      if (response.status === 200) {
+        const walletDataRes = {
+          usk: response.data?.responseObject.wallet.usk ?? 0,
+          kart: response.data?.responseObject.wallet.kart ?? 0
+        }
+        setWalletData(walletDataRes);
       }
-      setWalletData(walletDataRes);
     } catch (error) {
       console.error('Failed to get balance:', error);
     }
   };
+
 
   const handleAudio = () => {
     dispatch(settingsActions.audioPlay(!settings.isAudioPlay))
@@ -48,7 +61,7 @@ export default function Header() {
 
   useEffect(() => {
     if (userData?.username !== '') {
-      getSiteBalance();
+      getSiteBalance('get');
     }
   }, [siteBalance]);
 
@@ -85,11 +98,10 @@ export default function Header() {
         )}
         <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
           {userData?.username !== '' ? (
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-row items-center gap-8">
               {
                 settings.isAudioPlay ? <Volume2 className='text-purple cursor-pointer' onClick={handleAudio} /> : <VolumeX className='text-white cursor-pointer' onClick={handleAudio} />
               }
-              <Separator orientation={'vertical'} className="h-6" />
               <Button
                 className="hidden bg-transparent px-0 hover:bg-transparent lg:block"
                 onClick={() => setOpen(!open)}
@@ -98,7 +110,6 @@ export default function Header() {
                   className={`text-${open ? 'purple' : 'white'}`}
                 />
               </Button>
-              <Separator orientation={'vertical'} className="h-6" />
               <UserNav />
             </div>
           ) : (

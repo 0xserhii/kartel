@@ -382,7 +382,7 @@ export default function CrashGameSection() {
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center bg-dark-blue text-xs text-gray-300 ${(item.crashPoint / 100) > 1 && (item.crashPoint / 100) < 2 ? 'bg-dark-blue' : (item.crashPoint / 100) > 5 ? 'bg-[#3bc117]' : 'bg-purple-light'}`}
+                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${(item.crashPoint / 100) > 20 ? 'bg-purple-light' : 'bg-dark-blue'}`}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
                     </span>
@@ -582,6 +582,6 @@ export default function CrashGameSection() {
           </div>
         </div>
       </div>
-    </ScrollArea>
+    </ScrollArea >
   );
 }

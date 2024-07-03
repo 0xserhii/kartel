@@ -73,10 +73,9 @@ const SignInModal = () => {
         BACKEND_API_ENDPOINT.auth.signIn,
         { data: signInPayload }
       ]);
-      if (resSignIn?.auth?.accessToken) {
-        console.log({ token: resSignIn?.auth?.accessToken })
-        setAccessToken(resSignIn?.auth?.accessToken);
-        await dispatch(userActions.userData(resSignIn?.user));
+      if (resSignIn?.responseObject?.auth?.accessToken) {
+        setAccessToken(resSignIn?.responseObject?.auth?.accessToken);
+        await dispatch(userActions.userData(resSignIn?.responseObject?.user));
         toast.success('SignIn Success');
         modal.close(ModalType.LOGIN);
         return;
