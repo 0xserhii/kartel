@@ -65,6 +65,7 @@ export default function CrashGameSection() {
   const [downIntervalId, setDownIntervalId] = useState(0);
   const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>([]);
   const settings = useAppSelector((store: any) => store.settings);
+  const userData = useAppSelector((store: any) => store.user.userData);
   const [play, { stop, sound }] = useSound('/assets/audio/car_running.mp3', { volume: 0.5, loop: true });
   const [playExplosion, { stop: stopExplosion, sound: explosionSound }] = useSound('/assets/audio/explosion.mp3', { volume: 0.25 });
 
@@ -146,8 +147,6 @@ export default function CrashGameSection() {
       socket?.emit('cancel-auto-bet');
     }
   };
-
-
 
   useEffect(() => {
     if (socket) {
@@ -244,7 +243,14 @@ export default function CrashGameSection() {
     };
 
     crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
-      setBetData(data.players);
+      if (data.players) {
+        const user = data.players.find(player => player?.playerID === userData._id);
+        setBetData(data.players);
+        // console.log(data);
+        // setAutoBet(false);
+        setBetAmount(Number(user?.betAmount));
+        // setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
+      }
       const totals = calculateTotals(data.players);
       setTotalAmount((prevAmounts) => ({
         usk: (prevAmounts?.usk || 0) + totals.usk,
@@ -460,7 +466,7 @@ export default function CrashGameSection() {
                       <div className="relative">
                         <Input
                           type="number"
-                          value={betAmount}
+                          value={betAmount || ''}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
                           disabled={isAutoMode && !autoBet}
@@ -536,7 +542,7 @@ export default function CrashGameSection() {
                             <div className="relative w-full">
                               <Input
                                 type="number"
-                                value={autoCashoutAmount}
+                                value={autoCashoutAmount || ''}
                                 disabled={!avaliableAutoCashout || crashStatus === ECrashStatus.PROGRESS}
                                 onChange={(e) =>
                                   setAutoCashoutAmount(Number(e.target.value))
