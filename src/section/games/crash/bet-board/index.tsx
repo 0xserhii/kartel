@@ -15,6 +15,7 @@ const BetBoard = ({
   totalAmount: any;
   crashStatus: ECrashStatus;
 }) => {
+  console.log(betData);
   return (
     <div className="flex w-full flex-col gap-5 md:w-7/12">
       <div className="flex flex-row items-center justify-between py-1.5">

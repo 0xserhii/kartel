@@ -57,7 +57,7 @@ export interface ICrashServerToClientEvents {
     denom: string
   ) => void;
   [ECrashSocketEvent.AUTO_CRASHGAME_JOIN_SUCCESS]: (data: string) => void;
-  [ECrashSocketEvent.GAME_STATUS]: (data: { players: FormattedPlayerBetType[]; game_status: number }) => void;
+  [ECrashSocketEvent.GAME_STATUS]: (data: { players: FormattedPlayerBetType[]; gameStatus: any }) => void;
 }
 
 export interface ICrashClientToServerEvents {

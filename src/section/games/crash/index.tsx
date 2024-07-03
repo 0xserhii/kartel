@@ -49,7 +49,7 @@ export default function CrashGameSection() {
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [betData, setBetData] = useState<BetType[]>([]);
   const [betAmount, setBetAmount] = useState(0);
-  const [autoCashoutPoint, setAutoCashoutPoint] = useState(1.05);
+  const [autoCashoutPoint, setAutoCashoutPoint] = useState<any>(1.05);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [betCashout, setBetCashout] = useState<BetType[]>([]);
   const [avaliableBet, setAvaliableBet] = useState(false);
@@ -247,13 +247,12 @@ export default function CrashGameSection() {
     };
 
     crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
-      if (data.players) {
+      if (data.players.length > 0) {
         const user = data.players.find(player => player?.playerID === userData._id);
         setBetData(data.players);
-        // console.log(data);
-        // setAutoBet(false);
+        setAutoBet(false);
         setBetAmount(Number(user?.betAmount));
-        // setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
+        setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
       }
       const totals = calculateTotals(data.players);
       setTotalAmount((prevAmounts) => ({
