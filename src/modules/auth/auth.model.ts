@@ -10,10 +10,11 @@ const AuthSchema = new Schema<IAuthModel>(
       ref: "User",
       required: true,
     },
-    deviceId: { type: String, required: true },
+    deviceId: { type: String },
     platform: {
       type: String,
       enum: Object.keys(AuthConstant.PLATFORM),
+      default: AuthConstant.PLATFORM.WEB,
       required: true,
     },
     refreshToken: { type: String, required: false },

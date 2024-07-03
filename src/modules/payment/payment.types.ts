@@ -6,8 +6,8 @@ export type TransactionDetails = {
 };
 
 export enum ETokenType {
-  usk = 'usk',
-  kart = 'kart',
+  usk = "usk",
+  kart = "kart",
 }
 
 export type TWithDrawProps = {

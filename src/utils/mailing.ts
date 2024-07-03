@@ -70,6 +70,6 @@ export const sendEmailWithPostmark = async (mailOption: Message) => {
     return resMail;
     return;
   } catch (error) {
-    logger.error("Postmark Error::: ", error);
+    logger.error("Postmark Error::: " + error);
   }
 };

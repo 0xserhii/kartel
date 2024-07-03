@@ -1,45 +1,64 @@
-import { Namespace, Server, Socket, Event as SocketEvent } from "socket.io";
+import { Namespace, Server, Socket } from "socket.io";
+
 import { ESOCKET_NAMESPACE } from "@/constant/enum";
-import { ELeaderboardEvents } from "../leaderboard.constant";
+import logger from "@/utils/logger";
+
+import { LeaderboardService } from "../leaderboard.service";
 
 class LeaderboardSocketListener {
-    private socketServer: Namespace;
+  private socketServer: Namespace;
+  private leaderboardService: LeaderboardService;
+  private logPrefix = "[Leaderboard Socket:::]";
 
-    constructor(socketServer: Server) {
-        this.socketServer = socketServer.of(ESOCKET_NAMESPACE.leaderboard);
-        this.initializeListener();
-        this.subscribeListener();
+  constructor(socketServer: Server) {
+    // Initialize service
+    this.leaderboardService = new LeaderboardService();
+
+    this.socketServer = socketServer.of(ESOCKET_NAMESPACE.leaderboard);
+    this.initializeListener();
+    this.subscribeListener();
+  }
+
+  private subscribeListener(): void {
+    this.socketServer.on("connection", (_socket: Socket) => {
+      // this.initializeSubscribe(socket);
+    });
+  }
+
+  private initializeListener = async () => {
+    try {
+      const emitLeaderboard = async () => {
+        const start = Date.now();
+        const leaderboardResponse =
+          await this.leaderboardService.getTopLearderboards(10);
+
+        if (
+          leaderboardResponse &&
+          Object.keys(leaderboardResponse).length > 0
+        ) {
+          this.socketServer.emit("leaderboard-fetch-all", {
+            message: "success",
+            leaderboard: leaderboardResponse!,
+          });
+        } else {
+          this.socketServer.emit(
+            "notify-error",
+            "Error ocurred when fetched leaderboard!"
+          );
+        }
+
+        const elapsed = Date.now() - start;
+        setTimeout(emitLeaderboard, Math.max(0, 1000 - elapsed));
+      };
+
+      emitLeaderboard();
+    } catch (error) {
+      logger.error(this.logPrefix + "Emit leaderboard error: " + error);
     }
+  };
 
-    private subscribeListener(): void {
-        this.socketServer.on("connection", (socket: Socket) => {
-            this.initializeSubscribe(socket);
-            // Check for users ban status
-            socket.use(this.banStatusCheckMiddleware)
-
-            // Disconnect leaderboard socket
-            socket.on(ELeaderboardEvents.disconnect, async () => {
-                this.disconnect(socket)
-            });
-        });
-    }
-
-    private initializeListener = async () => {
-
-    }
-
-    private initializeSubscribe = async (socket: Socket) => {
-
-    }
-
-    private banStatusCheckMiddleware = async (packet: SocketEvent, next: (err?: any) => void) => {
-
-    }
-
-    private disconnect = async (socket: Socket) => {
-
-    }
-
+  // private initializeSubscribe = async (socket: Socket) => { };
+  // private disconnect = async (socket: Socket) => {};
 }
 
 export default LeaderboardSocketListener;

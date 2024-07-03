@@ -4,9 +4,7 @@ import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
 
-import {
-  RaceEntryController,
-} from ".";
+import { RaceEntryController } from ".";
 
 export default class RaceEntryRouter extends BaseRouter {
   private raceEntryController: RaceEntryController;
@@ -43,7 +41,7 @@ export default class RaceEntryRouter extends BaseRouter {
 
     this.router.get(
       "/:id",
-      checkPermissions(),
+      checkPermissions()
       // validateSchema(
       //   validations.byId,
       //   mapPropertyExample.getIdFromParamsWithMe
@@ -68,7 +66,10 @@ export default class RaceEntryRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.raceEntryController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.raceEntryController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

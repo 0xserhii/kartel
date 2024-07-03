@@ -1,7 +1,6 @@
-// Require Dependencies
 import mongoose, { model } from "mongoose";
+
 import { IMinesGameModel } from "./mines-game.interface";
-import { number } from "joi";
 
 const SchemaTypes = mongoose.SchemaTypes;
 

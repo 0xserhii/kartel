@@ -1,4 +1,4 @@
-import { FilterQuery, ObjectId } from "mongoose";
+import { FilterQuery } from "mongoose";
 
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
@@ -68,7 +68,10 @@ export class CrashGameController {
 
   public update = async ({ id }, crashGameData) => {
     try {
-      const crashGame = await this.crashGameService.updateById(id, crashGameData);
+      const crashGame = await this.crashGameService.updateById(
+        id,
+        crashGameData
+      );
 
       // need add to localizations
       if (!crashGame) {
@@ -97,5 +100,4 @@ export class CrashGameController {
 
     return crashGame;
   };
-
 }

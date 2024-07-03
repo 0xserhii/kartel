@@ -1,5 +1,6 @@
 // Require Dependencies
-import mongoose, { Document, Model, ObjectId, Types, model } from "mongoose";
+import mongoose, { model } from "mongoose";
+
 import { ICoinflipGameModel } from "./coinflip-game.interface";
 
 const SchemaTypes = mongoose.SchemaTypes;

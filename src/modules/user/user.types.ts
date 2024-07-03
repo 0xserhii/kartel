@@ -8,10 +8,19 @@ export interface IVIPLevelType {
   levelColor?: string;
 }
 
-
-export type TChatUser = Pick<IUserModel, '_id' | 'username' | 'avatar' | 'hasVerifiedAccount' | 'createdAt'>;
+export type TChatUser = Pick<
+  IUserModel,
+  "_id" | "username" | "avatar" | "hasVerifiedAccount" | "createdAt"
+>;
 
 export type TLeaderboardUserType = Pick<
   IUserModel,
-  '_id' | 'username' | 'userEmail' | 'leaderboard' | 'avatar' | 'createdAt' | 'hasVerifiedAccount' | 'rank'
+  | "_id"
+  | "username"
+  | "userEmail"
+  | "leaderboard"
+  | "avatar"
+  | "createdAt"
+  | "hasVerifiedAccount"
+  | "rank"
 >;

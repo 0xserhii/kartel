@@ -3,7 +3,7 @@ export enum EXAMPLE_ENUM {
   EXAMPLE_TWO = "EXAMPLE_TWO",
 }
 
-export const CCoinFlip_Config = {
+export const CCoinFlipConfig = {
   minBetAmount: 0.1, // Min bet amount (in coins)
   maxBetAmount: 100000, // Max bet amount (in coins)
   feePercentage: 0.05, // House fee percentage
@@ -14,13 +14,13 @@ export const CCoinFlip_Config = {
 export enum ECoinflipGameEvents {
   auth = "auth",
   createCoinflipGame = "create-new-coinflipgame",
-  newConflipGame = 'new-coinflip-game',
-  coinflipGameRolling = 'conflip-game-rolling',
-  coinflipRolled = 'conflip-game-rolled',
+  newConflipGame = "new-coinflip-game",
+  coinflipGameRolling = "conflip-game-rolling",
+  coinflipRolled = "conflip-game-rolled",
   autoCoinflipBet = "auto-coinflipgame-bet",
   cancelAutoBet = "cancel-auto-bet",
-  notifyError = 'notify-error',
-  gameCreationError = 'game-create-error',
-  updateWallet = 'update-wallet',
+  notifyError = "notify-error",
+  gameCreationError = "game-create-error",
+  updateWallet = "update-wallet",
   disconnect = "disconnect",
-};
+}

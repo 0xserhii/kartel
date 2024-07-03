@@ -67,17 +67,6 @@ export default class BaseService<ISchema> {
     return this.getItem({ _id: id } as FilterQuery<ISchema>, projection);
   }
 
-  async getItemByIdWithPayment(id: ObjectId | string, projection?) {
-    const projectWithPayment = await this.database.aggregate([
-
-    ]);
-
-    if (projectWithPayment?.length > 0) {
-      return projectWithPayment[0]
-    }
-    return []
-  }
-
   async getCount(search?: FilterQuery<ISchema>): Promise<number> {
     return this.database.countDocuments(search);
   }

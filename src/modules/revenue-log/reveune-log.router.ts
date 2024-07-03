@@ -4,7 +4,6 @@ import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-import * as validations from "@/utils/validations";
 
 import {
   CreateRevenueLogSchema,
@@ -52,7 +51,7 @@ export default class RevenueLogRouter extends BaseRouter {
       //   validations.byId,
       //   mapProperty.getIdFromParamsWithMe
       // ),
-      validateSchema(CreateRevenueLogSchema, mapProperty.getBody),
+      validateSchema(CreateRevenueLogSchema, mapProperty.getBody)
       // actionHandler(
       //   this.revenueLogController.getById,
       //   mapProperty.getIdFromParamsWithMe
@@ -72,7 +71,10 @@ export default class RevenueLogRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.revenueLogController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.revenueLogController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

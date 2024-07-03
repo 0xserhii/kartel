@@ -45,7 +45,8 @@ export class LeaderboardController {
   };
 
   public getById = async (leaderboardId) => {
-    const leaderboard = await this.leaderboardService.getItemById(leaderboardId);
+    const leaderboard =
+      await this.leaderboardService.getItemById(leaderboardId);
 
     // need add to localizations
     if (!leaderboard) {
@@ -69,7 +70,10 @@ export class LeaderboardController {
 
   public update = async ({ id }, leaderboardData) => {
     try {
-      const leaderboard = await this.leaderboardService.updateById(id, leaderboardData);
+      const leaderboard = await this.leaderboardService.updateById(
+        id,
+        leaderboardData
+      );
 
       // need add to localizations
       if (!leaderboard) {

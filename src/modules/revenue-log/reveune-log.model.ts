@@ -1,6 +1,7 @@
-import { IRevenueLogModel } from '.';
 // Require Dependencies
-import mongoose, { model } from 'mongoose';
+import mongoose, { model } from "mongoose";
+
+import { IRevenueLogModel } from ".";
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
@@ -10,7 +11,7 @@ const RevenueSchema = new Schema<IRevenueLogModel>({
   // Winner id
   userid: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
+    ref: "users",
     required: true,
   },
 
@@ -49,4 +50,4 @@ const RevenueSchema = new Schema<IRevenueLogModel>({
   },
 });
 
-export default model<IRevenueLogModel>('RevenueLog', RevenueSchema);
+export default model<IRevenueLogModel>("RevenueLog", RevenueSchema);

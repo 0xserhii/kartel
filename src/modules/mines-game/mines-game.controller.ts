@@ -4,8 +4,8 @@ import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
 
-import { MinesGameService } from "./mines-game.service";
 import { IMinesGameModel } from "./mines-game.interface";
+import { MinesGameService } from "./mines-game.service";
 
 export class MinesGameController {
   // Services
@@ -69,7 +69,10 @@ export class MinesGameController {
 
   public update = async ({ id }, minesGameData) => {
     try {
-      const minesGame = await this.minesGameService.updateById(id, minesGameData);
+      const minesGame = await this.minesGameService.updateById(
+        id,
+        minesGameData
+      );
 
       // need add to localizations
       if (!minesGame) {

@@ -1,14 +1,11 @@
 import actionHandler from "@/middleware/action-handler";
 import checkPermissions from "@/middleware/check-permissions";
-import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-// import * as validations from "@/utils/validations";
 
-import {
-  AutoCrashBetController,
-} from "./";
+// import * as validations from "@/utils/validations";
+import { AutoCrashBetController } from "./";
 
 export default class AutoCrashBetRouter extends BaseRouter {
   private autoCrashBetController: AutoCrashBetController;
@@ -45,7 +42,7 @@ export default class AutoCrashBetRouter extends BaseRouter {
 
     this.router.get(
       "/:id",
-      checkPermissions(),
+      checkPermissions()
       // validateSchema(
       //   validations.byId,
       //   mapPropertyExample.getIdFromParamsWithMe
@@ -70,7 +67,10 @@ export default class AutoCrashBetRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.autoCrashBetController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.autoCrashBetController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

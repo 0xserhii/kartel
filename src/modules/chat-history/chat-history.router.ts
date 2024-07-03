@@ -4,13 +4,8 @@ import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
-import * as validations from "@/utils/validations";
 
-import {
-  CreateChatHistorySchema,
-  ChatHistoryController,
-  UpdateChatHistorySchema,
-} from ".";
+import { ChatHistoryController, CreateChatHistorySchema } from ".";
 
 export default class ChatHistoryRouter extends BaseRouter {
   private chatHistoryController: ChatHistoryController;
@@ -46,7 +41,7 @@ export default class ChatHistoryRouter extends BaseRouter {
 
     this.router.get(
       "/:id",
-      checkPermissions(),
+      checkPermissions()
       // validateSchema(
       //   validations.byId,
       //   mapPropertyExample.getIdFromParamsWithMe
@@ -71,7 +66,10 @@ export default class ChatHistoryRouter extends BaseRouter {
     this.router.delete(
       "/:name",
       checkPermissions({ roles: [ROLE.ADMIN] }),
-      actionHandler(this.chatHistoryController.delete, mapProperty.getNameFromParam)
+      actionHandler(
+        this.chatHistoryController.delete,
+        mapProperty.getNameFromParam
+      )
     );
   }
 }

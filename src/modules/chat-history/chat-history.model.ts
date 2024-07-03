@@ -1,5 +1,6 @@
 // Import Dependencies
-import mongoose, { SchemaTypes, model } from "mongoose";
+import mongoose, { model, SchemaTypes } from "mongoose";
+
 import { IChatHistoryModel } from "./chat-history.interface";
 
 // Destructure Schema Types

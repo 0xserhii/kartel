@@ -1,5 +1,6 @@
 // Import Dependencies
 import mongoose, { model } from "mongoose";
+
 import { IWalletTransactionModel } from "./wallet-transaction.interface";
 const { Schema, SchemaTypes } = mongoose;
 

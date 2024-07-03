@@ -9,7 +9,10 @@ export const toHuman = (amount: BigNumber, decimals: number): number => {
   return parseFloat(amount.div(BigNumber.from(10).pow(decimals)).toString());
 };
 
-export const fromHumanString = (amount: string, decimals: number): BigNumber => {
+export const fromHumanString = (
+  amount: string,
+  decimals: number
+): BigNumber => {
   return BigNumber.from(amount).mul(BigNumber.from(10).pow(decimals));
 };
 
@@ -22,6 +25,9 @@ export const divToNumber = (a: BigNumber, b: BigNumber): number => {
 };
 
 export const bigCompare = (a: BigNumber, b: BigNumber): 0 | 1 | -1 => {
-  if (a.eq(b)) return 0;
+  if (a.eq(b)) {
+    return 0;
+  }
+
   return a.gt(b) ? 1 : -1;
 };
