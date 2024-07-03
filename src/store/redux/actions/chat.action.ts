@@ -24,7 +24,7 @@ export function receiveError(error: string) {
 
 export function sendMsg(msg: string) {
   return {
-    type: EChatSocketAction.SEND_MSG,
+    type: EChatSocketAction.RECEIVE_MSG,
     payload: msg
   };
 }

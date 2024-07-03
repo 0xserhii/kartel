@@ -6,6 +6,8 @@ import { eventChannel } from 'redux-saga';
 import { ILeaderType } from '../reducers/leaderboard.reducer';
 import { leaderboardActions } from '../actions';
 
+let socketTask;
+
 function subscribe(socket) {
   return eventChannel((emit) => {
     socket.on(
@@ -41,6 +43,7 @@ function* stopChannelSaga() {
     KartelSocket.leaderboard.off();
     KartelSocket.leaderboard.disconnect();
   }
+  yield (socketTask)
 }
 
 const sagas = [

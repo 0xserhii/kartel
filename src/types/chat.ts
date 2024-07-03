@@ -10,7 +10,6 @@ export interface IChat {
 export enum EChatSocketEvent {
   LOGIN = 'auth',
   JOIN_CHAT = 'join_chat',
-  SEND_MSG = 'message',
   RECEIVE_MSG = 'message',
   DISCONNECT_CHAT = 'disconnect',
   RECEIVE_CHAT_HISTORY = 'send-chat-history',
@@ -21,7 +20,7 @@ export enum EChatSocketEvent {
 export interface IChatClientToServerEvents {
   [EChatSocketEvent.LOGIN]: (token: string) => void;
   [EChatSocketEvent.JOIN_CHAT]: (_id: string) => void;
-  [EChatSocketEvent.SEND_MSG]: (message: string) => void;
+  [EChatSocketEvent.RECEIVE_MSG]: (message: string) => void;
   [EChatSocketEvent.GET_CHAT_HISTORY]: (sendAt: Date) => void;
 }
 

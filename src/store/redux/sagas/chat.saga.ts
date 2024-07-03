@@ -73,7 +73,7 @@ function* getChatHistorySaga(action) {
   }
 }
 
-function* subscribeSaga(action) {
+function* subscribeSaga() {
   try {
     yield fork(read, KartelSocket.chat);
     yield delay(200);
@@ -102,7 +102,7 @@ function* stopChanelSaga() {
 
 function* sendMsgSaga(action) {
   yield delay(500);
-  KartelSocket.chat.emit(EChatSocketEvent.SEND_MSG, action.payload);
+  KartelSocket.chat.emit(EChatSocketEvent.RECEIVE_MSG, action.payload);
 }
 
 const sagas = [
@@ -110,7 +110,7 @@ const sagas = [
   takeLatest(EChatSocketAction.LOGIN_CHAT, loginChanelSaga),
   takeLatest(EChatSocketAction.GET_CHAT_HISTORY, getChatHistorySaga),
   takeLatest(EChatSocketAction.DISCONNECT_CHAT, stopChanelSaga),
-  takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga)
+  takeEvery(EChatSocketAction.RECEIVE_MSG, sendMsgSaga)
 ];
 
 export default sagas;
