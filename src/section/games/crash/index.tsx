@@ -255,8 +255,8 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
+      setBetData(data.players);
       if (user && user.betAmount) {
-        setBetData(data.players);
         setAutoBet(false);
         setBetAmount(Number(user?.betAmount));
         setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
