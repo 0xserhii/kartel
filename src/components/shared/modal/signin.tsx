@@ -155,7 +155,7 @@ const SignInModal = () => {
                 </a>
               </div>
               <Button
-                className="w-full bg-purple py-5 hover:bg-purple"
+                className="capitalize w-full bg-purple py-5 hover:bg-purple"
                 type="submit"
               >
                 login
@@ -163,7 +163,7 @@ const SignInModal = () => {
               <p className="flex text-sm text-gray-300">
                 Don’t have an account ?&nbsp;
                 <span
-                  className="cursor-pointer font-semibold text-[#049DD9]"
+                  className="capitalize cursor-pointer font-semibold text-[#049DD9]"
                   onClick={handleSignUp}
                 >
                   Register

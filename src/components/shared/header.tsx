@@ -118,7 +118,7 @@ export default function Header() {
               onClick={handleSignIn}
             >
               <img src={authBtn} />
-              <span className="uppercase">Sign In</span>
+              <span className="uppercase">Log in</span>
             </Button>
           )}
         </div>
