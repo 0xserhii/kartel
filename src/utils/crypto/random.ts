@@ -4,7 +4,6 @@ import crypto from "crypto";
 
 import { SECURITY_CRYPTO_ENC_KEY, SECURITY_CRYPTO_SEC_KEY } from "@/config";
 import { CCrashConfig } from "@/modules/crash-game";
-import { CMinesConfig } from "@/modules/mines-game";
 
 import logger from "../logger";
 import { getCrypto, getPublicSeed } from "./get-seed";
@@ -142,42 +141,42 @@ const isCrashHashDivisible = (hash: string, mod: number): boolean => {
   return val === 0;
 };
 
-const generateMinesRandom = async (
-  gameId: string,
-  privateSeed: string,
-  betMinesCount: number
-): Promise<{ publicSeed: string; mines: number[] }> => {
-  try {
-    // Get a new public seed from blockchain
-    const publicSeed = await getPublicSeed();
+// const generateMinesRandom = async (
+//   gameId: string,
+//   privateSeed: string,
+//   betMinesCount: number
+// ): Promise<{ publicSeed: string; mines: number[] }> => {
+//   try {
+//     // Get a new public seed from blockchain
+//     const publicSeed = await getPublicSeed();
 
-    // Construct a new chance instance with
-    // privateSeed-roundId-publicSeed pair
-    const chance = new Chance(`${privateSeed}-${gameId}-${publicSeed}`);
+//     // Construct a new chance instance with
+//     // privateSeed-roundId-publicSeed pair
+//     const chance = new Chance(`${privateSeed}-${gameId}-${publicSeed}`);
 
-    const maxNum = CMinesConfig.maxBetMinesCount;
+//     const maxNum = CMinesConfig.maxBetMinesCount;
 
-    // Generate a unique set of mine positions
-    const mines = new Set<number>();
+//     // Generate a unique set of mine positions
+//     const mines = new Set<number>();
 
-    while (mines.size < betMinesCount) {
-      const randomMine = chance.integer({ min: 0, max: maxNum });
-      mines.add(randomMine);
-    }
+//     while (mines.size < betMinesCount) {
+//       const randomMine = chance.integer({ min: 0, max: maxNum });
+//       mines.add(randomMine);
+//     }
 
-    // Resolve promise and return data
-    return { publicSeed, mines: Array.from(mines) };
-  } catch (error) {
-    logger.error("[RANDOM]::: Error generating mine random" + error);
-    return { publicSeed: "", mines: [] };
-  }
-};
+//     // Resolve promise and return data
+//     return { publicSeed, mines: Array.from(mines) };
+//   } catch (error) {
+//     logger.error("[RANDOM]::: Error generating mine random" + error);
+//     return { publicSeed: "", mines: [] };
+//   }
+// };
 
 // Export all functions
 export {
   confirmValidation,
   generateCoinflipRandom,
   generateCrashRandom,
-  generateMinesRandom,
+  // generateMinesRandom,
   generatePrivateSeedHashPair,
 };

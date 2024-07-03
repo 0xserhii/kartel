@@ -10,6 +10,7 @@ export const IS_PRODUCTION: boolean = process.env.NODE_ENV === ENVS.Production;
 export const BASE_URL: string = process.env.BASE_URL;
 export const PORT: number = parseInt(process.env.PORT);
 export const ALLOW_HOSTS: Array<string> = process.env.ALLOW_HOSTS?.split(",");
+export const SOCKET_ALLOW_HOSTS: Array<string> = process.env.SOCKET_ALLOW_HOSTS?.split(",");
 export const FILE_FOLDER: string = "files";
 
 export const ENABLE_MAINTENANCE_ONSTART: boolean =

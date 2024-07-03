@@ -53,23 +53,5 @@ export default class UserRouter extends BaseRouter {
         mapProperty.getUserInfo,
       ])
     );
-
-    // this.router.post(
-    //   "/withdraw",
-    //   checkPermissions(),
-    //   validateSchema(validateUser.withDraw, mapProperty.getBody),
-    //   actionHandler(this.userController.userBalanceWithdraw, [
-    //     mapProperty.getBody,
-    //     mapProperty.getUserInfo,
-    //   ])
-    // );
-
-    // this.router.post(
-    //   "/deposit",
-    //   checkPermissions(),
-    //   actionHandler(this.userController.userBalanceDeposit, [
-    //     mapProperty.getUserInfo,
-    //   ])
-    // );
   }
 }

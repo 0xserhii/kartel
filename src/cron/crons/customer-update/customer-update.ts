@@ -2,7 +2,7 @@ import Cron, { ScheduleOptions } from "node-cron";
 
 import { BaseCron } from "@/cron/crons/base.cron";
 
-export class UserSubscription extends BaseCron {
+export class CustomerUpdate extends BaseCron {
   constructor(cronExpression: string, option = <ScheduleOptions>{}) {
     super(cronExpression, option);
   }
@@ -16,15 +16,15 @@ export class UserSubscription extends BaseCron {
       this.cronExpression,
       async () => {
         await this.catchWrapper(
-          this.updateUserSubscriptionStatus,
-          "updateUserSubscriptionStatus"
+          this.updateCustomerStatus,
+          "updateCustomerStatus"
         );
       },
       this.option
     );
   };
 
-  private updateUserSubscriptionStatus = async () => {
-    console.log("Start updateUserSubscriptionStatus");
+  private updateCustomerStatus = async () => {
+    console.log("Start updateCustomerStatus");
   };
 }

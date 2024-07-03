@@ -1,4 +1,4 @@
-import { UserSubscription } from "./crons";
+import { CustomerUpdate } from "./crons";
 
 // Cron Jobs
 /**
@@ -13,10 +13,10 @@ import { UserSubscription } from "./crons";
 
 // User Subscription Daily Cron Job
 // Executes every day at 00:01 AM
-const userSubscriptionCron = new UserSubscription("1 0 * * *", {
+const customerUpdateCron = new CustomerUpdate("1 0 * * *", {
   scheduled: true,
 });
 
 export const CronJobs = {
-  userSubscriptionCron,
+  customerUpdateCron,
 };
