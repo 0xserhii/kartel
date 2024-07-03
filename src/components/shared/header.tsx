@@ -1,7 +1,6 @@
 import Heading from './heading';
 import UserNav from './user-nav';
 import { MessageSquareMore, Volume2, VolumeX } from 'lucide-react';
-import { Separator } from '../ui/separator';
 import { Button } from '../ui/button';
 import authBtn from '/assets/auth-btn.svg';
 import useModal from '@/hooks/use-modal';
@@ -84,12 +83,11 @@ export default function Header() {
           </div>
         )}
         <div className="ml-4 mr-8 flex items-center gap-10 md:ml-6">
+          {
+            settings.isAudioPlay ? <Volume2 className='text-purple cursor-pointer' onClick={handleAudio} /> : <VolumeX className='text-white cursor-pointer' onClick={handleAudio} />
+          }
           {userData?.username !== '' ? (
             <div className="flex flex-row items-center gap-4">
-              {
-                settings.isAudioPlay ? <Volume2 className='text-purple cursor-pointer' onClick={handleAudio} /> : <VolumeX className='text-white cursor-pointer' onClick={handleAudio} />
-              }
-              <Separator orientation={'vertical'} className="h-6" />
               <Button
                 className="hidden bg-transparent px-0 hover:bg-transparent lg:block"
                 onClick={() => setOpen(!open)}
@@ -98,7 +96,6 @@ export default function Header() {
                   className={`text-${open ? 'purple' : 'white'}`}
                 />
               </Button>
-              <Separator orientation={'vertical'} className="h-6" />
               <UserNav />
             </div>
           ) : (
@@ -107,7 +104,7 @@ export default function Header() {
               onClick={handleSignIn}
             >
               <img src={authBtn} />
-              <span className="uppercase">Sign In</span>
+              <span className="uppercase">Log In</span>
             </Button>
           )}
         </div>

@@ -74,7 +74,6 @@ const SignInModal = () => {
         { data: signInPayload }
       ]);
       if (resSignIn?.auth?.accessToken) {
-        console.log({ token: resSignIn?.auth?.accessToken })
         setAccessToken(resSignIn?.auth?.accessToken);
         await dispatch(userActions.userData(resSignIn?.user));
         toast.success('SignIn Success');
@@ -156,7 +155,7 @@ const SignInModal = () => {
                 </a>
               </div>
               <Button
-                className="w-full bg-purple py-5 hover:bg-purple"
+                className="capitalize w-full bg-purple py-5 hover:bg-purple"
                 type="submit"
               >
                 login

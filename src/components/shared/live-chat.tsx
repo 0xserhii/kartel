@@ -9,9 +9,9 @@ import { ScrollArea } from '../ui/scroll-area';
 import React, { useEffect, useRef, useState } from 'react';
 import useToast from '@/hooks/use-toast';
 import { Input } from '../ui/input';
-import { chatActions, userActions } from '@/store/redux/actions';
+import { chatActions } from '@/store/redux/actions';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { getAccessToken, removeAllTokens } from '@/utils/axios';
+import { getAccessToken } from '@/utils/axios';
 import { useInView } from 'react-intersection-observer';
 import { useWallet } from '@/provider/crypto/wallet';
 
