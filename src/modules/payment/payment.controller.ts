@@ -107,21 +107,27 @@ export class PaymentController {
     return payment;
   };
 
-  public userBalanceWithdraw = async ({ amount, currency, address }, { userId }: IAuthInfo) => {
+  public userBalanceWithdraw = async (
+    { amount, currency, address },
+    { userId }: IAuthInfo
+  ) => {
     try {
       if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
-        throw new CustomError(409, 'Balance type is not supported');
+        throw new CustomError(409, "Balance type is not supported");
       }
       const user = await this.userService.getItemById(userId);
       const updateParams = `wallet.${currency}`;
       const walletValue = user?.wallet?.[currency] ?? 0;
       let updateValue = 0;
       if (walletValue < amount) {
-        throw new CustomError(409, 'not enough token balances');
+        throw new CustomError(409, "not enough token balances");
       } else {
-
         updateValue = walletValue - amount;
-        let updatedUser = await this.userService.updateUserBalance(userId, updateParams, updateValue)
+        let updatedUser = await this.userService.updateUserBalance(
+          userId,
+          updateParams,
+          updateValue
+        );
         // user withdraw crypto to admin wallet
         try {
           const resPayment = await this.paymentService.balanceWithdraw({
@@ -130,16 +136,20 @@ export class PaymentController {
             tokenType: currency,
           });
           if (!resPayment) {
-            throw new CustomError(409, 'unable withdraw');
+            throw new CustomError(409, "unable withdraw");
           }
         } catch {
-          updatedUser = await this.userService.updateUserBalance(userId, updateParams, walletValue)
+          updatedUser = await this.userService.updateUserBalance(
+            userId,
+            updateParams,
+            walletValue
+          );
         }
         return updatedUser;
       }
     } catch (error) {
       console.log(error);
-      throw new CustomError(409, 'updating balance error');
+      throw new CustomError(409, "updating balance error");
     }
   };
 
@@ -161,7 +171,10 @@ export class PaymentController {
     }
   };
 
-  public userBalanceDeposit = async ({ amount, currency, address, txHash }, { userId }: IAuthInfo) => {
+  public userBalanceDeposit = async (
+    { amount, currency, address, txHash },
+    { userId }: IAuthInfo
+  ) => {
     try {
       if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
         throw new CustomError(409, "Balance type is not supported");

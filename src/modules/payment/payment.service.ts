@@ -1,14 +1,28 @@
-import { IClient, IPaymentModel, TCheckDepositParam, TWithDrawProps, TransactionDetails, fromHumanString } from '.';
+import {
+  IClient,
+  IPaymentModel,
+  TCheckDepositParam,
+  TWithDrawProps,
+  TransactionDetails,
+  fromHumanString,
+} from ".";
 import BaseService from "@/utils/base/service";
 import { Payment } from "@/utils/db";
-import logger from '@/utils/logger';
-import { ADMIN_WALLET_ADDRESS, ADMIN_WALLET_MNEMONIC, BLOCKCHAIN_RPC_ENDPOINT } from '@/config';
-import { assertIsDeliverTxSuccess, GasPrice, SigningStargateClient } from '@cosmjs/stargate';
-import { HttpBatchClient, Tendermint37Client } from '@cosmjs/tendermint-rpc';
-import { kujiraQueryClient, registry, msg } from 'kujira.js';
-import { CDENOM_TOKENS } from '@/constant/crypto';
-import { DirectSecp256k1HdWallet } from '@cosmjs/proto-signing';
-
+import logger from "@/utils/logger";
+import {
+  ADMIN_WALLET_ADDRESS,
+  ADMIN_WALLET_MNEMONIC,
+  BLOCKCHAIN_RPC_ENDPOINT,
+} from "@/config";
+import {
+  assertIsDeliverTxSuccess,
+  GasPrice,
+  SigningStargateClient,
+} from "@cosmjs/stargate";
+import { HttpBatchClient, Tendermint37Client } from "@cosmjs/tendermint-rpc";
+import { kujiraQueryClient, registry, msg } from "kujira.js";
+import { CDENOM_TOKENS } from "@/constant/crypto";
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 export class PaymentService extends BaseService<IPaymentModel> {
   private instance: IClient | null = null;
@@ -131,14 +145,18 @@ export class PaymentService extends BaseService<IPaymentModel> {
     try {
       const mnemonic = ADMIN_WALLET_MNEMONIC;
       const signer = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
-        prefix: 'kujira',
+        prefix: "kujira",
       });
 
       const [account] = await signer.getAccounts();
-      const client = await SigningStargateClient.connectWithSigner(BLOCKCHAIN_RPC_ENDPOINT, signer, {
-        registry,
-        gasPrice: GasPrice.fromString('0.034ukuji'),
-      });
+      const client = await SigningStargateClient.connectWithSigner(
+        BLOCKCHAIN_RPC_ENDPOINT,
+        signer,
+        {
+          registry,
+          gasPrice: GasPrice.fromString("0.034ukuji"),
+        }
+      );
       const msgs = [
         msg.bank.msgSend({
           fromAddress: ADMIN_WALLET_ADDRESS,
@@ -151,7 +169,12 @@ export class PaymentService extends BaseService<IPaymentModel> {
           ],
         }),
       ];
-      const res = await client.signAndBroadcast(account.address, msgs, 'auto', 'withdraw to user in kartel casino');
+      const res = await client.signAndBroadcast(
+        account.address,
+        msgs,
+        "auto",
+        "withdraw to user in kartel casino"
+      );
       // console.log('widthDrawResult', { res });
       assertIsDeliverTxSuccess(res);
       return res.transactionHash;
@@ -159,7 +182,7 @@ export class PaymentService extends BaseService<IPaymentModel> {
       console.log(error);
       return false;
     }
-  }
+  };
 
   public balanceDeposit = async (data) => {
     try {
@@ -212,6 +235,5 @@ export class PaymentService extends BaseService<IPaymentModel> {
       logger.error(errorMessage);
       return null;
     }
-  }
-
+  };
 }

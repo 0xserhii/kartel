@@ -7,24 +7,24 @@ import CrashGameSocketListener from "./modules/crash-game/socket/crash-game.list
 import LeaderboardSocketListener from "./modules/leaderboard/socket/leaderboard.listener";
 
 class SocketServer {
-    private socketServer: Server;
+  private socketServer: Server;
 
-    constructor(socketServer: Server) {
-        this.socketServer = socketServer;
-        this.start();
+  constructor(socketServer: Server) {
+    this.socketServer = socketServer;
+    this.start();
+  }
+
+  private start() {
+    try {
+      new ChatHistorySocketListener(this.socketServer);
+      new CrashGameSocketListener(this.socketServer);
+      new LeaderboardSocketListener(this.socketServer);
+
+      logger.info("Socket server started");
+    } catch (error) {
+      logger.error("Error starting socket server" + error);
     }
-
-    private start() {
-        try {
-            new ChatHistorySocketListener(this.socketServer);
-            new CrashGameSocketListener(this.socketServer);
-            new LeaderboardSocketListener(this.socketServer);
-
-            logger.info("Socket server started");
-        } catch (error) {
-            logger.error("Error starting socket server" + error);
-        }
-    }
+  }
 }
 
 export default SocketServer;

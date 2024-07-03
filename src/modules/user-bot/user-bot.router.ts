@@ -28,6 +28,5 @@ export default class UserBotRouter extends BaseRouter {
       validateSchema(validations.getListValidation, mapProperty.getQuery),
       actionHandler(this.userBotController.getUsers, mapProperty.getQuery)
     );
-
   }
 }

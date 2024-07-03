@@ -48,6 +48,5 @@ export default class PaymentRouter extends BaseRouter {
         mapProperty.getUserInfo,
       ])
     );
-
   }
 }

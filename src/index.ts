@@ -11,7 +11,7 @@ import { ALLOW_HOSTS, PORT, SOCKET_ALLOW_HOSTS } from "@/config";
 import authorize from "@/middleware/authorize";
 import { errorHandler, routeNotFound } from "@/middleware/error-handler";
 import logger from "@/middleware/logger";
-import customParser from 'socket.io-msgpack-parser'
+import customParser from "socket.io-msgpack-parser";
 
 import { CronJobs } from "./cron";
 import RootRouter from "./root.router";
@@ -52,7 +52,7 @@ const socketServer = new SocketIOServer(httpServer, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-  parser: customParser
+  parser: customParser,
 });
 
 new SocketServer(socketServer);

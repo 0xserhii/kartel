@@ -104,7 +104,7 @@ class ChatHistorySocketHandler {
     }
   };
 
-  public disconnectHandler = async () => { };
+  public disconnectHandler = async () => {};
 
   public getChatHistoryHandler = async (sentAt: Date) => {
     let previousChatHistory;

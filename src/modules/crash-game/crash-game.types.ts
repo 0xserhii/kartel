@@ -64,4 +64,4 @@ export interface IFormattedGameHistoryType
     | "publicSeed"
     | "crashPoint"
     | "createdAt"
-  > { }
+  > {}

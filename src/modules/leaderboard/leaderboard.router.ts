@@ -22,6 +22,5 @@ export default class LeaderboardRouter extends BaseRouter {
       checkPermissions({ roles: [ROLE.ADMIN] }),
       actionHandler(this.leaderboardController.getAll)
     );
-
   }
 }

@@ -23,9 +23,6 @@ export default class WalletTransactionRouter extends BaseRouter {
       actionHandler(this.walletTransactionController.getAll)
     );
 
-    this.router.get(
-      "/:id",
-      checkPermissions({ roles: [ROLE.ADMIN] })
-    );
+    this.router.get("/:id", checkPermissions({ roles: [ROLE.ADMIN] }));
   }
 }

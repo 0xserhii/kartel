@@ -21,6 +21,5 @@ export default class CrashGameRouter extends BaseRouter {
       checkPermissions({ roles: [ROLE.ADMIN] }),
       actionHandler(this.crashGameController.getAll)
     );
-
   }
 }
