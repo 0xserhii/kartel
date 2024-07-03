@@ -195,307 +195,307 @@ class CrashGameSocketListener {
         return updatedGame;
     };
 
-    private runGame = async () => {
-        try {
-            const game = await this.createNewGameBySeed();
-            // Override local state
-            CrashGameSocketController.gameStatus._id = game._id;
-            CrashGameSocketController.gameStatus.status = CGAME_STATES.Starting;
-            CrashGameSocketController.gameStatus.privateSeed = game.privateSeed!;
-            CrashGameSocketController.gameStatus.privateHash = game.privateHash!;
-            CrashGameSocketController.gameStatus.publicSeed = null;
-            CrashGameSocketController.gameStatus.startedAt = new Date(
-                Date.now() + CTime.restart_wait_time
-            );
-            CrashGameSocketController.gameStatus.players = {};
-
-            // Update startedAt in db
-            this.crashGameService.updateById(game._id.toString(), {
-                startedAt: CrashGameSocketController.gameStatus.startedAt,
-            });
-
-            try {
-                // Bet for autobet players
-                const autoBetPlayers =
-                    await this.autoCrashBetService.aggregateByPipeline([
-                        { $match: { status: true } },
-                        {
-                            $lookup: {
-                                from: "users",
-                                localField: "user",
-                                foreignField: "_id",
-                                as: "user",
-                            },
-                        },
-                        {
-                            $unwind: "$user",
-                        },
-                    ]);
-
-                for (const autoBetPlayer of autoBetPlayers) {
-                    const { user, betAmount, denom, cashoutPoint, count } = autoBetPlayer;
-
-                    if (user?._id) {
-                        CrashGameSocketController.gameStatus.pending[String(user._id)] = {
-                            betAmount,
-                            denom,
-                            autoCashOut: cashoutPoint,
-                            username: user.username,
-                        };
-                        CrashGameSocketController.gameStatus.pendingCount++;
-                        logger.info(
-                            this.logoPrefix + `autobet :::` + autoBetPlayer.user._id
-                        );
-
-                        // If user is self-excluded
-                        if (user?.selfExcludes?.crash > Date.now()) {
-                            await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-                            delete CrashGameSocketController.gameStatus.pending[user.id];
-                            CrashGameSocketController.gameStatus.pendingCount--;
-                            this.socketServer
-                                .to(String(user._id))
-                                .emit(
-                                    "game-join-error",
-                                    `You have self-excluded yourself for another ${((user!.selfExcludes.crash - Date.now()) / 3600000).toFixed(1)} hours. Autobet has canceled`
-                                );
-                        }
-
-                        // If user has restricted bets
-                        if (user?.betsLocked) {
-                            await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-                            delete CrashGameSocketController.gameStatus.pending[user.id];
-                            CrashGameSocketController.gameStatus.pendingCount--;
-                            this.socketServer
-                                .to(String(user._id))
-                                .emit(
-                                    "game-join-error",
-                                    "Your account has an betting restriction. Please contact support for more information. Autobet has canceled"
-                                );
-                        }
-
-                        // If user can afford this bet
-                        if (
-                            (user?.wallet?.[denom] ?? 0) < parseFloat(betAmount.toFixed(2))
-                        ) {
-                            await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-                            delete CrashGameSocketController.gameStatus.pending[user.id];
-                            CrashGameSocketController.gameStatus.pendingCount--;
-                            this.socketServer
-                                .to(String(user._id))
-                                .emit(
-                                    "game-join-error",
-                                    "You can't afford this autobet! Autobet has canceled"
-                                );
-                        }
-
-                        if (count <= 0) {
-                            await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-                            delete CrashGameSocketController.gameStatus.pending[user.id];
-                            CrashGameSocketController.gameStatus.pendingCount--;
-                            this.socketServer
-                                .to(String(user._id))
-                                .emit(
-                                    "game-join-error",
-                                    "Autobet has reached the max number of bets! Autobet has canceled"
-                                );
-                        }
-
-                        // decrease the autobet count by one
-                        await this.autoCrashBetService.updateById(autoBetPlayer._id, {
-                            $set: { count: count - 1 },
-                        });
-
-                        const newWalletValue =
-                            (user!.wallet?.[denom] || 0) -
-                            Math.abs(parseFloat(betAmount.toFixed(2)));
-                        const newWagerValue =
-                            (user!.wager?.[denom] || 0) +
-                            Math.abs(parseFloat(betAmount.toFixed(2)));
-                        const newWagerNeededForWithdrawValue =
-                            (user!.wagerNeededForWithdraw?.[denom] || 0) +
-                            Math.abs(parseFloat(betAmount.toFixed(2)));
-                        const newLeaderboardValue =
-                            (user!.leaderboard?.["crash"]?.[denom]?.betAmount || 0) +
-                            Math.abs(parseFloat(betAmount.toFixed(2)));
-
-                        // Remove bet amount from user's balance
-                        await this.userService.updateById(user.id, {
-                            $set: {
-                                [`wallet.${denom}`]: newWalletValue,
-                                [`wagar.${denom}`]: newWagerValue,
-                                [`wagerNeededForWithdraw.${denom}`]:
-                                    newWagerNeededForWithdrawValue,
-                                [`leaderboard.crash.${denom}.betAmount`]: newLeaderboardValue,
-                            },
-                        });
-                        const newWalletTxData = {
-                            _user: new mongoose.Types.ObjectId(user.id),
-                            amount: Math.abs(betAmount.toFixed(2)),
-                            reason: "Crash play",
-                            extraData: {
-                                crashGameId: CrashGameSocketController.gameStatus._id,
-                            },
-                        };
-                        await this.walletTransactionService.create(newWalletTxData);
-                        // Update local wallet
-                        this.socketServer
-                            .to(String(user._id))
-                            .emit("update-wallet", newWalletValue, denom);
-
-                        // Update user's race progress if there is an active race
-                        // await checkAndEnterRace(
-                        //     user.id,
-                        //     Math.abs(parseFloat(betAmount.toFixed(2)))
-                        // );
-
-                        // Calculate house edge
-                        // const houseRake =
-                        //   parseFloat(betAmount.toFixed(2)) * CCrashConfig.houseEdge;
-
-                        // Apply 5% rake to current race prize pool
-                        // await checkAndApplyRakeToRace(houseRake * 0.05);
-
-                        // Apply user's rakeback if eligible
-                        // await checkAndApplyRakeback(user.id, houseRake);
-
-                        // Apply cut of house edge to user's affiliator
-                        // await checkAndApplyAffiliatorCut(user.id, houseRake);
-
-                        // Creating new bet object
-                        // Creating new bet object
-                        const newBet: IBetType = {
-                            autoCashOut: cashoutPoint,
-                            betAmount,
-                            denom,
-                            createdAt: new Date(),
-                            playerID: String(user._id),
-                            username: user.username,
-                            avatar: user.avatar,
-                            level: getVipLevelFromWager(
-                                user!.wager ? user!.wager?.[denom] ?? 0 : 0
-                            ),
-                            status: CBET_STATES.Playing,
-                            forcedCashout: true,
-                        };
-                        // Updating in db
-                        const updateParam = { $set: {} };
-                        updateParam.$set["players." + user.id] = newBet;
-                        await this.crashGameService.updateById(
-                            CrashGameSocketController.gameStatus._id as any,
-                            updateParam
-                        );
-
-                        // Assign to state
-                        CrashGameSocketController.gameStatus.players[user.id] = newBet;
-                        CrashGameSocketController.gameStatus.pendingCount--;
-
-                        const formattedBet =
-                            CrashGameSocketController.formatPlayerBet(newBet);
-                        CrashGameSocketController.gameStatus.pendingBets.push(formattedBet);
-
-                        this.emitPlayerBets();
-
-                        this.socketServer
-                            .to(String(user._id))
-                            .emit("auto-crashgame-join-success", "Autobet is running.");
-                    }
-                }
-            } catch (error) {
-                logger.error(
-                    this.logoPrefix +
-                    "Error while starting a crash game with auto bets:" +
-                    error
-                );
-            }
-
-            try {
-                // Bet a random number of bot players
-                const allBots = await this.userBotServices.get();
-                const randomNumberOfPlayers = Math.floor(Math.random() * 4) + 8;
-                const selectedBotPlayers = allBots
-                    .sort(() => 0.5 - Math.random())
-                    .slice(0, randomNumberOfPlayers);
-
-                for (const botPlayer of selectedBotPlayers) {
-                    const { _id, username, avatar, wager } = botPlayer;
-                    const betAmount = this.getRandomBetAmount();
-
-                    const denoms = Object.keys(CDENOM_TOKENS);
-                    const denomIndex = Math.floor(Math.random() * denoms.length);
-                    const denom = denoms[denomIndex];
-
-                    const delay = Math.floor(Math.random() * 7 + 2) * 1000; // Generate a random delay between 2-8 seconds
-
-                    setTimeout(async () => {
-                        const CASHOUTNUMBER = this.generateRandomNumber();
-                        CrashGameSocketController.gameStatus.pending[String(_id)] = {
-                            betAmount,
-                            denom,
-                            autoCashOut: CASHOUTNUMBER,
-                            username: username,
-                        };
-
-                        CrashGameSocketController.gameStatus.pendingCount++;
-
-                        // Creating new bet object
-                        const newBet: IBetType = {
-                            autoCashOut: CASHOUTNUMBER,
-                            betAmount,
-                            denom,
-                            createdAt: new Date(),
-                            playerID: String(_id),
-                            username: username,
-                            avatar: avatar,
-                            level: getVipLevelFromWager(wager),
-                            status: CBET_STATES.Playing,
-                            forcedCashout: true,
-                        };
-
-                        // Remove bet amount from user's balance
-                        await this.userBotServices.updateById(_id as string, {
-                            $inc: {
-                                wager: Math.abs(parseFloat(betAmount.toFixed(2))),
-                            },
-                        });
-
-                        // await checkAndEnterRace(
-                        //     String(_id),
-                        //     Math.abs(parseFloat(betAmount.toFixed(2)))
-                        // );
-
-                        // Updating in db
-                        const updateParam = { $set: {} };
-                        updateParam.$set["players." + _id] = newBet;
-                        await this.crashGameService.updateById(
-                            CrashGameSocketController.gameStatus._id.toString(),
-                            updateParam
-                        );
-
-                        // Assign to state
-                        CrashGameSocketController.gameStatus.players[String(_id)] = newBet;
-                        CrashGameSocketController.gameStatus.pendingCount--;
-
-                        const formattedBet =
-                            CrashGameSocketController.formatPlayerBet(newBet);
-                        CrashGameSocketController.gameStatus.pendingBets.push(formattedBet);
-                        this.emitPlayerBets();
-                    }, delay);
-                }
-            } catch (error) {
-                logger.error(this.logoPrefix + "Error Crash" + error);
-                CrashGameSocketController.gameStatus.pendingCount--;
-            }
-
-            this.emitStarting();
-        } catch (error) {
-            logger.error(this.logoPrefix + "Error running game: " + error);
-        }
-    };
-
     public emitPlayerBets = () => {
         const bets = CrashGameSocketController.gameStatus.pendingBets;
         CrashGameSocketController.gameStatus.pendingBets = [];
         this.socketServer.emit("game-bets", bets);
+    };
+
+    private runGame = async () => {
+        // try {
+        const game = await this.createNewGameBySeed();
+        // Override local state
+        CrashGameSocketController.gameStatus._id = game._id;
+        CrashGameSocketController.gameStatus.status = CGAME_STATES.Starting;
+        CrashGameSocketController.gameStatus.privateSeed = game.privateSeed!;
+        CrashGameSocketController.gameStatus.privateHash = game.privateHash!;
+        CrashGameSocketController.gameStatus.publicSeed = null;
+        CrashGameSocketController.gameStatus.startedAt = new Date(
+            Date.now() + CTime.restart_wait_time
+        );
+        CrashGameSocketController.gameStatus.players = {};
+
+        // Update startedAt in db
+        this.crashGameService.updateById(game._id.toString(), {
+            startedAt: CrashGameSocketController.gameStatus.startedAt,
+        });
+
+        try {
+            // Bet for autobet players
+            const autoBetPlayers =
+                await this.autoCrashBetService.aggregateByPipeline([
+                    { $match: { status: true } },
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "user",
+                            foreignField: "_id",
+                            as: "user",
+                        },
+                    },
+                    {
+                        $unwind: "$user",
+                    },
+                ]);
+
+            autoBetPlayers.forEach(async (autoBetPlayer) => {
+                const { user, betAmount, denom, cashoutPoint, count } = autoBetPlayer;
+
+                if (user?._id) {
+                    CrashGameSocketController.gameStatus.pending[String(user._id)] = {
+                        betAmount,
+                        denom,
+                        autoCashOut: cashoutPoint,
+                        username: user.username,
+                    };
+                    CrashGameSocketController.gameStatus.pendingCount++;
+                    logger.info(
+                        this.logoPrefix + `autobet :::` + autoBetPlayer.user._id
+                    );
+
+                    // If user is self-excluded
+                    if (user?.selfExcludes?.crash > Date.now()) {
+                        await this.autoCrashBetService.deleteById(autoBetPlayer._id);
+                        delete CrashGameSocketController.gameStatus.pending[user.id];
+                        CrashGameSocketController.gameStatus.pendingCount--;
+                        this.socketServer
+                            .to(String(user._id))
+                            .emit(
+                                "game-join-error",
+                                `You have self-excluded yourself for another ${((user!.selfExcludes.crash - Date.now()) / 3600000).toFixed(1)} hours. Autobet has canceled`
+                            );
+                    }
+
+                    // If user has restricted bets
+                    if (user?.betsLocked) {
+                        await this.autoCrashBetService.deleteById(autoBetPlayer._id);
+                        delete CrashGameSocketController.gameStatus.pending[user.id];
+                        CrashGameSocketController.gameStatus.pendingCount--;
+                        this.socketServer
+                            .to(String(user._id))
+                            .emit(
+                                "game-join-error",
+                                "Your account has an betting restriction. Please contact support for more information. Autobet has canceled"
+                            );
+                    }
+
+                    // If user can afford this bet
+                    if (
+                        (user?.wallet?.[denom] ?? 0) < parseFloat(betAmount.toFixed(2))
+                    ) {
+                        await this.autoCrashBetService.deleteById(autoBetPlayer._id);
+                        delete CrashGameSocketController.gameStatus.pending[user.id];
+                        CrashGameSocketController.gameStatus.pendingCount--;
+                        this.socketServer
+                            .to(String(user._id))
+                            .emit(
+                                "game-join-error",
+                                "You can't afford this autobet! Autobet has canceled"
+                            );
+                    }
+
+                    if (count <= 0) {
+                        await this.autoCrashBetService.deleteById(autoBetPlayer._id);
+                        delete CrashGameSocketController.gameStatus.pending[user.id];
+                        CrashGameSocketController.gameStatus.pendingCount--;
+                        this.socketServer
+                            .to(String(user._id))
+                            .emit(
+                                "game-join-error",
+                                "Autobet has reached the max number of bets! Autobet has canceled"
+                            );
+                    }
+
+                    // decrease the autobet count by one
+                    await this.autoCrashBetService.updateById(autoBetPlayer._id, {
+                        $set: { count: count - 1 },
+                    });
+
+
+                    const newWalletValue =
+                        (user!.wallet?.[denom] || 0) -
+                        Math.abs(parseFloat(betAmount.toFixed(2)));
+                    const newWagerValue =
+                        (user!.wager?.[denom] || 0) +
+                        Math.abs(parseFloat(betAmount.toFixed(2)));
+                    const newWagerNeededForWithdrawValue =
+                        (user!.wagerNeededForWithdraw?.[denom] || 0) +
+                        Math.abs(parseFloat(betAmount.toFixed(2)));
+                    const newLeaderboardValue =
+                        (user!.leaderboard?.["crash"]?.[denom]?.betAmount || 0) +
+                        Math.abs(parseFloat(betAmount.toFixed(2)));
+                    // Remove bet amount from user's balance
+                    await this.userService.updateById(user._id, {
+                        $set: {
+                            [`wallet.${denom}`]: newWalletValue,
+                            [`wagar.${denom}`]: newWagerValue,
+                            [`wagerNeededForWithdraw.${denom}`]:
+                                newWagerNeededForWithdrawValue,
+                            [`leaderboard.crash.${denom}.betAmount`]: newLeaderboardValue,
+                        },
+                    });
+
+                    const newWalletTxData = {
+                        _user: new mongoose.Types.ObjectId(user.id),
+                        amount: Math.abs(betAmount.toFixed(2)),
+                        reason: "Crash play",
+                        extraData: {
+                            crashGameId: CrashGameSocketController.gameStatus._id,
+                        },
+                    };
+
+                    await this.walletTransactionService.create(newWalletTxData);
+                    // Update local wallet
+                    this.socketServer
+                        .to(String(user._id))
+                        .emit("update-wallet", newWalletValue, denom);
+
+                    // Update user's race progress if there is an active race
+                    // await checkAndEnterRace(
+                    //     user.id,
+                    //     Math.abs(parseFloat(betAmount.toFixed(2)))
+                    // );
+
+                    // Calculate house edge
+                    // const houseRake =
+                    //   parseFloat(betAmount.toFixed(2)) * CCrashConfig.houseEdge;
+
+                    // Apply 5% rake to current race prize pool
+                    // await checkAndApplyRakeToRace(houseRake * 0.05);
+
+                    // Apply user's rakeback if eligible
+                    // await checkAndApplyRakeback(user.id, houseRake);
+
+                    // Apply cut of house edge to user's affiliator
+                    // await checkAndApplyAffiliatorCut(user.id, houseRake);
+
+                    // Creating new bet object
+                    // Creating new bet object
+                    const newBet: IBetType = {
+                        autoCashOut: cashoutPoint,
+                        betAmount,
+                        denom,
+                        createdAt: new Date(),
+                        playerID: String(user._id),
+                        username: user.username,
+                        avatar: user.avatar,
+                        level: getVipLevelFromWager(
+                            user!.wager ? user!.wager?.[denom] ?? 0 : 0
+                        ),
+                        status: CBET_STATES.Playing,
+                        forcedCashout: true,
+                    };
+                    // Updating in db
+                    const updateParam = { $set: {} };
+                    updateParam.$set["players." + user.id] = newBet;
+                    await this.crashGameService.updateById(
+                        CrashGameSocketController.gameStatus._id as any,
+                        updateParam
+                    );
+
+                    // Assign to state
+                    CrashGameSocketController.gameStatus.players[user._id] = newBet;
+                    CrashGameSocketController.gameStatus.pendingCount--;
+
+                    const formattedBet =
+                        CrashGameSocketController.formatPlayerBet(newBet);
+                    CrashGameSocketController.gameStatus.pendingBets.push(formattedBet);
+                    this.emitPlayerBets();
+
+                    this.socketServer
+                        .to(String(user._id))
+                        .emit("auto-crashgame-join-success", "Autobet is running.");
+                }
+            });
+        } catch (error) {
+            logger.error(
+                this.logoPrefix +
+                "Error while starting a crash game with auto bets:" +
+                error
+            );
+        }
+
+        try {
+            // Bet a random number of bot players
+            const allBots = await this.userBotServices.get();
+            const randomNumberOfPlayers = Math.floor(Math.random() * 4) + 8;
+            const selectedBotPlayers = allBots
+                .sort(() => 0.5 - Math.random())
+                .slice(0, randomNumberOfPlayers);
+
+            for (const botPlayer of selectedBotPlayers) {
+                const { _id, username, avatar, wager } = botPlayer;
+                const betAmount = this.getRandomBetAmount();
+
+                const denoms = Object.keys(CDENOM_TOKENS);
+                const denomIndex = Math.floor(Math.random() * denoms.length);
+                const denom = denoms[denomIndex];
+
+                const delay = Math.floor(Math.random() * 7 + 2) * 1000; // Generate a random delay between 2-8 seconds
+
+                setTimeout(async () => {
+                    const CASHOUTNUMBER = this.generateRandomNumber();
+                    CrashGameSocketController.gameStatus.pending[String(_id)] = {
+                        betAmount,
+                        denom,
+                        autoCashOut: CASHOUTNUMBER,
+                        username: username,
+                    };
+
+                    CrashGameSocketController.gameStatus.pendingCount++;
+
+                    // Creating new bet object
+                    const newBet: IBetType = {
+                        autoCashOut: CASHOUTNUMBER,
+                        betAmount,
+                        denom,
+                        createdAt: new Date(),
+                        playerID: String(_id),
+                        username: username,
+                        avatar: avatar,
+                        level: getVipLevelFromWager(wager),
+                        status: CBET_STATES.Playing,
+                        forcedCashout: true,
+                    };
+
+                    // Remove bet amount from user's balance
+                    await this.userBotServices.updateById(_id as string, {
+                        $inc: {
+                            wager: Math.abs(parseFloat(betAmount.toFixed(2))),
+                        },
+                    });
+
+                    // await checkAndEnterRace(
+                    //     String(_id),
+                    //     Math.abs(parseFloat(betAmount.toFixed(2)))
+                    // );
+
+                    // Updating in db
+                    const updateParam = { $set: {} };
+                    updateParam.$set["players." + _id] = newBet;
+                    await this.crashGameService.updateById(
+                        CrashGameSocketController.gameStatus._id.toString(),
+                        updateParam
+                    );
+
+                    // Assign to state
+                    CrashGameSocketController.gameStatus.players[String(_id)] = newBet;
+                    CrashGameSocketController.gameStatus.pendingCount--;
+
+                    const formattedBet =
+                        CrashGameSocketController.formatPlayerBet(newBet);
+                    CrashGameSocketController.gameStatus.pendingBets.push(formattedBet);
+                    this.emitPlayerBets();
+                }, delay);
+            }
+        } catch (error) {
+            logger.error(this.logoPrefix + "Error Crash" + error);
+            CrashGameSocketController.gameStatus.pendingCount--;
+        }
+        // } catch (error) {
+        //     logger.error(this.logoPrefix + "Error running game: " + error);
+        // }
+        this.emitStarting();
     };
 
     // Emits the start of the game and handles blocking
@@ -599,7 +599,6 @@ class CrashGameSocketListener {
         // Calculate next tick
         const left = CrashGameSocketController.gameStatus.duration! - elapsed;
         const nextTick = Math.max(0, Math.min(left, CTime.tick_rate));
-
         setTimeout(this.runTick, nextTick);
     };
 
@@ -611,7 +610,6 @@ class CrashGameSocketListener {
 
         // Completing all auto cashouts
         this.runCashOuts(at);
-
         // Check if crash point is reached
         if (at > CrashGameSocketController.gameStatus.crashPoint!) {
             this.endGame();
@@ -627,15 +625,14 @@ class CrashGameSocketListener {
     };
 
     public runCashOuts = (elapsed: number) => {
+
         _.each(CrashGameSocketController.gameStatus.players, (bet) => {
             // Check if bet is still active
             if (bet.status !== CBET_STATES.Playing) {
                 return;
             }
-
-            const crashSocketController = new CrashGameSocketController();
-
             // Check if the auto cashout is reached or max profit is reached
+            // console.log({ elapsed, bet, crashPoint: CrashGameSocketController.gameStatus.crashPoint })
             if (
                 bet.autoCashOut >= 101 &&
                 bet.autoCashOut <= elapsed &&
@@ -655,20 +652,19 @@ class CrashGameSocketListener {
                     }
                 );
             }
-            // else if (
-            //     bet.betAmount * (elapsed / 100) >= CCrashConfig.maxProfit &&
-            //     elapsed <= CrashGameSocketController.gameStatus.crashPoint!
-            // ) {
-            //     console.log("MAX_LIMMIT_AUTOCASHOUT");
-            //     this.doCashOut(bet.playerID, elapsed, true, (err: Error | null) => {
-            //         if (err) {
-            //             logger.error(
-            //                 this.logoPrefix +
-            //                 `There was an error while trying to cashout ${err}`
-            //             );
-            //         }
-            //     });
-            // }
+            else if (
+                bet.betAmount * (elapsed / 100) >= CCrashConfig.maxProfit && elapsed <= CrashGameSocketController.gameStatus.crashPoint!
+            ) {
+                console.log("MAX_LIMMIT_AUTOCASHOUT");
+                this.doCashOut(bet.playerID, elapsed, true, (err: Error | null) => {
+                    if (err) {
+                        logger.error(
+                            this.logoPrefix +
+                            `There was an error while trying to cashout ${err}`
+                        );
+                    }
+                });
+            }
         });
     };
 

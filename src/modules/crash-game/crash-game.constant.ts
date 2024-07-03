@@ -30,7 +30,7 @@ export const CBET_STATES = {
 };
 
 export const CTime = {
-  tick_rate: 100,
+  tick_rate: 150,
   start_wait_time: 4000,
   restart_wait_time: 9000,
 };

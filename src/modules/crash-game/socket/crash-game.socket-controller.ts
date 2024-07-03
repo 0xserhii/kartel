@@ -344,6 +344,11 @@ export class CrashGameSocketController {
                 (this.user!.leaderboard?.["crash"]?.[denom]?.betAmount || 0) +
                 Math.abs(parseFloat(betAmount.toFixed(2)));
 
+            console.log({
+                newvalue: newWalletValue,
+                original: this.user!.wallet?.[denom],
+                betAmount: betAmount,
+            });
             // Remove bet amount from user's balance
             await this.userService.update(
                 { _id: userId },
