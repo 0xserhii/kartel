@@ -21,7 +21,6 @@ export class PaymentService extends BaseService<IPaymentModel> {
   }
 
   public createClient = async (): Promise<IClient> => {
-    console.log("createClient", { rpc: BLOCKCHAIN_RPC_ENDPOINT });
     const tmClient = await Tendermint37Client.create(this.rpcClient);
     const querier = kujiraQueryClient({ client: tmClient });
     return { tmClient, querier };

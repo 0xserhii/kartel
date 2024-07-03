@@ -656,7 +656,7 @@ class CrashGameSocketListener {
                 bet.betAmount * (elapsed / 100) >= CCrashConfig.maxProfit && elapsed <= CrashGameSocketController.gameStatus.crashPoint!
             ) {
                 console.log("MAX_LIMMIT_AUTOCASHOUT");
-                this.doCashOut(bet.playerID, elapsed, true, (err: Error | null) => {
+                this.doCashOut(bet.playerID, elapsed, false, (err: Error | null) => {
                     if (err) {
                         logger.error(
                             this.logoPrefix +
