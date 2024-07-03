@@ -3,8 +3,8 @@ import Chance from "chance";
 import crypto from "crypto";
 
 import { SECURITY_CRYPTO_ENC_KEY, SECURITY_CRYPTO_SEC_KEY } from "@/config";
-import { CCrash_Config } from "@/modules/crash-game";
-import { CMines_Config } from "@/modules/mines-game";
+import { CCrashConfig } from "@/modules/crash-game";
+import { CMinesConfig } from "@/modules/mines-game";
 
 import logger from "../logger";
 import { getCrypto, getPublicSeed } from "./get-seed";
@@ -118,7 +118,7 @@ const generateCrashRandom = async (
 const generateCrashPoint = (seed: string, salt: string): number => {
   const hash = crypto.createHmac("sha256", seed).update(salt).digest("hex");
 
-  const hs = Math.floor(100 / (CCrash_Config.houseEdge * 100));
+  const hs = Math.floor(100 / (CCrashConfig.houseEdge * 100));
 
   if (isCrashHashDivisible(hash, hs)) {
     return 100;
@@ -155,7 +155,7 @@ const generateMinesRandom = async (
     // privateSeed-roundId-publicSeed pair
     const chance = new Chance(`${privateSeed}-${gameId}-${publicSeed}`);
 
-    const maxNum = CMines_Config.maxBetMinesCount;
+    const maxNum = CMinesConfig.maxBetMinesCount;
 
     // Generate a unique set of mine positions
     const mines = new Set<number>();

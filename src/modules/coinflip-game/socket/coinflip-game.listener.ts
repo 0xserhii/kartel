@@ -1,24 +1,18 @@
-import { Namespace, Server, Socket, Event as SocketEvent } from "socket.io";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { Event as SocketEvent, Namespace, Server, Socket } from "socket.io";
+
+import { TOKEN_SECRET } from "@/config";
 import { ESOCKET_NAMESPACE } from "@/constant/enum";
-import {
-  CCoinFlip_Config,
-  ECoinflipGameEvents,
-} from "../coinflip-game.constant";
 import { IUserModel } from "@/modules/user/user.interface";
 import UserService from "@/modules/user/user.service";
-import { TOKEN_SECRET } from "@/config";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { getCoinflipState } from "@/utils/setting/site";
-import { CoinflipGame } from "@/utils/db";
-import { WalletTransactionService } from "@/modules/wallet-transaction";
-import { generatePrivateSeedHashPair } from "@/utils/crypto/random";
+
+import { ECoinflipGameEvents } from "../coinflip-game.constant";
 
 class CoinflipGameSocketListener {
   private socketServer: Namespace;
   private loggedIn = false;
   private user: IUserModel | null = null;
   private userService: UserService;
-  private walletTransactionService: WalletTransactionService;
 
   constructor(socketServer: Server) {
     this.socketServer = socketServer.of(ESOCKET_NAMESPACE.coinflip);
@@ -36,7 +30,7 @@ class CoinflipGameSocketListener {
       // Create Coinflip Game handler
       socket.on(
         ECoinflipGameEvents.createCoinflipGame,
-        async (data: {
+        async (_data: {
           betAmount: number;
           denom: string;
           betCoinsCount: number;
@@ -46,10 +40,10 @@ class CoinflipGameSocketListener {
           // this.createCoinflipGame(data, socket);
         }
       );
-      // Disconnect Handler
-      socket.on(ECoinflipGameEvents.disconnect, async () => {
-        this.disconnect(socket);
-      });
+      // // Disconnect Handler
+      // socket.on(ECoinflipGameEvents.disconnect, async () => {
+      //   this.disconnect(socket);
+      // });
 
       // Check for users ban status
       socket.use((packet: SocketEvent, next: (err?: any) => void) =>
@@ -58,12 +52,12 @@ class CoinflipGameSocketListener {
     });
   }
 
-  private initializeListener = async () => { };
+  private initializeListener = async () => {};
 
-  private initializeSubscribe = async (socket: Socket) => { };
+  private initializeSubscribe = async (socket: Socket) => {};
 
   private banStatusCheckMiddleware = async (
-    packet: SocketEvent,
+    _packet: SocketEvent,
     next: (err?: any) => void,
     socket: Socket
   ) => {
@@ -99,6 +93,7 @@ class CoinflipGameSocketListener {
       // Verify token
       const decoded = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
       const user = await this.userService.getItem({ _id: decoded.userId });
+
       if (user) {
         if (parseInt(user.banExpires) > new Date().getTime()) {
           this.loggedIn = false;
@@ -136,22 +131,22 @@ class CoinflipGameSocketListener {
   //   }
   //   // More validation on the bet value
   //   if (
-  //     parseFloat(betAmount.toFixed(2)) < CCoinFlip_Config.minBetAmount ||
-  //     parseFloat(betAmount.toFixed(2)) > CCoinFlip_Config.maxBetAmount
+  //     parseFloat(betAmount.toFixed(2)) < CCoinFlipConfig.minBetAmount ||
+  //     parseFloat(betAmount.toFixed(2)) > CCoinFlipConfig.maxBetAmount
   //   ) {
   //     return socket.emit(
   //       "game-creation-error",
-  //       `Your bet must be a minimum of ${CCoinFlip_Config.minBetAmount} credits and a maximum of ${CCoinFlip_Config.maxBetAmount} credits!`
+  //       `Your bet must be a minimum of ${CCoinFlipConfig.minBetAmount} credits and a maximum of ${CCoinFlipConfig.maxBetAmount} credits!`
   //     );
   //   }
 
   //   if (
-  //     betSideCount < CCoinFlip_Config.minBetCoinsCount ||
-  //     betSideCount > CCoinFlip_Config.maxBetCoinsCount
+  //     betSideCount < CCoinFlipConfig.minBetCoinsCount ||
+  //     betSideCount > CCoinFlipConfig.maxBetCoinsCount
   //   ) {
   //     return socket.emit(
   //       "game-creation-error",
-  //       `Invalid bet Coin Count! Must be between ${CCoinFlip_Config.minBetCoinsCount} and ${CCoinFlip_Config.maxBetCoinsCount}`
+  //       `Invalid bet Coin Count! Must be between ${CCoinFlipConfig.minBetCoinsCount} and ${CCoinFlipConfig.maxBetCoinsCount}`
   //     );
   //   }
 
@@ -236,7 +231,7 @@ class CoinflipGameSocketListener {
   //     // await checkAndEnterRace(userId, Math.abs(parseFloat(betAmount.toFixed(2))));
 
   //     // Calculate house edge
-  //     // const houseEdge = parseFloat(betAmount.toFixed(2)) * CCoinFlip_Config.feePercentage;
+  //     // const houseEdge = parseFloat(betAmount.toFixed(2)) * CCoinFlipConfig.feePercentage;
 
   //     // Apply user's rakeback if eligible
   //     // await checkAndApplyRakeback(userId, houseEdge);
@@ -413,7 +408,7 @@ class CoinflipGameSocketListener {
   //   }
   // };
 
-  private disconnect = async (socket: Socket) => { };
+  // private disconnect = async (socket: Socket) => { };
 }
 
 export default CoinflipGameSocketListener;

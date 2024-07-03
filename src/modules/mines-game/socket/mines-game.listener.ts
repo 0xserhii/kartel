@@ -1,5 +1,7 @@
-import { Namespace, Server, Socket, Event as SocketEvent } from "socket.io";
+import { Namespace, Server, Socket } from "socket.io";
+
 import { ESOCKET_NAMESPACE } from "@/constant/enum";
+
 import { EMinesGameEvents } from "../mines-game.constant";
 
 class MinesGameSocketListener {
@@ -13,7 +15,7 @@ class MinesGameSocketListener {
 
   private subscribeListener(): void {
     this.socketServer.on("connection", (socket: Socket) => {
-      this.initializeSubscribe(socket);
+      // this.initializeSubscribe(socket);
       // Auth handler
       socket.on(EMinesGameEvents.auth, async (token: string) => {
         this.authHandler(token, socket);
@@ -44,20 +46,20 @@ class MinesGameSocketListener {
       });
 
       // Check for users ban status
-      socket.use(this.banStatusCheckMiddleware);
+      // socket.use(this.banStatusCheckMiddleware);
     });
   }
 
-  private initializeListener = async () => { };
+  private initializeListener = async () => {};
 
-  private initializeSubscribe = async (socket: Socket) => { };
+  // private initializeSubscribe = async (socket: Socket) => {};
 
-  private banStatusCheckMiddleware = async (
-    packet: SocketEvent,
-    next: (err?: any) => void
-  ) => { };
+  // private banStatusCheckMiddleware = async (
+  //   packet: SocketEvent,
+  //   next: (err?: any) => void
+  // ) => {};
 
-  private authHandler = async (token: string, socket: Socket) => { };
+  private authHandler = async (token: string, socket: Socket) => {};
 
   private createMinesGame = async (
     data: {
@@ -66,13 +68,13 @@ class MinesGameSocketListener {
       betMinesCount: number;
     },
     socket: Socket
-  ) => { };
+  ) => {};
 
-  private minesRolling = async (position: number, socket: Socket) => { };
+  private minesRolling = async (position: number, socket: Socket) => {};
 
-  private minesCashout = async (socket: Socket) => { };
+  private minesCashout = async (socket: Socket) => {};
 
-  private disconnect = async (socket: Socket) => { };
+  private disconnect = async (socket: Socket) => {};
 }
 
 export default MinesGameSocketListener;

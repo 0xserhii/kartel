@@ -3,7 +3,7 @@ export enum EXAMPLE_ENUM {
   EXAMPLE_TWO = "EXAMPLE_TWO",
 }
 
-export const CMines_Config = {
+export const CMinesConfig = {
   minBetAmount: 0.1, // Min bet amount (in coins)
   maxBetAmount: 300, // Max bet amount (in coins)
   feePercentage: 0.05, // House fee percentage

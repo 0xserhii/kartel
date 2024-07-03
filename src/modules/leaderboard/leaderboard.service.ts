@@ -1,10 +1,10 @@
 // need add model to mongo index file
+import { ALLOW_GAME_LIST } from "@/config";
 import BaseService from "@/utils/base/service";
 import { User } from "@/utils/db";
 
 // need add types
 import { TLeaderboardDocumentType } from "./leaderboard.types";
-import { ALLOW_GAME_LIST } from "@/config";
 
 export class LeaderboardService extends BaseService<TLeaderboardDocumentType> {
   constructor() {
@@ -12,8 +12,9 @@ export class LeaderboardService extends BaseService<TLeaderboardDocumentType> {
   }
 
   getTopLearderboards = async (count: number) => {
-    let leaderboard: { [key: string]: any[] } = {};
-    const gameList = ALLOW_GAME_LIST
+    const leaderboard: { [key: string]: any[] } = {};
+    const gameList = ALLOW_GAME_LIST;
+
     for (const game of gameList) {
       const topPipeline = [
         {
@@ -22,8 +23,8 @@ export class LeaderboardService extends BaseService<TLeaderboardDocumentType> {
               $sum: {
                 $map: {
                   input: { $objectToArray: `$leaderboard.${game}` }, // Focus on specific game
-                  as: 'denom',
-                  in: '$$denom.v.betAmount',
+                  as: "denom",
+                  in: "$$denom.v.betAmount",
                 },
               },
             },
@@ -42,7 +43,7 @@ export class LeaderboardService extends BaseService<TLeaderboardDocumentType> {
             hasVerifiedAccount: 1,
             totalBetAmount: 1,
             rank: 1,
-          }
+          },
         },
       ];
       const gameLeaderboard = await this.aggregateByPipeline(topPipeline);
@@ -50,5 +51,5 @@ export class LeaderboardService extends BaseService<TLeaderboardDocumentType> {
     }
 
     return leaderboard;
-  }
+  };
 }

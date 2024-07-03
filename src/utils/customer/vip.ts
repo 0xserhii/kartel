@@ -1,5 +1,5 @@
 // Import Dependencies
-import { CCustomer_Vip_Config } from "@/constant/customer";
+import { CCustomerVipConfig } from "@/constant/customer";
 import UserService from "@/modules/user/user.service";
 import { IVIPLevelType } from "@/modules/user/user.types";
 import UserBotService from "@/modules/user-bot/user-bot.service";
@@ -13,7 +13,7 @@ const {
   rakeback,
   vipLevelNAME,
   vipLevelCOLORS,
-} = CCustomer_Vip_Config;
+} = CCustomerVipConfig;
 
 // Generate VIP Levels
 const generateVIPLevels = (

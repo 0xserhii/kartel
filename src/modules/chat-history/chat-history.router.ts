@@ -5,11 +5,7 @@ import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
 import * as mapProperty from "@/utils/interfaces";
 
-import {
-  ChatHistoryController,
-  CreateChatHistorySchema,
-  UpdateChatHistorySchema,
-} from ".";
+import { ChatHistoryController, CreateChatHistorySchema } from ".";
 
 export default class ChatHistoryRouter extends BaseRouter {
   private chatHistoryController: ChatHistoryController;

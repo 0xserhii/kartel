@@ -60,11 +60,11 @@ const toggleMines = () => {
 // Export functions
 export {
   getCoinflipState,
-  getSiteCrashState,
   getDepositState,
   getLoginState,
   getMaintenanceState,
   getMinesState,
+  getSiteCrashState,
   getWithdrawState,
   toggleCoinflip,
   toggleCrash,

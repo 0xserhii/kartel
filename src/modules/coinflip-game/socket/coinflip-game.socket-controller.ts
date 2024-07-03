@@ -1,16 +1,16 @@
-import mongoose, { FilterQuery, ObjectId } from "mongoose";
+import _ from "lodash";
+import { FilterQuery } from "mongoose";
+import { Namespace } from "socket.io";
 
+import { RevenueLogService } from "@/modules/revenue-log";
+import UserService from "@/modules/user/user.service";
+import { WalletTransactionService } from "@/modules/wallet-transaction";
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
-import _ from "lodash";
-import logger from "@/utils/logger";
-import UserService from "@/modules/user/user.service";
-import { WalletTransactionService } from "@/modules/wallet-transaction";
-import { Namespace } from "socket.io";
-import { RevenueLogService } from "@/modules/revenue-log";
-import { CoinflipGameService } from "../coinflip-game.service";
+
 import { ICoinflipGameModel } from "../coinflip-game.interface";
+import { CoinflipGameService } from "../coinflip-game.service";
 
 export class CoinflipGameSocketController {
   // Services

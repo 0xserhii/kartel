@@ -1,6 +1,6 @@
+import { Tendermint37Client } from "@cosmjs/tendermint-rpc";
+import { kujiraQueryClient } from "kujira.js/lib/cjs/queryClient.js";
 import { Document } from "mongoose";
-import { Tendermint37Client } from '@cosmjs/tendermint-rpc';
-import { kujiraQueryClient } from 'kujira.js/lib/cjs/queryClient.js';
 
 export interface IPaymentModel extends Document {
   userId?: string;
@@ -10,7 +10,6 @@ export interface IPaymentModel extends Document {
   txHash: string;
   createdAt: Date;
 }
-
 
 export interface IClient {
   tmClient: Tendermint37Client;

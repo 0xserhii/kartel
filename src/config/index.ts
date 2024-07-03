@@ -51,7 +51,8 @@ export const BLOCKCHAIN_RPC_ENDPOINT: string =
 // Socket.io configs
 
 // Site configs
-export const ALLOW_GAME_LIST: Array<string> = process.env.ALLOW_GAME_LIST?.split(",") ?? [];
+export const ALLOW_GAME_LIST: Array<string> =
+  process.env.ALLOW_GAME_LIST?.split(",") ?? [];
 
 // Admin configs
 export const ADMIN_WALLET_ADDRESS: string = process.env.ADMIN_WALLET_ADDRESS;

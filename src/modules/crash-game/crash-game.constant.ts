@@ -1,4 +1,4 @@
-export const CCrash_Config = {
+export const CCrashConfig = {
   minBetAmount: 0.1, // Min bet amount (in coins)
   maxBetAmount: 100, // Max bet amount (in coins)
   maxProfit: 500, // Max profit on crash, forces auto cashout

@@ -1,4 +1,4 @@
-export const CCustomer_Vip_Config = {
+export const CCustomerVipConfig = {
   minDepositForWithdraw: 5, // You must have deposited atleast this amount before withdrawing
   minWithdrawAmount: 5, // Minimum Withdraw Amount
   levelToChat: 2, // The level amount you need to chat

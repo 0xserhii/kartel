@@ -3,7 +3,7 @@ export enum EXAMPLE_ENUM {
   EXAMPLE_TWO = "EXAMPLE_TWO",
 }
 
-export const CCoinFlip_Config = {
+export const CCoinFlipConfig = {
   minBetAmount: 0.1, // Min bet amount (in coins)
   maxBetAmount: 100000, // Max bet amount (in coins)
   feePercentage: 0.05, // House fee percentage
