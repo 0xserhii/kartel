@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Socket, io } from 'socket.io-client';
+import customParser from 'socket.io-msgpack-parser'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -174,7 +175,10 @@ export default function CrashGameSection() {
     const crashSocket: Socket<
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
-    > = io(`${SERVER_URL}/crash`);
+    > = io(
+      `${SERVER_URL}/crash`,
+      { parser: customParser }
+    );
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 

@@ -9,6 +9,7 @@ import { DelegationResponse } from 'cosmjs-types/cosmos/staking/v1beta1/staking'
 import { Any } from 'cosmjs-types/google/protobuf/any';
 import { BigNumber } from 'ethers';
 import {
+  AuthnWebSigner,
   CHAIN_INFO,
   Denom,
   Keplr,
@@ -66,6 +67,7 @@ export type IWallet = {
   setFeeDenom: (denom: string) => void;
   chainInfo: ChainInfo;
   adapter: null | Adapter;
+  signer: AuthnWebSigner | undefined;
 };
 
 const Context = createContext<IWallet>({
@@ -85,7 +87,8 @@ const Context = createContext<IWallet>({
   feeDenom: 'ukuji',
   setFeeDenom: () => { },
   chainInfo: {} as ChainInfo,
-  adapter: null
+  adapter: null,
+  signer: undefined
 });
 
 const toAdapter = (wallet: any) => {
@@ -320,7 +323,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     setWallet(null);
     wallet?.disconnect();
   };
-
   const value: IWallet = {
     adapter,
     account: wallet?.account || null,
@@ -336,7 +338,8 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     refreshDelegations,
     feeDenom,
     setFeeDenom,
-    chainInfo
+    chainInfo,
+    signer
   };
 
   return (

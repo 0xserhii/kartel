@@ -10,7 +10,7 @@ import {
 import { IMinesClientToServerEvents, IMinesServerToClientEvents } from '@/types/mines';
 import { IUserClientToServerEvents, IUserServerToClientEvents } from '@/types/user';
 import { Socket, io } from 'socket.io-client';
-// import customParser from 'socket.io-msgpack-parser'
+import customParser from 'socket.io-msgpack-parser'
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -18,8 +18,8 @@ const createSocket = <ServerEvents, ClientEvents>(
   namespace: string
 ): Socket<any, any> => {
   return io(
-    `${SERVER_URL}/${namespace}`
-    //  { parser: customParser }
+    `${SERVER_URL}/${namespace}`,
+    { parser: customParser }
   );
 };
 
