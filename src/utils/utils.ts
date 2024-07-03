@@ -40,12 +40,12 @@ export const probabilityXOrMoreHeads = async (
 const feePercentage = 0.05;
 export const calculateMiningProbabilities = (x: number, n: number) => {
   try {
-    let probabilities: number[] = [];
-    let out: number[] = [];
+    const probabilities: number[] = [];
+    const out: number[] = [];
     let remainingSafeSpots = n - x; // Total non-mine spots
     for (let i = 0; i < n - x; i++) {
       // Probability of hitting a safe spot in the current step
-      let probabilityOfSafeStep = remainingSafeSpots / (n - i);
+      const probabilityOfSafeStep = remainingSafeSpots / (n - i);
       if (!i) {
         probabilities.push(1 / probabilityOfSafeStep);
       } else {

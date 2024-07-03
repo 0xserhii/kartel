@@ -73,7 +73,7 @@ function* getChatHistorySaga(action) {
   }
 }
 
-function* subscribeSaga(action) {
+function* subscribeSaga() {
   try {
     yield fork(read, KartelSocket.chat);
     yield delay(200);

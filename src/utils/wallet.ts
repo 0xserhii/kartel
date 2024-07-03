@@ -10,7 +10,7 @@ export const appLink = (app: string): string => {
   return 'https://' + app + (app === '' ? '' : '.') + domain;
 };
 
-export const defaultReplacer = (key: string, value: any) => {
+export const defaultReplacer = (_key: string, value: any) => {
   if (typeof value === 'bigint') {
     return value.toString();
   }

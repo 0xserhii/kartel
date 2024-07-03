@@ -92,10 +92,7 @@ const LiveChat = () => {
 
   useEffect(() => {
     dispatch(chatActions.loginChatServer());
-    if (chatState.error !== "") {
-      disconnect();
-    }
-  }, [getAccessToken(), chatState.error]);
+  }, [getAccessToken()]);
 
   useEffect(() => {
     dispatch(chatActions.subscribeChatServer());
