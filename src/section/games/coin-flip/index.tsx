@@ -28,8 +28,6 @@ import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { coinflipActions, userActions } from '@/store/redux/actions';
 import { probabilityXOrMoreHeads } from '@/utils/utils';
 
-
-
 const CoinFlipSection = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
@@ -184,6 +182,9 @@ const CoinFlipSection = () => {
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
+      <div className="absolute z-20 flex h-full w-full items-center justify-center backdrop-blur-lg">
+        <p className="text-center text-2xl font-bold text-white">Coming Soon</p>
+      </div>
       {isEarned && (
         <Confetti
           width={width}
@@ -193,7 +194,7 @@ const CoinFlipSection = () => {
           recycle={false}
         />
       )}
-      <div className="w-full mt-9 flex flex-col items-center justify-center">
+      <div className="mt-9 flex w-full flex-col items-center justify-center">
         <div className="flex flex-col">
           <div className="flex h-64 flex-col items-center justify-around">
             {coinflipState.gameStatus && (
@@ -225,7 +226,7 @@ const CoinFlipSection = () => {
               })}
             </div>
           </div>
-          <div className="2xl:px-30 flex flex-col items-center justify-center gap-5 px-30 py-7 lg:px-28">
+          <div className="2xl:px-30 px-30 flex flex-col items-center justify-center gap-5 py-7 lg:px-28">
             <span className="mt-2 text-sm text-white ">
               {probability}% Chance
             </span>

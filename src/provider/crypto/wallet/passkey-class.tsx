@@ -43,7 +43,6 @@ export class Passkey {
       gasPrice: GasPrice.fromString('0.034ukuji'),
       accountParser
     });
-
     return await client.signAndBroadcast(this.account.address, msgs, {
       amount: coins(12500, 'ukuji'),
       gas: '1000000'

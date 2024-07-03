@@ -12,16 +12,23 @@ import leaderboardReducer from './reducers/leaderboard.reducer';
 import coinflipReducer from './reducers/coinflip.reducer';
 import minesReducer from './reducers/mines.reducer';
 import modalReducer from './reducers/modal.reducer';
+import settingsReducer from './reducers/settings.reducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
 const userPersistConfig = {
   key: 'user',
-  storage: storage,
+  storage: storage
+};
+
+const settingsPersistConfig = {
+  key: 'settings',
+  storage: storage
 };
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
+  settings: persistReducer(settingsPersistConfig, settingsReducer),
   chat: chatReducer,
   leaderboard: leaderboardReducer,
   coinflip: coinflipReducer,
@@ -33,10 +40,8 @@ const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE', 'persist/PAUSE', 'persist/PURGE', 'persist/FLUSH', 'persist/REGISTER']
-      }
-    }).concat(sagaMiddleware),
+      serializableCheck: false
+    }).concat(sagaMiddleware)
 });
 
 sagaMiddleware.run(rootSaga);

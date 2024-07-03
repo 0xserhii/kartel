@@ -32,14 +32,11 @@ function subscribe(socket) {
       }
     );
 
-    socket.on(
-      EChatSocketEvent.NOTIFY_ERROR,
-      (error: string) => {
-        emit(chatActions.receiveError(error));
-      }
-    );
+    socket.on(EChatSocketEvent.NOTIFY_ERROR, (error: string) => {
+      emit(chatActions.receiveError(error));
+    });
 
-    return () => { };
+    return () => {};
   });
 }
 
@@ -73,7 +70,7 @@ function* getChatHistorySaga(action) {
   }
 }
 
-function* subscribeSaga(action) {
+function* subscribeSaga() {
   try {
     yield fork(read, KartelSocket.chat);
     yield delay(200);

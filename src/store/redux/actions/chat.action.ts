@@ -50,7 +50,7 @@ export function disconnectChatServer() {
   };
 }
 
-export function getChatHistory(sendAt) {
+export function getChatHistory(sendAt: Date) {
   return {
     type: EChatSocketAction.GET_CHAT_HISTORY,
     payload: sendAt

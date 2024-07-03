@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Socket, io } from 'socket.io-client';
+import customParser from 'socket.io-msgpack-parser';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,8 +27,9 @@ import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSpring, animated } from '@react-spring/web';
-import { useAppDispatch } from '@/store/redux';
+import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { userActions } from '@/store/redux/actions';
+import useSound from 'use-sound';
 
 const GrowingNumber = ({ start, end }) => {
   const { number: numberValue } = useSpring({
@@ -43,10 +45,11 @@ export default function CrashGameSection() {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const crashBgVideoPlayer = useRef<HTMLVideoElement>(null);
   const toast = useToast();
+  const dispatch = useAppDispatch();
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [betData, setBetData] = useState<BetType[]>([]);
   const [betAmount, setBetAmount] = useState(0);
-  const [autoCashoutPoint, setAutoCashoutPoint] = useState(1.05);
+  const [autoCashoutPoint, setAutoCashoutPoint] = useState<any>(1.05);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [betCashout, setBetCashout] = useState<BetType[]>([]);
   const [avaliableBet, setAvaliableBet] = useState(false);
@@ -67,7 +70,14 @@ export default function CrashGameSection() {
   const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>(
     []
   );
-  const dispatch = useAppDispatch();
+  const settings = useAppSelector((store: any) => store.settings);
+  const userData = useAppSelector((store: any) => store.user.userData);
+  const [play, { stop, sound }] = useSound('/assets/audio/car_running.mp3', {
+    volume: 0.5,
+    loop: true
+  });
+  const [playExplosion, { stop: stopExplosion, sound: explosionSound }] =
+    useSound('/assets/audio/explosion.mp3', { volume: 0.25 });
 
   const updatePrepareCountDown = () => {
     setPrepareTime((prev) => prev - 100);
@@ -109,7 +119,6 @@ export default function CrashGameSection() {
 
   const handleStartBet = async () => {
     if (betAmount > 0 && !avaliableBet) {
-
       const joinParams = {
         target: avaliableAutoCashout
           ? Number(autoCashoutAmount) * 100
@@ -170,10 +179,25 @@ export default function CrashGameSection() {
   }, [socket, toast]);
 
   useEffect(() => {
+    const handleJoinSuccess = (data) => {
+      toast.success(data);
+      if (data === 'Autobet has been canceled.') {
+        setAutoBet(true);
+      } else {
+        setAutoBet(false);
+      }
+    };
+    socket?.on('auto-crashgame-join-success', handleJoinSuccess);
+    return () => {
+      socket?.off('auto-crashgame-join-success', handleJoinSuccess);
+    };
+  }, [socket, toast]);
+
+  useEffect(() => {
     const crashSocket: Socket<
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
-    > = io(`${SERVER_URL}/crash`);
+    > = io(`${SERVER_URL}/crash`, { parser: customParser });
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
@@ -228,17 +252,27 @@ export default function CrashGameSection() {
     };
 
     crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
-      setBetData(data.players);
+      if (data.players.length > 0) {
+        const user = data.players.find(
+          (player) => player?.playerID === userData._id
+        );
+        setBetData(data.players);
+        setAutoBet(false);
+        setBetAmount(Number(user?.betAmount));
+        setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
+      }
       const totals = calculateTotals(data.players);
       setTotalAmount((prevAmounts) => ({
         usk: (prevAmounts?.usk || 0) + totals.usk,
         kuji: (prevAmounts?.kuji || 0) + totals.kuji,
-        kart: (prevAmounts?.kart || 0) + totals.kart,
+        kart: (prevAmounts?.kart || 0) + totals.kart
       }));
     });
 
     crashSocket.on(ECrashSocketEvent.UPDATE_WALLET, (walletValue, denom) => {
-      dispatch(userActions.siteBalanceUpdate({ value: walletValue, denom: denom }));
+      dispatch(
+        userActions.siteBalanceUpdate({ value: walletValue, denom: denom })
+      );
     });
 
     crashSocket.on(
@@ -249,7 +283,7 @@ export default function CrashGameSection() {
         setTotalAmount((prevAmounts) => ({
           usk: (prevAmounts?.usk || 0) + totals.usk,
           kuji: (prevAmounts?.kuji || 0) + totals.kuji,
-          kart: (prevAmounts?.kart || 0) + totals.kart,
+          kart: (prevAmounts?.kart || 0) + totals.kart
         }));
       }
     );
@@ -276,13 +310,35 @@ export default function CrashGameSection() {
   }, []);
 
   useEffect(() => {
+    let intervalId: number | undefined;
+
     if (crashStatus === ECrashStatus.PREPARE) {
-      const intervalId = window.setInterval(updatePrepareCountDown, 100);
+      intervalId = window.setInterval(updatePrepareCountDown, 100);
       setDownIntervalId(intervalId);
     } else {
       clearInterval(downIntervalId);
     }
-  }, [crashStatus]);
+
+    if (crashStatus === ECrashStatus.PROGRESS && settings.isAudioPlay) {
+      if (!sound?.playing()) {
+        play();
+      }
+    } else if (crashStatus === ECrashStatus.END && settings.isAudioPlay) {
+      stop();
+      if (!explosionSound?.playing()) {
+        playExplosion();
+      }
+    } else {
+      stop();
+      stopExplosion();
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+      stop();
+      stopExplosion();
+    };
+  }, [crashStatus, settings.isAudioPlay]);
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
@@ -303,22 +359,22 @@ export default function CrashGameSection() {
               </video>
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-                    <div
-                      className={cn(
-                        'text-6xl font-extrabold text-white',
-                        crashStatus === ECrashStatus.END && 'crashed-value'
-                      )}
-                    >
-                      X<GrowingNumber start={crTick.prev} end={crTick.cur} />
-                    </div>
-                    <div className="font-semibold text-[#f5b95a]">
-                      {crashStatus === ECrashStatus.PROGRESS
-                        ? 'CURRENT PAYOUT'
-                        : 'ROUND OVER'}
-                    </div>
+                <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+                  <div
+                    className={cn(
+                      'text-6xl font-extrabold text-white',
+                      crashStatus === ECrashStatus.END && 'crashed-value'
+                    )}
+                  >
+                    X<GrowingNumber start={crTick.prev} end={crTick.cur} />
                   </div>
-                )}
+                  <div className="font-semibold text-[#f5b95a]">
+                    {crashStatus === ECrashStatus.PROGRESS
+                      ? 'CURRENT PAYOUT'
+                      : 'ROUND OVER'}
+                  </div>
+                </div>
+              )}
               {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
                 <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className="text-xl font-semibold uppercase text-white">
@@ -331,18 +387,18 @@ export default function CrashGameSection() {
               )}
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-car car-moving absolute bottom-16">
-                    <img
-                      src={
-                        crashStatus === ECrashStatus.PROGRESS
-                          ? '/assets/games/crash/moving_car.gif'
-                          : '/assets/games/crash/explosion.gif'
-                      }
-                      className="w-64"
-                      alt="crash-car"
-                    />
-                  </div>
-                )}
+                <div className="crash-car car-moving absolute bottom-16">
+                  <img
+                    src={
+                      crashStatus === ECrashStatus.PROGRESS
+                        ? '/assets/games/crash/moving_car.gif'
+                        : '/assets/games/crash/explosion.gif'
+                    }
+                    className="w-64"
+                    alt="crash-car"
+                  />
+                </div>
+              )}
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
@@ -359,7 +415,7 @@ export default function CrashGameSection() {
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center bg-dark-blue text-xs text-gray-300 ${(item.crashPoint / 100) > 1 && (item.crashPoint / 100) < 2 ? 'bg-dark-blue' : (item.crashPoint / 100) > 3 ? 'bg-[#3bc117]' : 'bg-purple-light'}`}
+                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${item.crashPoint / 100 > 20 ? 'bg-purple-light' : 'bg-dark-blue'}`}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
                     </span>
@@ -379,7 +435,7 @@ export default function CrashGameSection() {
                         className={cn(
                           'min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white',
                           selectMode === item &&
-                          'border-purple bg-purple text-white hover:bg-purple'
+                            'border-purple bg-purple text-white hover:bg-purple'
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -398,9 +454,11 @@ export default function CrashGameSection() {
                           isAutoMode
                             ? false
                             : (crashStatus !== ECrashStatus.PREPARE &&
-                              !avaliableBet) ||
-                            (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet)
+                                !avaliableBet) ||
+                              (crashStatus !== ECrashStatus.PROGRESS &&
+                                avaliableBet) ||
+                              (crashStatus == ECrashStatus.PROGRESS &&
+                                avaliableAutoCashout)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -422,7 +480,7 @@ export default function CrashGameSection() {
                       <div className="relative">
                         <Input
                           type="number"
-                          value={betAmount}
+                          value={betAmount || ''}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
                           disabled={isAutoMode && !autoBet}
@@ -487,6 +545,10 @@ export default function CrashGameSection() {
                               id="terms"
                               className="text-[#049DD9]"
                               checked={avaliableAutoCashout}
+                              disabled={
+                                avaliableAutoCashout &&
+                                crashStatus === ECrashStatus.PROGRESS
+                              }
                               onClick={() =>
                                 setAvaliableAutoCashout(!avaliableAutoCashout)
                               }
@@ -497,8 +559,11 @@ export default function CrashGameSection() {
                             <div className="relative w-full">
                               <Input
                                 type="number"
-                                value={autoCashoutAmount}
-                                disabled={!avaliableAutoCashout}
+                                value={autoCashoutAmount || ''}
+                                disabled={
+                                  !avaliableAutoCashout ||
+                                  crashStatus === ECrashStatus.PROGRESS
+                                }
                                 onChange={(e) =>
                                   setAutoCashoutAmount(Number(e.target.value))
                                 }

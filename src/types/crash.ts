@@ -22,12 +22,15 @@ export enum ECrashSocketEvent {
   BET_CASHOUT_SUCCESS = 'bet-cashout-success',
   AUTO_CRASHGAME_JOIN_SUCCESS = 'auto-crashgame-join-success',
   GAME_STATUS = 'game-status',
-  UPDATE_WALLET = 'update-wallet',
+  UPDATE_WALLET = 'update-wallet'
 }
 
 export interface ICrashServerToClientEvents {
   [ECrashSocketEvent.GAME_BETS]: (bets: FormattedPlayerBetType[]) => void;
-  [ECrashSocketEvent.UPDATE_WALLET]: (walletValue: number, denom: string) => void;
+  [ECrashSocketEvent.UPDATE_WALLET]: (
+    walletValue: number,
+    denom: string
+  ) => void;
   [ECrashSocketEvent.GAME_STARTING]: (data: {
     _id: string | null;
     privateHash: string | null;
@@ -57,7 +60,10 @@ export interface ICrashServerToClientEvents {
     denom: string
   ) => void;
   [ECrashSocketEvent.AUTO_CRASHGAME_JOIN_SUCCESS]: (data: string) => void;
-  [ECrashSocketEvent.GAME_STATUS]: (data: { players: FormattedPlayerBetType[]; game_status: number }) => void;
+  [ECrashSocketEvent.GAME_STATUS]: (data: {
+    players: FormattedPlayerBetType[];
+    gameStatus: any;
+  }) => void;
 }
 
 export interface ICrashClientToServerEvents {

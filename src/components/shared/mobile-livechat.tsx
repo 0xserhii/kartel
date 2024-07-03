@@ -13,7 +13,7 @@ export default function MobileLivechat({
 }: TMobileLivechatProps) {
   return (
     <>
-      <Sheet open={livechatOpen} onOpenChange={setLivechatOpen} >
+      <Sheet open={livechatOpen} onOpenChange={setLivechatOpen}>
         <SheetContent
           side="right"
           className="w-auto border-none bg-dark p-0 pt-16 shadow-lg shadow-purple-0.15"

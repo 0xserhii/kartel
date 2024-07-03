@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import useToast from '@/hooks/use-toast';
 import { useWallet } from '@/provider/crypto/wallet';
 import { fromHumanString, msg, toHuman } from 'kujira.js';
@@ -24,12 +23,19 @@ import {
   initialBalance,
   token
 } from '@/constants/data';
-import { useAppSelector } from '@/store/redux';
+import { useAppDispatch, useAppSelector } from '@/store/redux';
 import LoadingIcon from '../loading-icon';
+import { axiosGet, axiosPost } from '@/utils/axios';
+import { userActions } from '@/store/redux/actions';
+
+type TWalletData = {
+  usk: number;
+  kart: number;
+};
 
 const DepositModal = () => {
   const modal = useModal();
-  const userData = useAppSelector((state: any) => state.user.userData);
+  const dispatch = useAppDispatch();
   const modalState = useAppSelector((state: any) => state.modal);
   const isOpen = modalState.open && modalState.type === ModalType.DEPOSIT;
   const toast = useToast();
@@ -63,7 +69,7 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
-        await updateBalance('withdraw');
+        await withdrawBalance();
         refreshBalances();
       } catch (err) {
         console.log(err);
@@ -75,11 +81,10 @@ const DepositModal = () => {
   };
 
   const handleDeposit = async () => {
-    const encryptedAddressRes: any = (
-      await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/payments/admin-wallet`
-      )
-    ).data.responseObject as string;
+    const encryptedAddressRes: any = await axiosGet(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/admin-wallet`
+    );
+
     const walletAddress = await aesWrapper.decryptMessage(
       encryptedAddressRes.aesKey,
       encryptedAddressRes.encryptedAddress
@@ -102,8 +107,12 @@ const DepositModal = () => {
     if (account) {
       try {
         setLoading(true);
-        const kujiraBalance = balances.filter(item => item.denom === denoms.usk)?.[0]?.amount ?? 0;
-        if (Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055) {
+        const kujiraBalance =
+          balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
+          0;
+        if (
+          Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055
+        ) {
           toast.error(`Insufficient Kujira balance for Fee`);
           return;
         }
@@ -122,10 +131,10 @@ const DepositModal = () => {
           ],
           'Deposit to Kartel'
         );
-        await updateBalance('deposit', hashTx.transactionHash);
+        await updateBalance(hashTx.transactionHash);
         refreshBalances();
       } catch (err) {
-        console.warn("tx_error", err);
+        console.warn('tx_error', err);
         setLoading(false);
       } finally {
         setLoading(false);
@@ -133,45 +142,106 @@ const DepositModal = () => {
     }
   };
 
-  const updateBalance = async (type: string, txHash?: string) => {
+  const updateBalance = async (txHash?: string) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/users/${userData._id}/balance`,
+      const response = await axiosPost([
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/deposit`,
         {
-          balanceType: selectedToken.name,
-          actionType: type,
-          amount: Number(depositAmount),
-          txHash,
-          address: account?.address
+          data: {
+            currency: selectedToken.name,
+            amount: Number(depositAmount),
+            txHash,
+            address: account?.address
+          }
         }
-      );
-      if (response.status === 200) {
-        const walletDataRes = {
-          usk: response.data?.responseObject.wallet.usk ?? 0,
-          kart: response.data?.responseObject.wallet.kart ?? 0
-        }
+      ]);
+      if (response.status === 'success') {
+        const walletDataRes: TWalletData = {
+          usk: response.data?.usk ?? 0,
+          kart: response.data?.kart ?? 0
+        };
         setWalletData(walletDataRes);
-        if (type === 'deposit') {
-          toast.success(`Deposit Successful`);
-        } else if (type === 'withdraw') {
-          toast.success(`Withdraw Successful`);
-        }
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.usk,
+            denom: denoms.usk
+          })
+        );
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.kart,
+            denom: denoms.kart
+          })
+        );
+        toast.success(`Deposit Successful`);
       }
     } catch (error) {
       console.error('Failed to update balance:', error);
     }
   };
 
+  const withdrawBalance = async () => {
+    try {
+      const response = await axiosPost([
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/payment/withdraw`,
+        {
+          data: {
+            currency: selectedToken.name,
+            amount: Number(depositAmount),
+            address: account?.address
+          }
+        }
+      ]);
+      if (response.status === 'success') {
+        const walletDataRes: TWalletData = {
+          usk: response.data?.usk ?? 0,
+          kart: response.data?.kart ?? 0
+        };
+        setWalletData(walletDataRes);
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.usk,
+            denom: denoms.usk
+          })
+        );
+        dispatch(
+          userActions.siteBalanceUpdate({
+            value: walletDataRes.kart,
+            denom: denoms.kart
+          })
+        );
+        toast.success(`Withdraw Successful`);
+      }
+    } catch (error) {
+      console.error('Failed to update balance:', error);
+    }
+  };
+
+  const getSiteBalance = async () => {
+    try {
+      const response = await axiosGet(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/balance`
+      );
+      const walletDataRes = {
+        usk: response?.balance?.usk ?? 0,
+        kart: response?.balance?.kart ?? 0
+      };
+      setWalletData(walletDataRes);
+    } catch (error) {
+      console.error('Failed to get balance:', error);
+    }
+  };
+
   useEffect(() => {
     if (isOpen) {
-      updateBalance('get');
+      getSiteBalance();
     }
   }, [isOpen]);
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="gap-6 rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
-        <DialogHeader className="flex flex-row mb-[-25px]">
+        <DialogHeader className="mb-[-25px] flex flex-row">
           <div className="flex w-full flex-row items-center justify-center">
             <img src="/assets/logo.png" className="h-32 w-36" />
           </div>
@@ -275,7 +345,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

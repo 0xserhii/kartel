@@ -60,23 +60,21 @@ const CasinoGames = ({
           alt={altText + 'title'}
           className="absolute right-2 top-2 w-24"
         />
-        {
-          linkTo !== '/mines' ? (
-            <Link to={linkTo}>
-              <img
-                src={Playnow}
-                alt="Play Now"
-                className="absolute bottom-5 left-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:scale-[1.1] hover:transition-all"
-              />
-            </Link>
-          ) : (
+        {linkTo == '/crash' ? (
+          <Link to={linkTo}>
             <img
-              src={ComingSoonTitle}
-              alt="title"
-              className="absolute w-36 rounded-md left-5 bottom-5"
+              src={Playnow}
+              alt="Play Now"
+              className="absolute bottom-5 left-5 w-24 cursor-pointer rounded-md border-4 border-black bg-white px-2 py-2 ease-in-out hover:scale-[1.1] hover:transition-all"
             />
-          )
-        }
+          </Link>
+        ) : (
+          <img
+            src={ComingSoonTitle}
+            alt="title"
+            className="absolute bottom-5 left-5 w-36 rounded-md"
+          />
+        )}
       </div>
     </div>
   );
@@ -131,12 +129,12 @@ export default function Home() {
                 <img
                   src={BlackJackTitle}
                   alt="title"
-                  className="absolute w-48 rounded-md top-5 right-5"
+                  className="absolute right-5 top-5 w-48 rounded-md"
                 />
                 <img
                   src={ComingSoonTitle}
                   alt="title"
-                  className="absolute w-36 rounded-md bottom-5 left-5"
+                  className="absolute bottom-5 left-5 w-36 rounded-md"
                 />
               </div>
               <div className="relative w-6/12">
@@ -148,12 +146,12 @@ export default function Home() {
                 <img
                   src={HorseRacingTitle}
                   alt="title"
-                  className="w-80 rounded-md absolute right-5 top-5"
+                  className="absolute right-5 top-5 w-80 rounded-md"
                 />
                 <img
                   src={ComingSoonTitle}
                   alt="title"
-                  className="absolute w-36 rounded-md left-5 bottom-5"
+                  className="absolute bottom-5 left-5 w-36 rounded-md"
                 />
               </div>
             </div>
@@ -167,12 +165,12 @@ export default function Home() {
                 <img
                   src={RouletteTitle}
                   alt="title"
-                  className="absolute w-48 rounded-md right-5 top-5"
+                  className="absolute right-5 top-5 w-48 rounded-md"
                 />
                 <img
                   src={ComingSoonTitle}
                   alt="title"
-                  className="absolute w-36 rounded-md left-5 bottom-5"
+                  className="absolute bottom-5 left-5 w-36 rounded-md"
                 />
               </div>
               <div className="relative w-6/12">
@@ -184,18 +182,18 @@ export default function Home() {
                 <img
                   src={SlotsTitle}
                   alt="title"
-                  className="w-28 rounded-md absolute right-5 top-5"
+                  className="absolute right-5 top-5 w-28 rounded-md"
                 />
                 <img
                   src={ComingSoonTitle}
                   alt="title"
-                  className="w-36 rounded-md absolute left-5 bottom-5"
+                  className="absolute bottom-5 left-5 w-36 rounded-md"
                 />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </ScrollArea >
+    </ScrollArea>
   );
 }

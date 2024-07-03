@@ -73,9 +73,9 @@ const SignInModal = () => {
         BACKEND_API_ENDPOINT.auth.signIn,
         { data: signInPayload }
       ]);
-      if (resSignIn?.responseObject?.auth?.accessToken) {
-        setAccessToken(resSignIn?.responseObject?.auth?.accessToken);
-        await dispatch(userActions.userData(resSignIn?.responseObject?.user));
+      if (resSignIn?.auth?.accessToken) {
+        setAccessToken(resSignIn?.auth?.accessToken);
+        await dispatch(userActions.userData(resSignIn?.user));
         toast.success('SignIn Success');
         modal.close(ModalType.LOGIN);
         return;
@@ -155,7 +155,7 @@ const SignInModal = () => {
                 </a>
               </div>
               <Button
-                className="w-full bg-purple py-5 hover:bg-purple"
+                className="w-full bg-purple py-5 capitalize hover:bg-purple"
                 type="submit"
               >
                 login

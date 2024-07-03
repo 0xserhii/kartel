@@ -49,7 +49,7 @@ function subscribe(socket) {
       }
     );
 
-    return () => { };
+    return () => {};
   });
 }
 

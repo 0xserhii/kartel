@@ -1,4 +1,10 @@
-import { DISCONNECT_USER, INIT_USER_DATA, SITE_BALANCE_UPDATE, SUBSCRIBE_USER, USER_DATA } from '../reducers/user.reducer';
+import {
+  DISCONNECT_USER,
+  INIT_USER_DATA,
+  SITE_BALANCE_UPDATE,
+  SUBSCRIBE_USER,
+  USER_DATA
+} from '../reducers/user.reducer';
 
 export type TUserData = {
   userData: {
@@ -22,11 +28,11 @@ export function initUserData() {
   };
 }
 
-export function siteBalanceUpdate(wallet: { value: number, denom: string }) {
+export function siteBalanceUpdate(wallet: { value: number; denom: string }) {
   return {
     type: SITE_BALANCE_UPDATE,
     payload: wallet
-  }
+  };
 }
 
 export function subscribeUserServer() {
