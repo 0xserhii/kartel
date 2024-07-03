@@ -423,7 +423,7 @@ export default function CrashGameSection() {
                             : (crashStatus !== ECrashStatus.PREPARE &&
                               !avaliableBet) ||
                             (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet)
+                              avaliableBet) || (crashStatus == ECrashStatus.PROGRESS && avaliableAutoCashout)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -448,7 +448,7 @@ export default function CrashGameSection() {
                           value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
-                          disabled={isAutoMode && !autoBet}
+                          disabled={isAutoMode && !autoBet || crashStatus === ECrashStatus.PROGRESS}
                         />
                         <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                           <DropdownMenu>
@@ -510,6 +510,7 @@ export default function CrashGameSection() {
                               id="terms"
                               className="text-[#049DD9]"
                               checked={avaliableAutoCashout}
+                              disabled={avaliableAutoCashout && crashStatus === ECrashStatus.PROGRESS}
                               onClick={() =>
                                 setAvaliableAutoCashout(!avaliableAutoCashout)
                               }
@@ -521,7 +522,7 @@ export default function CrashGameSection() {
                               <Input
                                 type="number"
                                 value={autoCashoutAmount}
-                                disabled={!avaliableAutoCashout}
+                                disabled={!avaliableAutoCashout || crashStatus === ECrashStatus.PROGRESS}
                                 onChange={(e) =>
                                   setAutoCashoutAmount(Number(e.target.value))
                                 }
