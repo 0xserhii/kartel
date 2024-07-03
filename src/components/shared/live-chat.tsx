@@ -93,9 +93,7 @@ const LiveChat = () => {
   useEffect(() => {
     dispatch(chatActions.loginChatServer());
     if (chatState.error !== "") {
-      dispatch(userActions.initUserData());
       disconnect();
-      removeAllTokens();
     }
   }, [getAccessToken(), chatState.error]);
 
