@@ -16,7 +16,7 @@ export interface IGameStateType {
   privateSeed: string | null;
   privateHash: string | null;
   publicSeed: string | null;
-  connectedUsers: { [key: string]: Socket };
+  connectedUsers: { [key: string]: string };
   createdAt?: Date;
 }
 
@@ -64,4 +64,4 @@ export interface IFormattedGameHistoryType
     | "publicSeed"
     | "crashPoint"
     | "createdAt"
-  > {}
+  > { }

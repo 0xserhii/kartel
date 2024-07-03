@@ -30,8 +30,6 @@ export { default as CoinflipGame } from "@/modules/coinflip-game/coinflip-game.m
 export { default as CrashGame } from "@/modules/crash-game/crash-game.model";
 export { default as MinesGame } from "@/modules/mines-game/mines-game.model";
 export { default as Payment } from "@/modules/payment/payment.model";
-export { default as RaceEntry } from "@/modules/race-entry/race-entry.model";
-export { default as RaceGame } from "@/modules/race-game/race-game.model";
 export { default as RevenueLog } from "@/modules/revenue-log/reveune-log.model";
 export { default as User } from "@/modules/user/user.model";
 export { default as UserBot } from "@/modules/user-bot/user-bot.model";

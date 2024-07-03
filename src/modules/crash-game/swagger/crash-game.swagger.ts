@@ -2,7 +2,6 @@
 
 import * as errorResponse from "@/utils/swagger/errors";
 
-import { EXAMPLE_ENUM } from "../crash-game.constant";
 import { fullExampleSchema } from "./crash-game.schema";
 
 const tags = ["Example"];
@@ -136,7 +135,6 @@ const editExample = {
               name: { type: "string", required: false },
               type: {
                 type: "string",
-                enum: Object.keys(EXAMPLE_ENUM),
                 required: false,
               },
             },

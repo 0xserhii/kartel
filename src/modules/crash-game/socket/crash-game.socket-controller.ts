@@ -24,6 +24,8 @@ import {
     IGameStateType,
     TFormattedPlayerBetType,
 } from "../crash-game.types";
+import { TOKEN_SECRET } from "@/config";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export class CrashGameSocketController {
     // Services
@@ -57,7 +59,7 @@ export class CrashGameSocketController {
     };
 
     // Logger config
-    private logoPrefix: string = "CrashGameSocketController::: ";
+    private logoPrefix: string = "[Crash Game UserSocket]::: ";
 
     // Socket setting
     private socketNameSpace: Namespace;
@@ -106,34 +108,35 @@ export class CrashGameSocketController {
             );
         }
 
-        // try {
-        //     // Verify token
-        //     const decoded = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
+        try {
+            // Verify token
+            const decoded = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
 
-        //     const user = await this.userService.getItem({ _id: decoded.userId });
-        //     if (user) {
-        //         if (parseInt(user.banExpires) > new Date().getTime()) {
-        //             this.loggedIn = false;
-        //             this.user = null;
-        //             return this.socket.emit("user banned");
-        //         } else {
-        //             this.loggedIn = true;
-        //             this.user = user;
+            const user = await this.userService.getItem({ _id: decoded.userId });
+            if (user) {
+                if (parseInt(user.banExpires) > new Date().getTime()) {
+                    this.loggedIn = false;
+                    this.user = null;
+                    this.socket.emit("user banned");
+                } else {
+                    this.loggedIn = true;
+                    this.user = user;
 
-        //             this.socket.join(String(user._id));
-        //             CrashGameSocketController.gameStatus.connectedUsers[
-        //                 user._id.toString()
-        //             ] = this.socket;
-        //             logger.info(this.logoPrefix + "User connect " + user._id)
-        //             return this.socket.emit("notify-success", "Successfully authenticated!");
-        //         }
-        //     }
-        // } catch (error) {
-        //     this.loggedIn = false;
-        //     console.log("error handle", error);
-        //     this.user = null;
-        //     return this.socket.emit("notify-error", "Authentication token is not valid");
-        // }
+                    this.socket.join(String(user._id));
+                    CrashGameSocketController.gameStatus.connectedUsers[
+                        user._id.toString()
+                    ] = this.socket.id;
+                    logger.info(this.logoPrefix + "User connect userId: " + user._id + " socketId: " + this.socket.id)
+                    // this.socket.emit("notify-success", "Successfully authenticated!");
+                }
+            }
+            // this.socket.emit("notify-error", "Authentication token is not valid");
+        } catch (error) {
+            this.loggedIn = false;
+            console.log("error handle", error);
+            this.user = null;
+            this.socket.emit("notify-error", "Authentication token is not valid");
+        }
     };
 
     public getHistoryHandler = async (count: number) => {
