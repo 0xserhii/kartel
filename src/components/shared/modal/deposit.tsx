@@ -129,6 +129,7 @@ const DepositModal = () => {
           ],
           'Deposit to Kartel'
         );
+        console.log({ hashTx })
         await updateBalance(hashTx.transactionHash);
         refreshBalances();
       } catch (err) {
