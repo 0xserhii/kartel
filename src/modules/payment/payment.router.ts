@@ -1,12 +1,9 @@
 import actionHandler from "@/middleware/action-handler";
 import checkPermissions from "@/middleware/check-permissions";
-import validateSchema from "@/middleware/validate-schema";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
-import * as mapProperty from "@/utils/interfaces";
 
 import { PaymentController } from ".";
-import * as validatePayment from "./payment.validate";
 
 export default class PaymentRouter extends BaseRouter {
   private paymentController: PaymentController;

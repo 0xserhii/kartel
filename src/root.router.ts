@@ -1,6 +1,6 @@
 import { Router } from "express";
-import swaggerUi from "swagger-ui-express";
 
+// import swaggerUi from "swagger-ui-express";
 import AuthRouter from "./modules/auth/auth.router";
 import AutoCrashBetRouter from "./modules/auto-crash-bet/auto-crash-bet.router";
 import ChatHistoryRouter from "./modules/chat-history/chat-history.router";

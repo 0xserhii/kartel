@@ -1,10 +1,9 @@
-import { Namespace, Server, Socket, Event as SocketEvent } from "socket.io";
+import { Event as SocketEvent, Namespace, Server, Socket } from "socket.io";
 
 import { ESOCKET_NAMESPACE } from "@/constant/enum";
-import PaymentSocketHandler from "./payment.socket-controller";
-import { EPaymentEvents } from "../payment.constant";
-import { TSocketDepositParam, TSocketWithDrawParam } from "../payment.types";
 
+import { EPaymentEvents } from "../payment.constant";
+import PaymentSocketHandler from "./payment.socket-controller";
 
 class PaymentSocketListener {
   private socketServer: Namespace;
@@ -22,26 +21,25 @@ class PaymentSocketListener {
       const paymentSocketHandler = new PaymentSocketHandler(
         this.socketServer,
         socket
-      )
+      );
 
       // Auth handler
       socket.on(EPaymentEvents.login, async (token: string) => {
-        await paymentSocketHandler.authHandler(token)
-      })
+        await paymentSocketHandler.authHandler(token);
+      });
       // User deposit
-      socket.on(EPaymentEvents.deposit, async (depositParam: TSocketDepositParam) => {
-        await paymentSocketHandler.depositHandler(depositParam)
-      })
+      socket.on(EPaymentEvents.deposit, async (depositParam: string) => {
+        await paymentSocketHandler.depositHandler(depositParam);
+      });
       // User withdraw
-      socket.on(EPaymentEvents.withdraw, async (withdrawParam: TSocketWithDrawParam) => {
-        await paymentSocketHandler.withdrawHandler(withdrawParam)
-      })
+      socket.on(EPaymentEvents.withdraw, async (withdrawParam: string) => {
+        await paymentSocketHandler.withdrawHandler(withdrawParam);
+      });
 
       // Check for users ban status
       socket.use((packet: SocketEvent, next: (err?: any) => void) =>
         paymentSocketHandler.banStatusCheckMiddleware(packet, next)
       );
-
     });
   }
 }

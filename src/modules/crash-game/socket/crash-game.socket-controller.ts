@@ -1,7 +1,9 @@
+import jwt, { JwtPayload } from "jsonwebtoken";
 import _ from "lodash";
 import mongoose from "mongoose";
 import { Event as SocketEvent, Namespace, Socket } from "socket.io";
 
+import { TOKEN_SECRET } from "@/config";
 import { AutoCrashBetService } from "@/modules/auto-crash-bet";
 import { IUserModel } from "@/modules/user/user.interface";
 import UserService from "@/modules/user/user.service";
@@ -24,8 +26,6 @@ import {
   IGameStateType,
   TFormattedPlayerBetType,
 } from "../crash-game.types";
-import { TOKEN_SECRET } from "@/config";
-import jwt, { JwtPayload } from "jsonwebtoken";
 
 export class CrashGameSocketController {
   // Services
@@ -113,6 +113,7 @@ export class CrashGameSocketController {
       const decoded = jwt.verify(token, TOKEN_SECRET) as JwtPayload;
 
       const user = await this.userService.getItem({ _id: decoded.userId });
+
       if (user) {
         if (parseInt(user.banExpires) > new Date().getTime()) {
           this.loggedIn = false;
@@ -128,10 +129,10 @@ export class CrashGameSocketController {
           ] = this.socket.id;
           logger.info(
             this.logoPrefix +
-            "User connect userId: " +
-            user._id +
-            " socketId: " +
-            this.socket.id
+              "User connect userId: " +
+              user._id +
+              " socketId: " +
+              this.socket.id
           );
           // this.socket.emit("notify-success", "Successfully authenticated!");
         }
@@ -249,7 +250,6 @@ export class CrashGameSocketController {
     data: TJoinGamePayload,
     emitPlayersBet: () => void
   ) => {
-
     const { target, betAmount: crashBetAmount, denom } = data;
 
     if (!this.loggedIn) {
@@ -328,7 +328,8 @@ export class CrashGameSocketController {
 
       // If user can afford this bet
       if (
-        (this.user!.wallet?.[denom] ?? 0) < parseFloat(crashBetAmount.toFixed(2))
+        (this.user!.wallet?.[denom] ?? 0) <
+        parseFloat(crashBetAmount.toFixed(2))
       ) {
         delete CrashGameSocketController.gameStatus.pending[userId];
         CrashGameSocketController.gameStatus.pendingCount--;
@@ -515,7 +516,10 @@ export class CrashGameSocketController {
     if (this.loggedIn && this.user) {
       try {
         // Check if user is banned
-        if (this.user && parseInt(this.user.banExpires) > new Date().getTime()) {
+        if (
+          this.user &&
+          parseInt(this.user.banExpires) > new Date().getTime()
+        ) {
           return this.socket.emit("user banned");
         } else {
           return next();

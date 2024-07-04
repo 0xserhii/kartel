@@ -7,11 +7,11 @@ import UserService from "@/modules/user/user.service";
 import { CustomError } from "@/utils/helpers";
 import * as localizations from "@/utils/localizations";
 import ILocalization from "@/utils/localizations/localizations.interface";
+import logger from "@/utils/logger";
 
 import { ROLE } from "../user/user.constant";
 import AuthService from "./auth.service";
 import { IAuthModel } from "./auth.types";
-import logger from "@/utils/logger";
 
 export default class AuthController {
   private service: AuthService;

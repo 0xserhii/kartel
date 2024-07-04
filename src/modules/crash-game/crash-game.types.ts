@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { Socket } from "socket.io";
 
 import { IVIPLevelType } from "../user/user.types";
 
@@ -64,4 +63,4 @@ export interface IFormattedGameHistoryType
     | "publicSeed"
     | "crashPoint"
     | "createdAt"
-  > { }
+  > {}

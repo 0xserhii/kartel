@@ -31,15 +31,15 @@ export type TUpdateBalance = {
 };
 
 export type TSocketDepositParam = {
-  amount: number,
-  currency: string,
-  address: string,
-  txHash: string
-}
+  amount: number;
+  currency: string;
+  address: string;
+  txHash: string;
+};
 
 export type TSocketWithDrawParam = {
-  amount: number,
-  currency: string,
-  address: string,
-  txHash: string
-}
+  amount: number;
+  currency: string;
+  address: string;
+  txHash: string;
+};
