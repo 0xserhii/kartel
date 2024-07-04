@@ -31,3 +31,16 @@ export const bigCompare = (a: BigNumber, b: BigNumber): 0 | 1 | -1 => {
 
   return a.gt(b) ? 1 : -1;
 };
+
+
+export enum EPaymentEvents {
+  login = "auth",
+  withdraw = "withdraw",
+  deposit = "deposit",
+  setAdminWallet = "set-admin-wallet",
+  updateBalance = "updateBalance",
+  paymentFailed = "payment-failed",
+}
+
+// 1minutes
+export const CAllowTimeDiff = 60 * 1000

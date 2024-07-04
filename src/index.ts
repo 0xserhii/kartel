@@ -52,7 +52,7 @@ const socketServer = new SocketIOServer(httpServer, {
     methods: ["GET", "POST"],
     credentials: true,
   },
-  parser: customParser,
+  // parser: customParser,
 });
 
 new SocketServer(socketServer);

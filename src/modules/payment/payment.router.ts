@@ -24,29 +24,29 @@ export default class PaymentRouter extends BaseRouter {
       actionHandler(this.paymentController.getAll)
     );
 
-    this.router.post(
-      "/withdraw",
-      checkPermissions(),
-      validateSchema(validatePayment.withDraw, mapProperty.getBody),
-      actionHandler(this.paymentController.userBalanceWithdraw, [
-        mapProperty.getBody,
-        mapProperty.getUserInfo,
-      ])
-    );
+    // this.router.post(
+    //   "/withdraw",
+    //   checkPermissions(),
+    //   validateSchema(validatePayment.withDraw, mapProperty.getBody),
+    //   actionHandler(this.paymentController.userBalanceWithdraw, [
+    //     mapProperty.getBody,
+    //     mapProperty.getUserInfo,
+    //   ])
+    // );
 
-    this.router.get(
-      "/admin-wallet",
-      actionHandler(this.paymentController.getAddress, mapProperty.getUserInfo)
-    );
+    // this.router.get(
+    //   "/admin-wallet",
+    //   actionHandler(this.paymentController.getAddress, mapProperty.getUserInfo)
+    // );
 
-    this.router.post(
-      "/deposit",
-      checkPermissions(),
-      validateSchema(validatePayment.deposit, mapProperty.getBody),
-      actionHandler(this.paymentController.userBalanceDeposit, [
-        mapProperty.getBody,
-        mapProperty.getUserInfo,
-      ])
-    );
+    // this.router.post(
+    //   "/deposit",
+    //   checkPermissions(),
+    //   validateSchema(validatePayment.deposit, mapProperty.getBody),
+    //   actionHandler(this.paymentController.userBalanceDeposit, [
+    //     mapProperty.getBody,
+    //     mapProperty.getUserInfo,
+    //   ])
+    // );
   }
 }

@@ -1,4 +1,5 @@
 import {
+  CAllowTimeDiff,
   IClient,
   IPaymentModel,
   TCheckDepositParam,
@@ -85,9 +86,9 @@ export class PaymentService extends BaseService<IPaymentModel> {
               }
             });
           }
+
         });
       });
-
       if (sender && receiver && amount && denom) {
         return { sender, receiver, amount, denom };
       } else {
@@ -102,12 +103,15 @@ export class PaymentService extends BaseService<IPaymentModel> {
 
   public checkDepositPayment = async (payload: TCheckDepositParam) => {
     try {
-      console.log("check deposit user", { payload });
       const kujiarActionClient = await this.getClient();
       const txDetails = await kujiarActionClient.querier.tx.getTx(
         payload.txHash
       );
-
+      const txTime = new Date(txDetails.txResponse.timestamp);
+      const timeDiff = (new Date()).getUTCMilliseconds() - txTime.getUTCMilliseconds()
+      if (timeDiff > CAllowTimeDiff) {
+        return false;
+      }
       if (txDetails.txResponse?.rawLog) {
         const txLowLogs: string = txDetails.txResponse?.rawLog;
         const checkDetails = this.getTransactionDetails(txLowLogs);
