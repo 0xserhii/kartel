@@ -4,4 +4,5 @@ export enum ModalType {
   DEPOSIT = "deposit",
   ADDGOLD = "addGold",
   WALLETCONNECT = "wallectConnect",
+  CRASH_INFO = "crashInfo"
 }

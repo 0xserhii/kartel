@@ -173,3 +173,35 @@ export const denoms = {
   usk: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
   kart: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
 };
+
+export const crashInfoSections = [
+  {
+    title: "1. Place Your Bet",
+    steps: [
+      "• Before the Crash Car gets rolling, enter the amount you want to bet in either USK or Kart.",
+      "• Confirm your bet and get ready for the launch!"
+    ]
+  },
+  {
+    title: "2. Watch the Crash Car",
+    steps: [
+      "• As the Car takes off from the starting line, the multiplier value (your potential winnings) will keep increasing.",
+      "• Watch as the multiplier climbs higher and higher."
+    ]
+  },
+  {
+    title: "3. Cash Out",
+    steps: [
+      "• Decide when to cash out by clicking the cash-out button.",
+      "• If you cash out before the Car crashes, you win your bet multiplied by the current multiplier value.",
+      "• For example, if you bet $10 and cash out at a 3x multiplier, you’ll receive $30 (minus fees)"
+    ]
+  },
+  {
+    title: "4. Crash",
+    steps: [
+      "• If the Car crashes before you cash out, you lose your bet.",
+      "• The key is to balance risk and reward—cash out too early, and you might miss bigger winnings; wait too long, and you risk losing it all."
+    ]
+  }
+];

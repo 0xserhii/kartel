@@ -1,6 +1,6 @@
 import Heading from "./heading";
 import UserNav from "./user-nav";
-import { MessageSquareMore, Volume2, VolumeX } from "lucide-react";
+import { MessageSquareMore } from "lucide-react";
 import { Button } from "../ui/button";
 import authBtn from "/assets/auth-btn.svg";
 import useModal from "@/hooks/use-modal";
@@ -11,8 +11,8 @@ import { useEffect, useState } from "react";
 import { initialBalance } from "@/constants/data";
 import { subscribeUserServer } from "@/store/redux/actions/user.action";
 import { axiosGet } from "@/utils/axios";
-import { settingsActions } from "@/store/redux/actions";
 import useSound from "use-sound";
+import ToggleButton from "./toggle-button";
 
 export default function Header() {
   const modal = useModal();
@@ -46,10 +46,6 @@ export default function Header() {
     }
   };
 
-  const handleAudio = () => {
-    dispatch(settingsActions.audioPlay(!settings.isAudioPlay));
-  };
-
   useEffect(() => {
     if (userData?.username !== "") {
       getSiteBalance();
@@ -61,12 +57,12 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    if (settings.isAudioPlay) {
+    if (settings.isMusicPlay) {
       play();
     } else {
       stop();
     }
-  }, [settings.isAudioPlay]);
+  }, [settings.isMusicPlay]);
 
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
@@ -89,17 +85,7 @@ export default function Header() {
           </div>
         )}
         <div className="ml-4 mr-8 flex items-center gap-3 md:ml-6">
-          {settings.isAudioPlay ? (
-            <Volume2
-              className="cursor-pointer text-purple"
-              onClick={handleAudio}
-            />
-          ) : (
-            <VolumeX
-              className="cursor-pointer text-white"
-              onClick={handleAudio}
-            />
-          )}
+          <ToggleButton />
           {userData?.username !== "" ? (
             <div className="flex flex-row items-center gap-4">
               <Button

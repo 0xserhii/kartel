@@ -31,11 +31,9 @@ import { paymentActions } from "@/store/redux/actions";
 const DepositModal = () => {
   const modal = useModal();
   const dispatch = useAppDispatch();
-  const [modalState, paymentState, userState] = useAppSelector((state) => [
-    state.modal,
-    state.payment,
-    state.user,
-  ]);
+  const userState = useAppSelector((state) => state.user);
+  const modalState = useAppSelector((state) => state.modal);
+  const paymentState = useAppSelector((state) => state.payment);
   const isOpen = modalState.open && modalState.type === ModalType.DEPOSIT;
   const toast = useToast();
   const [depositAmount, setDepositAmount] = useState("");
@@ -290,7 +288,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => {}}
+                onChange={() => { }}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

@@ -28,13 +28,26 @@ import { multiplerArray, betMode, roundArray, token } from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { userActions } from "@/store/redux/actions";
+import { useSpring, animated } from '@react-spring/web';
+import useModal from "@/hooks/use-modal";
 import useSound from "use-sound";
-import CountUp from "react-countup";
+import { ModalType } from "@/types/modal";
+
+const GrowingNumber = ({ start, end }) => {
+  const { number: numberValue } = useSpring({
+    from: { number: start },
+    number: end,
+    config: { duration: 0.1, tension: 170, friction: 26 }
+  });
+
+  return <animated.span>{numberValue.to((n) => n.toFixed(2))}</animated.span>;
+};
 
 export default function CrashGameSection() {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const crashBgVideoPlayer = useRef<HTMLVideoElement>(null);
   const toast = useToast();
+  const modal = useModal();
   const dispatch = useAppDispatch();
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [betData, setBetData] = useState<BetType[]>([]);
@@ -66,6 +79,7 @@ export default function CrashGameSection() {
     volume: 0.5,
     loop: true,
   });
+
   const [playExplosion, { stop: stopExplosion, sound: explosionSound }] =
     useSound("/assets/audio/explosion.mp3", { volume: 0.25 });
 
@@ -146,6 +160,11 @@ export default function CrashGameSection() {
       socket?.emit("cancel-auto-bet");
     }
   };
+
+  const handleInfoModal = () => {
+    console.log("crash-info")
+    modal.open(ModalType.CRASH_INFO);
+  }
 
   useEffect(() => {
     if (socket) {
@@ -309,11 +328,11 @@ export default function CrashGameSection() {
       clearInterval(downIntervalId);
     }
 
-    if (crashStatus === ECrashStatus.PROGRESS && settings.isAudioPlay) {
+    if (crashStatus === ECrashStatus.PROGRESS && settings.isSoundPlay) {
       if (!sound?.playing()) {
         play();
       }
-    } else if (crashStatus === ECrashStatus.END && settings.isAudioPlay) {
+    } else if (crashStatus === ECrashStatus.END && settings.isSoundPlay) {
       stop();
       if (!explosionSound?.playing()) {
         playExplosion();
@@ -328,7 +347,7 @@ export default function CrashGameSection() {
       stop();
       stopExplosion();
     };
-  }, [crashStatus, settings.isAudioPlay]);
+  }, [crashStatus, settings.isSoundPlay]);
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
@@ -349,27 +368,23 @@ export default function CrashGameSection() {
               </video>
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-                  <div
-                    className={cn(
-                      "text-6xl font-extrabold text-white",
-                      crashStatus === ECrashStatus.END && "crashed-value"
-                    )}
-                  >
-                    X{" "}
-                    <CountUp
-                      start={crTick.cur}
-                      end={crTick.prev}
-                      decimals={2}
-                    />
+                  <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+                    <div
+                      className={cn(
+                        "text-6xl font-extrabold text-white",
+                        crashStatus === ECrashStatus.END && "crashed-value"
+                      )}
+                    >
+                      X{" "}
+                      <GrowingNumber start={crTick.prev} end={crTick.cur} />
+                    </div>
+                    <div className="font-semibold text-[#f5b95a]">
+                      {crashStatus === ECrashStatus.PROGRESS
+                        ? "CURRENT PAYOUT"
+                        : "ROUND OVER"}
+                    </div>
                   </div>
-                  <div className="font-semibold text-[#f5b95a]">
-                    {crashStatus === ECrashStatus.PROGRESS
-                      ? "CURRENT PAYOUT"
-                      : "ROUND OVER"}
-                  </div>
-                </div>
-              )}
+                )}
               {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
                 <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className="text-xl font-semibold uppercase text-white">
@@ -382,18 +397,18 @@ export default function CrashGameSection() {
               )}
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                <div className="crash-car car-moving absolute bottom-16">
-                  <img
-                    src={
-                      crashStatus === ECrashStatus.PROGRESS
-                        ? "/assets/games/crash/moving_car.gif"
-                        : "/assets/games/crash/explosion.gif"
-                    }
-                    className="w-64"
-                    alt="crash-car"
-                  />
-                </div>
-              )}
+                  <div className="crash-car car-moving absolute bottom-16">
+                    <img
+                      src={
+                        crashStatus === ECrashStatus.PROGRESS
+                          ? "/assets/games/crash/moving_car.gif"
+                          : "/assets/games/crash/explosion.gif"
+                      }
+                      className="w-64"
+                      alt="crash-car"
+                    />
+                  </div>
+                )}
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
@@ -430,7 +445,7 @@ export default function CrashGameSection() {
                         className={cn(
                           "min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white",
                           selectMode === item &&
-                            "border-purple bg-purple text-white hover:bg-purple"
+                          "border-purple bg-purple text-white hover:bg-purple"
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -442,18 +457,18 @@ export default function CrashGameSection() {
                 </div>
                 <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                   <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
-                    <div className="flex flex-row items-center justify-end">
+                    <div className="flex flex-row items-center justify-center">
                       <Button
-                        className="h-12 w-6/12 bg-purple px-3 py-3 uppercase hover:bg-purple"
+                        className="w-6/12 h-12 bg-purple px-3 py-3 uppercase hover:bg-purple"
                         disabled={
                           isAutoMode
                             ? false
                             : (crashStatus !== ECrashStatus.PREPARE &&
-                                !avaliableBet) ||
-                              (crashStatus !== ECrashStatus.PROGRESS &&
-                                avaliableBet) ||
-                              (crashStatus == ECrashStatus.PROGRESS &&
-                                avaliableAutoCashout)
+                              !avaliableBet) ||
+                            (crashStatus !== ECrashStatus.PROGRESS &&
+                              avaliableBet) ||
+                            (crashStatus == ECrashStatus.PROGRESS &&
+                              avaliableAutoCashout)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -465,6 +480,13 @@ export default function CrashGameSection() {
                             ? "Cash Out"
                             : "Place Bet"}
                       </Button>
+                      <button className="absolute right-8 top-4 p-0" onClick={handleInfoModal}>
+                        <img src='/assets/games/info.png' alt="crash-info" className="w-7 h-7 rounded-full" style={{
+                          transform: "scale(1)",
+                          animation:
+                            "2s ease 0s infinite normal none running animation-bubble",
+                        }} />
+                      </button>
                     </div>
                     <div
                       className={`flex flex-col ${isAutoMode ? "gap-4" : "gap-5"}`}

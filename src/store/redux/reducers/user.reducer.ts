@@ -14,7 +14,7 @@ interface UserAction {
   payload: any;
 }
 
-const initialState: any = {
+const initialState: UserState = {
   userData: { username: "", userEmail: "", _id: "" },
   wallet: { value: 0, denom: "" },
 };

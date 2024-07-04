@@ -1,7 +1,9 @@
-export const AUDIO_PLAY = "AUDIO_PLAY";
+export const MUSIC_PLAY = "MUSIC_PLAY";
+export const SOUND_PLAY = "SOUND_PLAY";
 
 export interface SettingsState {
-  isAudioPlay: boolean;
+  isMusicPlay: boolean;
+  isSoundPlay: boolean;
 }
 
 interface SettingsAction {
@@ -10,17 +12,25 @@ interface SettingsAction {
 }
 
 const initialState: any = {
-  isAudioPlay: false,
+  isMusicPlay: false,
+  isSoundPlay: false,
 };
 
 const settingsReducer = (
-  state: any = initialState,
+  state: SettingsState = initialState,
   action: SettingsAction
 ): any => {
   switch (action.type) {
-    case AUDIO_PLAY:
+    case MUSIC_PLAY:
       return {
-        isAudioPlay: action.payload,
+        ...state,
+        isMusicPlay: action.payload,
+      };
+
+    case SOUND_PLAY:
+      return {
+        ...state,
+        isSoundPlay: action.payload,
       };
 
     default:
