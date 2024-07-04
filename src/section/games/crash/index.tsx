@@ -26,20 +26,10 @@ import useToast from '@/hooks/use-toast';
 import BetBoard from './bet-board';
 import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useSpring, animated } from '@react-spring/web';
 import { useAppDispatch, useAppSelector } from '@/store/redux';
 import { userActions } from '@/store/redux/actions';
 import useSound from 'use-sound';
-
-const GrowingNumber = ({ start, end }) => {
-  const { number: numberValue } = useSpring({
-    from: { number: start },
-    number: end,
-    config: { duration: 0.1 }
-  });
-
-  return <animated.span>{numberValue.to((n) => n.toFixed(2))}</animated.span>;
-};
+import CountUp from "react-countup";
 
 export default function CrashGameSection() {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
@@ -197,7 +187,9 @@ export default function CrashGameSection() {
     const crashSocket: Socket<
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
-    > = io(`${SERVER_URL}/crash`, { parser: customParser });
+    > = io(`${SERVER_URL}/crash`,
+      { parser: customParser }
+    );
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
@@ -255,8 +247,8 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
+      setBetCashout(data.players);
       if (user && user.betAmount) {
-        setBetData(data.players);
         setAutoBet(false);
         setBetAmount(Number(user?.betAmount));
         setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
@@ -366,7 +358,11 @@ export default function CrashGameSection() {
                         crashStatus === ECrashStatus.END && 'crashed-value'
                       )}
                     >
-                      X<GrowingNumber start={crTick.prev} end={crTick.cur} />
+                      X <CountUp
+                        start={crTick.cur}
+                        end={crTick.prev}
+                        decimals={2}
+                      />
                     </div>
                     <div className="font-semibold text-[#f5b95a]">
                       {crashStatus === ECrashStatus.PROGRESS
@@ -480,7 +476,7 @@ export default function CrashGameSection() {
                       <div className="relative">
                         <Input
                           type="number"
-                          value={betAmount || ''}
+                          value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
                           disabled={isAutoMode && !autoBet}
