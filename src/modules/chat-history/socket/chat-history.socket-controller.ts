@@ -7,8 +7,8 @@ import UserService from "@/modules/user/user.service";
 import { TChatUser } from "@/modules/user/user.types";
 import logger from "@/utils/logger";
 
-import { ChatHistoryService } from "../chat-history.service";
 import { EChatHistoryEvents } from "../chat-history.constant";
+import { ChatHistoryService } from "../chat-history.service";
 
 class ChatHistorySocketHandler {
   private socket: Socket;
@@ -116,6 +116,7 @@ class ChatHistorySocketHandler {
       previousChatHistory =
         await this.chatHistoryService.fetchEarlierChatHistories(new Date(), 15);
     }
+
     if (previousChatHistory?.length > 0) {
       this.socket.emit("send-chat-history", {
         message: "success",

@@ -2,7 +2,6 @@ import actionHandler from "@/middleware/action-handler";
 import checkPermissions from "@/middleware/check-permissions";
 import { ROLE } from "@/modules/user/user.constant";
 import { BaseRouter } from "@/utils/base";
-import * as mapProperty from "@/utils/interfaces";
 
 import { LeaderboardController } from ".";
 

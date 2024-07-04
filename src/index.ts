@@ -5,13 +5,13 @@ import express from "express";
 import { Server } from "http";
 import path from "path";
 import { Server as SocketIOServer } from "socket.io";
+import customParser from "socket.io-msgpack-parser";
 import { fileURLToPath } from "url";
 
 import { ALLOW_HOSTS, PORT, SOCKET_ALLOW_HOSTS } from "@/config";
 import authorize from "@/middleware/authorize";
 import { errorHandler, routeNotFound } from "@/middleware/error-handler";
 import logger from "@/middleware/logger";
-import customParser from "socket.io-msgpack-parser";
 
 import { CronJobs } from "./cron";
 import RootRouter from "./root.router";

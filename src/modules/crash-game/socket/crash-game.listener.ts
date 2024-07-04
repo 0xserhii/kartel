@@ -1,14 +1,11 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
 import _ from "lodash";
 import mongoose, { ObjectId } from "mongoose";
 import { Event as SocketEvent, Namespace, Server, Socket } from "socket.io";
 
-import { TOKEN_SECRET } from "@/config";
 import { CDENOM_TOKENS } from "@/constant/crypto";
 import { ESOCKET_NAMESPACE } from "@/constant/enum";
 import { AutoCrashBetService } from "@/modules/auto-crash-bet";
 import { RevenueLogService } from "@/modules/revenue-log";
-import { IUserModel } from "@/modules/user/user.interface";
 import UserService from "@/modules/user/user.service";
 import UserBotService from "@/modules/user-bot/user-bot.service";
 import { WalletTransactionService } from "@/modules/wallet-transaction";
@@ -28,7 +25,6 @@ import {
   ECrashGameEvents,
 } from "../crash-game.constant";
 import {
-  IUpdateParams,
   TAutoCrashBetPayload,
   TJoinGamePayload,
 } from "../crash-game.interface";
@@ -406,8 +402,8 @@ class CrashGameSocketListener {
     } catch (error) {
       logger.error(
         this.logoPrefix +
-        "Error while starting a crash game with auto bets:" +
-        error
+          "Error while starting a crash game with auto bets:" +
+          error
       );
     }
 
@@ -488,6 +484,7 @@ class CrashGameSocketListener {
       logger.error(this.logoPrefix + "Error Crash" + error);
       CrashGameSocketController.gameStatus.pendingCount--;
     }
+
     // } catch (error) {
     //     logger.error(this.logoPrefix + "Error running game: " + error);
     // }
@@ -517,7 +514,7 @@ class CrashGameSocketListener {
       if (CrashGameSocketController.gameStatus.pendingCount > 0) {
         logger.info(
           this.logoPrefix +
-          `Crash >> Delaying game while waiting for ${ids.length} (${ids.join(", ")}) join(s)`
+            `Crash >> Delaying game while waiting for ${ids.length} (${ids.join(", ")}) join(s)`
         );
         return setTimeout(loop, 50);
       }
@@ -542,7 +539,7 @@ class CrashGameSocketListener {
       CrashGameSocketController.gameStatus.publicSeed = randomData.publicSeed;
       CrashGameSocketController.gameStatus.duration = Math.ceil(
         16666.666667 *
-        Math.log(0.01 * (CrashGameSocketController.gameStatus.crashPoint + 1))
+          Math.log(0.01 * (CrashGameSocketController.gameStatus.crashPoint + 1))
       );
       CrashGameSocketController.gameStatus.startedAt = new Date();
       CrashGameSocketController.gameStatus.pending = {};
@@ -550,7 +547,7 @@ class CrashGameSocketListener {
 
       logger.info(
         this.logoPrefix +
-        `Starting new game ${CrashGameSocketController.gameStatus._id} with crash point ${CrashGameSocketController.gameStatus.crashPoint / 100}`
+          `Starting new game ${CrashGameSocketController.gameStatus._id} with crash point ${CrashGameSocketController.gameStatus.crashPoint / 100}`
       );
 
       // Updating in db
@@ -606,6 +603,7 @@ class CrashGameSocketListener {
 
     // Completing all auto cashouts
     this.runCashOuts(at);
+
     // Check if crash point is reached
     if (at > CrashGameSocketController.gameStatus.crashPoint!) {
       this.endGame();
@@ -626,6 +624,7 @@ class CrashGameSocketListener {
       if (bet.status !== CBET_STATES.Playing) {
         return;
       }
+
       // Check if the auto cashout is reached or max profit is reached
       // console.log({ elapsed, bet, crashPoint: CrashGameSocketController.gameStatus.crashPoint })
       if (
@@ -641,7 +640,7 @@ class CrashGameSocketListener {
             if (err) {
               logger.error(
                 this.logoPrefix +
-                `There was an error while trying to cashout ${err}`
+                  `There was an error while trying to cashout ${err}`
               );
             }
           }
@@ -655,7 +654,7 @@ class CrashGameSocketListener {
           if (err) {
             logger.error(
               this.logoPrefix +
-              `There was an error while trying to cashout ${err}`
+                `There was an error while trying to cashout ${err}`
             );
           }
         });
@@ -813,7 +812,7 @@ class CrashGameSocketListener {
   public endGame = async () => {
     logger.info(
       this.logoPrefix +
-      `Ending game at ${CrashGameSocketController.gameStatus.crashPoint! / 100}`
+        `Ending game at ${CrashGameSocketController.gameStatus.crashPoint! / 100}`
     );
 
     const crashTime = Date.now();

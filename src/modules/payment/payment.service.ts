@@ -1,28 +1,31 @@
-import {
-  IClient,
-  IPaymentModel,
-  TCheckDepositParam,
-  TWithDrawProps,
-  TransactionDetails,
-  fromHumanString,
-} from ".";
-import BaseService from "@/utils/base/service";
-import { Payment } from "@/utils/db";
-import logger from "@/utils/logger";
-import {
-  ADMIN_WALLET_ADDRESS,
-  ADMIN_WALLET_MNEMONIC,
-  BLOCKCHAIN_RPC_ENDPOINT,
-} from "@/config";
+import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import {
   assertIsDeliverTxSuccess,
   GasPrice,
   SigningStargateClient,
 } from "@cosmjs/stargate";
 import { HttpBatchClient, Tendermint37Client } from "@cosmjs/tendermint-rpc";
-import { kujiraQueryClient, registry, msg } from "kujira.js";
+import { kujiraQueryClient, msg, registry } from "kujira.js";
+
+import {
+  ADMIN_WALLET_ADDRESS,
+  ADMIN_WALLET_MNEMONIC,
+  BLOCKCHAIN_RPC_ENDPOINT,
+} from "@/config";
 import { CDENOM_TOKENS } from "@/constant/crypto";
-import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+import BaseService from "@/utils/base/service";
+import { Payment } from "@/utils/db";
+import logger from "@/utils/logger";
+
+import {
+  CAllowTimeDiff,
+  fromHumanString,
+  IClient,
+  IPaymentModel,
+  TCheckDepositParam,
+  TransactionDetails,
+  TWithDrawProps,
+} from ".";
 
 export class PaymentService extends BaseService<IPaymentModel> {
   private instance: IClient | null = null;
@@ -102,11 +105,17 @@ export class PaymentService extends BaseService<IPaymentModel> {
 
   public checkDepositPayment = async (payload: TCheckDepositParam) => {
     try {
-      console.log("check deposit user", { payload });
       const kujiarActionClient = await this.getClient();
       const txDetails = await kujiarActionClient.querier.tx.getTx(
         payload.txHash
       );
+      const txTime = new Date(txDetails.txResponse.timestamp);
+      const timeDiff =
+        new Date().getUTCMilliseconds() - txTime.getUTCMilliseconds();
+
+      if (timeDiff > CAllowTimeDiff) {
+        return false;
+      }
 
       if (txDetails.txResponse?.rawLog) {
         const txLowLogs: string = txDetails.txResponse?.rawLog;
@@ -220,9 +229,11 @@ export class PaymentService extends BaseService<IPaymentModel> {
   public balanceWithdraw = async (data) => {
     try {
       const txHash = await this.withDrawToUser(data);
+
       if (!txHash) {
         return null;
       }
+
       const newPayment = await this.create({
         walletAddress: data.address,
         amount: data.amount,

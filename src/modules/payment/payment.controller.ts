@@ -111,14 +111,22 @@ export class PaymentController {
     { amount, currency, address },
     { userId }: IAuthInfo
   ) => {
+    const withdrawParam = {
+      address: address,
+      amount: amount,
+      tokenType: currency,
+    };
+
     try {
       if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
         throw new CustomError(409, "Balance type is not supported");
       }
+
       const user = await this.userService.getItemById(userId);
       const updateParams = `wallet.${currency}`;
       const walletValue = user?.wallet?.[currency] ?? 0;
       let updateValue = 0;
+
       if (walletValue < amount) {
         throw new CustomError(409, "not enough token balances");
       } else {
@@ -128,14 +136,12 @@ export class PaymentController {
           updateParams,
           updateValue
         );
+
         // user withdraw crypto to admin wallet
         try {
-          const resPayment = await this.paymentService.balanceWithdraw({
-            address: address,
-            amount: amount,
-            tokenType: currency,
-          });
-          console.log({ resPayment })
+          const resPayment =
+            await this.paymentService.balanceWithdraw(withdrawParam);
+
           if (!resPayment) {
             throw new CustomError(409, "unable withdraw");
           }
@@ -145,11 +151,20 @@ export class PaymentController {
             updateParams,
             walletValue
           );
+          logger.error(
+            `[Payment failed] user: ${userId} paymentInfo: ${JSON.stringify(withdrawParam)}`
+          );
         }
+
+        logger.info(
+          `[Payment success] user: ${userId} paymentInfo: ${JSON.stringify(withdrawParam)}`
+        );
         return updatedUser;
       }
     } catch (error) {
-      console.log(error);
+      logger.error(
+        `[Payment failed] user: ${userId} paymentInfo: ${JSON.stringify(withdrawParam)}`
+      );
       throw new CustomError(409, "updating balance error");
     }
   };
@@ -176,6 +191,13 @@ export class PaymentController {
     { amount, currency, address, txHash },
     { userId }: IAuthInfo
   ) => {
+    const depositParam = {
+      address: address,
+      txHash: txHash ?? "",
+      amount: amount,
+      tokenType: currency,
+    };
+
     try {
       if (Object.keys(CDENOM_TOKENS).indexOf(currency) == -1) {
         throw new CustomError(409, "Balance type is not supported");
@@ -188,16 +210,18 @@ export class PaymentController {
       let updateValue = 0;
 
       // user deposit crypto to admin wallet
-      const resPayment = await this.paymentService.balanceDeposit({
-        address: address,
-        txHash: txHash ?? "",
-        amount: amount,
-        tokenType: currency,
-      });
+      const resPayment = await this.paymentService.balanceDeposit(depositParam);
 
       if (!resPayment) {
+        logger.error(
+          `[Payment failed] user: ${userId} paymentInfo: ${JSON.stringify(depositParam)}`
+        );
         throw new CustomError(409, "unable deposit");
       }
+
+      logger.info(
+        `[Payment success] user: ${userId} paymentInfo: ${JSON.stringify(depositParam)}`
+      );
 
       updateValue = walletValue + amount;
       return await this.userService.updateUserBalance(
@@ -206,7 +230,9 @@ export class PaymentController {
         updateValue
       );
     } catch (error) {
-      console.log(error);
+      logger.error(
+        `[Payment failed] user: ${userId} paymentInfo: ${JSON.stringify(depositParam)}`
+      );
       throw new CustomError(409, "updating balance error");
     }
   };
