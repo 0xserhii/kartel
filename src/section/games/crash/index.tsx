@@ -162,7 +162,6 @@ export default function CrashGameSection() {
   };
 
   const handleInfoModal = () => {
-    console.log("crash-info")
     modal.open(ModalType.CRASH_INFO);
   }
 
