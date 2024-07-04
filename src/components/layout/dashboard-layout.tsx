@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
-import { MenuIcon } from 'lucide-react';
-import Sidebar from '../shared/sidebar';
-import Header from '../shared/header';
-import MobileSidebar from '../shared/mobile-sidebar';
-import MobileLivechat from '../shared/mobile-livechat';
-import LiveChat from '../shared/live-chat';
-import { useOpen } from '@/provider/chat-provider';
-import { useAppDispatch } from '@/store/redux';
-import { getAccessToken } from '@/utils/axios';
-import { paymentActions } from '@/store/redux/actions';
+import { useEffect, useState } from "react";
+import { MenuIcon } from "lucide-react";
+import Sidebar from "../shared/sidebar";
+import Header from "../shared/header";
+import MobileSidebar from "../shared/mobile-sidebar";
+import MobileLivechat from "../shared/mobile-livechat";
+import LiveChat from "../shared/live-chat";
+import { useOpen } from "@/provider/chat-provider";
+import { useAppDispatch } from "@/store/redux";
+import { getAccessToken } from "@/utils/axios";
+import { paymentActions } from "@/store/redux/actions";
 
 export default function DashboardLayout({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [liveChatOpen, setLiveChatOpen] = useState<boolean>(false);
   const { open } = useOpen();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(paymentActions.loginPaymentServer())
-  }, [getAccessToken()])
+    dispatch(paymentActions.loginPaymentServer());
+  }, [getAccessToken()]);
 
   useEffect(() => {
-    dispatch(paymentActions.subscribePaymentServer())
-  }, [])
+    dispatch(paymentActions.subscribePaymentServer());
+  }, []);
   return (
     <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
       <div className="absolute z-20 flex h-full w-full items-center justify-center backdrop-blur-lg lg:hidden">
@@ -58,7 +58,7 @@ export default function DashboardLayout({
             setLivechatOpen={setLiveChatOpen}
           />
           <div
-            className={`hidden transform shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out lg:flex ${open ? 'w-[278px] translate-x-0 opacity-100' : 'w-0 translate-x-full opacity-0'}`}
+            className={`hidden transform shadow-lg shadow-purple-0.15 transition-all duration-300 ease-in-out lg:flex ${open ? "w-[278px] translate-x-0 opacity-100" : "w-0 translate-x-full opacity-0"}`}
           >
             <LiveChat />
           </div>

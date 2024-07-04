@@ -1,11 +1,11 @@
-import { Button } from '@/components/ui/button';
-import { useRouter } from '@/hooks';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Suspense } from 'react';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter } from 'react-router-dom';
-import { ChatProvider } from './chat-provider';
+import { Button } from "@/components/ui/button";
+import { useRouter } from "@/hooks";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense } from "react";
+import { ErrorBoundary, FallbackProps } from "react-error-boundary";
+import { HelmetProvider } from "react-helmet-async";
+import { BrowserRouter } from "react-router-dom";
+import { ChatProvider } from "./chat-provider";
 
 export const queryClient = new QueryClient();
 
@@ -27,7 +27,7 @@ const ErrorFallback = ({ error }: FallbackProps) => {
 };
 
 export default function AppProvider({
-  children
+  children,
 }: {
   children: React.ReactNode;
 }) {

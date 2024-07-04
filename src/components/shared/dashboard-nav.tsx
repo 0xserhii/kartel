@@ -1,14 +1,14 @@
-import { cn } from '@/utils/utils';
-import { NavItem, NavItemGroup } from '@/types';
-import { Dispatch, SetStateAction, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { cn } from "@/utils/utils";
+import { NavItem, NavItemGroup } from "@/types";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Collapsible,
   CollapsibleContent,
-  CollapsibleTrigger
-} from '../ui/collapsible';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import { usePathname } from '@/hooks';
+  CollapsibleTrigger,
+} from "../ui/collapsible";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { usePathname } from "@/hooks";
 
 type DashboardNavProps = {
   items: NavItemGroup[];
@@ -30,10 +30,10 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
   return (
     <Link
       key={item.href}
-      target={item.href.includes('https://') ? '_blank' : undefined}
+      target={item.href.includes("https://") ? "_blank" : undefined}
       className={cn(
-        'flex transform items-center rounded-[6px] bg-dark-blue px-6 py-[10.5px] text-gray300 transition-colors duration-300 hover:bg-purple hover:text-gray100',
-        isActive && 'bg-purple text-white'
+        "flex transform items-center rounded-[6px] bg-dark-blue px-6 py-[10.5px] text-gray300 transition-colors duration-300 hover:bg-purple hover:text-gray100",
+        isActive && "bg-purple text-white"
       )}
       to={item.href}
     >

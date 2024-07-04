@@ -1,62 +1,60 @@
-import { IChatClientToServerEvents, IChatServerToClientEvents } from '@/types';
+import { IChatClientToServerEvents, IChatServerToClientEvents } from "@/types";
 import {
   ICoinflipClientToServerEvents,
-  ICoinflipServerToClientEvents
-} from '@/types/coinflip';
+  ICoinflipServerToClientEvents,
+} from "@/types/coinflip";
 import {
   ILeaderboardClientToServerEvents,
-  ILeaderboardServerToClientEvents
-} from '@/types/leader';
+  ILeaderboardServerToClientEvents,
+} from "@/types/leader";
 import {
   IMinesClientToServerEvents,
-  IMinesServerToClientEvents
-} from '@/types/mines';
+  IMinesServerToClientEvents,
+} from "@/types/mines";
 import {
   IUserClientToServerEvents,
-  IUserServerToClientEvents
-} from '@/types/user';
-import { Socket, io } from 'socket.io-client';
-import customParser from 'socket.io-msgpack-parser';
+  IUserServerToClientEvents,
+} from "@/types/user";
+import { Socket, io } from "socket.io-client";
+import customParser from "socket.io-msgpack-parser";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const createSocket = <ServerEvents, ClientEvents>(
   namespace: string
 ): Socket<any, any> => {
-  return io(`${SERVER_URL}/${namespace}`,
-    // { parser: customParser }
-  );
+  return io(`${SERVER_URL}/${namespace}`, { parser: customParser });
 };
 
 const chatSocket = createSocket<
   IChatServerToClientEvents,
   IChatClientToServerEvents
->('chat');
+>("chat");
 
 const coinflipSocket = createSocket<
   ICoinflipServerToClientEvents,
   ICoinflipClientToServerEvents
->('coinflip');
+>("coinflip");
 
 const leaderboardSocket = createSocket<
   ILeaderboardServerToClientEvents,
   ILeaderboardClientToServerEvents
->('leaderboard');
+>("leaderboard");
 
 const minesSocket = createSocket<
   IMinesServerToClientEvents,
   IMinesClientToServerEvents
->('mines');
+>("mines");
 
 const crashSocket = createSocket<
   IUserServerToClientEvents,
   IUserClientToServerEvents
->('crash');
+>("crash");
 
 const paymentSocket = createSocket<
   IUserServerToClientEvents,
   IUserClientToServerEvents
->('payment');
+>("payment");
 
 const KartelSocket = {
   chat: chatSocket,
@@ -64,7 +62,7 @@ const KartelSocket = {
   leaderboard: leaderboardSocket,
   crash: crashSocket,
   payment: paymentSocket,
-  mines: minesSocket
+  mines: minesSocket,
 };
 
 export default KartelSocket;

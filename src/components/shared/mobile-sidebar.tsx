@@ -1,9 +1,9 @@
-import DashboardNav from '@/components/shared/dashboard-nav';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { navItems } from '@/constants/data';
-import { Dispatch, SetStateAction } from 'react';
-import { Link } from 'react-router-dom';
-import Logo from '/assets/logo.png';
+import DashboardNav from "@/components/shared/dashboard-nav";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { navItems } from "@/constants/data";
+import { Dispatch, SetStateAction } from "react";
+import { Link } from "react-router-dom";
+import Logo from "/assets/logo.png";
 
 type TMobileSidebarProps = {
   className?: string;
@@ -12,7 +12,7 @@ type TMobileSidebarProps = {
 };
 export default function MobileSidebar({
   setSidebarOpen,
-  sidebarOpen
+  sidebarOpen,
 }: TMobileSidebarProps) {
   return (
     <>

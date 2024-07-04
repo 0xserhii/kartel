@@ -3,26 +3,26 @@ import {
   FormattedPlayerBetType,
   BetType,
   CrashHistoryData,
-  AutoCrashGameData
-} from './crashGame';
+  AutoCrashGameData,
+} from "./crashGame";
 
 export enum ECrashSocketEvent {
-  GAME_BETS = 'game-bets',
-  GAME_STARTING = 'game-starting',
-  GAME_START = 'game-start',
-  BET_CASHOUT = 'bet-cashout',
-  GAME_END = 'game-end',
-  GAME_TICK = 'game-tick',
-  JOIN_CRASH_GAME = 'join-crash-game',
-  CRASHGAME_JOIN_SUCCESS = 'crashgame-join-success',
-  AUTO_CRASHGAME_BET = 'auto-crashgame-bet',
-  PREVIOUS_CRASHGAME_HISTORY = 'previous-crashgame-history',
-  GAME_JOIN_ERROR = 'game-join-error',
-  BET_CASHOUT_ERROR = 'bet-cashout-error',
-  BET_CASHOUT_SUCCESS = 'bet-cashout-success',
-  AUTO_CRASHGAME_JOIN_SUCCESS = 'auto-crashgame-join-success',
-  GAME_STATUS = 'game-status',
-  UPDATE_WALLET = 'update-wallet'
+  GAME_BETS = "game-bets",
+  GAME_STARTING = "game-starting",
+  GAME_START = "game-start",
+  BET_CASHOUT = "bet-cashout",
+  GAME_END = "game-end",
+  GAME_TICK = "game-tick",
+  JOIN_CRASH_GAME = "join-crash-game",
+  CRASHGAME_JOIN_SUCCESS = "crashgame-join-success",
+  AUTO_CRASHGAME_BET = "auto-crashgame-bet",
+  PREVIOUS_CRASHGAME_HISTORY = "previous-crashgame-history",
+  GAME_JOIN_ERROR = "game-join-error",
+  BET_CASHOUT_ERROR = "bet-cashout-error",
+  BET_CASHOUT_SUCCESS = "bet-cashout-success",
+  AUTO_CRASHGAME_JOIN_SUCCESS = "auto-crashgame-join-success",
+  GAME_STATUS = "game-status",
+  UPDATE_WALLET = "update-wallet",
 }
 
 export interface ICrashServerToClientEvents {

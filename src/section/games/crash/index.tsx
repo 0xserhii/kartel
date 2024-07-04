@@ -1,34 +1,34 @@
-import MovingBackgroundVideo from '/assets/games/crash/moving_background.mp4';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { cn, formatMillisecondsShort } from '@/utils/utils';
-import { useEffect, useRef, useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
-import { Socket, io } from 'socket.io-client';
-import customParser from 'socket.io-msgpack-parser';
+import MovingBackgroundVideo from "/assets/games/crash/moving_background.mp4";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { cn, formatMillisecondsShort } from "@/utils/utils";
+import { useEffect, useRef, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Socket, io } from "socket.io-client";
+import customParser from "socket.io-msgpack-parser";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { BetType, CrashHistoryData, FormattedPlayerBetType } from '@/types';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { BetType, CrashHistoryData, FormattedPlayerBetType } from "@/types";
 import {
   ECrashSocketEvent,
   ICrashClientToServerEvents,
-  ICrashServerToClientEvents
-} from '@/types/crash';
-import { ECrashStatus } from '@/constants/status';
-import { getAccessToken } from '@/utils/axios';
-import useToast from '@/hooks/use-toast';
-import BetBoard from './bet-board';
-import { multiplerArray, betMode, roundArray, token } from '@/constants/data';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { userActions } from '@/store/redux/actions';
-import useSound from 'use-sound';
+  ICrashServerToClientEvents,
+} from "@/types/crash";
+import { ECrashStatus } from "@/constants/status";
+import { getAccessToken } from "@/utils/axios";
+import useToast from "@/hooks/use-toast";
+import BetBoard from "./bet-board";
+import { multiplerArray, betMode, roundArray, token } from "@/constants/data";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useAppDispatch, useAppSelector } from "@/store/redux";
+import { userActions } from "@/store/redux/actions";
+import useSound from "use-sound";
 import CountUp from "react-countup";
 
 export default function CrashGameSection() {
@@ -50,7 +50,7 @@ export default function CrashGameSection() {
   const [selectMode, setSelectMode] = useState(betMode[0]);
   const [avaliableAutoCashout, setAvaliableAutoCashout] =
     useState<boolean>(false);
-  const isAutoMode = selectMode === 'auto';
+  const isAutoMode = selectMode === "auto";
   const [crTick, setCrTick] = useState({ prev: 1, cur: 1 });
   const [prepareTime, setPrepareTime] = useState(0);
   const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
@@ -62,12 +62,12 @@ export default function CrashGameSection() {
   );
   const settings = useAppSelector((store: any) => store.settings);
   const userData = useAppSelector((store: any) => store.user.userData);
-  const [play, { stop, sound }] = useSound('/assets/audio/car_running.mp3', {
+  const [play, { stop, sound }] = useSound("/assets/audio/car_running.mp3", {
     volume: 0.5,
-    loop: true
+    loop: true,
   });
   const [playExplosion, { stop: stopExplosion, sound: explosionSound }] =
-    useSound('/assets/audio/explosion.mp3', { volume: 0.25 });
+    useSound("/assets/audio/explosion.mp3", { volume: 0.25 });
 
   const updatePrepareCountDown = () => {
     setPrepareTime((prev) => prev - 100);
@@ -84,20 +84,20 @@ export default function CrashGameSection() {
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
     const reqTest = new RegExp(`^\\d*\\.?\\d{0,2}$`);
-    if (reqTest.test(inputValue) && inputValue !== '') {
+    if (reqTest.test(inputValue) && inputValue !== "") {
       const updateValue =
         parseFloat(inputValue) >= 1
-          ? inputValue.replace(/^0+/, '')
+          ? inputValue.replace(/^0+/, "")
           : inputValue;
       setBetAmount(updateValue);
-    } else if (inputValue === '') {
+    } else if (inputValue === "") {
       setBetAmount(0);
     }
   };
 
   const handleAutoCashoutPointChange = (event) => {
     const inputValue = event.target.value;
-    if (inputValue === '') {
+    if (inputValue === "") {
       setAutoCashoutPoint(0);
     } else setAutoCashoutPoint(inputValue);
   };
@@ -114,17 +114,17 @@ export default function CrashGameSection() {
           ? Number(autoCashoutAmount) * 100
           : 1000000,
         betAmount: Number(betAmount).valueOf(),
-        denom: selectedToken.name
+        denom: selectedToken.name,
       };
-      socket?.emit('join-crash-game', joinParams);
+      socket?.emit("join-crash-game", joinParams);
     }
     if (!(betAmount > 0)) {
-      toast.error('Bet amount must be greater than 0');
+      toast.error("Bet amount must be greater than 0");
       return;
     }
     if (avaliableBet) {
       setAvaliableBet(false);
-      socket?.emit('bet-cashout');
+      socket?.emit("bet-cashout");
     }
   };
 
@@ -135,51 +135,51 @@ export default function CrashGameSection() {
           cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
           count: Number(round).valueOf(),
           betAmount: Number(betAmount).valueOf(),
-          denom: selectedToken.name
+          denom: selectedToken.name,
         };
-        socket?.emit('auto-crashgame-bet', joinParams);
+        socket?.emit("auto-crashgame-bet", joinParams);
       } else {
         setAutoBet(false);
       }
     } else {
       setAutoBet(true);
-      socket?.emit('cancel-auto-bet');
+      socket?.emit("cancel-auto-bet");
     }
   };
 
   useEffect(() => {
     if (socket) {
-      socket.emit('auth', getAccessToken());
+      socket.emit("auth", getAccessToken());
     }
   }, [getAccessToken()]);
 
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === 'Autobet has been canceled.') {
+      if (data === "Autobet has been canceled.") {
         setAutoBet(true);
       } else {
         setAutoBet(false);
       }
     };
-    socket?.on('auto-crashgame-join-success', handleJoinSuccess);
+    socket?.on("auto-crashgame-join-success", handleJoinSuccess);
     return () => {
-      socket?.off('auto-crashgame-join-success', handleJoinSuccess);
+      socket?.off("auto-crashgame-join-success", handleJoinSuccess);
     };
   }, [socket, toast]);
 
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === 'Autobet has been canceled.') {
+      if (data === "Autobet has been canceled.") {
         setAutoBet(true);
       } else {
         setAutoBet(false);
       }
     };
-    socket?.on('auto-crashgame-join-success', handleJoinSuccess);
+    socket?.on("auto-crashgame-join-success", handleJoinSuccess);
     return () => {
-      socket?.off('auto-crashgame-join-success', handleJoinSuccess);
+      socket?.off("auto-crashgame-join-success", handleJoinSuccess);
     };
   }, [socket, toast]);
 
@@ -187,9 +187,7 @@ export default function CrashGameSection() {
     const crashSocket: Socket<
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
-    > = io(`${SERVER_URL}/crash`,
-      { parser: customParser }
-    );
+    > = io(`${SERVER_URL}/crash`, { parser: customParser });
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
@@ -197,7 +195,7 @@ export default function CrashGameSection() {
       setCrashStatus(ECrashStatus.PROGRESS);
       setCrTick((prev) => ({
         prev: prev.cur,
-        cur: tick
+        cur: tick,
       }));
     });
 
@@ -210,7 +208,7 @@ export default function CrashGameSection() {
       setTotalAmount({
         usk: 0,
         kuji: 0,
-        kart: 0
+        kart: 0,
       });
     });
 
@@ -257,7 +255,7 @@ export default function CrashGameSection() {
       setTotalAmount((prevAmounts) => ({
         usk: (prevAmounts?.usk || 0) + totals.usk,
         kuji: (prevAmounts?.kuji || 0) + totals.kuji,
-        kart: (prevAmounts?.kart || 0) + totals.kart
+        kart: (prevAmounts?.kart || 0) + totals.kart,
       }));
     });
 
@@ -275,7 +273,7 @@ export default function CrashGameSection() {
         setTotalAmount((prevAmounts) => ({
           usk: (prevAmounts?.usk || 0) + totals.usk,
           kuji: (prevAmounts?.kuji || 0) + totals.kuji,
-          kart: (prevAmounts?.kart || 0) + totals.kart
+          kart: (prevAmounts?.kart || 0) + totals.kart,
         }));
       }
     );
@@ -293,7 +291,7 @@ export default function CrashGameSection() {
       setBetCashout((prev) => [...prev, data?.userdata]);
     });
 
-    crashSocket.emit('auth', getAccessToken());
+    crashSocket.emit("auth", getAccessToken());
 
     setSocket(crashSocket);
     return () => {
@@ -351,26 +349,27 @@ export default function CrashGameSection() {
               </video>
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-                    <div
-                      className={cn(
-                        'text-6xl font-extrabold text-white',
-                        crashStatus === ECrashStatus.END && 'crashed-value'
-                      )}
-                    >
-                      X <CountUp
-                        start={crTick.cur}
-                        end={crTick.prev}
-                        decimals={2}
-                      />
-                    </div>
-                    <div className="font-semibold text-[#f5b95a]">
-                      {crashStatus === ECrashStatus.PROGRESS
-                        ? 'CURRENT PAYOUT'
-                        : 'ROUND OVER'}
-                    </div>
+                <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+                  <div
+                    className={cn(
+                      "text-6xl font-extrabold text-white",
+                      crashStatus === ECrashStatus.END && "crashed-value"
+                    )}
+                  >
+                    X{" "}
+                    <CountUp
+                      start={crTick.cur}
+                      end={crTick.prev}
+                      decimals={2}
+                    />
                   </div>
-                )}
+                  <div className="font-semibold text-[#f5b95a]">
+                    {crashStatus === ECrashStatus.PROGRESS
+                      ? "CURRENT PAYOUT"
+                      : "ROUND OVER"}
+                  </div>
+                </div>
+              )}
               {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
                 <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className="text-xl font-semibold uppercase text-white">
@@ -383,18 +382,18 @@ export default function CrashGameSection() {
               )}
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-car car-moving absolute bottom-16">
-                    <img
-                      src={
-                        crashStatus === ECrashStatus.PROGRESS
-                          ? '/assets/games/crash/moving_car.gif'
-                          : '/assets/games/crash/explosion.gif'
-                      }
-                      className="w-64"
-                      alt="crash-car"
-                    />
-                  </div>
-                )}
+                <div className="crash-car car-moving absolute bottom-16">
+                  <img
+                    src={
+                      crashStatus === ECrashStatus.PROGRESS
+                        ? "/assets/games/crash/moving_car.gif"
+                        : "/assets/games/crash/explosion.gif"
+                    }
+                    className="w-64"
+                    alt="crash-car"
+                  />
+                </div>
+              )}
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
@@ -411,7 +410,7 @@ export default function CrashGameSection() {
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${item.crashPoint / 100 > 20 ? 'bg-purple-light' : 'bg-dark-blue'}`}
+                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
                     >
                       x{(item.crashPoint / 100).toFixed(2)}
                     </span>
@@ -429,9 +428,9 @@ export default function CrashGameSection() {
                     {betMode.map((item, index) => (
                       <Button
                         className={cn(
-                          'min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white',
+                          "min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white",
                           selectMode === item &&
-                          'border-purple bg-purple text-white hover:bg-purple'
+                            "border-purple bg-purple text-white hover:bg-purple"
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -450,25 +449,25 @@ export default function CrashGameSection() {
                           isAutoMode
                             ? false
                             : (crashStatus !== ECrashStatus.PREPARE &&
-                              !avaliableBet) ||
-                            (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet) ||
-                            (crashStatus == ECrashStatus.PROGRESS &&
-                              avaliableAutoCashout)
+                                !avaliableBet) ||
+                              (crashStatus !== ECrashStatus.PROGRESS &&
+                                avaliableBet) ||
+                              (crashStatus == ECrashStatus.PROGRESS &&
+                                avaliableAutoCashout)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
                         {isAutoMode
                           ? autoBet
-                            ? 'Auto Bet'
-                            : 'Cancel'
+                            ? "Auto Bet"
+                            : "Cancel"
                           : avaliableBet
-                            ? 'Cash Out'
-                            : 'Place Bet'}
+                            ? "Cash Out"
+                            : "Place Bet"}
                       </Button>
                     </div>
                     <div
-                      className={`flex flex-col ${isAutoMode ? 'gap-4' : 'gap-5'}`}
+                      className={`flex flex-col ${isAutoMode ? "gap-4" : "gap-5"}`}
                     >
                       <p className="w-6/12 text-sm uppercase text-[#556987]">
                         bet amount
@@ -530,7 +529,7 @@ export default function CrashGameSection() {
                             key={index}
                             onClick={() => handleMultiplierClick(item)}
                           >
-                            {item + 'x'}
+                            {item + "x"}
                           </Button>
                         ))}
                       </div>
@@ -555,7 +554,7 @@ export default function CrashGameSection() {
                             <div className="relative w-full">
                               <Input
                                 type="number"
-                                value={autoCashoutAmount || ''}
+                                value={autoCashoutAmount || ""}
                                 disabled={
                                   !avaliableAutoCashout ||
                                   crashStatus === ECrashStatus.PROGRESS
@@ -596,11 +595,11 @@ export default function CrashGameSection() {
                             {roundArray.map((item, index) => (
                               <Button
                                 disabled={isAutoMode && !autoBet}
-                                className={`rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white ${round === item ? 'bg-purple text-white' : ''}`}
+                                className={`rounded-lg border border-[#1D1776] bg-dark-blue font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white ${round === item ? "bg-purple text-white" : ""}`}
                                 key={index}
                                 onClick={() => setRound(item)}
                               >
-                                {item === 10000 ? '∞' : item}
+                                {item === 10000 ? "∞" : item}
                               </Button>
                             ))}
                           </div>

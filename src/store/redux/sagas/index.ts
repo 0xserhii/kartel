@@ -1,10 +1,10 @@
-import { all } from 'redux-saga/effects';
+import { all } from "redux-saga/effects";
 
-import chatSagas from './chat.saga';
-import leaderboardSagas from './leaderboard.saga';
-import coinflipSagas from './coinflip.saga';
-import minesSagas from './mines.saga';
-import paymentSagas from './payment.saga';
+import chatSagas from "./chat.saga";
+import leaderboardSagas from "./leaderboard.saga";
+import coinflipSagas from "./coinflip.saga";
+import minesSagas from "./mines.saga";
+import paymentSagas from "./payment.saga";
 
 export default function* rootSaga() {
   yield all([
@@ -12,6 +12,6 @@ export default function* rootSaga() {
     ...paymentSagas,
     ...leaderboardSagas,
     ...coinflipSagas,
-    ...minesSagas
+    ...minesSagas,
   ]);
 }

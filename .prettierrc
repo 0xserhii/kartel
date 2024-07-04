@@ -3,9 +3,11 @@
   "bracketSpacing": true,
   "semi": true,
   "useTabs": false,
-  "trailingComma": "none",
-  "singleQuote": true,
+  "trailingComma": "es5",
+  "singleQuote": false,
   "tabWidth": 2,
   "endOfLine": "lf",
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ]
 }

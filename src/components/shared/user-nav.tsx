@@ -1,21 +1,21 @@
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { getAccessToken, removeAllTokens } from '@/utils/axios';
-import { useWallet } from '@/provider/crypto/wallet';
-import useToast from '@/hooks/use-toast';
-import useModal from '@/hooks/use-modal';
-import { ModalType } from '@/types/modal';
-import { useDispatch } from 'react-redux';
-import { userActions } from '@/store/redux/actions';
-import { useAppSelector } from '@/store/redux';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getAccessToken, removeAllTokens } from "@/utils/axios";
+import { useWallet } from "@/provider/crypto/wallet";
+import useToast from "@/hooks/use-toast";
+import useModal from "@/hooks/use-modal";
+import { ModalType } from "@/types/modal";
+import { useDispatch } from "react-redux";
+import { userActions } from "@/store/redux/actions";
+import { useAppSelector } from "@/store/redux";
 
 export default function UserNav() {
   const modal = useModal();
@@ -30,14 +30,14 @@ export default function UserNav() {
       await dispatch(userActions.initUserData());
       disconnect();
       removeAllTokens();
-      toast.success('Logout Successfully');
+      toast.success("Logout Successfully");
     }
   };
 
   const toggleWalletConnection = async () => {
     if (account) {
       disconnect();
-      toast.success('Wallet Disconnected');
+      toast.success("Wallet Disconnected");
     } else {
       modal.open(ModalType.WALLETCONNECT);
     }
@@ -51,7 +51,7 @@ export default function UserNav() {
           className="flex gap-2 border-2 border-[#4a278da1] bg-transparent p-2 !outline-none !ring-0 !ring-offset-0 hover:bg-transparent"
         >
           <Avatar className="h-5 w-5">
-            <AvatarImage src={'/assets/icons/gold-avatar.png'} alt={''} />
+            <AvatarImage src={"/assets/icons/gold-avatar.png"} alt={""} />
           </Avatar>
           <p className="text-white">{userData?.username}</p>
         </Button>
@@ -73,7 +73,7 @@ export default function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={toggleWalletConnection}>
-            {account ? 'Disconnect Wallet' : 'Connect Wallet'}
+            {account ? "Disconnect Wallet" : "Connect Wallet"}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>

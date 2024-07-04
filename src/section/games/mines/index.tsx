@@ -1,26 +1,26 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   defaulMine,
   minesAmountPresets,
   multiplerArray,
-  token
-} from '@/constants/data';
-import { EMinesStatus } from '@/constants/status';
-import useToast from '@/hooks/use-toast';
-import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { minesActions } from '@/store/redux/actions';
-import { getAccessToken } from '@/utils/axios';
-import { calculateMiningProbabilities } from '@/utils/utils';
-import { useEffect, useState } from 'react';
+  token,
+} from "@/constants/data";
+import { EMinesStatus } from "@/constants/status";
+import useToast from "@/hooks/use-toast";
+import { useAppDispatch, useAppSelector } from "@/store/redux";
+import { minesActions } from "@/store/redux/actions";
+import { getAccessToken } from "@/utils/axios";
+import { calculateMiningProbabilities } from "@/utils/utils";
+import { useEffect, useState } from "react";
 
 export default function MinesGameSection() {
   const toast = useToast();
@@ -35,7 +35,7 @@ export default function MinesGameSection() {
   const dispatch = useAppDispatch();
   const minesState = useAppSelector((state: any) => state.mines);
   const [mineImages, setMineImages] = useState(
-    Array(defaulMine.length).fill('mystery')
+    Array(defaulMine.length).fill("mystery")
   );
   const [lastClickedIndex, setLastClickedIndex] = useState<number | null>(null);
   const [clickedIndices, setClickedIndices] = useState<Set<number>>(new Set());
@@ -49,7 +49,7 @@ export default function MinesGameSection() {
     setMinesStatus(defaulMine.map(() => false));
     setIsGameOver(false);
     setMineStatus(EMinesStatus.NONE);
-    setMineImages(Array(defaulMine.length).fill('mystery'));
+    setMineImages(Array(defaulMine.length).fill("mystery"));
     setLastClickedIndex(null);
     setClickedIndices(new Set());
   };
@@ -57,13 +57,13 @@ export default function MinesGameSection() {
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
     const reqTest = new RegExp(`^\\d*\\.?\\d{0,2}$`);
-    if (reqTest.test(inputValue) && inputValue !== '') {
+    if (reqTest.test(inputValue) && inputValue !== "") {
       const updateValue =
         parseFloat(inputValue) >= 1
-          ? inputValue.replace(/^0+/, '')
+          ? inputValue.replace(/^0+/, "")
           : inputValue;
       setBetAmount(updateValue);
-    } else if (inputValue === '') {
+    } else if (inputValue === "") {
       setBetAmount(0);
     }
   };
@@ -76,13 +76,13 @@ export default function MinesGameSection() {
   const handleMinesAmountChange = (event) => {
     const inputValue = event.target.value;
     const reqTest = new RegExp(`^\\d*\\.?\\d{0,2}$`);
-    if (reqTest.test(inputValue) && inputValue !== '') {
+    if (reqTest.test(inputValue) && inputValue !== "") {
       const updateValue =
         parseFloat(inputValue) >= 1
-          ? inputValue.replace(/^0+/, '')
+          ? inputValue.replace(/^0+/, "")
           : inputValue;
       setMinesAmount(updateValue);
-    } else if (inputValue === '') {
+    } else if (inputValue === "") {
       setMinesAmount(0);
     }
   };
@@ -123,11 +123,11 @@ export default function MinesGameSection() {
           minesActions.startMinesgame({
             betAmount: Number(betAmount),
             denom: selectedToken.name,
-            betMinesCount: minesAmount
+            betMinesCount: minesAmount,
           })
         );
       } else {
-        toast.error('Invalid Token Amount');
+        toast.error("Invalid Token Amount");
       }
     } else {
       dispatch(minesActions.cashoutgame());
@@ -161,9 +161,9 @@ export default function MinesGameSection() {
       if (minesState.gameResult !== null && lastClickedIndex !== null) {
         const newMineImages = [...mineImages];
         if (minesState.gameResult) {
-          newMineImages[lastClickedIndex] = 'star';
+          newMineImages[lastClickedIndex] = "star";
         } else {
-          newMineImages[lastClickedIndex] = 'bomb';
+          newMineImages[lastClickedIndex] = "bomb";
           setLastClickedIndex(null);
           setIsGameOver(true);
         }
@@ -188,7 +188,7 @@ export default function MinesGameSection() {
   }, [minesState.gameResult, lastClickedIndex, mineImages]);
 
   useEffect(() => {
-    if (minesState.error !== '') {
+    if (minesState.error !== "") {
       toast.error(minesState.error);
       resetGame();
     }
@@ -205,13 +205,13 @@ export default function MinesGameSection() {
                 ref={(el) => {
                   if (selectedProbability === index + 1 && el) {
                     el.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'nearest',
-                      inline: 'center'
+                      behavior: "smooth",
+                      block: "nearest",
+                      inline: "center",
                     });
                   }
                 }}
-                className={`rounded-lg border border-[#1D1776] bg-dark-blue px-2.5 py-1 text-xs font-semibold text-gray500 hover:bg-dark-blue ${selectedProbability === index + 1 ? 'bg-purple text-white' : ''}`}
+                className={`rounded-lg border border-[#1D1776] bg-dark-blue px-2.5 py-1 text-xs font-semibold text-gray500 hover:bg-dark-blue ${selectedProbability === index + 1 ? "bg-purple text-white" : ""}`}
               >
                 x{item > 1000 ? `${(item / 1000).toFixed(2)}k` : item}
               </div>
@@ -222,7 +222,7 @@ export default function MinesGameSection() {
           {isGameOver && (
             <span className="absolute top-16 text-center text-xl font-bold uppercase text-[#df8002]">
               {minesState.earned === null
-                ? 'Game over'
+                ? "Game over"
                 : `WON ${minesState.earned}`}
             </span>
           )}
@@ -236,7 +236,7 @@ export default function MinesGameSection() {
                     .slice(rowIndex * 5, (rowIndex + 1) * 5)
                     .map((mine, index) => (
                       <button
-                        className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? 'pointer-events-none' : ''} ${mineStatus === EMinesStatus.START ? 'some-start-class' : ''} ${clickedIndices.has(rowIndex * 5 + index) ? 'ripple-animation cursor-wait' : ''}`}
+                        className={`group flex items-center justify-center ${minesStatus[rowIndex * 5 + index] ? "pointer-events-none" : ""} ${mineStatus === EMinesStatus.START ? "some-start-class" : ""} ${clickedIndices.has(rowIndex * 5 + index) ? "ripple-animation cursor-wait" : ""}`}
                         key={index}
                         onClick={() => {
                           if (
@@ -316,7 +316,7 @@ export default function MinesGameSection() {
                       key={index}
                       onClick={() => handleMultiplierClick(item)}
                     >
-                      {item + 'x'}
+                      {item + "x"}
                     </Button>
                   ))}
                 </div>
@@ -365,10 +365,10 @@ export default function MinesGameSection() {
                 mineStatus !== EMinesStatus.NONE && lastClickedIndex === null
               }
             >
-              {mineStatus === EMinesStatus.NONE ? 'Start Bet' : 'Cash Out'}
+              {mineStatus === EMinesStatus.NONE ? "Start Bet" : "Cash Out"}
               <span className="text-sm">
                 {selectedProbability === 0
-                  ? ''
+                  ? ""
                   : `$${(probabilities[selectedProbability - 1] * betAmount).toFixed(2)}`}
               </span>
             </Button>

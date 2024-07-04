@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "set GENERATE_SOURCEMAP=false && tsc && vite build",
+    "prettier": "npx prettier -w '**/*.{js,jsx,ts,tsx,json,.*}'",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier . --write",

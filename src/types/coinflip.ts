@@ -1,4 +1,4 @@
-import VIPLevelType from './vipLevel';
+import VIPLevelType from "./vipLevel";
 
 export interface ICoinPlayer {
   _id: string;
@@ -10,15 +10,15 @@ export interface ICoinPlayer {
 }
 
 export enum ECoinflipSocketEvent {
-  LOGIN = 'auth',
-  CREATE_NEW_COINFLIPGAME = 'create-new-coinflipgame',
-  JOIN_COINFLIPGAME = 'join-coinflipgame',
-  COINFLIPGAME_JOIN_SUCCESS = 'coinflipgame-join-success',
-  COINFLIPGAME_JOINED = 'coinflipgame-joined',
-  COINFLIPGAME_ROLLING = 'coinflipgame-rolling',
-  COINFLIPGAME_ROLLED = 'coinflipgame-rolled',
-  UPDATE_WALLET = 'update-wallet',
-  GAME_CREATION_ERROR = 'game-creation-error'
+  LOGIN = "auth",
+  CREATE_NEW_COINFLIPGAME = "create-new-coinflipgame",
+  JOIN_COINFLIPGAME = "join-coinflipgame",
+  COINFLIPGAME_JOIN_SUCCESS = "coinflipgame-join-success",
+  COINFLIPGAME_JOINED = "coinflipgame-joined",
+  COINFLIPGAME_ROLLING = "coinflipgame-rolling",
+  COINFLIPGAME_ROLLED = "coinflipgame-rolled",
+  UPDATE_WALLET = "update-wallet",
+  GAME_CREATION_ERROR = "game-creation-error",
 }
 
 export interface ICoinflipServerToClientEvents {
@@ -36,7 +36,7 @@ export interface ICoinflipServerToClientEvents {
     _id,
     randomModule,
     coinflipResult,
-    isEarn
+    isEarn,
   }: {
     _id: string;
     randomModule: number;

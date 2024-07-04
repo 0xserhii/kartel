@@ -1,65 +1,65 @@
-import { TAdminWallet, TSocketDepositParam, TSocketWithDrawParam, TUpdateBalanceParam } from '@/types/payment';
-import { EPaymentSocketAction } from '../reducers/payment.type';
+import { TAdminWallet, TUpdateBalanceParam } from "@/types/payment";
+import { EPaymentSocketAction } from "../reducers/payment.type";
 
-export function withDraw(data: TSocketWithDrawParam) {
+export function withDraw(data: string) {
   return {
     type: EPaymentSocketAction.WITHDRAW,
-    payload: data
+    payload: data,
   };
 }
 
-export function deposit(data: TSocketDepositParam) {
+export function deposit(data: string) {
   return {
     type: EPaymentSocketAction.DEPOSIT,
-    payload: data
+    payload: data,
   };
 }
 
 export function setTxProgress(status: boolean) {
   return {
     type: EPaymentSocketAction.SET_TXPROGRESS,
-    payload: status
+    payload: status,
   };
 }
 
 export function paymentFailed(msg: string) {
   return {
     type: EPaymentSocketAction.PAYMENT_FAILED,
-    payload: msg
+    payload: msg,
   };
 }
 
 export function setAdminWallet(data: TAdminWallet) {
   return {
     type: EPaymentSocketAction.SET_ADMINWALLET,
-    payload: data
+    payload: data,
   };
 }
 
 export function loginPaymentServer() {
   return {
     type: EPaymentSocketAction.LOGIN_PAYMENT,
-    payload: 'success'
+    payload: "success",
   };
 }
 
 export function subscribePaymentServer() {
   return {
     type: EPaymentSocketAction.SUBSCRIBE_PAYMENT,
-    payload: null
+    payload: null,
   };
 }
 
 export function disconnectPaymentServer() {
   return {
     type: EPaymentSocketAction.DISCONNECT_PAYMENT,
-    payload: null
+    payload: null,
   };
 }
 
 export function updateBalancePayment(data: TUpdateBalanceParam) {
   return {
     type: EPaymentSocketAction.UPDATE_BALANCE,
-    payload: data
+    payload: data,
   };
 }

@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga';
+import { eventChannel } from "redux-saga";
 
 import {
   put,
@@ -7,14 +7,18 @@ import {
   take,
   cancel,
   takeLatest,
-  delay
-} from 'redux-saga/effects';
+  delay,
+} from "redux-saga/effects";
 
-import { paymentActions, userActions } from '../actions';
-import { getAccessToken } from '@/utils/axios';
-import KartelSocket from '@/utils/socket-service';
-import { EPaymentEvents, TAdminWallet, TUpdateBalanceParam } from '@/types/payment';
-import { EPaymentSocketAction } from '../reducers/payment.type';
+import { paymentActions, userActions } from "../actions";
+import { getAccessToken } from "@/utils/axios";
+import KartelSocket from "@/utils/socket-service";
+import {
+  EPaymentEvents,
+  TAdminWallet,
+  TUpdateBalanceParam,
+} from "@/types/payment";
+import { EPaymentSocketAction } from "../reducers/payment.type";
 
 let socketTask;
 
@@ -24,39 +28,30 @@ function subscribe(socket) {
       emit(paymentActions.setAdminWallet(data));
     });
 
-    socket.on(
-      EPaymentEvents.updateBalance,
-      (data: TUpdateBalanceParam) => {
-        emit(paymentActions.updateBalancePayment(data));
-        emit(userActions.siteBalanceUpdate({ value: data.walletValue, denom: data.denom }));
-      }
-    );
+    socket.on(EPaymentEvents.updateBalance, (data: TUpdateBalanceParam) => {
+      emit(paymentActions.updateBalancePayment(data));
+      emit(
+        userActions.siteBalanceUpdate({
+          value: data.walletValue,
+          denom: data.denom,
+        })
+      );
+    });
 
-    socket.on(
-      EPaymentEvents.paymentFailed,
-      (data: string) => {
-        emit(paymentActions.paymentFailed(data));
-      }
-    );
+    socket.on(EPaymentEvents.paymentFailed, (data: string) => {
+      emit(paymentActions.paymentFailed(data));
+    });
 
-    return () => { };
+    return () => {};
   });
 }
 
 function* deposit(socket, action) {
-  yield call(
-    [socket, socket.emit],
-    EPaymentEvents.deposit,
-    action.payload
-  );
+  yield call([socket, socket.emit], EPaymentEvents.deposit, action.payload);
 }
 
 function* withdraw(socket, action) {
-  yield call(
-    [socket, socket.emit],
-    EPaymentEvents.withdraw,
-    action.payload
-  );
+  yield call([socket, socket.emit], EPaymentEvents.withdraw, action.payload);
 }
 
 function* login(socket) {

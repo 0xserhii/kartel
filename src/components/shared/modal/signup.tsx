@@ -2,56 +2,56 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ModalType } from '@/types/modal';
-import useModal from '@/hooks/use-modal';
-import useToast from '@/hooks/use-toast';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ModalType } from "@/types/modal";
+import useModal from "@/hooks/use-modal";
+import useToast from "@/hooks/use-toast";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormMessage
-} from '@/components/ui/form';
-import { axiosPost } from '@/utils/axios';
-import { BACKEND_API_ENDPOINT } from '@/utils/constant';
-import { useAppSelector } from '@/store/redux';
+  FormMessage,
+} from "@/components/ui/form";
+import { axiosPost } from "@/utils/axios";
+import { BACKEND_API_ENDPOINT } from "@/utils/constant";
+import { useAppSelector } from "@/store/redux";
 
 const SignUpSchema = z
   .object({
-    username: z.string().nonempty('Full Name is required'),
+    username: z.string().nonempty("Full Name is required"),
     email: z
       .string()
-      .nonempty('Email is required')
-      .email('Email must be a valid email address'),
+      .nonempty("Email is required")
+      .email("Email must be a valid email address"),
     password: z
       .string()
-      .nonempty('Password is required')
-      .min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().nonempty('Confirm Password is required')
+      .nonempty("Password is required")
+      .min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().nonempty("Confirm Password is required"),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.confirmPassword) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Passwords must match',
-        path: ['confirmPassword']
+        message: "Passwords must match",
+        path: ["confirmPassword"],
       });
     }
   });
 
 const SignUpDefaultValue = {
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
 };
 
 const SignUpModal = () => {
@@ -62,7 +62,7 @@ const SignUpModal = () => {
 
   const signUpForm = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
-    defaultValues: SignUpDefaultValue
+    defaultValues: SignUpDefaultValue,
   });
 
   const hanndleOpenChange = async () => {
@@ -80,18 +80,18 @@ const SignUpModal = () => {
       const signUpPayload = {
         username: data.username,
         email: data.email,
-        password: data.password
+        password: data.password,
       };
       await axiosPost([
         BACKEND_API_ENDPOINT.auth.signUp,
-        { data: signUpPayload }
+        { data: signUpPayload },
       ]);
       modal.close(ModalType.SIGNUP);
       modal.open(ModalType.LOGIN);
-      toast.success('SignUp Success');
+      toast.success("SignUp Success");
     } catch (error) {
       console.log(error);
-      toast.error('SignUp Failed');
+      toast.error("SignUp Failed");
     }
   };
 

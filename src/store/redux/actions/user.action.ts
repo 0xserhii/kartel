@@ -3,8 +3,8 @@ import {
   INIT_USER_DATA,
   SITE_BALANCE_UPDATE,
   SUBSCRIBE_USER,
-  USER_DATA
-} from '../reducers/user.reducer';
+  USER_DATA,
+} from "../reducers/user.reducer";
 
 export type TUserData = {
   userData: {
@@ -17,34 +17,34 @@ export type TUserData = {
 export function userData(data: any) {
   return {
     type: USER_DATA,
-    payload: data
+    payload: data,
   };
 }
 
 export function initUserData() {
   return {
     type: INIT_USER_DATA,
-    payload: null
+    payload: null,
   };
 }
 
 export function siteBalanceUpdate(wallet: { value: number; denom: string }) {
   return {
     type: SITE_BALANCE_UPDATE,
-    payload: wallet
+    payload: wallet,
   };
 }
 
 export function subscribeUserServer() {
   return {
     type: SUBSCRIBE_USER,
-    payload: null
+    payload: null,
   };
 }
 
 export function disconnectUserServer() {
   return {
     type: DISCONNECT_USER,
-    payload: null
+    payload: null,
   };
 }

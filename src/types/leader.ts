@@ -4,7 +4,7 @@ export interface LeaderboardType {
 }
 
 export enum ELeaderboardSocketEvent {
-  GET_LEADERBOARD_HISTORY = 'leaderboard-fetch-all'
+  GET_LEADERBOARD_HISTORY = "leaderboard-fetch-all",
 }
 
 export interface ILeaderboardClientToServerEvents {}

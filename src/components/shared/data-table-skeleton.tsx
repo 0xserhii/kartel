@@ -1,12 +1,12 @@
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/components/ui/table';
+  TableRow,
+} from "@/components/ui/table";
 
 type DataTableSkeletonProps = {
   columnCount: number;
@@ -21,7 +21,7 @@ export function DataTableSkeleton({
   rowCount = 10,
   searchableColumnCount = 0,
   filterableColumnCount = 0,
-  showViewOptions = true
+  showViewOptions = true,
 }: DataTableSkeletonProps) {
   return (
     <div className="w-full space-y-3 overflow-auto">

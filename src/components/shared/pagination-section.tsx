@@ -7,8 +7,8 @@ import {
   PaginationNext,
   PaginationNextLast,
   PaginationPrevious,
-  PaginationPreviousLast
-} from '@/components/ui/pagination';
+  PaginationPreviousLast,
+} from "@/components/ui/pagination";
 
 type TPaginationSectionProps = {
   totalPosts: number;
@@ -20,7 +20,7 @@ export default function PaginationSection({
   totalPosts,
   postsPerPage,
   currentPage,
-  setCurrentPage
+  setCurrentPage,
 }: TPaginationSectionProps) {
   const pageNumbers: number[] = [];
   for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
@@ -64,7 +64,7 @@ export default function PaginationSection({
     const renderedPages = activePages.map((page, idx) => (
       <PaginationItem
         key={idx}
-        className={currentPage === page ? 'rounded-md bg-primary' : ''}
+        className={currentPage === page ? "rounded-md bg-primary" : ""}
       >
         <PaginationLink onClick={() => setCurrentPage(page)}>
           {page}

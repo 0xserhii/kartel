@@ -1,35 +1,34 @@
-
 export enum EPaymentEvents {
   login = "auth",
   withdraw = "withdraw",
   deposit = "deposit",
   setAdminWallet = "set-admin-wallet",
   paymentFailed = "payment-failed",
-  updateBalance = "updateBalance"
+  updateBalance = "updateBalance",
 }
 
 export type TSocketDepositParam = {
-  amount: number,
-  currency: string,
-  address: string,
-  txHash: string
-}
+  amount: number;
+  currency: string;
+  address: string;
+  txHash: string;
+};
 
 export type TUpdateBalanceParam = {
-  walletValue: number,
-  denom: string
-}
+  walletValue: number;
+  denom: string;
+};
 
 export type TSocketWithDrawParam = {
-  amount: number,
-  currency: string,
-  address: string
-}
+  amount: number;
+  currency: string;
+  address: string;
+};
 
 export type TAdminWallet = {
-  key: string,
-  address: string
-}
+  key: string;
+  address: string;
+};
 
 export interface IPaymentClientToServerEvents {
   [EPaymentEvents.login]: (token: string) => void;

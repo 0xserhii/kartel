@@ -2,44 +2,44 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ModalType } from '@/types/modal';
-import useModal from '@/hooks/use-modal';
-import { z } from 'zod';
-import useToast from '@/hooks/use-toast';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { axiosPost, setAccessToken } from '@/utils/axios';
-import { BACKEND_API_ENDPOINT } from '@/utils/constant';
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ModalType } from "@/types/modal";
+import useModal from "@/hooks/use-modal";
+import { z } from "zod";
+import useToast from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { axiosPost, setAccessToken } from "@/utils/axios";
+import { BACKEND_API_ENDPOINT } from "@/utils/constant";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-  FormMessage
-} from '@/components/ui/form';
-import { useDispatch } from 'react-redux';
-import { userActions } from '@/store/redux/actions';
-import { useAppSelector } from '@/store/redux';
+  FormMessage,
+} from "@/components/ui/form";
+import { useDispatch } from "react-redux";
+import { userActions } from "@/store/redux/actions";
+import { useAppSelector } from "@/store/redux";
 
 const SignInSchema = z.object({
   email: z
     .string()
-    .nonempty('Email is required')
-    .email('Email must be a valid email address'),
+    .nonempty("Email is required")
+    .email("Email must be a valid email address"),
   password: z
     .string()
-    .nonempty('Password is required')
-    .min(6, 'Password must be at least 6 characters')
+    .nonempty("Password is required")
+    .min(6, "Password must be at least 6 characters"),
 });
 
 const SignInDefaultValue = {
-  email: '',
-  password: ''
+  email: "",
+  password: "",
 };
 
 const SignInModal = () => {
@@ -50,7 +50,7 @@ const SignInModal = () => {
   const isOpen = modalState.open && modalState.type === ModalType.LOGIN;
   const signInForm = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
-    defaultValues: SignInDefaultValue
+    defaultValues: SignInDefaultValue,
   });
 
   const hanndleOpenChange = async () => {
@@ -67,23 +67,23 @@ const SignInModal = () => {
     try {
       const signInPayload = {
         email: data.email,
-        password: data.password
+        password: data.password,
       };
       const resSignIn = await axiosPost([
         BACKEND_API_ENDPOINT.auth.signIn,
-        { data: signInPayload }
+        { data: signInPayload },
       ]);
       if (resSignIn?.auth?.accessToken) {
         setAccessToken(resSignIn?.auth?.accessToken);
         await dispatch(userActions.userData(resSignIn?.user));
-        toast.success('SignIn Success');
+        toast.success("SignIn Success");
         modal.close(ModalType.LOGIN);
         return;
       }
-      toast.error('SignIn Failed');
+      toast.error("SignIn Failed");
     } catch (error) {
       console.log(error);
-      toast.error('SignIn Failed');
+      toast.error("SignIn Failed");
     }
   };
 

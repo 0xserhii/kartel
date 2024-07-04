@@ -1,4 +1,4 @@
-import ConvertWrapper from './convert-wrapper';
+import ConvertWrapper from "./convert-wrapper";
 
 const crypto = window.crypto.subtle;
 
@@ -19,11 +19,11 @@ export default class AESWrapper {
 
   async importPublicKey(key: string): Promise<CryptoKey> {
     return crypto.importKey(
-      'raw',
+      "raw",
       this.converterWrapper.base64StringToArrayBuffer(key),
-      { name: 'AES-CBC' },
+      { name: "AES-CBC" },
       false,
-      ['encrypt', 'decrypt']
+      ["encrypt", "decrypt"]
     );
   }
 
@@ -45,7 +45,7 @@ export default class AESWrapper {
     const cryptoKey = await this.importPublicKey(key);
 
     const encrypted = await crypto.encrypt(
-      { name: 'AES-CBC', iv },
+      { name: "AES-CBC", iv },
       cryptoKey,
       this.converterWrapper.str2abUtf8(message)
     );
@@ -59,8 +59,8 @@ export default class AESWrapper {
 
     const decrypted = await crypto.decrypt(
       {
-        name: 'AES-CBC',
-        iv: this.converterWrapper.base64StringToArrayBuffer(data.iv)
+        name: "AES-CBC",
+        iv: this.converterWrapper.base64StringToArrayBuffer(data.iv),
       },
       cryptoKey,
       this.converterWrapper.base64StringToArrayBuffer(data.message)

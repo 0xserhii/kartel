@@ -1,14 +1,14 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { ECrashStatus } from '@/constants/status';
-import { BetType } from '@/types';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { ECrashStatus } from "@/constants/status";
+import { BetType } from "@/types";
 
 const BetBoard = ({
   betData,
   betCashout,
   totalAmount,
-  crashStatus
+  crashStatus,
 }: {
   betData: BetType[];
   betCashout: BetType[];
@@ -25,13 +25,13 @@ const BetBoard = ({
           <span className="flex flex-row items-center gap-2">
             <img src="/assets/tokens/usk.png" className="h-6 w-6" />
             <p className="text-lg text-[#049DD9]">
-              {totalAmount?.usk.toFixed(3) ?? '0.000'}
+              {totalAmount?.usk.toFixed(3) ?? "0.000"}
             </p>
           </span>
           <span className="flex flex-row items-center gap-2">
             <img src="/assets/tokens/kart.png" className="h-6 w-6" />
             <p className="text-lg text-[#049DD9]">
-              {totalAmount?.kart.toFixed(3) ?? '0.000'}
+              {totalAmount?.kart.toFixed(3) ?? "0.000"}
             </p>
           </span>
         </div>
@@ -78,10 +78,10 @@ const BetBoard = ({
                             (betCashout?.find(
                               (item) => item.playerID === player.playerID
                             )?.stoppedAt ?? 0) / 100
-                          ).toFixed(2) + 'x') ||
+                          ).toFixed(2) + "x") ||
                           (crashStatus === ECrashStatus.END
-                            ? 'bang'
-                            : 'betting')}
+                            ? "bang"
+                            : "betting")}
                       </TableCell>
                       <TableCell className="w-1/6 text-center">
                         <div className="flex w-full flex-row items-center justify-center gap-1 text-center">
@@ -106,7 +106,7 @@ const BetBoard = ({
                           </span>
                         ) : crashStatus === ECrashStatus.END ? (
                           <span className="text-purple">
-                            {'-' + player.betAmount}
+                            {"-" + player.betAmount}
                           </span>
                         ) : (
                           <span>betting</span>

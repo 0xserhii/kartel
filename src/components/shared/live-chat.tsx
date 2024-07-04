@@ -1,18 +1,18 @@
 import EmojiPicker, {
   Theme,
   EmojiClickData,
-  EmojiStyle
-} from 'emoji-picker-react';
-import { Separator } from '../ui/separator';
-import { Smile, SendHorizonal } from 'lucide-react';
-import { ScrollArea } from '../ui/scroll-area';
-import React, { useEffect, useRef, useState } from 'react';
-import useToast from '@/hooks/use-toast';
-import { Input } from '../ui/input';
-import { chatActions } from '@/store/redux/actions';
-import { useAppDispatch, useAppSelector } from '@/store/redux';
-import { getAccessToken } from '@/utils/axios';
-import { useInView } from 'react-intersection-observer';
+  EmojiStyle,
+} from "emoji-picker-react";
+import { Separator } from "../ui/separator";
+import { Smile, SendHorizonal } from "lucide-react";
+import { ScrollArea } from "../ui/scroll-area";
+import React, { useEffect, useRef, useState } from "react";
+import useToast from "@/hooks/use-toast";
+import { Input } from "../ui/input";
+import { chatActions } from "@/store/redux/actions";
+import { useAppDispatch, useAppSelector } from "@/store/redux";
+import { getAccessToken } from "@/utils/axios";
+import { useInView } from "react-intersection-observer";
 
 export type HistoryItemProps = {
   name: string;
@@ -28,7 +28,7 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
       <div className="flex flex-1 flex-col justify-between rounded-lg bg-[#4a278d4f] px-2 py-1">
         <div>
           <span className="text-sm font-medium text-gray300">
-            {name ?? 'User:'}
+            {name ?? "User:"}
           </span>
           <span className="text-xs font-medium text-gray500"> {time}</span>
         </div>
@@ -41,13 +41,13 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
 };
 
 const LiveChat = () => {
-  const [inputStr, setInputStr] = useState('');
+  const [inputStr, setInputStr] = useState("");
   const [emojiIsOpened, setEmojiIsOpened] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const userData = useAppSelector((store: any) => store.user.userData);
   const { ref: lastMessageRef, inView } = useInView({
     threshold: 0,
-    triggerOnce: false
+    triggerOnce: false,
   });
   const toast = useToast();
   const chatState = useAppSelector((state: any) => state.chat);
@@ -65,24 +65,24 @@ const LiveChat = () => {
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
     });
   };
 
   const sendMessage = () => {
     if (!inputStr) return;
-    if (userData.username === '') {
-      toast.error('Please login to chat');
+    if (userData.username === "") {
+      toast.error("Please login to chat");
       return;
     }
 
     const message = inputStr;
     try {
       dispatch(chatActions.sendMsg(message));
-      setInputStr('');
+      setInputStr("");
     } catch (error) {
       console.log(error);
     }
@@ -107,8 +107,8 @@ const LiveChat = () => {
       ) {
         setTimeout(() => {
           ref.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'end'
+            behavior: "smooth",
+            block: "end",
           });
         }, 200);
       }
@@ -129,16 +129,16 @@ const LiveChat = () => {
         <div
           className="h-2 w-2 rounded-full bg-purple"
           style={{
-            transform: 'scale(1)',
+            transform: "scale(1)",
             animation:
-              '2s ease 0s infinite normal none running animation-bubble'
+              "2s ease 0s infinite normal none running animation-bubble",
           }}
         ></div>
       </div>
       <Separator className="bg-[#4b34a7] bg-opacity-50" />
       <div className="flex flex-1 flex-col items-stretch gap-4">
         <ScrollArea
-          className={`py-3 ${emojiIsOpened ? ' max-h-[calc(80vh-300px)]' : ' max-h-[calc(80vh)]'}`}
+          className={`py-3 ${emojiIsOpened ? " max-h-[calc(80vh-300px)]" : " max-h-[calc(80vh)]"}`}
         >
           <div className="flex w-full flex-col">
             <div ref={lastMessageRef}></div>
@@ -162,7 +162,7 @@ const LiveChat = () => {
         <div className="flex h-full flex-col">
           <div className="flex h-full w-full items-center gap-2">
             <Smile
-              className={`cursor-pointer ${emojiIsOpened ? 'text-yellow' : ''}`}
+              className={`cursor-pointer ${emojiIsOpened ? "text-yellow" : ""}`}
               onClick={() => {
                 toggleIsOpened(emojiIsOpened);
               }}
@@ -174,7 +174,7 @@ const LiveChat = () => {
                 setInputStr(e.target.value);
               }}
               onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey) {
                   sendMessage();
                   e.preventDefault();
                 }
@@ -187,14 +187,14 @@ const LiveChat = () => {
           </div>
           <div className="flex w-full items-center">
             <EmojiPicker
-              height={'300px'}
-              width={'100%'}
+              height={"300px"}
+              width={"100%"}
               theme={Theme.DARK}
               emojiStyle={EmojiStyle.GOOGLE}
               previewConfig={{
-                defaultEmoji: '',
-                defaultCaption: '',
-                showPreview: false
+                defaultEmoji: "",
+                defaultCaption: "",
+                showPreview: false,
               }}
               skinTonesDisabled={true}
               open={emojiIsOpened}

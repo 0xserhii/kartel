@@ -1,5 +1,5 @@
-'use client';
-import { ReactNode, createContext, useContext, useState } from 'react';
+"use client";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 type MarketplaceContextType = {
   open: boolean;
@@ -12,7 +12,7 @@ export const useOpen = () => {
   const context = useContext(Context);
 
   if (!context) {
-    throw new Error('useOpen must be used within a chatprovider');
+    throw new Error("useOpen must be used within a chatprovider");
   }
 
   return context;

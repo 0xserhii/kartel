@@ -1,12 +1,12 @@
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import { ModalType } from '@/types/modal';
-import useModal from '@/hooks/use-modal';
-import { ChevronRight, Download } from 'lucide-react';
-import { Adapter, useWallet } from '@/provider/crypto/wallet';
-import { useState } from 'react';
-import useToast from '@/hooks/use-toast';
-import { useAppSelector } from '@/store/redux';
-import LoadingIcon from '../loading-icon';
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { ModalType } from "@/types/modal";
+import useModal from "@/hooks/use-modal";
+import { ChevronRight, Download } from "lucide-react";
+import { Adapter, useWallet } from "@/provider/crypto/wallet";
+import { useState } from "react";
+import useToast from "@/hooks/use-toast";
+import { useAppSelector } from "@/store/redux";
+import LoadingIcon from "../loading-icon";
 
 interface ITokenList {
   name: string;
@@ -15,29 +15,29 @@ interface ITokenList {
 
 const tokenList: ITokenList[] = [
   {
-    name: 'Keplr',
-    image: '/assets/tokens/keplr.svg'
+    name: "Keplr",
+    image: "/assets/tokens/keplr.svg",
   },
   {
-    name: 'Leap',
-    image: '/assets/tokens/leap.svg'
+    name: "Leap",
+    image: "/assets/tokens/leap.svg",
   },
   {
-    name: 'Cosmotation',
-    image: '/assets/tokens/cosmostation.svg'
-  }
+    name: "Cosmotation",
+    image: "/assets/tokens/cosmostation.svg",
+  },
 ];
 
 const CWalletLink = {
-  keplr: 'https://www.keplr.app/download',
-  cosmostation: 'https://www.cosmostation.io/products/cosmostation_extension',
-  leap: 'https://www.leapwallet.io'
+  keplr: "https://www.keplr.app/download",
+  cosmostation: "https://www.cosmostation.io/products/cosmostation_extension",
+  leap: "https://www.leapwallet.io",
 };
 
 const defaultLoading = {
   keplr: false,
   cosmostation: false,
-  leap: false
+  leap: false,
 };
 
 const WalletConnectModal = () => {
@@ -57,25 +57,25 @@ const WalletConnectModal = () => {
   const handleConnectWalet = async (walletType: string) => {
     try {
       switch (walletType) {
-        case 'Keplr':
+        case "Keplr":
           if (!window.keplr) {
-            window.open(CWalletLink.keplr, '_blank');
+            window.open(CWalletLink.keplr, "_blank");
             return;
           }
           setLoading((prev) => ({ ...prev, keplr: true }));
           await connect(Adapter.Keplr);
           break;
-        case 'Leap':
+        case "Leap":
           if (!window.leap) {
-            window.open(CWalletLink.leap, '_blank');
+            window.open(CWalletLink.leap, "_blank");
             return;
           }
           setLoading((prev) => ({ ...prev, leap: true }));
           await connect(Adapter.Leap);
           break;
-        case 'Cosmotation':
+        case "Cosmotation":
           if (!window.station) {
-            window.open(CWalletLink.cosmostation, '_blank');
+            window.open(CWalletLink.cosmostation, "_blank");
             return;
           }
           setLoading((prev) => ({ ...prev, cosmostation: true }));
@@ -88,7 +88,7 @@ const WalletConnectModal = () => {
       modal.open(ModalType.DEPOSIT);
       setLoading(defaultLoading);
     } catch (error) {
-      toast.error('User rejected');
+      toast.error("User rejected");
       setLoading(defaultLoading);
     }
   };
@@ -112,30 +112,30 @@ const WalletConnectModal = () => {
                   {item.name}
                 </span>
               </div>
-              {item.name === 'Keplr' &&
+              {item.name === "Keplr" &&
                 !loading.keplr &&
                 (window.keplr ? (
                   <ChevronRight className="h-5 w-5 text-white" />
                 ) : (
                   <Download className="h-5 w-5 text-white" />
                 ))}
-              {item.name === 'Leap' &&
+              {item.name === "Leap" &&
                 !loading.leap &&
                 (window.leap ? (
                   <ChevronRight className="h-5 w-5 text-white" />
                 ) : (
                   <Download className="h-5 w-5 text-white" />
                 ))}
-              {item.name === 'Cosmotation' &&
+              {item.name === "Cosmotation" &&
                 !loading.cosmostation &&
                 (window.station ? (
                   <ChevronRight className="h-5 w-5 text-white" />
                 ) : (
                   <Download className="h-5 w-5 text-white" />
                 ))}
-              {item.name === 'Keplr' && loading.keplr && <LoadingIcon />}
-              {item.name === 'Leap' && loading.leap && <LoadingIcon />}
-              {item.name === 'Cosmotation' && loading.cosmostation && (
+              {item.name === "Keplr" && loading.keplr && <LoadingIcon />}
+              {item.name === "Leap" && loading.leap && <LoadingIcon />}
+              {item.name === "Cosmotation" && loading.cosmostation && (
                 <LoadingIcon />
               )}
             </button>

@@ -1,43 +1,47 @@
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { ModalType } from '@/types/modal';
-import useModal from '@/hooks/use-modal';
-import { Input } from '@/components/ui/input';
-import { BigNumber } from '@ethersproject/bignumber';
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ModalType } from "@/types/modal";
+import useModal from "@/hooks/use-modal";
+import { Input } from "@/components/ui/input";
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { useEffect, useState } from 'react';
-import useToast from '@/hooks/use-toast';
-import { useWallet } from '@/provider/crypto/wallet';
-import { fromHumanString, msg, toHuman } from 'kujira.js';
-import AESWrapper from '@/lib/encryption/aes-wrapper';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useEffect, useState } from "react";
+import useToast from "@/hooks/use-toast";
+import { useWallet } from "@/provider/crypto/wallet";
+import { fromHumanString, msg, toHuman } from "kujira.js";
+import AESWrapper from "@/lib/encryption/aes-wrapper";
 import {
   TokenBalances,
   denoms,
   finance,
   initialBalance,
-  token
-} from '@/constants/data';
-import { useAppDispatch, useAppSelector } from '@/store/redux';
-import LoadingIcon from '../loading-icon';
-import { axiosGet } from '@/utils/axios';
-import { paymentActions } from '@/store/redux/actions';
+  token,
+} from "@/constants/data";
+import { useAppDispatch, useAppSelector } from "@/store/redux";
+import LoadingIcon from "../loading-icon";
+import { axiosGet } from "@/utils/axios";
+import { paymentActions } from "@/store/redux/actions";
 
 const DepositModal = () => {
   const modal = useModal();
   const dispatch = useAppDispatch();
-  const [modalState, paymentState, userState] = useAppSelector((state) => [state.modal, state.payment, state.user]);
+  const [modalState, paymentState, userState] = useAppSelector((state) => [
+    state.modal,
+    state.payment,
+    state.user,
+  ]);
   const isOpen = modalState.open && modalState.type === ModalType.DEPOSIT;
   const toast = useToast();
-  const [depositAmount, setDepositAmount] = useState('');
+  const [depositAmount, setDepositAmount] = useState("");
   const [selectedToken, setSelectedToken] = useState(token[0]);
   const [walletData, setWalletData] = useState<TokenBalances>(initialBalance);
-  const [selectedFinance, setSelectedFinance] = useState('Deposit');
+  const [selectedFinance, setSelectedFinance] = useState("Deposit");
 
   const aesWrapper = AESWrapper.getInstance();
   const { signAndBroadcast, account, balances, refreshBalances } = useWallet();
@@ -63,9 +67,13 @@ const DepositModal = () => {
         const withdrawParam = {
           currency: selectedToken.name,
           amount: Number(depositAmount),
-          address: account?.address
-        }
-        dispatch(paymentActions.withDraw(withdrawParam))
+          address: account?.address,
+        };
+        const encryptedParam = await aesWrapper.encryptMessage(
+          paymentState.admin.address,
+          JSON.stringify(withdrawParam)
+        );
+        dispatch(paymentActions.withDraw(encryptedParam));
       } catch (err) {
         console.log(err);
       }
@@ -73,7 +81,7 @@ const DepositModal = () => {
   };
 
   const handleDeposit = async () => {
-    dispatch(paymentActions.setTxProgress(true))
+    dispatch(paymentActions.setTxProgress(true));
     const walletAddress = await aesWrapper.decryptMessage(
       paymentState.admin.address,
       paymentState.admin.key
@@ -112,22 +120,26 @@ const DepositModal = () => {
               amount: [
                 {
                   denom: selectedToken.denom,
-                  amount: fromHumanString(depositAmount, 6).toString()
-                }
-              ]
-            })
+                  amount: fromHumanString(depositAmount, 6).toString(),
+                },
+              ],
+            }),
           ],
-          'Deposit to Kartel'
+          "Deposit to Kartel"
         );
         const depositParam = {
           currency: selectedToken.name,
           amount: Number(depositAmount),
           txHash: hashTx.transactionHash,
-          address: account?.address
-        }
-        dispatch(paymentActions.deposit(depositParam))
+          address: account?.address,
+        };
+        const encryptedData = await aesWrapper.encryptMessage(
+          paymentState.admin.address,
+          JSON.stringify(depositParam)
+        );
+        dispatch(paymentActions.deposit(encryptedData));
       } catch (err) {
-        console.warn('tx_error', err);
+        console.warn("tx_error", err);
       }
     }
   };
@@ -139,17 +151,17 @@ const DepositModal = () => {
       );
       const walletDataRes = {
         usk: response?.balance?.usk ?? 0,
-        kart: response?.balance?.kart ?? 0
+        kart: response?.balance?.kart ?? 0,
       };
       setWalletData(walletDataRes);
     } catch (error) {
-      console.error('Failed to get balance:', error);
+      console.error("Failed to get balance:", error);
     }
   };
 
   useEffect(() => {
     refreshBalances();
-  }, [paymentState.txProgress])
+  }, [paymentState.txProgress]);
 
   useEffect(() => {
     if (isOpen) {
@@ -158,10 +170,14 @@ const DepositModal = () => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (paymentState.error !== "") {
-      toast.error(paymentState.error)
+    if (paymentState.error === "Withdraw Success") {
+      toast.success("Withdraw Success");
+    } else if (paymentState.error === "Deposit Success") {
+      toast.success("Deposit Success");
+    } else if (paymentState.error !== "") {
+      toast.error(paymentState.error);
     }
-  }, [paymentState.error])
+  }, [paymentState.error]);
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
@@ -176,7 +192,7 @@ const DepositModal = () => {
             <button
               key={index}
               onClick={() => setSelectedFinance(item)}
-              className={`${selectedFinance === item ? ' border-white' : 'border-transparent'} border-b-2 p-2 text-white transition-all duration-300 ease-out`}
+              className={`${selectedFinance === item ? " border-white" : "border-transparent"} border-b-2 p-2 text-white transition-all duration-300 ease-out`}
             >
               {item}
             </button>
@@ -268,13 +284,13 @@ const DepositModal = () => {
               </DropdownMenu>
             </span>
           </div>
-          {selectedFinance === 'Withdraw' && (
+          {selectedFinance === "Withdraw" && (
             <div className="mt-2 flex flex-col gap-1">
               <span className="text-xs text-white">Wallet Address</span>
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
@@ -285,7 +301,7 @@ const DepositModal = () => {
           className="w-full gap-2 bg-purple py-5 hover:bg-purple"
           type="submit"
           onClick={
-            selectedFinance === 'Withdraw' ? handleWithdraw : handleDeposit
+            selectedFinance === "Withdraw" ? handleWithdraw : handleDeposit
           }
           disabled={paymentState.txProgress}
         >

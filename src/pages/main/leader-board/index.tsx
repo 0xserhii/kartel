@@ -1,19 +1,19 @@
-import CrashBanner from '/assets/crash.jpg';
-import CoinflipBanner from '/assets/coinflip.jpg';
-import CoinflipTitle from '/assets/coinflip-title.png';
-import CrashTitle from '/assets/crash-title.png';
-import PlayText from '/assets/play-text.svg';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
-import { ScrollBar, ScrollArea } from '@/components/ui/scroll-area';
-import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { leaderboardActions } from '@/store/redux/actions';
-import { useAppDispatch, useAppSelector } from '@/store/redux';
-import LoadingIcon from '@/components/shared/loading-icon';
+import CrashBanner from "/assets/crash.jpg";
+import CoinflipBanner from "/assets/coinflip.jpg";
+import CoinflipTitle from "/assets/coinflip-title.png";
+import CrashTitle from "/assets/crash-title.png";
+import PlayText from "/assets/play-text.svg";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { ScrollBar, ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { leaderboardActions } from "@/store/redux/actions";
+import { useAppDispatch, useAppSelector } from "@/store/redux";
+import LoadingIcon from "@/components/shared/loading-icon";
 
 const leaderboardTabs = [
-  { title: 'Crash', value: 'crash' }
+  { title: "Crash", value: "crash" },
   // { title: 'Coinflip', value: 'coinflip' }
 ];
 
@@ -39,7 +39,7 @@ export default function Leaderboard() {
               <button
                 key={index}
                 onClick={() => setActive(item.value)}
-                className={`rounded-md border border-blue-border bg-dark-blue px-6 py-2 text-sm  ${active === item.value ? 'bg-purple text-white' : 'text-gray400'}`}
+                className={`rounded-md border border-blue-border bg-dark-blue px-6 py-2 text-sm  ${active === item.value ? "bg-purple text-white" : "text-gray400"}`}
               >
                 {item.title}
               </button>
@@ -65,7 +65,7 @@ export default function Leaderboard() {
                 </TableBody>
               </Table>
             </CardHeader>
-            <CardContent className={`px-2 py-0 ${'h-[536px]'}`}>
+            <CardContent className={`px-2 py-0 ${"h-[536px]"}`}>
               {loading ? (
                 <LoadingIcon />
               ) : (
@@ -136,8 +136,8 @@ export default function Leaderboard() {
                                         <span
                                           className={
                                             Number(profit) >= 0
-                                              ? 'text-white'
-                                              : 'text-purple'
+                                              ? "text-white"
+                                              : "text-purple"
                                           }
                                         >
                                           {profit}
@@ -158,7 +158,7 @@ export default function Leaderboard() {
               )}
             </CardContent>
           </Card>
-          {active === 'crash' && (
+          {active === "crash" && (
             <div className="flex transition-all ease-in-out">
               <div className="relative rounded-md">
                 <img
@@ -181,7 +181,7 @@ export default function Leaderboard() {
               </div>
             </div>
           )}
-          {active === 'coinflip' && (
+          {active === "coinflip" && (
             <div className="flex transition-all ease-in-out">
               <div className="relative rounded-md">
                 <img

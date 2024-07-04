@@ -1,4 +1,4 @@
-import { EMinesSocketAction } from './mines.type';
+import { EMinesSocketAction } from "./mines.type";
 
 interface IMinesState {
   loginStatus: boolean;
@@ -13,9 +13,9 @@ const initialState = {
   loginStatus: false,
   gameResult: null,
   rolling: false,
-  error: '',
+  error: "",
   earned: 0,
-  mines: []
+  mines: [],
 };
 
 export default function minesReducer(
@@ -39,7 +39,7 @@ export default function minesReducer(
       return {
         ...state,
         earned: action.payload.winAmount,
-        mines: action.payload.mines
+        mines: action.payload.mines,
       };
 
     default:

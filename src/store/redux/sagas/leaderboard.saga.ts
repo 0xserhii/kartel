@@ -1,10 +1,10 @@
-import { put, call, fork, take, takeLatest, delay } from 'redux-saga/effects';
-import KartelSocket from '@/utils/socket-service';
-import { ELeaderboardSocketEvent } from '@/types/leader';
-import { ELeaderboardSocketAction } from '../reducers/leaderboard.type';
-import { eventChannel } from 'redux-saga';
-import { ILeaderType } from '../reducers/leaderboard.reducer';
-import { leaderboardActions } from '../actions';
+import { put, call, fork, take, takeLatest, delay } from "redux-saga/effects";
+import KartelSocket from "@/utils/socket-service";
+import { ELeaderboardSocketEvent } from "@/types/leader";
+import { ELeaderboardSocketAction } from "../reducers/leaderboard.type";
+import { eventChannel } from "redux-saga";
+import { ILeaderType } from "../reducers/leaderboard.reducer";
+import { leaderboardActions } from "../actions";
 
 let socketTask;
 
@@ -48,7 +48,7 @@ function* stopChannelSaga() {
 
 const sagas = [
   takeLatest(ELeaderboardSocketAction.SUBSCRIBE_LEADERBOARD, subscribeSaga),
-  takeLatest(ELeaderboardSocketAction.DISCONNECT_LEADERBOARD, stopChannelSaga)
+  takeLatest(ELeaderboardSocketAction.DISCONNECT_LEADERBOARD, stopChannelSaga),
 ];
 
 export default sagas;

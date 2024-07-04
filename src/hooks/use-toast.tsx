@@ -1,11 +1,11 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const SuccessToast = ({ content }: { content: string }) => {
   return (
     <div className="flex-row gap-2">
       <div
         className="d-flex align-items-center whitespace-nowrap text-nowrap px-2 text-sm text-white"
-        style={{ fontSize: '.9rem' }}
+        style={{ fontSize: ".9rem" }}
       >
         {content}
       </div>
@@ -17,7 +17,7 @@ const ErrorToast = ({ content }: { content: string }) => (
   <div className="flex-row gap-2">
     <div
       className="d-flex align-items-center whitespace-nowrap text-nowrap px-2 text-sm text-white"
-      style={{ fontSize: '.9rem' }}
+      style={{ fontSize: ".9rem" }}
     >
       {content}
     </div>
@@ -31,7 +31,7 @@ const useToast = () => {
     toast.error(<ErrorToast content={content} />);
   return {
     success,
-    error
+    error,
   };
 };
 
