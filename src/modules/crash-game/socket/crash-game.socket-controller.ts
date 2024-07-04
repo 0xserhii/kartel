@@ -128,10 +128,10 @@ export class CrashGameSocketController {
           ] = this.socket.id;
           logger.info(
             this.logoPrefix +
-              "User connect userId: " +
-              user._id +
-              " socketId: " +
-              this.socket.id
+            "User connect userId: " +
+            user._id +
+            " socketId: " +
+            this.socket.id
           );
           // this.socket.emit("notify-success", "Successfully authenticated!");
         }
@@ -139,7 +139,7 @@ export class CrashGameSocketController {
       // this.socket.emit("notify-error", "Authentication token is not valid");
     } catch (error) {
       this.loggedIn = false;
-      console.log("error handle", error);
+      logger.error(this.logoPrefix + "auth error handle " + error);
       this.user = null;
       this.socket.emit("notify-error", "Authentication token is not valid");
     }
@@ -249,7 +249,8 @@ export class CrashGameSocketController {
     data: TJoinGamePayload,
     emitPlayersBet: () => void
   ) => {
-    const { target, betAmount, denom } = data;
+
+    const { target, betAmount: crashBetAmount, denom } = data;
 
     if (!this.loggedIn) {
       return this.socket.emit("game-join-error", "You are not logged in!");
@@ -257,7 +258,7 @@ export class CrashGameSocketController {
 
     const userId = this.user!._id.toString();
 
-    if (typeof betAmount !== "number" || isNaN(betAmount)) {
+    if (typeof crashBetAmount !== "number" || isNaN(crashBetAmount)) {
       return this.socket.emit("game-join-error", "Invalid betAmount type!");
     }
 
@@ -298,7 +299,7 @@ export class CrashGameSocketController {
     }
 
     CrashGameSocketController.gameStatus.pending[userId] = {
-      betAmount,
+      betAmount: crashBetAmount,
       denom,
       autoCashOut,
       username: this.user!.username,
@@ -327,7 +328,7 @@ export class CrashGameSocketController {
 
       // If user can afford this bet
       if (
-        (this.user!.wallet?.[denom] ?? 0) < parseFloat(betAmount.toFixed(2))
+        (this.user!.wallet?.[denom] ?? 0) < parseFloat(crashBetAmount.toFixed(2))
       ) {
         delete CrashGameSocketController.gameStatus.pending[userId];
         CrashGameSocketController.gameStatus.pendingCount--;
@@ -339,40 +340,34 @@ export class CrashGameSocketController {
 
       const newWalletValue =
         (this.user!.wallet?.[denom] || 0) -
-        Math.abs(parseFloat(betAmount.toFixed(2)));
+        Math.abs(parseFloat(crashBetAmount.toFixed(2)));
       const newWagerValue =
         (this.user!.wager?.[denom] || 0) +
-        Math.abs(parseFloat(betAmount.toFixed(2)));
+        Math.abs(parseFloat(crashBetAmount.toFixed(2)));
       const newWagerNeededForWithdrawValue =
         (this.user!.wagerNeededForWithdraw?.[denom] || 0) +
-        Math.abs(parseFloat(betAmount.toFixed(2)));
+        Math.abs(parseFloat(crashBetAmount.toFixed(2)));
       const newLeaderboardValue =
         (this.user!.leaderboard?.["crash"]?.[denom]?.betAmount || 0) +
-        Math.abs(parseFloat(betAmount.toFixed(2)));
+        Math.abs(parseFloat(crashBetAmount.toFixed(2)));
 
-      console.log({
-        newvalue: newWalletValue,
-        original: this.user!.wallet?.[denom],
-        betAmount: betAmount,
-      });
       // Remove bet amount from user's balance
-      await this.userService.update(
-        { _id: userId },
-        {
-          $set: {
-            [`wallet.${denom}`]: newWalletValue,
-            [`wagar.${denom}`]: newWagerValue,
-            [`wagerNeededForWithdraw.${denom}`]: newWagerNeededForWithdrawValue,
-            [`leaderboard.crash.${denom}.betAmount`]: newLeaderboardValue,
-          },
-        }
-      );
+      this.user = await this.userService.updateById(userId, {
+        $set: {
+          [`wallet.${denom}`]: newWalletValue,
+          [`wager.${denom}`]: newWagerValue,
+          [`wagerNeededForWithdraw.${denom}`]: newWagerNeededForWithdrawValue,
+          [`leaderboard.crash.${denom}.betAmount`]: newLeaderboardValue,
+        },
+      });
+
       const newWalletTxData = {
         userId,
-        amount: -Math.abs(parseFloat(betAmount.toFixed(2))),
+        amount: -Math.abs(parseFloat(crashBetAmount.toFixed(2))),
         type: "Crash play",
         crashGameId: CrashGameSocketController.gameStatus._id,
       };
+
       await this.walletTransactionService.create(newWalletTxData);
 
       // Update local wallet
@@ -381,7 +376,7 @@ export class CrashGameSocketController {
       // Creating new bet object
       const newBet = {
         autoCashOut,
-        betAmount,
+        betAmount: crashBetAmount,
         denom,
         createdAt: new Date(),
         playerID: userId,
@@ -519,10 +514,8 @@ export class CrashGameSocketController {
   ) => {
     if (this.loggedIn && this.user) {
       try {
-        const dbUser = await this.userService.getItem({ _id: this.user._id });
-
         // Check if user is banned
-        if (dbUser && parseInt(dbUser.banExpires) > new Date().getTime()) {
+        if (this.user && parseInt(this.user.banExpires) > new Date().getTime()) {
           return this.socket.emit("user banned");
         } else {
           return next();

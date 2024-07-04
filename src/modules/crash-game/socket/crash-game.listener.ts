@@ -255,7 +255,7 @@ class CrashGameSocketListener {
           // If user is self-excluded
           if (user?.selfExcludes?.crash > Date.now()) {
             await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-            delete CrashGameSocketController.gameStatus.pending[user.id];
+            delete CrashGameSocketController.gameStatus.pending[user._id];
             CrashGameSocketController.gameStatus.pendingCount--;
             this.socketServer
               .to(String(user._id))
@@ -268,7 +268,7 @@ class CrashGameSocketListener {
           // If user has restricted bets
           if (user?.betsLocked) {
             await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-            delete CrashGameSocketController.gameStatus.pending[user.id];
+            delete CrashGameSocketController.gameStatus.pending[user._id];
             CrashGameSocketController.gameStatus.pendingCount--;
             this.socketServer
               .to(String(user._id))
@@ -281,7 +281,7 @@ class CrashGameSocketListener {
           // If user can afford this bet
           if ((user?.wallet?.[denom] ?? 0) < parseFloat(betAmount.toFixed(2))) {
             await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-            delete CrashGameSocketController.gameStatus.pending[user.id];
+            delete CrashGameSocketController.gameStatus.pending[user._id];
             CrashGameSocketController.gameStatus.pendingCount--;
             this.socketServer
               .to(String(user._id))
@@ -293,7 +293,7 @@ class CrashGameSocketListener {
 
           if (count <= 0) {
             await this.autoCrashBetService.deleteById(autoBetPlayer._id);
-            delete CrashGameSocketController.gameStatus.pending[user.id];
+            delete CrashGameSocketController.gameStatus.pending[user._id];
             CrashGameSocketController.gameStatus.pendingCount--;
             this.socketServer
               .to(String(user._id))
@@ -332,7 +332,7 @@ class CrashGameSocketListener {
           });
 
           const newWalletTxData = {
-            _user: new mongoose.Types.ObjectId(user.id),
+            _user: new mongoose.Types.ObjectId(user._id),
             amount: Math.abs(betAmount.toFixed(2)),
             reason: "Crash play",
             extraData: {
@@ -383,7 +383,7 @@ class CrashGameSocketListener {
           };
           // Updating in db
           const updateParam = { $set: {} };
-          updateParam.$set["players." + user.id] = newBet;
+          updateParam.$set["players." + user._id] = newBet;
           await this.crashGameService.updateById(
             CrashGameSocketController.gameStatus._id as any,
             updateParam
@@ -406,8 +406,8 @@ class CrashGameSocketListener {
     } catch (error) {
       logger.error(
         this.logoPrefix +
-          "Error while starting a crash game with auto bets:" +
-          error
+        "Error while starting a crash game with auto bets:" +
+        error
       );
     }
 
@@ -517,7 +517,7 @@ class CrashGameSocketListener {
       if (CrashGameSocketController.gameStatus.pendingCount > 0) {
         logger.info(
           this.logoPrefix +
-            `Crash >> Delaying game while waiting for ${ids.length} (${ids.join(", ")}) join(s)`
+          `Crash >> Delaying game while waiting for ${ids.length} (${ids.join(", ")}) join(s)`
         );
         return setTimeout(loop, 50);
       }
@@ -542,7 +542,7 @@ class CrashGameSocketListener {
       CrashGameSocketController.gameStatus.publicSeed = randomData.publicSeed;
       CrashGameSocketController.gameStatus.duration = Math.ceil(
         16666.666667 *
-          Math.log(0.01 * (CrashGameSocketController.gameStatus.crashPoint + 1))
+        Math.log(0.01 * (CrashGameSocketController.gameStatus.crashPoint + 1))
       );
       CrashGameSocketController.gameStatus.startedAt = new Date();
       CrashGameSocketController.gameStatus.pending = {};
@@ -550,7 +550,7 @@ class CrashGameSocketListener {
 
       logger.info(
         this.logoPrefix +
-          `Starting new game ${CrashGameSocketController.gameStatus._id} with crash point ${CrashGameSocketController.gameStatus.crashPoint / 100}`
+        `Starting new game ${CrashGameSocketController.gameStatus._id} with crash point ${CrashGameSocketController.gameStatus.crashPoint / 100}`
       );
 
       // Updating in db
@@ -641,7 +641,7 @@ class CrashGameSocketListener {
             if (err) {
               logger.error(
                 this.logoPrefix +
-                  `There was an error while trying to cashout ${err}`
+                `There was an error while trying to cashout ${err}`
               );
             }
           }
@@ -655,7 +655,7 @@ class CrashGameSocketListener {
           if (err) {
             logger.error(
               this.logoPrefix +
-                `There was an error while trying to cashout ${err}`
+              `There was an error while trying to cashout ${err}`
             );
           }
         });
@@ -813,7 +813,7 @@ class CrashGameSocketListener {
   public endGame = async () => {
     logger.info(
       this.logoPrefix +
-        `Ending game at ${CrashGameSocketController.gameStatus.crashPoint! / 100}`
+      `Ending game at ${CrashGameSocketController.gameStatus.crashPoint! / 100}`
     );
 
     const crashTime = Date.now();
