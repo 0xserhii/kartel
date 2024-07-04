@@ -24,7 +24,7 @@ const createSocket = <ServerEvents, ClientEvents>(
   namespace: string
 ): Socket<any, any> => {
   return io(`${SERVER_URL}/${namespace}`,
-    { parser: customParser }
+    // { parser: customParser }
   );
 };
 
@@ -48,16 +48,22 @@ const minesSocket = createSocket<
   IMinesClientToServerEvents
 >('mines');
 
-const userSocket = createSocket<
+const crashSocket = createSocket<
   IUserServerToClientEvents,
   IUserClientToServerEvents
 >('crash');
+
+const paymentSocket = createSocket<
+  IUserServerToClientEvents,
+  IUserClientToServerEvents
+>('payment');
 
 const KartelSocket = {
   chat: chatSocket,
   coinflip: coinflipSocket,
   leaderboard: leaderboardSocket,
-  user: userSocket,
+  crash: crashSocket,
+  payment: paymentSocket,
   mines: minesSocket
 };
 

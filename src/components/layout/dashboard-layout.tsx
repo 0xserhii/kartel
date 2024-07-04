@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MenuIcon } from 'lucide-react';
 import Sidebar from '../shared/sidebar';
 import Header from '../shared/header';
@@ -6,6 +6,9 @@ import MobileSidebar from '../shared/mobile-sidebar';
 import MobileLivechat from '../shared/mobile-livechat';
 import LiveChat from '../shared/live-chat';
 import { useOpen } from '@/provider/chat-provider';
+import { useAppDispatch } from '@/store/redux';
+import { getAccessToken } from '@/utils/axios';
+import { paymentActions } from '@/store/redux/actions';
 
 export default function DashboardLayout({
   children
@@ -15,7 +18,15 @@ export default function DashboardLayout({
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [liveChatOpen, setLiveChatOpen] = useState<boolean>(false);
   const { open } = useOpen();
+  const dispatch = useAppDispatch()
 
+  useEffect(() => {
+    dispatch(paymentActions.loginPaymentServer())
+  }, [getAccessToken()])
+
+  useEffect(() => {
+    dispatch(paymentActions.subscribePaymentServer())
+  }, [])
   return (
     <div className="flex h-screen bg-opacity-90 bg-gradient-to-b from-dark-0.7 to-dark bg-blend-multiply">
       <div className="absolute z-20 flex h-full w-full items-center justify-center backdrop-blur-lg lg:hidden">

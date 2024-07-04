@@ -1,4 +1,5 @@
 export * as chatActions from './chat.action';
+export * as paymentActions from './payment.action';
 export * as leaderboardActions from './leaderboard.actions';
 export * as coinflipActions from './coinflip.actions';
 export * as modalActions from './modal.action';
