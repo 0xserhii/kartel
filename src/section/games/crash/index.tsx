@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Socket, io } from 'socket.io-client';
-// import customParser from 'socket.io-msgpack-parser';
+import customParser from 'socket.io-msgpack-parser';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -198,7 +198,7 @@ export default function CrashGameSection() {
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
     > = io(`${SERVER_URL}/crash`,
-      // { parser: customParser }
+      { parser: customParser }
     );
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
@@ -257,10 +257,10 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
-      setBetData(data.players);
+      setBetCashout(data.players);
       if (user && user.betAmount) {
         setAutoBet(false);
-        // setBetAmount(Number(user?.betAmount));
+        setBetAmount(Number(user?.betAmount));
         setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
       }
       const totals = calculateTotals(data.players);
@@ -301,6 +301,7 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
+      console.log(data.userdata);
     });
 
     crashSocket.emit('auth', getAccessToken());
