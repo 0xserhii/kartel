@@ -1,5 +1,5 @@
-import { LeaderboardType } from '@/types/leader';
-import { ELeaderboardSocketAction } from './leaderboard.type';
+import { LeaderboardType } from "@/types/leader";
+import { ELeaderboardSocketAction } from "./leaderboard.type";
 
 export interface ILeaderType {
   _id: string;
@@ -22,8 +22,8 @@ interface ILeaderboardState {
 const initialState: ILeaderboardState = {
   leaderboardHistory: {
     crash: [],
-    coinflip: []
-  }
+    coinflip: [],
+  },
 };
 
 export default function leaderboardReducer(
@@ -34,7 +34,7 @@ export default function leaderboardReducer(
     case ELeaderboardSocketAction.GET_LEADERBOARD_HISTORY:
       return {
         ...state,
-        leaderboardHistory: action.payload as TLeaderboardHistory
+        leaderboardHistory: action.payload as TLeaderboardHistory,
       };
 
     case ELeaderboardSocketAction.DISCONNECT_LEADERBOARD:

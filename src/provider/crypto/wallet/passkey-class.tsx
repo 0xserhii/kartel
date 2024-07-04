@@ -1,8 +1,8 @@
-import { AccountData, EncodeObject, coins } from '@cosmjs/proto-signing';
-import { DeliverTxResponse, GasPrice } from '@cosmjs/stargate';
-import { Tendermint37Client } from '@cosmjs/tendermint-rpc';
-import { ChainInfo, Window as KeplrWindow } from '@keplr-wallet/types';
-import { AuthnClient, AuthnSigner, accountParser, registry } from 'kujira.js';
+import { AccountData, EncodeObject, coins } from "@cosmjs/proto-signing";
+import { DeliverTxResponse, GasPrice } from "@cosmjs/stargate";
+import { Tendermint37Client } from "@cosmjs/tendermint-rpc";
+import { ChainInfo, Window as KeplrWindow } from "@keplr-wallet/types";
+import { AuthnClient, AuthnSigner, accountParser, registry } from "kujira.js";
 
 declare global {
   interface Window extends KeplrWindow {}
@@ -40,12 +40,12 @@ export class Passkey {
     const tmClient = await Tendermint37Client.connect(rpc);
     const client = await AuthnClient.createWithSigner(tmClient, this.signer, {
       registry,
-      gasPrice: GasPrice.fromString('0.034ukuji'),
-      accountParser
+      gasPrice: GasPrice.fromString("0.034ukuji"),
+      accountParser,
     });
     return await client.signAndBroadcast(this.account.address, msgs, {
-      amount: coins(12500, 'ukuji'),
-      gas: '1000000'
+      amount: coins(12500, "ukuji"),
+      gas: "1000000",
     });
   };
 }

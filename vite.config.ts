@@ -1,9 +1,9 @@
-import path from 'path';
-import react from '@vitejs/plugin-react-swc';
-import { defineConfig } from 'vite';
-import dotenv from 'dotenv';
-import obfuscator from 'rollup-plugin-obfuscator';
-import babel from 'vite-plugin-babel';
+import path from "path";
+import react from "@vitejs/plugin-react-swc";
+import { defineConfig } from "vite";
+import dotenv from "dotenv";
+import obfuscator from "rollup-plugin-obfuscator";
+import babel from "vite-plugin-babel";
 
 dotenv.config();
 
@@ -11,18 +11,18 @@ export default defineConfig({
   plugins: [react(), babel()],
   server: {
     port: 3000,
-    host: '0.0.0.0'
+    host: "0.0.0.0",
   },
   build: {
     terserOptions: {
       compress: {
-        drop_console: true
+        drop_console: true,
         // drop_debugger: true
       },
       mangle: true,
       output: {
-        comments: false // Remove comments
-      }
+        comments: false, // Remove comments
+      },
     },
     rollupOptions: {
       plugins: [
@@ -37,7 +37,7 @@ export default defineConfig({
             // debugProtection: true,
             // debugProtectionInterval: 3000,
             disableConsoleOutput: true,
-            identifierNamesGenerator: 'hexadecimal',
+            identifierNamesGenerator: "hexadecimal",
             log: false,
             numbersToExpressions: true,
             renameGlobals: false,
@@ -46,20 +46,20 @@ export default defineConfig({
             splitStrings: true,
             splitStringsChunkLength: 10,
             stringArray: true,
-            stringArrayEncoding: ['rc4'],
+            stringArrayEncoding: ["rc4"],
             stringArrayThreshold: 0.75,
-            unicodeEscapeSequence: false
-          }
-        })
-      ]
-    }
+            unicodeEscapeSequence: false,
+          },
+        }),
+      ],
+    },
   },
   define: {
-    'process.env': JSON.stringify(process.env) // Provide process.env to the client
+    "process.env": JSON.stringify(process.env), // Provide process.env to the client
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  }
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
 });

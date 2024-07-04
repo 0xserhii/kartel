@@ -9,7 +9,7 @@ export default class ConvertWrapper {
   }
 
   public arrayBufferToUtf8(arrayBuffer: ArrayBuffer): string {
-    return new TextDecoder('utf-8').decode(arrayBuffer);
+    return new TextDecoder("utf-8").decode(arrayBuffer);
   }
 
   public base64StringToArrayBuffer(base64: string): ArrayBuffer {
@@ -23,19 +23,19 @@ export default class ConvertWrapper {
   }
 
   public convertPemToBinary2(pem: string): string {
-    const lines = pem.split('\n');
-    let encoded = '';
+    const lines = pem.split("\n");
+    let encoded = "";
     for (const line of lines) {
       if (
         line.trim().length > 0 &&
-        !line.includes('-BEGIN RSA PRIVATE KEY-') &&
-        !line.includes('-BEGIN RSA PUBLIC KEY-') &&
-        !line.includes('-BEGIN PRIVATE KEY-') &&
-        !line.includes('-BEGIN PUBLIC KEY-') &&
-        !line.includes('-END PUBLIC KEY-') &&
-        !line.includes('-END RSA PRIVATE KEY-') &&
-        !line.includes('-END PRIVATE KEY-') &&
-        !line.includes('-END RSA PUBLIC KEY-')
+        !line.includes("-BEGIN RSA PRIVATE KEY-") &&
+        !line.includes("-BEGIN RSA PUBLIC KEY-") &&
+        !line.includes("-BEGIN PRIVATE KEY-") &&
+        !line.includes("-BEGIN PUBLIC KEY-") &&
+        !line.includes("-END PUBLIC KEY-") &&
+        !line.includes("-END RSA PRIVATE KEY-") &&
+        !line.includes("-END PRIVATE KEY-") &&
+        !line.includes("-END RSA PUBLIC KEY-")
       ) {
         encoded += line.trim();
       }
@@ -49,7 +49,7 @@ export default class ConvertWrapper {
 
   public arrayBufferToBase64String(arrayBuffer: ArrayBuffer): string {
     const byteArray = new Uint8Array(arrayBuffer);
-    let byteString = '';
+    let byteString = "";
     for (let i = 0; i < byteArray.byteLength; i++) {
       byteString += String.fromCharCode(byteArray[i]);
     }

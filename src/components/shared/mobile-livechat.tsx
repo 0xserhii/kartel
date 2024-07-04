@@ -1,6 +1,6 @@
-import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { Dispatch, SetStateAction } from 'react';
-import LiveChat from './live-chat';
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Dispatch, SetStateAction } from "react";
+import LiveChat from "./live-chat";
 
 type TMobileLivechatProps = {
   className?: string;
@@ -9,7 +9,7 @@ type TMobileLivechatProps = {
 };
 export default function MobileLivechat({
   setLivechatOpen,
-  livechatOpen
+  livechatOpen,
 }: TMobileLivechatProps) {
   return (
     <>

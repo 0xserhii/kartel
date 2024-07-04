@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga';
+import { eventChannel } from "redux-saga";
 
 import {
   put,
@@ -8,14 +8,14 @@ import {
   cancel,
   takeLatest,
   takeEvery,
-  delay
-} from 'redux-saga/effects';
+  delay,
+} from "redux-saga/effects";
 
-import { coinflipActions, userActions } from '../actions';
-import { getAccessToken } from '@/utils/axios';
-import KartelSocket from '@/utils/socket-service';
-import { ECoinflipSocketEvent } from '@/types/coinflip';
-import { ECoinflipSocketAction } from '../reducers/coinflip.type';
+import { coinflipActions, userActions } from "../actions";
+import { getAccessToken } from "@/utils/axios";
+import KartelSocket from "@/utils/socket-service";
+import { ECoinflipSocketEvent } from "@/types/coinflip";
+import { ECoinflipSocketAction } from "../reducers/coinflip.type";
 
 let socketTask;
 
@@ -30,7 +30,7 @@ function subscribe(socket) {
     });
 
     socket.on(ECoinflipSocketEvent.COINFLIPGAME_JOIN_SUCCESS, () => {
-      emit(coinflipActions.receiveMsg('Game joined successfully'));
+      emit(coinflipActions.receiveMsg("Game joined successfully"));
     });
 
     socket.on(ECoinflipSocketEvent.UPDATE_WALLET, (amount) => {
@@ -107,7 +107,7 @@ const sagas = [
   takeEvery(
     ECoinflipSocketAction.CREATE_NEW_COINFLIPGAME,
     startCoinflipgameSaga
-  )
+  ),
 ];
 
 export default sagas;

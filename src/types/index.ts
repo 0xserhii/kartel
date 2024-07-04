@@ -1,7 +1,7 @@
-export * from './socket';
-export * from './chat';
-export * from './vipLevel';
-export * from './crashGame';
+export * from "./socket";
+export * from "./chat";
+export * from "./vipLevel";
+export * from "./crashGame";
 
 export interface NavItem {
   title: string;

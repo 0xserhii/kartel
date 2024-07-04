@@ -1,4 +1,4 @@
-import { ECoinflipSocketAction } from './coinflip.type';
+import { ECoinflipSocketAction } from "./coinflip.type";
 
 type ICoinflipData = {
   _id: string;
@@ -17,15 +17,15 @@ interface ICoinflipState {
 
 const initialState = {
   gameData: {
-    _id: '',
+    _id: "",
     randomModule: 0,
     coinflipResult: [true],
-    isEarn: false
+    isEarn: false,
   },
   winAmount: 0,
   loginStatus: false,
-  msg: '',
-  gameStatus: false
+  msg: "",
+  gameStatus: false,
 };
 
 export default function coinflipReducer(
@@ -40,7 +40,7 @@ export default function coinflipReducer(
       return {
         ...state,
         gameData: { ...state.gameData, ...(action.payload as ICoinflipData) },
-        gameStatus: true
+        gameStatus: true,
       };
 
     case ECoinflipSocketAction.UPDATE_WALLET:
@@ -57,7 +57,7 @@ export default function coinflipReducer(
         ...state,
         gameStatus: false,
         gameData: initialState.gameData,
-        msg: ''
+        msg: "",
       };
 
     default:

@@ -1,47 +1,18 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
-import rootSaga from './sagas';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import storage from 'redux-persist/lib/storage';
-import { persistReducer, persistStore } from 'redux-persist';
-
-// reducers
-import userReducer from './reducers/user.reducer';
-import chatReducer from './reducers/chat.reducer';
-import leaderboardReducer from './reducers/leaderboard.reducer';
-import coinflipReducer from './reducers/coinflip.reducer';
-import minesReducer from './reducers/mines.reducer';
-import modalReducer from './reducers/modal.reducer';
-import settingsReducer from './reducers/settings.reducer';
+import { configureStore } from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
+import rootSaga from "./sagas";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { persistStore } from "redux-persist";
+import rootReducer from "./reducers";
 
 const sagaMiddleware = createSagaMiddleware();
-
-const userPersistConfig = {
-  key: 'user',
-  storage: storage
-};
-
-const settingsPersistConfig = {
-  key: 'settings',
-  storage: storage
-};
-
-const rootReducer = combineReducers({
-  user: persistReducer(userPersistConfig, userReducer),
-  settings: persistReducer(settingsPersistConfig, settingsReducer),
-  chat: chatReducer,
-  leaderboard: leaderboardReducer,
-  coinflip: coinflipReducer,
-  mines: minesReducer,
-  modal: modalReducer
-});
 
 const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false
-    }).concat(sagaMiddleware)
+      serializableCheck: false,
+    }).concat(sagaMiddleware),
 });
 
 sagaMiddleware.run(rootSaga);

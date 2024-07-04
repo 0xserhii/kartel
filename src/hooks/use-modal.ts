@@ -1,6 +1,6 @@
-import { ModalType } from './../types/modal';
-import { closeModal, openModal } from '@/store/redux/actions/modal.action';
-import { useDispatch } from 'react-redux';
+import { ModalType } from "./../types/modal";
+import { closeModal, openModal } from "@/store/redux/actions/modal.action";
+import { useDispatch } from "react-redux";
 
 export default function useModal() {
   const dispatch = useDispatch();

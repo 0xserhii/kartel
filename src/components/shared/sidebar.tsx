@@ -1,14 +1,14 @@
-import { navItems } from '@/constants/data';
-import DashboardNav from './dashboard-nav';
-import { Link } from 'react-router-dom';
-import Logo from '/assets/logo.png';
-import Deposit from '/assets/deposit-icon.svg';
-import { ScrollArea } from '../ui/scroll-area';
-import useModal from '@/hooks/use-modal';
-import { ModalType } from '@/types/modal';
-import { useAppSelector } from '@/store/redux';
-import useToast from '@/hooks/use-toast';
-import { useWallet } from '@/provider/crypto/wallet';
+import { navItems } from "@/constants/data";
+import DashboardNav from "./dashboard-nav";
+import { Link } from "react-router-dom";
+import Logo from "/assets/logo.png";
+import Deposit from "/assets/deposit-icon.svg";
+import { ScrollArea } from "../ui/scroll-area";
+import useModal from "@/hooks/use-modal";
+import { ModalType } from "@/types/modal";
+import { useAppSelector } from "@/store/redux";
+import useToast from "@/hooks/use-toast";
+import { useWallet } from "@/provider/crypto/wallet";
 
 export default function Sidebar() {
   const modal = useModal();
@@ -17,11 +17,11 @@ export default function Sidebar() {
   const userData = useAppSelector((store: any) => store.user.userData);
 
   const handleDeposit = async () => {
-    if (userData?.username === '') {
-      toast.error('Please login to deposit');
+    if (userData?.username === "") {
+      toast.error("Please login to deposit");
       return;
     }
-    if (!account?.address || account?.address === '') {
+    if (!account?.address || account?.address === "") {
       modal.open(ModalType.WALLETCONNECT);
       return;
     }

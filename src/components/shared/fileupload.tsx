@@ -1,21 +1,21 @@
-import { AvatarIcon } from '@radix-ui/react-icons';
-import { CameraIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Accept, useDropzone } from 'react-dropzone';
+import { AvatarIcon } from "@radix-ui/react-icons";
+import { CameraIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Accept, useDropzone } from "react-dropzone";
 
 type TFileUploadProps = {
   onChange: (value: File[]) => void;
   value: File[];
 };
 export default function FileUpload({ onChange, value }: TFileUploadProps) {
-  console.log('files=>', value);
+  console.log("files=>", value);
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*' as unknown as Accept,
+    accept: "image/*" as unknown as Accept,
     onDrop: (acceptedFiles: File[]) => {
-      console.log('files acceptedFiles=>', acceptedFiles);
+      console.log("files acceptedFiles=>", acceptedFiles);
       onUpdateFile(acceptedFiles);
-    }
+    },
   });
 
   const onUpdateFile = (newFiles: File[]) => {
@@ -24,7 +24,7 @@ export default function FileUpload({ onChange, value }: TFileUploadProps) {
   return (
     <div className="flex items-center justify-center">
       <div className="relative h-36 w-36 overflow-hidden rounded-full bg-gray-200 shadow-2xl ">
-        <div {...getRootProps({ className: 'dropzone cursor-pointer' })}>
+        <div {...getRootProps({ className: "dropzone cursor-pointer" })}>
           <input {...getInputProps()} />
           {value && !!value.length ? (
             <ImagePreview file={value[0]} />

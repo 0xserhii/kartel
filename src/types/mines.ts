@@ -1,11 +1,11 @@
 export enum EMinesSocketEvent {
-  LOGIN = 'auth',
-  CREATE_NEW_MINESGAME = 'create-new-minesgame',
-  MINESGAME_ROLLED = 'minesgame-rolled',
-  MINESGAME_ENDED = 'minesgame-ended',
-  MINES_ROLLING = 'mines-rolling',
-  GAME_CREATION_ERROR = 'game-creation-error',
-  MINES_CASHOUT = 'mines-cashout'
+  LOGIN = "auth",
+  CREATE_NEW_MINESGAME = "create-new-minesgame",
+  MINESGAME_ROLLED = "minesgame-rolled",
+  MINESGAME_ENDED = "minesgame-ended",
+  MINES_ROLLING = "mines-rolling",
+  GAME_CREATION_ERROR = "game-creation-error",
+  MINES_CASHOUT = "mines-cashout",
 }
 
 export interface IMinesServerToClientEvents {

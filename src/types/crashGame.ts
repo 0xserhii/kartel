@@ -1,4 +1,4 @@
-import VIPLevelType from './vipLevel';
+import VIPLevelType from "./vipLevel";
 
 export interface IToken {
   name: string;
@@ -45,26 +45,26 @@ export interface PendingBetType {
 
 export type FormattedPlayerBetType = Pick<
   BetType,
-  | 'playerID'
-  | 'username'
-  | 'avatar'
-  | 'betAmount'
-  | 'status'
-  | 'level'
-  | 'stoppedAt'
-  | 'winningAmount'
-  | 'denom'
+  | "playerID"
+  | "username"
+  | "avatar"
+  | "betAmount"
+  | "status"
+  | "level"
+  | "stoppedAt"
+  | "winningAmount"
+  | "denom"
 >;
 
 export interface FormattedGameHistoryType
   extends Pick<
     GameStateType,
-    | '_id'
-    | 'privateHash'
-    | 'privateSeed'
-    | 'publicSeed'
-    | 'crashPoint'
-    | 'createdAt'
+    | "_id"
+    | "privateHash"
+    | "privateSeed"
+    | "publicSeed"
+    | "crashPoint"
+    | "createdAt"
   > {}
 
 interface LevelInfo {

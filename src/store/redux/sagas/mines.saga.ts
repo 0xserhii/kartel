@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga';
+import { eventChannel } from "redux-saga";
 
 import {
   put,
@@ -8,14 +8,14 @@ import {
   cancel,
   takeLatest,
   takeEvery,
-  delay
-} from 'redux-saga/effects';
+  delay,
+} from "redux-saga/effects";
 
-import { minesActions } from '../actions';
-import { getAccessToken } from '@/utils/axios';
-import KartelSocket from '@/utils/socket-service';
-import { EMinesSocketEvent } from '@/types/mines';
-import { EMinesSocketAction } from '../reducers/mines.type';
+import { minesActions } from "../actions";
+import { getAccessToken } from "@/utils/axios";
+import KartelSocket from "@/utils/socket-service";
+import { EMinesSocketEvent } from "@/types/mines";
+import { EMinesSocketAction } from "../reducers/mines.type";
 
 let socketTask;
 
@@ -76,7 +76,7 @@ function* stopChanelSaga() {
   yield cancel(socketTask);
 }
 
-function* cashoutMinesgameSaga(action) {
+function* cashoutMinesgameSaga() {
   yield delay(300);
   KartelSocket.mines.emit(EMinesSocketEvent.MINES_CASHOUT);
 }
@@ -100,7 +100,7 @@ const sagas = [
   takeLatest(EMinesSocketAction.SUBSCRIBE_MINES, subscribeSaga),
   takeEvery(EMinesSocketAction.CREATE_NEW_MINESGAME, startMinesgameSaga),
   takeEvery(EMinesSocketAction.MINES_ROLLING, rollingMinesgameSaga),
-  takeEvery(EMinesSocketAction.CASHOUT_MINESGAME, cashoutMinesgameSaga)
+  takeEvery(EMinesSocketAction.CASHOUT_MINESGAME, cashoutMinesgameSaga),
 ];
 
 export default sagas;

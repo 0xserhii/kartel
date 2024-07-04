@@ -1,37 +1,37 @@
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Link } from 'react-router-dom';
-import InvitedFriends from '/assets/invitefriends.jpg';
-import BlackJack from '/assets/blackjack.jpg';
-import BlackJackTitle from '/assets/blackjack-title.png';
-import InviteTitle from '/assets/invite-title.png';
-import HorseRacing from '/assets/horseracing.jpg';
-import HorseRacingTitle from '/assets/horserace-title.png';
-import Roulette from '/assets/roulette.jpg';
-import RouletteTitle from '/assets/roulette-title.png';
-import Slots from '/assets/slots.jpg';
-import SlotsTitle from '/assets/slots-title.png';
-import Playnow from '/assets/playnow.svg';
-import ComingSoonTitle from '/assets/coming-soon.png';
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "react-router-dom";
+import InvitedFriends from "/assets/invitefriends.jpg";
+import BlackJack from "/assets/blackjack.jpg";
+import BlackJackTitle from "/assets/blackjack-title.png";
+import InviteTitle from "/assets/invite-title.png";
+import HorseRacing from "/assets/horseracing.jpg";
+import HorseRacingTitle from "/assets/horserace-title.png";
+import Roulette from "/assets/roulette.jpg";
+import RouletteTitle from "/assets/roulette-title.png";
+import Slots from "/assets/slots.jpg";
+import SlotsTitle from "/assets/slots-title.png";
+import Playnow from "/assets/playnow.svg";
+import ComingSoonTitle from "/assets/coming-soon.png";
 
 const casinoGameSrc = [
   {
-    name: 'crash',
-    bgSrc: '/assets/crash.jpg',
-    titleSrc: '/assets/crash-title.png',
-    href: '/crash'
+    name: "crash",
+    bgSrc: "/assets/crash.jpg",
+    titleSrc: "/assets/crash-title.png",
+    href: "/crash",
   },
   {
-    name: 'coinflip',
-    bgSrc: '/assets/coinflip.jpg',
-    titleSrc: '/assets/coinflip-title.png',
-    href: '/coin-flip'
+    name: "coinflip",
+    bgSrc: "/assets/coinflip.jpg",
+    titleSrc: "/assets/coinflip-title.png",
+    href: "/coin-flip",
   },
   {
-    name: 'mines',
-    bgSrc: '/assets/mines.jpg',
-    titleSrc: '/assets/mines-title.svg',
-    href: '/mines'
-  }
+    name: "mines",
+    bgSrc: "/assets/mines.jpg",
+    titleSrc: "/assets/mines-title.svg",
+    href: "/mines",
+  },
 ];
 
 type TCasinoGames = {
@@ -45,7 +45,7 @@ const CasinoGames = ({
   bannerSrc,
   titleSrc,
   linkTo,
-  altText
+  altText,
 }: TCasinoGames) => {
   return (
     <div className="h-full w-4/12">
@@ -57,10 +57,10 @@ const CasinoGames = ({
         />
         <img
           src={titleSrc}
-          alt={altText + 'title'}
+          alt={altText + "title"}
           className="absolute right-2 top-2 w-24"
         />
-        {linkTo == '/crash' ? (
+        {linkTo == "/crash" ? (
           <Link to={linkTo}>
             <img
               src={Playnow}

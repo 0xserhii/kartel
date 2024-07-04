@@ -2,12 +2,12 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { ModalType } from '@/types/modal';
-import useModal from '@/hooks/use-modal';
-import { useAppSelector } from '@/store/redux';
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ModalType } from "@/types/modal";
+import useModal from "@/hooks/use-modal";
+import { useAppSelector } from "@/store/redux";
 
 const AddGoldModal = () => {
   const modal = useModal();

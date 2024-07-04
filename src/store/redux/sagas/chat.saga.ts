@@ -1,4 +1,4 @@
-import { eventChannel } from 'redux-saga';
+import { eventChannel } from "redux-saga";
 
 import {
   put,
@@ -8,14 +8,14 @@ import {
   cancel,
   takeLatest,
   takeEvery,
-  delay
-} from 'redux-saga/effects';
+  delay,
+} from "redux-saga/effects";
 
-import { chatActions } from '../actions';
-import { getAccessToken } from '@/utils/axios';
-import KartelSocket from '@/utils/socket-service';
-import { EChatSocketEvent, IChat } from '@/types';
-import { EChatSocketAction } from '../reducers/chat.type';
+import { chatActions } from "../actions";
+import { getAccessToken } from "@/utils/axios";
+import KartelSocket from "@/utils/socket-service";
+import { EChatSocketEvent, IChat } from "@/types";
+import { EChatSocketAction } from "../reducers/chat.type";
 
 let socketTask;
 
@@ -107,7 +107,7 @@ const sagas = [
   takeLatest(EChatSocketAction.LOGIN_CHAT, loginChanelSaga),
   takeLatest(EChatSocketAction.GET_CHAT_HISTORY, getChatHistorySaga),
   takeLatest(EChatSocketAction.DISCONNECT_CHAT, stopChanelSaga),
-  takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga)
+  takeEvery(EChatSocketAction.SEND_MSG, sendMsgSaga),
 ];
 
 export default sagas;

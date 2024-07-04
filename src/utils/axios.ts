@@ -1,18 +1,18 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from "axios";
 
 // ----------------------------------------------------------------------
 const accessKey = import.meta.env.VITE_APP_ACCESS_TOKENKEY!;
 
 const axiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_APP_BACKEND_ENDPOINT}`
+  baseURL: `${import.meta.env.VITE_APP_BACKEND_ENDPOINT}`,
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = getAccessToken();
     config.headers.Authorization = `Bearer ${accessToken}`;
-    config.headers['Access-Control-Allow-Origin'] = '*';
-    config.headers['X-TIMEZONE'] = -new Date().getTimezoneOffset() / 60;
+    config.headers["Access-Control-Allow-Origin"] = "*";
+    config.headers["X-TIMEZONE"] = -new Date().getTimezoneOffset() / 60;
     return config;
   },
   (err) => {
@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   (error) =>
     Promise.reject(
-      (error.response && error.response.data) || 'Something went wrong'
+      (error.response && error.response.data) || "Something went wrong"
     )
 );
 
@@ -72,34 +72,34 @@ export const axiosDelete = async (
 export const getAccessToken = (): string => {
   if (window) {
     const token = localStorage.getItem(accessKey);
-    return token || '';
+    return token || "";
   }
-  return '';
+  return "";
 };
 
 export const getUserData = (): string => {
   if (window) {
-    const userData = localStorage.getItem('userData');
-    return userData || '';
+    const userData = localStorage.getItem("userData");
+    return userData || "";
   }
-  return '';
+  return "";
 };
 
 export const setAccessToken = (token: string): void => {
-  if (window && token !== '') {
+  if (window && token !== "") {
     localStorage.setItem(accessKey, token);
   }
 };
 
 export const setUserData = (userData: any): void => {
-  if (window && userData !== '') {
-    localStorage.setItem('userData', userData);
+  if (window && userData !== "") {
+    localStorage.setItem("userData", userData);
   }
 };
 
 export const removeAllTokens = (): void => {
   if (window) {
     localStorage.removeItem(accessKey);
-    localStorage.removeItem('userData');
+    localStorage.removeItem("userData");
   }
 };

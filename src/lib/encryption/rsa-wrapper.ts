@@ -1,8 +1,8 @@
 // src/cryptoUtils.ts
-import ConvertWrapper from './convert-wrapper';
+import ConvertWrapper from "./convert-wrapper";
 
 const crypto = window.crypto.subtle;
-const rsaParams = { name: 'RSA-OAEP', hash: { name: 'SHA-1' } };
+const rsaParams = { name: "RSA-OAEP", hash: { name: "SHA-1" } };
 
 export default class RSAWrapper {
   private static instance: RSAWrapper;
@@ -22,13 +22,13 @@ export default class RSAWrapper {
   async importPublicKey(keyInPemFormat: string): Promise<CryptoKey> {
     const key = this.converterWrapper.convertPemToBinary2(keyInPemFormat);
     const keyBuffer = this.converterWrapper.base64StringToArrayBuffer(key);
-    return crypto.importKey('spki', keyBuffer, rsaParams, false, ['encrypt']);
+    return crypto.importKey("spki", keyBuffer, rsaParams, false, ["encrypt"]);
   }
 
   async importPrivateKey(keyInPemFormat: string): Promise<CryptoKey> {
     const key = this.converterWrapper.convertPemToBinary2(keyInPemFormat);
     const keyBuffer = this.converterWrapper.base64StringToArrayBuffer(key);
-    return crypto.importKey('pkcs8', keyBuffer, rsaParams, false, ['decrypt']);
+    return crypto.importKey("pkcs8", keyBuffer, rsaParams, false, ["decrypt"]);
   }
 
   async publicEncrypt(

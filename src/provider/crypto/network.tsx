@@ -1,18 +1,18 @@
-import { useLocalStorage } from '@/hooks';
+import { useLocalStorage } from "@/hooks";
 import {
   HttpBatchClient,
   StatusResponse,
-  Tendermint37Client
-} from '@cosmjs/tendermint-rpc';
-import { ChainInfo } from '@keplr-wallet/types';
+  Tendermint37Client,
+} from "@cosmjs/tendermint-rpc";
+import { ChainInfo } from "@keplr-wallet/types";
 import {
   CHAIN_INFO,
   KujiraQueryClient,
   TESTNET,
   NETWORK,
   RPCS,
-  kujiraQueryClient
-} from 'kujira.js';
+  kujiraQueryClient,
+} from "kujira.js";
 import {
   Dispatch,
   FC,
@@ -22,8 +22,8 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState
-} from 'react';
+  useState,
+} from "react";
 
 interface RPCConnection {
   endpoint: string;
@@ -50,12 +50,12 @@ const Context = createContext<NetworkContext>({
   setNetwork: () => {},
   tmClient: null,
   query: null,
-  rpc: '',
+  rpc: "",
   rpcs: [],
   setRpc: () => {},
   preferred: null,
   unlock: () => {},
-  lock: () => {}
+  lock: () => {},
 });
 
 const toClient = async (
@@ -68,7 +68,7 @@ const toClient = async (
   const c = await Tendermint37Client.create(
     new HttpBatchClient(endpoint, {
       dispatchInterval: 100,
-      batchSizeLimit: 200
+      batchSizeLimit: 200,
     })
   );
   const status = await c.status();
@@ -81,8 +81,10 @@ const toClient = async (
         endpoint,
         latency: new Date().getTime() - start,
         connectedTime: new Date(),
-        latestBlockTime: new Date(status.syncInfo.latestBlockTime.toISOString())
-      }
+        latestBlockTime: new Date(
+          status.syncInfo.latestBlockTime.toISOString()
+        ),
+      },
     }));
   return [c, endpoint];
 };
@@ -92,8 +94,8 @@ export const NetworkContext: React.FC<
     onError?: (err: any) => void;
   }>
 > = ({ children, onError }) => {
-  const [network, setNetwork] = useLocalStorage('network', TESTNET);
-  const [preferred, setPreferred] = useLocalStorage('rpc', '');
+  const [network, setNetwork] = useLocalStorage("network", TESTNET);
+  const [preferred, setPreferred] = useLocalStorage("rpc", "");
   const [tm, setTmClient] = useState<null | [Tendermint37Client, string]>();
   const [latencies, setLatencies] = useState<Record<string, RPCConnection>>({});
 
@@ -124,7 +126,7 @@ export const NetworkContext: React.FC<
   };
 
   const unlock = () => {
-    setPreferred('');
+    setPreferred("");
   };
 
   const lock = () => {
@@ -155,7 +157,7 @@ export const NetworkContext: React.FC<
             setRpc,
             unlock,
             lock,
-            preferred: preferred || null
+            preferred: preferred || null,
           }}
         >
           {children}
@@ -194,7 +196,7 @@ export const useNetwork = (): [
     unlock: () => void;
     lock: () => void;
   },
-  (n: NETWORK) => void
+  (n: NETWORK) => void,
 ] => {
   const {
     network,
@@ -206,7 +208,7 @@ export const useNetwork = (): [
     preferred,
     lock,
     unlock,
-    rpcs
+    rpcs,
   } = useContext(Context);
 
   return [
@@ -215,13 +217,13 @@ export const useNetwork = (): [
       chainInfo: CHAIN_INFO[network],
       tmClient,
       query,
-      rpc: 'https://kujira-testnet-rpc.polkachu.com',
+      rpc: "https://kujira-testnet-rpc.polkachu.com",
       rpcs,
       setRpc,
       preferred,
       lock,
-      unlock
+      unlock,
     },
-    setNetwork
+    setNetwork,
   ];
 };

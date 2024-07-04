@@ -1,4 +1,4 @@
-import { IChatUser } from './user';
+import { IChatUser } from "./user";
 
 export interface IChat {
   _id: string;
@@ -8,14 +8,14 @@ export interface IChat {
 }
 
 export enum EChatSocketEvent {
-  LOGIN = 'auth',
-  JOIN_CHAT = 'join_chat',
-  RECEIVE_MSG = 'backend-frontend-message',
-  SEND_MSG = 'frontend-backend-message',
-  DISCONNECT_CHAT = 'disconnect',
-  RECEIVE_CHAT_HISTORY = 'send-chat-history',
-  GET_CHAT_HISTORY = 'get-chat-history',
-  NOTIFY_ERROR = 'notify-error'
+  LOGIN = "auth",
+  JOIN_CHAT = "join_chat",
+  RECEIVE_MSG = "backend-frontend-message",
+  SEND_MSG = "frontend-backend-message",
+  DISCONNECT_CHAT = "disconnect",
+  RECEIVE_CHAT_HISTORY = "send-chat-history",
+  GET_CHAT_HISTORY = "get-chat-history",
+  NOTIFY_ERROR = "notify-error",
 }
 
 export interface IChatClientToServerEvents {
