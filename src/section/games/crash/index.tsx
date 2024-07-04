@@ -32,6 +32,7 @@ import { useSpring, animated } from '@react-spring/web';
 import useModal from "@/hooks/use-modal";
 import useSound from "use-sound";
 import { ModalType } from "@/types/modal";
+import { Info } from "lucide-react";
 
 const GrowingNumber = ({ start, end }) => {
   const { number: numberValue } = useSpring({
@@ -263,7 +264,11 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
-      setBetCashout(data.players);
+      setBetData(data.players);
+      Object.keys(data.gameStatus.players).forEach((playerID) => {
+        const playerData = data.gameStatus.players[playerID];
+        setBetCashout((prev) => [...prev, playerData]);
+      });
       if (user && user.betAmount) {
         setAutoBet(false);
         setBetAmount(Number(user?.betAmount));
@@ -307,6 +312,8 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
+      console.log(data);
+
     });
 
     crashSocket.emit("auth", getAccessToken());
@@ -456,7 +463,7 @@ export default function CrashGameSection() {
                 </div>
                 <Card className=" border-purple-0.15  bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
                   <div className="flex h-full w-full flex-col gap-2 rounded-lg bg-[#0D0B32CC] px-8 py-5">
-                    <div className="flex flex-row items-center justify-center">
+                    <div className="flex flex-row items-center justify-end gap-5">
                       <Button
                         className="w-6/12 h-12 bg-purple px-3 py-3 uppercase hover:bg-purple"
                         disabled={
@@ -479,12 +486,8 @@ export default function CrashGameSection() {
                             ? "Cash Out"
                             : "Place Bet"}
                       </Button>
-                      <button className="absolute right-8 top-4 p-0" onClick={handleInfoModal}>
-                        <img src='/assets/games/info.png' alt="crash-info" className="w-7 h-7 rounded-full" style={{
-                          transform: "scale(1)",
-                          animation:
-                            "2s ease 0s infinite normal none running animation-bubble",
-                        }} />
+                      <button className="p-0" onClick={handleInfoModal}>
+                        <Info className="text-purple w-7 h-7" />
                       </button>
                     </div>
                     <div

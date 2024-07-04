@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { useEffect, useState } from "react";
 import { initialBalance } from "@/constants/data";
 import { subscribeUserServer } from "@/store/redux/actions/user.action";
-import { axiosGet } from "@/utils/axios";
+import { axiosGet, getAccessToken } from "@/utils/axios";
 import useSound from "use-sound";
 import ToggleButton from "./toggle-button";
 
@@ -50,7 +50,7 @@ export default function Header() {
     if (userData?.username !== "") {
       getSiteBalance();
     }
-  }, [siteBalance]);
+  }, [siteBalance, getAccessToken()]);
 
   useEffect(() => {
     dispatch(subscribeUserServer());
@@ -86,7 +86,7 @@ export default function Header() {
         )}
         <div className="ml-4 mr-8 flex items-center gap-3 md:ml-6">
           <ToggleButton />
-          {userData?.username !== "" ? (
+          {getAccessToken() ? (
             <div className="flex flex-row items-center gap-4">
               <Button
                 className="hidden bg-transparent px-0 hover:bg-transparent lg:block"
