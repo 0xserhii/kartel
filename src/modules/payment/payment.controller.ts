@@ -135,6 +135,7 @@ export class PaymentController {
             amount: amount,
             tokenType: currency,
           });
+          console.log({ resPayment })
           if (!resPayment) {
             throw new CustomError(409, "unable withdraw");
           }
