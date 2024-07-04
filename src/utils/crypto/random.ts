@@ -126,10 +126,7 @@ const generateCrashPoint = (seed: string, salt: string): number => {
   const h = parseInt(hash.slice(0, 52 / 4), 16);
   const e = Math.pow(2, 52);
 
-  const crashPoint = Math.floor((100 * e - h) / (e - h));
-
-  // Ensure crash point is less than 1000
-  return Math.min(crashPoint, 999);
+  return Math.floor((100 * e - h) / (e - h));
 };
 
 const isCrashHashDivisible = (hash: string, mod: number): boolean => {
