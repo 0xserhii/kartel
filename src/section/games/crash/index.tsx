@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Socket, io } from 'socket.io-client';
-import customParser from 'socket.io-msgpack-parser';
+// import customParser from 'socket.io-msgpack-parser';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -197,7 +197,9 @@ export default function CrashGameSection() {
     const crashSocket: Socket<
       ICrashServerToClientEvents,
       ICrashClientToServerEvents
-    > = io(`${SERVER_URL}/crash`, { parser: customParser });
+    > = io(`${SERVER_URL}/crash`,
+      // { parser: customParser }
+    );
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
@@ -258,7 +260,7 @@ export default function CrashGameSection() {
       setBetData(data.players);
       if (user && user.betAmount) {
         setAutoBet(false);
-        setBetAmount(Number(user?.betAmount));
+        // setBetAmount(Number(user?.betAmount));
         setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
       }
       const totals = calculateTotals(data.players);
@@ -480,7 +482,7 @@ export default function CrashGameSection() {
                       <div className="relative">
                         <Input
                           type="number"
-                          value={betAmount || ''}
+                          value={betAmount}
                           onChange={handleBetAmountChange}
                           className="border border-purple-0.5 text-white placeholder:text-gray-700"
                           disabled={isAutoMode && !autoBet}
