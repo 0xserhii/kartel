@@ -111,7 +111,7 @@ export class PaymentService extends BaseService<IPaymentModel> {
       );
       const txTime = new Date(txDetails.txResponse.timestamp);
       const timeDiff =
-        new Date().getUTCMilliseconds() - txTime.getUTCMilliseconds();
+        new Date().getTime() - txTime.getTime();
 
       if (timeDiff > CAllowTimeDiff) {
         return false;
