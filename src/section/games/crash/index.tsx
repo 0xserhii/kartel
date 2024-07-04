@@ -487,7 +487,7 @@ export default function CrashGameSection() {
                             : "Place Bet"}
                       </Button>
                       <button className="p-0" onClick={handleInfoModal}>
-                        <Info className="text-purple w-7 h-7" />
+                        <Info className="text-white w-7 h-7" />
                       </button>
                     </div>
                     <div
