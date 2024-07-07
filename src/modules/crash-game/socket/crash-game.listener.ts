@@ -31,6 +31,7 @@ import {
 import { CrashGameService } from "../crash-game.service";
 import { IBetType } from "../crash-game.types";
 import { CrashGameSocketController } from "./crash-game.socket-controller";
+import { IUserModel } from "@/modules/user/user.interface";
 
 class CrashGameSocketListener {
   private socketServer: Namespace;
@@ -42,6 +43,7 @@ class CrashGameSocketListener {
   private walletTransactionService: WalletTransactionService;
   private userBotServices: UserBotService;
   private reveneuLogService: RevenueLogService;
+  private user: IUserModel | null = null;
 
   constructor(socketServer: Server) {
     // Socket init
@@ -362,6 +364,50 @@ class CrashGameSocketListener {
           // await checkAndApplyAffiliatorCut(user.id, houseRake);
 
           // Creating new bet object
+          const revenueId = process.env.REVENUE_ID;
+          let siteUser = await this.userService.getItemById(revenueId);
+
+          if (siteUser) {
+            let newSiteWalletValue = 0;
+
+            if (siteUser?.wallet) {
+              newSiteWalletValue = (siteUser?.wallet?.[denom] || 0) + betAmount;
+            } else {
+              newSiteWalletValue = betAmount;
+            }
+
+            siteUser = await this.userService.updateById(revenueId, {
+              $set: {
+                [`wallet.${denom}`]: newSiteWalletValue,
+              },
+            });
+
+          } else {
+            logger.error(this.logoPrefix + "Couldn't find site user!");
+          }
+
+          if (siteUser) {
+            const newRevenuePayload = {
+              userid: new mongoose.Types.ObjectId(user._id),
+              // Revenue type 1: coinflip, 2: crash
+              revenueType: 2,
+              // Balance
+              revenue: betAmount,
+              denom: denom,
+              lastBalance: siteUser!.wallet?.[denom],
+            };
+            await this.reveneuLogService.create(newRevenuePayload);
+          }
+
+          const newAdminWalletTxData = {
+            _user: new mongoose.Types.ObjectId(user._id),
+            amount: Math.abs(betAmount),
+            reason: "Crash Win",
+            extraData: { crashGameId: CrashGameSocketController.gameStatus._id },
+          };
+
+          await this.walletTransactionService.create(newAdminWalletTxData);
+
           // Creating new bet object
           const newBet: IBetType = {
             autoCashOut: cashoutPoint,
@@ -402,8 +448,8 @@ class CrashGameSocketListener {
     } catch (error) {
       logger.error(
         this.logoPrefix +
-          "Error while starting a crash game with auto bets:" +
-          error
+        "Error while starting a crash game with auto bets:" +
+        error
       );
     }
 
@@ -514,7 +560,7 @@ class CrashGameSocketListener {
       if (CrashGameSocketController.gameStatus.pendingCount > 0) {
         logger.info(
           this.logoPrefix +
-            `Crash >> Delaying game while waiting for ${ids.length} (${ids.join(", ")}) join(s)`
+          `Crash >> Delaying game while waiting for ${ids.length} (${ids.join(", ")}) join(s)`
         );
         return setTimeout(loop, 50);
       }
@@ -539,7 +585,7 @@ class CrashGameSocketListener {
       CrashGameSocketController.gameStatus.publicSeed = randomData.publicSeed;
       CrashGameSocketController.gameStatus.duration = Math.ceil(
         16666.666667 *
-          Math.log(0.01 * (CrashGameSocketController.gameStatus.crashPoint + 1))
+        Math.log(0.01 * (CrashGameSocketController.gameStatus.crashPoint + 1))
       );
       CrashGameSocketController.gameStatus.startedAt = new Date();
       CrashGameSocketController.gameStatus.pending = {};
@@ -547,7 +593,7 @@ class CrashGameSocketListener {
 
       logger.info(
         this.logoPrefix +
-          `Starting new game ${CrashGameSocketController.gameStatus._id} with crash point ${CrashGameSocketController.gameStatus.crashPoint / 100}`
+        `Starting new game ${CrashGameSocketController.gameStatus._id} with crash point ${CrashGameSocketController.gameStatus.crashPoint / 100}`
       );
 
       // Updating in db
@@ -640,7 +686,7 @@ class CrashGameSocketListener {
             if (err) {
               logger.error(
                 this.logoPrefix +
-                  `There was an error while trying to cashout ${err}`
+                `There was an error while trying to cashout ${err}`
               );
             }
           }
@@ -654,7 +700,7 @@ class CrashGameSocketListener {
           if (err) {
             logger.error(
               this.logoPrefix +
-                `There was an error while trying to cashout ${err}`
+              `There was an error while trying to cashout ${err}`
             );
           }
         });
@@ -709,6 +755,14 @@ class CrashGameSocketListener {
 
     const houseAmount = winningAmount * CCrashConfig.houseEdge;
     winningAmount *= 1 - CCrashConfig.houseEdge;
+    const adminLoseAmount = winningAmount - bet.betAmount;
+
+    console.log({
+      "admin Amount lose >>> ": adminLoseAmount,
+      "winning Amount of user >>> ": winningAmount,
+      "house amount >>> ": houseAmount,
+      "bet AMount of user >>> ": bet.betAmount
+    });
 
     CrashGameSocketController.gameStatus.players[playerID].winningAmount =
       winningAmount;
@@ -730,19 +784,22 @@ class CrashGameSocketListener {
     });
 
     // Giving winning balance to user
-    const user = await this.userService.getItemById(playerID);
+    this.user = await this.userService.getItemById(playerID);
 
-    if (user) {
+    if (this.user) {
+      console.log("winning Amount", playerID, winningAmount);
       // Get the current value from the wallet map
-      const currentValue = user.wallet?.[bet.denom] || 0;
+      const currentValue = this.user.wallet?.[bet.denom] || 0;
 
       // Increment the value
       const newValue = currentValue + Math.abs(winningAmount);
       const newLeaderboardValue =
-        (user.leaderboard?.["crash"]?.[bet.denom]?.winAmount || 0) +
+        (this.user.leaderboard?.["crash"]?.[bet.denom]?.winAmount || 0) +
         Math.abs(winningAmount);
+      console.log(currentValue);
+      console.log(newValue);
 
-      await this.userService.updateById(playerID, {
+      this.user = await this.userService.updateById(playerID, {
         $set: {
           [`wallet.${bet.denom}`]: newValue,
           [`leaderboard.crash.${bet.denom}.winAmount`]: newLeaderboardValue,
@@ -754,22 +811,23 @@ class CrashGameSocketListener {
 
       // Add revenue to the site wallet
       const revenueId = process.env.REVENUE_ID;
-      const siteUser = await this.userService.getItemById(revenueId);
+      let siteUser = await this.userService.getItemById(revenueId);
 
       if (siteUser) {
         let newSiteWalletValue = 0;
 
         if (siteUser?.wallet) {
-          newSiteWalletValue = siteUser?.wallet?.[bet.denom] || 0 + houseAmount;
+          newSiteWalletValue = (siteUser?.wallet?.[bet.denom] || 0) + houseAmount - adminLoseAmount;
         } else {
-          newSiteWalletValue = houseAmount;
+          newSiteWalletValue = houseAmount - adminLoseAmount;
         }
 
-        await this.userService.updateById(revenueId, {
+        siteUser = await this.userService.updateById(revenueId, {
           $set: {
             [`wallet.${bet.denom}`]: newSiteWalletValue,
           },
         });
+
       } else {
         logger.error(this.logoPrefix + "Couldn't find site user!");
       }
@@ -783,7 +841,7 @@ class CrashGameSocketListener {
           // Revenue type 1: coinflip, 2: crash
           revenueType: 2,
           // Balance
-          revenue: houseAmount,
+          revenue: houseAmount - adminLoseAmount - bet.betAmount,
           denom: bet.denom,
           lastBalance: siteuser!.wallet?.[bet.denom],
         };
@@ -793,10 +851,11 @@ class CrashGameSocketListener {
 
     const newWalletTxData = {
       _user: new mongoose.Types.ObjectId(playerID),
-      amount: Math.abs(winningAmount),
+      amount: Math.abs(bet.betAmount - winningAmount + houseAmount),
       reason: "Crash Win",
       extraData: { crashGameId: CrashGameSocketController.gameStatus._id },
     };
+
     await this.walletTransactionService.create(newWalletTxData);
 
     // Updating in db
@@ -812,7 +871,7 @@ class CrashGameSocketListener {
   public endGame = async () => {
     logger.info(
       this.logoPrefix +
-        `Ending game at ${CrashGameSocketController.gameStatus.crashPoint! / 100}`
+      `Ending game at ${CrashGameSocketController.gameStatus.crashPoint! / 100}`
     );
 
     const crashTime = Date.now();

@@ -6,6 +6,7 @@ import ChatHistorySocketListener from "./modules/chat-history/socket/chat-histor
 import CrashGameSocketListener from "./modules/crash-game/socket/crash-game.listener";
 import LeaderboardSocketListener from "./modules/leaderboard/socket/leaderboard.listener";
 import PaymentSocketListener from "./modules/payment/socket/payment.listener";
+import DashboardSocketListener from "./modules/dashboard/socket/dashboard.listener";
 
 class SocketServer {
   private socketServer: Server;
@@ -21,6 +22,7 @@ class SocketServer {
       new CrashGameSocketListener(this.socketServer);
       new LeaderboardSocketListener(this.socketServer);
       new PaymentSocketListener(this.socketServer);
+      new DashboardSocketListener(this.socketServer);
 
       logger.info("Socket server started");
     } catch (error) {

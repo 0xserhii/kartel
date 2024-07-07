@@ -5,4 +5,5 @@ export enum ESOCKET_NAMESPACE {
   mines = "/mines",
   leaderboard = "/leaderboard",
   payment = "/payment",
+  dashboard = "/dashboard",
 }

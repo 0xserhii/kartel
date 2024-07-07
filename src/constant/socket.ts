@@ -150,6 +150,17 @@ export interface IServerToClientEvents {
   }) => void;
   // 'leaderboard-bet-update': (data: { game: string; updateData: PendingBetType[] }) => void;
   // 'leaderboard-win-update': (data: { game: string; updateData: BetType }) => void;
+
+  //dashboard
+  "dashboard-fetch-all": (data: {
+    message: string;
+    dashboard: { [key: string]: TLeaderboardUserType[] };
+  }) => void;
+
+  "dashboard-pnl": (data: {
+    message: string;
+    pnl: { [key: string]: number };
+  }) => void;
 }
 
 export interface ISocketData {

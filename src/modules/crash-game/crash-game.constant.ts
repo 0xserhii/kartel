@@ -1,7 +1,7 @@
 export const CCrashConfig = {
   minBetAmount: 0.1, // Min bet amount (in coins)
   maxBetAmount: 100, // Max bet amount (in coins)
-  maxProfit: 500, // Max profit on crash, forces auto cashout
+  maxProfit: 1000, // Max profit on crash, forces auto cashout
   houseEdge: 0.05, // House edge percentage
 };
 

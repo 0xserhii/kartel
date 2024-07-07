@@ -40,7 +40,7 @@ const generatePrivateSeedHashPair = async (): Promise<{
   try {
     const seed = await generatePrivateSeed();
     const hash = await buildPrivateHash(seed);
-    return { seed, hash };
+    return ({ seed, hash });
   } catch (error) {
     logger.error("[RANDOM]::: Error generating private seed hash pair" + error);
     return { seed: "", hash: "" };
@@ -115,7 +115,7 @@ const generateCrashRandom = async (
 };
 
 const generateCrashPoint = (seed: string, salt: string): number => {
-  const hash = crypto.createHmac("sha256", seed).update(salt).digest("hex");
+  const hash = crypto.createHmac('sha256', seed).update(salt).digest("hex");
 
   const hs = Math.floor(100 / (CCrashConfig.houseEdge * 100));
 

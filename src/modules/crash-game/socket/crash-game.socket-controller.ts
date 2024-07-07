@@ -26,6 +26,7 @@ import {
   IGameStateType,
   TFormattedPlayerBetType,
 } from "../crash-game.types";
+import { RevenueLogService } from "@/modules/revenue-log";
 
 export class CrashGameSocketController {
   // Services
@@ -33,6 +34,7 @@ export class CrashGameSocketController {
   private userService: UserService;
   private autoCrashBetService: AutoCrashBetService;
   private walletTransactionService: WalletTransactionService;
+  private reveneuLogService: RevenueLogService;
 
   // Diff services
   private localizations: ILocalization;
@@ -76,6 +78,7 @@ export class CrashGameSocketController {
     this.userService = new UserService();
     this.autoCrashBetService = new AutoCrashBetService();
     this.walletTransactionService = new WalletTransactionService();
+    this.reveneuLogService = new RevenueLogService();
 
     this.localizations = localizations["en"];
   }
@@ -129,10 +132,10 @@ export class CrashGameSocketController {
           ] = this.socket.id;
           logger.info(
             this.logoPrefix +
-              "User connect userId: " +
-              user._id +
-              " socketId: " +
-              this.socket.id
+            "User connect userId: " +
+            user._id +
+            " socketId: " +
+            this.socket.id
           );
           // this.socket.emit("notify-success", "Successfully authenticated!");
         }
@@ -307,7 +310,9 @@ export class CrashGameSocketController {
 
     CrashGameSocketController.gameStatus.pendingCount++;
 
+
     try {
+      this.user = await this.userService.getItemById(userId);
       // If user is self-excluded
       if (this.user!.selfExcludes.crash > Date.now()) {
         return this.socket.emit(
@@ -353,6 +358,12 @@ export class CrashGameSocketController {
         Math.abs(parseFloat(crashBetAmount.toFixed(2)));
 
       // Remove bet amount from user's balance
+      console.log({
+        "crash bet amount": crashBetAmount,
+        "wallet of user": this.user!.wallet?.[denom],
+        "new wallet of user": newWalletValue
+      });
+
       this.user = await this.userService.updateById(userId, {
         $set: {
           [`wallet.${denom}`]: newWalletValue,
@@ -389,6 +400,51 @@ export class CrashGameSocketController {
         status: this.betStatus.Playing,
         forcedCashout: false,
       };
+
+      // Add revenue to the site wallet
+      const revenueId = process.env.REVENUE_ID;
+      let siteUser = await this.userService.getItemById(revenueId);
+
+      if (siteUser) {
+        let newSiteWalletValue = 0;
+
+        if (siteUser?.wallet) {
+          newSiteWalletValue = (siteUser?.wallet?.[denom] || 0) + crashBetAmount;
+        } else {
+          newSiteWalletValue = crashBetAmount;
+        }
+
+        siteUser = await this.userService.updateById(revenueId, {
+          $set: {
+            [`wallet.${denom}`]: newSiteWalletValue,
+          },
+        });
+
+      } else {
+        logger.error(this.logoPrefix + "Couldn't find site user!");
+      }
+
+      if (siteUser) {
+        const newRevenuePayload = {
+          userid: new mongoose.Types.ObjectId(userId),
+          // Revenue type 1: coinflip, 2: crash
+          revenueType: 2,
+          // Balance
+          revenue: crashBetAmount,
+          denom: denom,
+          lastBalance: siteUser!.wallet?.[denom],
+        };
+        await this.reveneuLogService.create(newRevenuePayload);
+      }
+
+      const newAdminWalletTxData = {
+        _user: new mongoose.Types.ObjectId(userId),
+        amount: Math.abs(crashBetAmount),
+        reason: "Crash Win",
+        extraData: { crashGameId: CrashGameSocketController.gameStatus._id },
+      };
+
+      await this.walletTransactionService.create(newAdminWalletTxData);
 
       // Updating in db
       const updateParam: IUpdateParams = { $set: {} };
