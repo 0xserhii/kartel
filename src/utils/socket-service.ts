@@ -56,6 +56,11 @@ const paymentSocket = createSocket<
   IUserClientToServerEvents
 >("payment");
 
+const dashboardSocket = createSocket<
+  IUserServerToClientEvents,
+  IUserClientToServerEvents
+>("dashboard");
+
 const KartelSocket = {
   chat: chatSocket,
   coinflip: coinflipSocket,
@@ -63,6 +68,7 @@ const KartelSocket = {
   crash: crashSocket,
   payment: paymentSocket,
   mines: minesSocket,
+  dashboard: dashboardSocket
 };
 
 export default KartelSocket;

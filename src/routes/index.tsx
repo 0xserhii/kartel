@@ -6,6 +6,7 @@ import Home from "@/pages/main/home";
 import CrashGame from "@/pages/games/crash";
 import CoinFlipGame from "@/pages/games/coin-flip";
 import Leaderboard from "@/pages/main/leader-board";
+import Dashboard from "@/pages/main/dashboard";
 import NotFound from "@/pages/not-found";
 import SlotsGames from "@/pages/games/slots";
 import BlackJackGames from "@/pages/games/blackjack";
@@ -37,7 +38,7 @@ export default function AppRouter() {
         },
         {
           path: "/dashboard",
-          element: "",
+          element: <Dashboard />,
         },
         {
           path: "/crash",
@@ -85,6 +86,10 @@ export default function AppRouter() {
       element: <Navigate to="/404" replace />,
     },
   ];
+
+  const protectedRoutes = [
+
+  ]
   const routes = useRoutes([...dashboardRoutes, ...publicRoutes]);
 
   return routes;

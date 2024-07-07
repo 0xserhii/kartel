@@ -86,7 +86,7 @@ export default function Header() {
         )}
         <div className="ml-4 mr-8 flex items-center gap-3 md:ml-6">
           <ToggleButton />
-          {getAccessToken() ? (
+          {userData?.username !== "" ? (
             <div className="flex flex-row items-center gap-4">
               <Button
                 className="hidden bg-transparent px-0 hover:bg-transparent lg:block"

@@ -487,7 +487,7 @@ export default function CrashGameSection() {
                             : "Place Bet"}
                       </Button>
                       <button className="p-0" onClick={handleInfoModal}>
-                        <Info className="text-white w-7 h-7" />
+                        <Info className="text-gray-400 w-5 h-5" />
                       </button>
                     </div>
                     <div
@@ -514,6 +514,7 @@ export default function CrashGameSection() {
                                 <img
                                   src={selectedToken.src}
                                   className="h-4 w-4"
+                                  alt="token"
                                 />
                                 {selectedToken.name}
                               </div>

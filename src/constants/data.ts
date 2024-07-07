@@ -69,7 +69,7 @@ export const navItems: NavItemGroup[] = [
 export const tabItems = [
   { name: "home", path: "/" },
   { name: "leaderboard", path: "/leader-board" },
-  // { name: 'dashboard', path: '/dashboard' }
+  { name: 'dashboard', path: '/dashboard' }
 ];
 
 export type Employee = {
@@ -204,4 +204,29 @@ export const crashInfoSections = [
       "• The key is to balance risk and reward—cash out too early, and you might miss bigger winnings; wait too long, and you risk losing it all."
     ]
   }
+];
+
+export const casinoGameSrc = [
+  {
+    name: "crash",
+    bgSrc: "/assets/crash.jpg",
+    titleSrc: "/assets/crash-title.png",
+    href: "/crash",
+  },
+  {
+    name: "coinflip",
+    bgSrc: "/assets/coinflip.jpg",
+    titleSrc: "/assets/coinflip-title.png",
+    href: "/coin-flip",
+  },
+  {
+    name: "mines",
+    bgSrc: "/assets/mines.jpg",
+    titleSrc: "/assets/mines-title.svg",
+    href: "/mines",
+  },
+];
+
+export const gameLists = [
+  { name: "crash", color: "#0BA544" }
 ];
