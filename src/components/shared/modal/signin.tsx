@@ -25,6 +25,7 @@ import {
 import { useDispatch } from "react-redux";
 import { userActions } from "@/store/redux/actions";
 import { useAppSelector } from "@/store/redux";
+import { useEffect } from "react";
 
 const SignInSchema = z.object({
   email: z
@@ -46,12 +47,22 @@ const SignInModal = () => {
   const toast = useToast();
   const modal = useModal();
   const modalState = useAppSelector((state: any) => state.modal);
+  const userState = useAppSelector((state: any) => state.user)
   const dispatch = useDispatch();
   const isOpen = modalState.open && modalState.type === ModalType.LOGIN;
   const signInForm = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: SignInDefaultValue,
   });
+
+  const handleRememberMe = () => {
+    if (signInForm.getValues('email') === "" && signInForm.getValues('password') === "" && !userState.remember) {
+      toast.error("Please fill the inputs")
+      return;
+    } else {
+      dispatch(userActions.rememberMe(!userState.remember));
+    }
+  };
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -86,6 +97,23 @@ const SignInModal = () => {
       toast.error("SignIn Failed");
     }
   };
+
+  useEffect(() => {
+    if (userState.remember) {
+      dispatch(userActions.setCredential({ email: userState.credentials.email, password: userState.credentials.password }));
+    }
+    const { email, password } = userState.remember ? userState.credentials : { email: "", password: "" };
+    signInForm.setValue("email", email);
+    signInForm.setValue("password", password);
+  }, []);
+
+  useEffect(() => {
+    if (userState.remember && signInForm.getValues("email") && signInForm.getValues("password")) {
+      dispatch(userActions.setCredential({ email: signInForm.getValues("email"), password: signInForm.getValues("password") }));
+    } else {
+      dispatch(userActions.removeCredential())
+    }
+  }, [userState.remember]);
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
@@ -142,10 +170,10 @@ const SignInModal = () => {
               </div>
               <div className="flex w-full flex-row justify-between">
                 <div className="flex items-center space-x-2">
-                  <Checkbox id="terms" className="text-[#049DD9] " />
+                  <Checkbox checked={userState?.remember} id="terms" className="text-[#049DD9]" onClick={handleRememberMe} />
                   <label
                     htmlFor="terms"
-                    className="text-sm leading-none text-gray-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-sm leading-none text-gray-300 peer-disabled:cursor-not-allowed peer-disabled:opacity-70 select-none"
                   >
                     Remember me
                   </label>

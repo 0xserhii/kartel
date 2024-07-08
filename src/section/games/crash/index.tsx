@@ -312,8 +312,6 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
-      console.log(data);
-
     });
 
     crashSocket.emit("auth", getAccessToken());

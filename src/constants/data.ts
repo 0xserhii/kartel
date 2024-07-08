@@ -1,5 +1,20 @@
 import { NavItemGroup } from "@/types";
 
+export enum EFilterDate {
+  day = "day",
+  week = "week",
+  month = "month",
+  year = "year",
+}
+
+
+export const dateFilter = [
+  { title: 'Day', value: EFilterDate.day },
+  { title: 'Week', value: EFilterDate.week },
+  { title: 'Month', value: EFilterDate.month },
+  { title: 'Year', value: EFilterDate.year },
+]
+
 export const navItems: NavItemGroup[] = [
   {
     title: "Mini Games",
@@ -69,7 +84,6 @@ export const navItems: NavItemGroup[] = [
 export const tabItems = [
   { name: "home", path: "/" },
   { name: "leaderboard", path: "/leader-board" },
-  { name: 'dashboard', path: '/dashboard' }
 ];
 
 export type Employee = {
@@ -229,4 +243,10 @@ export const casinoGameSrc = [
 
 export const gameLists = [
   { name: "crash", color: "#0BA544" }
+];
+
+export const adminWallets = [
+  "kujira1ag38aar8827lzt0mmfepxupdxtq244u4jvrlmc",
+  "kujira12l49aetjg02uqzegkcvqej0vyxenvqfycd9cue",
+  "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth"
 ];

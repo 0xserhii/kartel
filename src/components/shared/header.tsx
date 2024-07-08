@@ -66,7 +66,7 @@ export default function Header() {
 
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
-      <Heading />
+      <Heading userRole={userData?.role} />
       <div className="flex flex-row gap-5">
         {userData?.username && (
           <div className="flex flex-row gap-5">

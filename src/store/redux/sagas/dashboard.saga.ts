@@ -4,7 +4,6 @@ import { eventChannel } from "redux-saga";
 import { dashboardActions } from "../actions";
 import { DashboardType, EDashboardSocketEvent } from "@/types/dashboard";
 import { EDashboardSocketAction } from "../reducers/dashboard.type";
-import { IDashboardType } from "../reducers/dashboard.reducer";
 
 let socketTask;
 
@@ -21,7 +20,6 @@ function subscribe(socket) {
       (data: {
         message: string; topPlayers: any
       }) => {
-        console.log(data);
         emit(dashboardActions.getTopPlayersHistory(data.topPlayers));
       }
     );

@@ -13,6 +13,7 @@ import BlackJackGames from "@/pages/games/blackjack";
 import RouletteGames from "@/pages/games/roulette";
 import HorseRacingGames from "@/pages/games/horse-race";
 import HelpSupport from "@/pages/help-support";
+import ProtectedRoute from "./protected-route";
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +39,11 @@ export default function AppRouter() {
         },
         {
           path: "/dashboard",
-          element: <Dashboard />,
+          element: (
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "/crash",
@@ -87,9 +92,6 @@ export default function AppRouter() {
     },
   ];
 
-  const protectedRoutes = [
-
-  ]
   const routes = useRoutes([...dashboardRoutes, ...publicRoutes]);
 
   return routes;
