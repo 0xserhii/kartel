@@ -40,12 +40,22 @@ const LeaderboardCard = ({ title, dataKey }) => {
                 <ScrollArea className="h-88 px-5 py-3">
                     <Table className="relative table-fixed border-separate border-spacing-y-3">
                         <TableBody>
-                            {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]?.map((score, index) => {
-                                const betAmount = score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
-                                const winAmount = score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
-                                const profit = (winAmount - betAmount).toFixed(2);
+                            {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]
+                                ?.map((score, index) => {
+                                    const betAmount = score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
+                                    const winAmount = score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
+                                    const profit = (winAmount - betAmount).toFixed(2);
 
-                                return (
+                                    return {
+                                        ...score,
+                                        profit: Number(profit),
+                                        betAmount: Number(betAmount).toFixed(2),
+                                        winAmount: Number(winAmount).toFixed(2),
+                                    };
+                                })
+                                .filter(score => score.profit >= 0)
+                                .sort((a, b) => b.profit - a.profit)
+                                .map((score, index) => (
                                     <TableRow
                                         key={index}
                                         className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
@@ -67,23 +77,22 @@ const LeaderboardCard = ({ title, dataKey }) => {
                                             </div>
                                         </TableCell>
                                         <TableCell className="w-1/5 text-center">
-                                            {Number(betAmount).toFixed(2)}
+                                            {score.betAmount}
                                         </TableCell>
                                         <TableCell className="w-1/5">
                                             <div className="flex items-center justify-center gap-1">
-                                                {Number(winAmount).toFixed(2)}
+                                                {score.winAmount}
                                             </div>
                                         </TableCell>
                                         <TableCell className="w-1/5">
                                             <div className="flex items-center justify-center gap-1">
-                                                <span className={Number(profit) >= 0 ? "text-white" : "text-purple"}>
-                                                    {profit}
+                                                <span className={score.profit >= 0 ? "text-white" : "text-purple"}>
+                                                    {score.profit.toFixed(2)}
                                                 </span>
                                             </div>
                                         </TableCell>
                                     </TableRow>
-                                );
-                            })}
+                                ))}
                         </TableBody>
                     </Table>
                     <ScrollBar orientation="horizontal" />
