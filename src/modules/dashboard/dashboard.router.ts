@@ -25,7 +25,7 @@ export default class DashboardRouter extends BaseRouter {
 
     this.router.post(
       "/dashboard-update",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
+      checkPermissions(),
       actionHandler(this.dashboardController.getDashboard, mapProperty.getQuery)
     );
   }

@@ -54,7 +54,7 @@ export default class UserRouter extends BaseRouter {
 
     this.router.get(
       "/admin-wallet",
-      checkPermissions({ roles: [ROLE.ADMIN] }),
+      checkPermissions(),
       actionHandler(this.userController.getAdminWalletBalance, [
         mapProperty.getUserInfo,
       ])

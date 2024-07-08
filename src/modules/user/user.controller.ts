@@ -132,7 +132,6 @@ export default class UserController {
   getAdminWalletBalance = async () => {
     const siteUser = process.env.REVENUE_ID;
     const admin = await this.userService.getItemById(siteUser);
-
     return {
       balance: admin.wallet,
     };
