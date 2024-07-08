@@ -16,7 +16,7 @@ export default function DashboardSection() {
     const dispatch = useDispatch();
     const dashboardState = useAppSelector((state: any) => state.dashboard);
     const [adminWallet, setAdminWallet] = useState<TokenBalances>(initialBalance);
-    const [filterDate, setFilterDate] = useState<EFilterDate>(EFilterDate.day);
+    const [filterDate, setFilterDate] = useState<EFilterDate>(EFilterDate.hour);
 
     const getAdminBalance = async () => {
         try {
