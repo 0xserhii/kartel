@@ -66,7 +66,7 @@ export default function Header() {
 
   return (
     <div className="flex flex-1 items-center justify-between bg-dark bg-opacity-30 bg-blend-multiply">
-      <Heading />
+      <Heading userRole={userData?.role} />
       <div className="flex flex-row gap-5">
         {userData?.username && (
           <div className="flex flex-row gap-5">
@@ -86,7 +86,7 @@ export default function Header() {
         )}
         <div className="ml-4 mr-8 flex items-center gap-3 md:ml-6">
           <ToggleButton />
-          {getAccessToken() ? (
+          {userData?.username !== "" ? (
             <div className="flex flex-row items-center gap-4">
               <Button
                 className="hidden bg-transparent px-0 hover:bg-transparent lg:block"

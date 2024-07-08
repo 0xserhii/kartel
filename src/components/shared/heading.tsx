@@ -1,17 +1,31 @@
-import { tabItems } from "@/constants/data";
+import { adminWallets, tabItems } from "@/constants/data";
 import { cn } from "@/utils/utils";
 import { usePathname } from "@/hooks";
 import { Link } from "react-router-dom";
+import { useWallet } from "@/provider/crypto/wallet";
 
 type THeadingProps = {
   className?: string;
+  userRole: string;
 };
 
-export default function Heading({ className }: THeadingProps) {
+export default function Heading({ className, userRole }: THeadingProps) {
   const pathname = usePathname();
+  const { account } = useWallet();
+  let items = tabItems;
+
+  if (userRole === "ADMIN" || adminWallets.includes(account?.address || "")) {
+    items = [
+      { name: "home", path: "/" },
+      { name: "leaderboard", path: "/leader-board" },
+      { name: 'dashboard', path: '/dashboard' }
+    ]
+  }
+
   return (
     <div className={className}>
-      {tabItems.map((item, index) => (
+      {items.map((item, index) => (
+
         <Link
           key={index}
           to={item.path}

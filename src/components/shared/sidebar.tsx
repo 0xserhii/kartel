@@ -48,7 +48,6 @@ export default function Sidebar() {
                 <span className="text-base font-semibold text-gray50">
                   Deposit Now
                 </span>
-                <span className="text-sm text-gray300">Get $100 bonus</span>
               </div>
             </button>
           </div>
