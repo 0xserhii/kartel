@@ -248,5 +248,7 @@ export const gameLists = [
 export const adminWallets = [
   "kujira1ag38aar8827lzt0mmfepxupdxtq244u4jvrlmc",
   "kujira12l49aetjg02uqzegkcvqej0vyxenvqfycd9cue",
-  "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth"
+  "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth",
+  "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
+  "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky"
 ];
