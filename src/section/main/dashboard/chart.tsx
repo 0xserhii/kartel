@@ -29,7 +29,11 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
             if (fetchedAdminBalance.length === 1) {
                 fetchedAdminBalance.unshift(fetchedAdminBalance[0])
             }
-            if (date === EFilterDate.day) {
+            if (date === EFilterDate.hour) {
+                for (let i = 0; i < fetchedAdminBalance?.length; i++) {
+                    tempXData.unshift((`${(currentHour - i).toString().padStart(2, '0')}h`))
+                }
+            } else if (date === EFilterDate.day) {
                 for (let i = 0; i < fetchedAdminBalance?.length; i++) {
                     tempXData.unshift((`${(currentHour - i).toString().padStart(2, '0')}h`))
                 }

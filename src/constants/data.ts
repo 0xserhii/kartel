@@ -1,6 +1,7 @@
 import { NavItemGroup } from "@/types";
 
 export enum EFilterDate {
+  hour = "hour",
   day = "day",
   week = "week",
   month = "month",
@@ -9,6 +10,7 @@ export enum EFilterDate {
 
 
 export const dateFilter = [
+  { title: '1H', value: EFilterDate.hour },
   { title: 'Day', value: EFilterDate.day },
   { title: 'Week', value: EFilterDate.week },
   { title: 'Month', value: EFilterDate.month },
