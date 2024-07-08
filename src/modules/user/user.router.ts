@@ -15,9 +15,7 @@ export default class UserRouter extends BaseRouter {
 
   constructor() {
     super();
-
     this.userController = new UserController();
-
     this.routes();
   }
 
@@ -50,6 +48,14 @@ export default class UserRouter extends BaseRouter {
       "/balance",
       checkPermissions(),
       actionHandler(this.userController.getUserBalance, [
+        mapProperty.getUserInfo,
+      ])
+    );
+
+    this.router.get(
+      "/admin-wallet",
+      checkPermissions({ roles: [ROLE.ADMIN] }),
+      actionHandler(this.userController.getAdminWalletBalance, [
         mapProperty.getUserInfo,
       ])
     );

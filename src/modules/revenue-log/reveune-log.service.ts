@@ -11,54 +11,28 @@ export class RevenueLogService extends BaseService<IRevenueLogModel> {
     super(RevenueLog);
   }
 
-  fetchDashboardData = async (
-  ): Promise<IRevenueLogModel[] | []> => {
+  public async getLatest(): Promise<IRevenueLogModel | null> {
     try {
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      const dashboardData = await this.aggregateByPipeline([
-        {
-          $match: {
-            created: {
-              $gte: oneWeekAgo,
-              $lt: new Date()
-            }
-          }
-        },
-        {
-          $group: {
-            _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
-            latestEntry: { $last: "$$ROOT" }
-          }
-        },
-        {
-          $replaceRoot: { newRoot: "$latestEntry" }
-        },
+      const result = await this.aggregateByPipeline([
         {
           $project: {
-            "revenueType": 1,
-            "revenue": 1,
-            "lastBalance": 1,
-            "created": 1
+            _id: 0,
+            revenueType: 1,
+            revenue: 1,
+            denom: 1,
+            lastBalance: 1,
+            created: 1
           }
         },
-        { $sort: { created: 1 } }
+        { $sort: { created: -1 } },
+        { $limit: 1 }
       ]);
+      console.log(result);
 
-
-      if (!dashboardData) {
-        throw new Error("No data returned from aggregateByPipeline");
-      }
-
-      if (dashboardData.length === 0) {
-        return [];
-      }
-      console.log(dashboardData);
-      return dashboardData as IRevenueLogModel[];
-    } catch (ex) {
-      logger.error("Error finding dashboard data", ex);
-      return [];
+      return result[0] as IRevenueLogModel;
+    } catch (error) {
+      logger.error("Error fetching the latest revenue log", error);
+      return null;
     }
-  };
+  }
 }

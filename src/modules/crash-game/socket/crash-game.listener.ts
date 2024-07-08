@@ -796,8 +796,6 @@ class CrashGameSocketListener {
       const newLeaderboardValue =
         (this.user.leaderboard?.["crash"]?.[bet.denom]?.winAmount || 0) +
         Math.abs(winningAmount);
-      console.log(currentValue);
-      console.log(newValue);
 
       this.user = await this.userService.updateById(playerID, {
         $set: {
@@ -817,9 +815,9 @@ class CrashGameSocketListener {
         let newSiteWalletValue = 0;
 
         if (siteUser?.wallet) {
-          newSiteWalletValue = (siteUser?.wallet?.[bet.denom] || 0) + houseAmount - adminLoseAmount;
+          newSiteWalletValue = (siteUser?.wallet?.[bet.denom] || 0) - winningAmount;
         } else {
-          newSiteWalletValue = houseAmount - adminLoseAmount;
+          newSiteWalletValue = -winningAmount;
         }
 
         siteUser = await this.userService.updateById(revenueId, {
@@ -841,7 +839,7 @@ class CrashGameSocketListener {
           // Revenue type 1: coinflip, 2: crash
           revenueType: 2,
           // Balance
-          revenue: houseAmount - adminLoseAmount - bet.betAmount,
+          revenue: -winningAmount,
           denom: bet.denom,
           lastBalance: siteuser!.wallet?.[bet.denom],
         };

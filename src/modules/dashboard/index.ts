@@ -3,3 +3,4 @@ export * from "./dashboard.controller";
 export * from "./dashboard.service";
 export * from "./dashboard.types";
 export * from "./dashboard.validate";
+export * from "./dashboard.interface";

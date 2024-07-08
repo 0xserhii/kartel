@@ -19,11 +19,6 @@ class DashboardSocketHandler {
     this.reveneuLogService = new RevenueLogService();
   }
 
-  public getRevenueLogs = async () => {
-    const revenueLogs = await this.reveneuLogService.fetchDashboardData();
-    this.socket.emit("revenue-logs", revenueLogs);
-  };
-
   public disconnectHandler = async () => { };
 }
 

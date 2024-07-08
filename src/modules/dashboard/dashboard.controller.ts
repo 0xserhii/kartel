@@ -6,6 +6,7 @@ import ILocalization from "@/utils/localizations/localizations.interface";
 
 import { DashboardService } from "./dashboard.service";
 import { TDashboardDocumentType } from "./dashboard.types";
+import { EFilterDate } from "./dashboard.constant";
 
 export class DashboardController {
   // Services
@@ -101,5 +102,9 @@ export class DashboardController {
     }
 
     return dashboard;
+  };
+
+  public getDashboard = async (query: { date: EFilterDate }) => {
+    return await this.dashboardService.getDashboardChart(query.date);
   };
 }

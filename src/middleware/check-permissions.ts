@@ -38,7 +38,9 @@ export default function checkPermissions({
         : null;
 
       // Set user role as member by default
-      user.role = ROLE.MEMBER;
+      if (user.role !== ROLE.ADMIN) {
+        user.role = ROLE.MEMBER;
+      }
 
       if (user?.role) {
         if (roles.includes(user.role as ROLE)) {

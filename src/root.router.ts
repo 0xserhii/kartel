@@ -11,6 +11,7 @@ import RevenueLogRouter from "./modules/revenue-log/reveune-log.router";
 import UserRouter from "./modules/user/user.router";
 import UserBotRouter from "./modules/user-bot/user-bot.router";
 import WalletTransactionRouter from "./modules/wallet-transaction/wallet-transaction.router";
+import DashboardRouter from "./modules/dashboard/dashboard.router";
 // import swaggerSetup from "./utils/swagger/swagger.setup";
 
 export default class RootRouter {
@@ -26,6 +27,7 @@ export default class RootRouter {
     // this.router.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSetup));
 
     this.router.use("/auth", new AuthRouter().router);
+    this.router.use("/dashboard", new DashboardRouter().router);
     this.router.use("/auto-crash-bet", new AutoCrashBetRouter().router);
     this.router.use("/logs", new LogsRouter().router);
     this.router.use("/chat-history", new ChatHistoryRouter().router);

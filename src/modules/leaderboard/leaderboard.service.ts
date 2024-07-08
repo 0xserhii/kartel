@@ -110,7 +110,6 @@ export class LeaderboardService extends BaseService<TLeaderboardDocumentType> {
         dashboard[game] = { winners, losers };
       }
 
-      console.log(dashboard);
       return dashboard;
     } catch (ex) {
       logger.error("Error finding top players", ex);

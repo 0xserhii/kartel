@@ -32,34 +32,10 @@ class DashboardSocketListener {
 
   private initializeListener = async () => {
     try {
-      const emitDashboard = async () => {
-        const start = Date.now();
-        const dashboardResponse =
-          await this.revenueLog.fetchDashboardData();
-
-        if (
-          dashboardResponse &&
-          Object.keys(dashboardResponse).length > 0
-        ) {
-          this.socketServer.emit("dashboard-fetch-all", {
-            message: "success",
-            dashboard: dashboardResponse!,
-          });
-        } else {
-          this.socketServer.emit(
-            "notify-error",
-            "Error ocurred when fetched dashboard!"
-          );
-        }
-
-        const elapsed = Date.now() - start;
-        setTimeout(emitDashboard, Math.max(0, 2000 - elapsed));
-      };
 
       const emitTopPlayers = async () => {
         const start = Date.now();
         const dashboardPnlResponse = await this.leaderboard.fetchTopPlayers(5);
-        console.log(dashboardPnlResponse);
 
         if (dashboardPnlResponse && Object.keys(dashboardPnlResponse).length > 0) {
           this.socketServer.emit("dashboard-top-players", {
@@ -72,7 +48,6 @@ class DashboardSocketListener {
         setTimeout(emitTopPlayers, Math.max(0, 2000 - elapsed));
       }
 
-      emitDashboard();
       emitTopPlayers();
     } catch (error) {
       logger.error(this.logPrefix + "Emit dashboard error: " + error);

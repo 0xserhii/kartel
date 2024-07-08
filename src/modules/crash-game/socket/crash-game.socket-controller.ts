@@ -158,6 +158,7 @@ export class CrashGameSocketController {
         { $limit: count },
         { $project: { _id: 1, players: 1, crashPoint: 1 } },
       ]);
+
       this.socket.emit("previous-crashgame-history", history);
     } catch (error) {
       console.error("Error fetching previous crash game history:", error);

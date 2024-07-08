@@ -32,3 +32,4 @@ export { default as RevenueLog } from "@/modules/revenue-log/reveune-log.model";
 export { default as User } from "@/modules/user/user.model";
 export { default as UserBot } from "@/modules/user-bot/user-bot.model";
 export { default as WalletTransaction } from "@/modules/wallet-transaction/wallet-transaction.model";
+export { default as Dashboard } from "@/modules/dashboard/dashboard.model";

@@ -1,4 +1,5 @@
 import { CustomerUpdate } from "./crons";
+import { DashboardUpdate } from "./crons/dashboard-update";
 
 // Cron Jobs
 /**
@@ -17,6 +18,11 @@ const customerUpdateCron = new CustomerUpdate("1 0 * * *", {
   scheduled: true,
 });
 
+const revenueLogUpdateCron = new DashboardUpdate("*/5 * * * *", {
+  scheduled: true,
+});
+
 export const CronJobs = {
   customerUpdateCron,
+  revenueLogUpdateCron
 };

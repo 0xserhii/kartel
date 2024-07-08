@@ -8,3 +8,10 @@ export enum ELeaderboardEvents {
   notifyError = "notify-error",
   disconnect = "disconnect",
 }
+
+export enum EFilterDate {
+  day = "day",
+  week = "week",
+  month = "month",
+  year = "year",
+}
