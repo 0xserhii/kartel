@@ -405,7 +405,7 @@ export class CrashGameSocketController {
       // Add revenue to the site wallet
       const revenueId = process.env.REVENUE_ID;
       let siteUser = await this.userService.getItemById(revenueId);
-
+      console.log("siteUser", siteUser);
       if (siteUser) {
         let newSiteWalletValue = 0;
 
