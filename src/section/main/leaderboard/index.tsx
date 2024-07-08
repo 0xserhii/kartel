@@ -45,7 +45,6 @@ const LeaderboardCard = ({ title, dataKey }) => {
                                     const betAmount = score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
                                     const winAmount = score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
                                     const profit = (winAmount - betAmount).toFixed(2);
-
                                     return {
                                         ...score,
                                         profit: Number(profit),
