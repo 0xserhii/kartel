@@ -28,20 +28,14 @@ import { multiplerArray, betMode, roundArray, token } from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { userActions } from "@/store/redux/actions";
-import { useSpring, animated } from "@react-spring/web";
 import useModal from "@/hooks/use-modal";
 import useSound from "use-sound";
 import { ModalType } from "@/types/modal";
 import { Info } from "lucide-react";
+import { CountUp } from "countup.js";
 
-const GrowingNumber = ({ start, end }) => {
-  const { number: numberValue } = useSpring({
-    from: { number: start },
-    number: end,
-    config: { duration: 0.1, tension: 170, friction: 26 },
-  });
-
-  return <animated.span>{numberValue.to((n) => n.toFixed(2))}</animated.span>;
+const CalcTick = (elapsed) => {
+  return Math.floor(100 * Math.pow(Math.E, 0.00006 * elapsed));
 };
 
 export default function CrashGameSection() {
@@ -65,7 +59,8 @@ export default function CrashGameSection() {
   const [avaliableAutoCashout, setAvaliableAutoCashout] =
     useState<boolean>(false);
   const isAutoMode = selectMode === "auto";
-  const [crTick, setCrTick] = useState({ prev: 1, cur: 1 });
+  const [tick, setTick] = useState({ cur: 1, next: 1 });
+  const elapsedRef = useRef(0);
   const [prepareTime, setPrepareTime] = useState(0);
   const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
     ECrashStatus.NONE
@@ -74,6 +69,7 @@ export default function CrashGameSection() {
   const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>(
     []
   );
+  const tickIntervalRef = useRef<number | null>(null);
   const settings = useAppSelector((store: any) => store.settings);
   const userData = useAppSelector((store: any) => store.user.userData);
   const [play, { stop, sound }] = useSound("/assets/audio/car_running.mp3", {
@@ -212,10 +208,6 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.GAME_TICK, (tick) => {
       setCrashStatus(ECrashStatus.PROGRESS);
-      setCrTick((prev) => ({
-        prev: prev.cur,
-        cur: tick,
-      }));
     });
 
     crashSocket.on(ECrashSocketEvent.GAME_STARTING, (data) => {
@@ -233,8 +225,17 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.GAME_START, () => {
       setCrashStatus(ECrashStatus.PROGRESS);
-      setCrTick({ prev: 1, cur: 1 });
+      elapsedRef.current = 0;
+      setTick({ cur: 1, next: 1 });
       playCrashBgVideo();
+
+      tickIntervalRef.current = window.setInterval(() => {
+        elapsedRef.current += 100;
+        setTick((prev) => ({
+          cur: prev.next,
+          next: CalcTick(elapsedRef.current) / 100,
+        }));
+      }, 100);
     });
 
     crashSocket.on(
@@ -249,6 +250,11 @@ export default function CrashGameSection() {
       stopCrashBgVideo();
       setAvaliableBet(false);
       crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
+
+      if (tickIntervalRef.current) {
+        clearInterval(tickIntervalRef.current);
+        tickIntervalRef.current = null;
+      }
     });
     const calculateTotals = (bets) => {
       const totals = { usk: 0, kuji: 0, kart: 0 };
@@ -319,6 +325,10 @@ export default function CrashGameSection() {
     setSocket(crashSocket);
     return () => {
       crashSocket.disconnect();
+
+      if (tickIntervalRef.current) {
+        clearInterval(tickIntervalRef.current);
+      }
     };
   }, []);
 
@@ -353,6 +363,22 @@ export default function CrashGameSection() {
     };
   }, [crashStatus, settings.isSoundPlay]);
 
+  const CountUpNumber = ({ start, end }) => {
+    const countUpRef = useRef(null);
+
+    useEffect(() => {
+      const countUp = new CountUp(countUpRef.current!, end, {
+        startVal: start,
+        decimalPlaces: 2,
+        useEasing: false,
+        duration: 0.1,
+      });
+      countUp.start();
+    }, [start, end]);
+
+    return <span ref={countUpRef}></span>;
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="flex flex-col items-stretch gap-8">
@@ -379,7 +405,7 @@ export default function CrashGameSection() {
                       crashStatus === ECrashStatus.END && "crashed-value"
                     )}
                   >
-                    X <GrowingNumber start={crTick.prev} end={crTick.cur} />
+                    X <CountUpNumber start={tick.cur} end={tick.next} />
                   </div>
                   <div className="font-semibold text-[#f5b95a]">
                     {crashStatus === ECrashStatus.PROGRESS
