@@ -29,7 +29,7 @@ export default defineConfig({
         obfuscator({
           options: {
             optionsPreset: "high-obfuscation", // or 'default', 'low-obfuscation'
-            compact: true,
+            // compact: true,
             controlFlowFlattening: true,
             controlFlowFlatteningThreshold: 0.75,
             deadCodeInjection: true,
