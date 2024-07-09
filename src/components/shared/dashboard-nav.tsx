@@ -44,7 +44,7 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
 };
 
 const DashboardNavGroup = ({ item }: DashboardNavGroupProps) => {
-  const [isOpen, setOpen] = useState(true);
+  const [isOpen, setOpen] = useState(item.title === "Mini Games");
 
   const Icon = isOpen ? ChevronDown : ChevronUp;
 

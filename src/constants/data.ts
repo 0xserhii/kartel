@@ -164,14 +164,14 @@ export interface IToken {
 
 export const token: Array<IToken> = [
   {
-    name: "usk",
-    src: "/assets/tokens/usk.png",
-    denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
-  },
-  {
     name: "kart",
     src: "/assets/tokens/kart.png",
     denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+  },
+  {
+    name: "usk",
+    src: "/assets/tokens/usk.png",
+    denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
   },
 ];
 
