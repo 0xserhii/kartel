@@ -28,7 +28,7 @@ export default defineConfig({
       plugins: [
         obfuscator({
           options: {
-            optionsPreset: 'high-obfuscation', // or 'default', 'low-obfuscation'
+            optionsPreset: "high-obfuscation", // or 'default', 'low-obfuscation'
             compact: true,
             controlFlowFlattening: true,
             controlFlowFlatteningThreshold: 0.75,

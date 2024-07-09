@@ -3,7 +3,13 @@ import CoinflipBanner from "/assets/coinflip.jpg";
 import CoinflipTitle from "/assets/coinflip-title.png";
 import CrashTitle from "/assets/crash-title.png";
 import PlayText from "/assets/play-text.svg";
-import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { ScrollBar, ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -20,7 +26,7 @@ const LeaderboardCard = ({ title, dataKey }) => {
   const active = leaderboardTabs[0].value;
 
   return (
-    <ScrollArea className="w-full p-5 bg-opacity-80 bg-dark h-88 border-purple-0.5 border shadow-purple-0.5 drop-shadow-sm rounded-lg overflow-x-auto">
+    <ScrollArea className="h-88 w-full overflow-x-auto rounded-lg border border-purple-0.5 bg-dark bg-opacity-80 p-5 shadow-purple-0.5 drop-shadow-sm">
       <div className="w-full min-w-[500px]">
         <Table className="relative table-fixed border-separate border-spacing-y-3">
           <TableHeader>
@@ -29,14 +35,18 @@ const LeaderboardCard = ({ title, dataKey }) => {
               <TableCell className="w-2/5">User</TableCell>
               <TableCell className="w-1/5 text-center">{title} Bet</TableCell>
               <TableCell className="w-1/5 text-center">{title} Win</TableCell>
-              <TableCell className="w-1/5 text-center">{title} Profit</TableCell>
+              <TableCell className="w-1/5 text-center">
+                {title} Profit
+              </TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
             {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]
               ?.map((score, index) => {
-                const betAmount = score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
-                const winAmount = score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
+                const betAmount =
+                  score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
+                const winAmount =
+                  score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
                 const profit = (winAmount - betAmount).toFixed(2);
                 return {
                   ...score,
@@ -45,7 +55,7 @@ const LeaderboardCard = ({ title, dataKey }) => {
                   winAmount: Number(winAmount).toFixed(2),
                 };
               })
-              .filter(score => score.profit >= 0)
+              .filter((score) => score.profit >= 0)
               .sort((a, b) => b.profit - a.profit)
               .map((score, index) => (
                 <TableRow
@@ -76,7 +86,11 @@ const LeaderboardCard = ({ title, dataKey }) => {
                   </TableCell>
                   <TableCell className="w-1/5">
                     <div className="flex items-center justify-center gap-1">
-                      <span className={score.profit >= 0 ? "text-white" : "text-purple"}>
+                      <span
+                        className={
+                          score.profit >= 0 ? "text-white" : "text-purple"
+                        }
+                      >
                         {score.profit.toFixed(2)}
                       </span>
                     </div>

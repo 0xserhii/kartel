@@ -144,7 +144,11 @@ const DepositModal = () => {
             Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() <
             0.00055
           ) {
-            dispatch(paymentActions.paymentFailed("Insufficient Kujira balance for Fee"));
+            dispatch(
+              paymentActions.paymentFailed(
+                "Insufficient Kujira balance for Fee"
+              )
+            );
             return;
           }
           const hashTx = await signAndBroadcast(
@@ -331,7 +335,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
