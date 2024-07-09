@@ -21,13 +21,13 @@ const LeaderboardCard = ({ title, dataKey }) => {
     const active = leaderboardTabs[0].value;
 
     return (
-        <Card className="w-6/12 border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
+        <Card className="2xl:w-6/12 w-full border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
                 <Table className="w-full table-fixed">
                     <TableBody>
                         <TableRow className="!bg-transparent">
                             <TableCell className="w-1/5 text-center">No.</TableCell>
-                            <TableCell className="w-1/5">User</TableCell>
+                            <TableCell className="w-2/5">User</TableCell>
                             <TableCell className="w-1/5 text-center">{title} Bet</TableCell>
                             <TableCell className="w-1/5 text-center">{title} Win</TableCell>
                             <TableCell className="w-1/5 text-center">{title} Profit</TableCell>
@@ -35,10 +35,9 @@ const LeaderboardCard = ({ title, dataKey }) => {
                     </TableBody>
                 </Table>
             </CardHeader>
-            <CardContent className={`px-2 py-0 ${"h-[536px]"}`}>
-
+            <CardContent className={`px-2 py-0 h-[536px] overflow-auto`}>
                 <ScrollArea className="h-88 px-5 py-3">
-                    <Table className="relative table-fixed border-separate border-spacing-y-3">
+                    <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-hidden">
                         <TableBody>
                             {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]
                                 ?.map((score, index) => {
@@ -70,10 +69,8 @@ const LeaderboardCard = ({ title, dataKey }) => {
                                                 <span>{index + 1}</span>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="w-1/5">
-                                            <div className="flex items-center gap-2">
-                                                <span>{score.username}</span>
-                                            </div>
+                                        <TableCell className="w-2/5 truncate">
+                                            {score.username}
                                         </TableCell>
                                         <TableCell className="w-1/5 text-center">
                                             {score.betAmount}
@@ -127,7 +124,7 @@ export default function LeaderboardSection() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3">
-                    <div className="flex flex-row gap-3">
+                    <div className="flex 2xl:flex-row flex-col gap-3">
                         <LeaderboardCard title="USK" dataKey="usk" />
                         <LeaderboardCard title="KART" dataKey="kart" />
                     </div>
