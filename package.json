@@ -10,8 +10,8 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier . --write",
-    "start": "npm run build && vite preview",
-    "preview": "vite preview --port 6000",
+    "start": "npm run build && vite preview --port 3005",
+    "preview": "vite preview",
     "prepare": "husky"
   },
   "lint-staged": {
