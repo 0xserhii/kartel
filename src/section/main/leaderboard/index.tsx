@@ -3,8 +3,7 @@ import CoinflipBanner from "/assets/coinflip.jpg";
 import CoinflipTitle from "/assets/coinflip-title.png";
 import CrashTitle from "/assets/crash-title.png";
 import PlayText from "/assets/play-text.svg";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollBar, ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -21,80 +20,74 @@ const LeaderboardCard = ({ title, dataKey }) => {
     const active = leaderboardTabs[0].value;
 
     return (
-        <Card className="2xl:w-6/12 w-full border-purple-0.15 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between border-b border-b-purple-0.5 px-7 py-3 text-base font-semibold text-gray500">
-                <Table className="w-full table-fixed">
-                    <TableBody>
-                        <TableRow className="!bg-transparent">
+        <ScrollArea className="w-full p-5 bg-opacity-80 bg-dark h-88 border-purple-0.5 border shadow-purple-0.5 drop-shadow-sm rounded-lg overflow-x-auto">
+            <div className="w-full min-w-[500px]">
+                <Table className="relative table-fixed border-separate border-spacing-y-3">
+                    <TableHeader>
+                        <TableRow className="!bg-transparent text-gray300">
                             <TableCell className="w-1/5 text-center">No.</TableCell>
                             <TableCell className="w-2/5">User</TableCell>
                             <TableCell className="w-1/5 text-center">{title} Bet</TableCell>
                             <TableCell className="w-1/5 text-center">{title} Win</TableCell>
                             <TableCell className="w-1/5 text-center">{title} Profit</TableCell>
                         </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]
+                            ?.map((score, index) => {
+                                const betAmount = score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
+                                const winAmount = score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
+                                const profit = (winAmount - betAmount).toFixed(2);
+                                return {
+                                    ...score,
+                                    profit: Number(profit),
+                                    betAmount: Number(betAmount).toFixed(2),
+                                    winAmount: Number(winAmount).toFixed(2),
+                                };
+                            })
+                            .filter(score => score.profit >= 0)
+                            .sort((a, b) => b.profit - a.profit)
+                            .map((score, index) => (
+                                <TableRow
+                                    key={index}
+                                    className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
+                                >
+                                    <TableCell className="w-1/5 text-center">
+                                        <div className="flex items-center justify-center gap-2">
+                                            {index + 1 <= 3 && (
+                                                <img
+                                                    src={`/assets/medal/top${index + 1}.svg`}
+                                                    className="h-5 w-5"
+                                                />
+                                            )}
+                                            <span>{index + 1}</span>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="w-2/5 truncate">
+                                        {score.username}
+                                    </TableCell>
+                                    <TableCell className="w-1/5 text-center">
+                                        {score.betAmount}
+                                    </TableCell>
+                                    <TableCell className="w-1/5">
+                                        <div className="flex items-center justify-center gap-1">
+                                            {score.winAmount}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="w-1/5">
+                                        <div className="flex items-center justify-center gap-1">
+                                            <span className={score.profit >= 0 ? "text-white" : "text-purple"}>
+                                                {score.profit.toFixed(2)}
+                                            </span>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
-            </CardHeader>
-            <CardContent className={`px-2 py-0 h-[536px] overflow-auto`}>
-                <ScrollArea className="h-88 px-5 py-3">
-                    <Table className="relative table-fixed border-separate border-spacing-y-3 overflow-hidden">
-                        <TableBody>
-                            {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]
-                                ?.map((score, index) => {
-                                    const betAmount = score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
-                                    const winAmount = score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
-                                    const profit = (winAmount - betAmount).toFixed(2);
-                                    return {
-                                        ...score,
-                                        profit: Number(profit),
-                                        betAmount: Number(betAmount).toFixed(2),
-                                        winAmount: Number(winAmount).toFixed(2),
-                                    };
-                                })
-                                .filter(score => score.profit >= 0)
-                                .sort((a, b) => b.profit - a.profit)
-                                .map((score, index) => (
-                                    <TableRow
-                                        key={index}
-                                        className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
-                                    >
-                                        <TableCell className="w-1/5 text-center">
-                                            <div className="flex items-center justify-center gap-2">
-                                                {index + 1 <= 3 && (
-                                                    <img
-                                                        src={`/assets/medal/top${index + 1}.svg`}
-                                                        className="h-5 w-5"
-                                                    />
-                                                )}
-                                                <span>{index + 1}</span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="w-2/5 truncate">
-                                            {score.username}
-                                        </TableCell>
-                                        <TableCell className="w-1/5 text-center">
-                                            {score.betAmount}
-                                        </TableCell>
-                                        <TableCell className="w-1/5">
-                                            <div className="flex items-center justify-center gap-1">
-                                                {score.winAmount}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="w-1/5">
-                                            <div className="flex items-center justify-center gap-1">
-                                                <span className={score.profit >= 0 ? "text-white" : "text-purple"}>
-                                                    {score.profit.toFixed(2)}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                        </TableBody>
-                    </Table>
-                    <ScrollBar orientation="horizontal" />
-                </ScrollArea>
-            </CardContent>
-        </Card>
+            </div>
+            <ScrollBar orientation="horizontal" />
+        </ScrollArea>
     );
 };
 
@@ -124,7 +117,7 @@ export default function LeaderboardSection() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3">
-                    <div className="flex 2xl:flex-row flex-col gap-3">
+                    <div className="grid grid-cols-2 gap-3">
                         <LeaderboardCard title="USK" dataKey="usk" />
                         <LeaderboardCard title="KART" dataKey="kart" />
                     </div>

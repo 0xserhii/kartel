@@ -84,7 +84,7 @@ export default function DashboardSection() {
                         </div>
                         <DashboardChart date={filterDate} />
                     </Card>
-                    <div className="flex flex-row gap-5">
+                    <div className="grid grid-cols-2 gap-5 w-full">
                         <WinnerBoard winners={dashboardState?.topPlayers?.crash?.winners} />
                         <LoserBoard losers={dashboardState?.topPlayers?.crash?.losers} />
                     </div>
