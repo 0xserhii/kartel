@@ -12,7 +12,7 @@ export default function LoserBoard({ losers }: { losers: any }) {
                         <TableBody>
                             <TableRow className="!bg-transparent">
                                 <TableCell className="w-1/5 text-center">No.</TableCell>
-                                <TableCell className="w-1/5">User</TableCell>
+                                <TableCell className="w-2/5">User</TableCell>
                                 <TableCell className="w-1/5 text-center">
                                     Bet Amount
                                 </TableCell>
@@ -40,10 +40,8 @@ export default function LoserBoard({ losers }: { losers: any }) {
                                                         <span>{index + 1}</span>
                                                     </div>
                                                 </TableCell>
-                                                <TableCell className="w-1/5">
-                                                    <div className="flex items-center gap-2">
-                                                        <span>{score.username}</span>
-                                                    </div>
+                                                <TableCell className="w-2/5">
+                                                    <span>{score.username}</span>
                                                 </TableCell>
                                                 <TableCell className="w-1/5 text-center">
                                                     {Number(
