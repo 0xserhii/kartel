@@ -65,7 +65,7 @@ const DepositModal = () => {
 
   const handleWithdraw = async () => {
     if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
-      toast.error(`Insufficient token`);
+      dispatch(paymentActions.paymentFailed("Insufficient token"));
       return;
     }
     if (account) {
@@ -81,6 +81,7 @@ const DepositModal = () => {
         );
         dispatch(paymentActions.withDraw(encryptedParam));
       } catch (err) {
+        dispatch(paymentActions.paymentFailed("Withdraw rejected"));
         console.log(err);
       }
     }
@@ -116,7 +117,7 @@ const DepositModal = () => {
         }
       }
       if (!signedTx) {
-        toast.error("Reject deposit");
+        dispatch(paymentActions.paymentFailed("Reject deposit"));
         return;
       }
       if (
@@ -131,7 +132,7 @@ const DepositModal = () => {
           )
         )
       ) {
-        toast.error(`Insufficient token in wallet`);
+        dispatch(paymentActions.paymentFailed("Insufficient token in wallet"));
         return;
       }
       if (account) {
@@ -143,7 +144,7 @@ const DepositModal = () => {
             Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() <
             0.00055
           ) {
-            toast.error(`Insufficient Kujira balance for Fee`);
+            dispatch(paymentActions.paymentFailed("Insufficient Kujira balance for Fee"));
             return;
           }
           const hashTx = await signAndBroadcast(
@@ -174,12 +175,13 @@ const DepositModal = () => {
           );
           dispatch(paymentActions.deposit(encryptedData));
         } catch (err) {
+          dispatch(paymentActions.paymentFailed("Reject deposit"));
           console.warn("tx_error", err);
         }
       }
     } catch (error) {
       console.log(error);
-      toast.error("Reject deposit");
+      dispatch(paymentActions.paymentFailed("Reject deposit"));
     }
   };
 
@@ -329,7 +331,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => {}}
+                onChange={() => { }}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

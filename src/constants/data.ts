@@ -1,5 +1,7 @@
 import { NavItemGroup } from "@/types";
 
+const isProduction = import.meta.env.VITE_KUJIRA_NETWORK === "mainnet";
+
 export enum EFilterDate {
   hour = "hour",
   day = "day",
@@ -166,12 +168,12 @@ export const token: Array<IToken> = [
   {
     name: "usk",
     src: "/assets/tokens/usk.png",
-    denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
+    denom: isProduction ? "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk" : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
   },
   {
     name: "kart",
     src: "/assets/tokens/kart.png",
-    denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+    denom: isProduction ? "factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/ukart" : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
   },
 ];
 
@@ -185,8 +187,8 @@ export const initialBalance = { usk: 0, kart: 0 };
 export const finance = ["Deposit", "Withdraw"];
 
 export const denoms = {
-  usk: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
-  kart: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+  usk: isProduction ? "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk" : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
+  kart: isProduction ? "factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/ukart" : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
 };
 
 export const crashInfoSections = [
