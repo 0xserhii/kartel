@@ -17,13 +17,11 @@ function subscribe(socket) {
     );
     socket.on(
       EDashboardSocketEvent.GET_TOP_PLAYERS,
-      (data: {
-        message: string; topPlayers: any
-      }) => {
+      (data: { message: string; topPlayers: any }) => {
         emit(dashboardActions.getTopPlayersHistory(data.topPlayers));
       }
     );
-    return () => { };
+    return () => {};
   });
 }
 

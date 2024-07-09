@@ -10,8 +10,8 @@ export interface IPaymentState {
 
 const initialState: IPaymentState = {
   admin: {
-    key: "",
-    address: "",
+    address1: "",
+    address2: "",
   },
   loginStatus: false,
   txProgress: false,

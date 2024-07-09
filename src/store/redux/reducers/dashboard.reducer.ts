@@ -25,7 +25,7 @@ const initialState: IDashboardState = {
     crash: [],
     coinflip: [],
   },
-  topPlayers: {}
+  topPlayers: {},
 };
 
 export default function dashboardReducer(
@@ -42,7 +42,7 @@ export default function dashboardReducer(
     case EDashboardSocketAction.GET_TOP_PLAYERS:
       return {
         ...state,
-        topPlayers: action.payload as any
+        topPlayers: action.payload as any,
       };
 
     case EDashboardSocketAction.DISCONNECT_DASHBOARD:

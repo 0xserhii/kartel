@@ -14,7 +14,7 @@ export type TUserData = {
     username: string;
     userEmail: string;
     _id: string;
-    role: string
+    role: string;
   };
 };
 
@@ -39,7 +39,10 @@ export function rememberMe(remember: boolean) {
   };
 }
 
-export function setCredential(credentials: { email: string; password: string }) {
+export function setCredential(credentials: {
+  email: string;
+  password: string;
+}) {
   return {
     type: SET_CREDENTIALS,
     payload: credentials,
@@ -73,4 +76,3 @@ export function disconnectUserServer() {
     payload: null,
   };
 }
-

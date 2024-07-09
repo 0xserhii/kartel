@@ -22,15 +22,10 @@ const tokenList: ITokenList[] = [
     name: "Leap",
     image: "/assets/tokens/leap.svg",
   },
-  {
-    name: "Cosmotation",
-    image: "/assets/tokens/cosmostation.svg",
-  },
 ];
 
 const CWalletLink = {
   keplr: "https://www.keplr.app/download",
-  cosmostation: "https://www.cosmostation.io/products/cosmostation_extension",
   leap: "https://www.leapwallet.io",
 };
 
@@ -72,14 +67,6 @@ const WalletConnectModal = () => {
           }
           setLoading((prev) => ({ ...prev, leap: true }));
           await connect(Adapter.Leap);
-          break;
-        case "Cosmotation":
-          if (!window.station) {
-            window.open(CWalletLink.cosmostation, "_blank");
-            return;
-          }
-          setLoading((prev) => ({ ...prev, cosmostation: true }));
-          await connect(Adapter.Station);
           break;
         default:
           break;
@@ -126,18 +113,8 @@ const WalletConnectModal = () => {
                 ) : (
                   <Download className="h-5 w-5 text-white" />
                 ))}
-              {item.name === "Cosmotation" &&
-                !loading.cosmostation &&
-                (window.station ? (
-                  <ChevronRight className="h-5 w-5 text-white" />
-                ) : (
-                  <Download className="h-5 w-5 text-white" />
-                ))}
               {item.name === "Keplr" && loading.keplr && <LoadingIcon />}
               {item.name === "Leap" && loading.leap && <LoadingIcon />}
-              {item.name === "Cosmotation" && loading.cosmostation && (
-                <LoadingIcon />
-              )}
             </button>
           ))}
         </div>

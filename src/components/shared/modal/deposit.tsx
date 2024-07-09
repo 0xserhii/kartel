@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useState } from "react";
 import useToast from "@/hooks/use-toast";
-import { useWallet } from "@/provider/crypto/wallet";
+import { Adapter, useWallet } from "@/provider/crypto/wallet";
 import { fromHumanString, msg, toHuman } from "kujira.js";
 import AESWrapper from "@/lib/encryption/aes-wrapper";
 import {
@@ -27,6 +27,7 @@ import { useAppDispatch, useAppSelector } from "@/store/redux";
 import LoadingIcon from "../loading-icon";
 import { axiosGet } from "@/utils/axios";
 import { paymentActions } from "@/store/redux/actions";
+import { StdSignature } from "@keplr-wallet/types";
 
 const DepositModal = () => {
   const modal = useModal();
@@ -42,7 +43,14 @@ const DepositModal = () => {
   const [selectedFinance, setSelectedFinance] = useState("Deposit");
 
   const aesWrapper = AESWrapper.getInstance();
-  const { signAndBroadcast, account, balances, refreshBalances } = useWallet();
+  const {
+    signAndBroadcast,
+    account,
+    balances,
+    refreshBalances,
+    adapter,
+    chainInfo,
+  } = useWallet();
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -68,7 +76,7 @@ const DepositModal = () => {
           address: account?.address,
         };
         const encryptedParam = await aesWrapper.encryptMessage(
-          paymentState.admin.address,
+          paymentState.admin.address1,
           JSON.stringify(withdrawParam)
         );
         dispatch(paymentActions.withDraw(encryptedParam));
@@ -79,66 +87,99 @@ const DepositModal = () => {
   };
 
   const handleDeposit = async () => {
-    dispatch(paymentActions.setTxProgress(true));
-    const walletAddress = await aesWrapper.decryptMessage(
-      paymentState.admin.address,
-      paymentState.admin.key
-    );
-    if (
-      Number(depositAmount) >
-      Number(
-        toHuman(
-          BigNumber.from(
-            balances.find((item) => item.denom === selectedToken.denom)
-              ?.amount ?? 0
-          ),
-          6
-        )
-      )
-    ) {
-      toast.error(`Insufficient token in wallet`);
-      return;
-    }
-    if (account) {
-      try {
-        const kujiraBalance =
-          balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
-          0;
-        if (
-          Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055
-        ) {
-          toast.error(`Insufficient Kujira balance for Fee`);
-          return;
+    try {
+      dispatch(paymentActions.setTxProgress(true));
+      const walletAddress = await aesWrapper.decryptMessage(
+        paymentState.admin.address1,
+        paymentState.admin.address2
+      );
+      let signedTx: StdSignature | undefined = undefined;
+      if (adapter === Adapter.Keplr) {
+        const chainId = chainInfo.chainId;
+        const signed = await window.keplr?.signArbitrary(
+          chainId,
+          account?.address ?? "",
+          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
+        );
+        if (signed) {
+          signedTx = signed;
         }
-        const hashTx = await signAndBroadcast(
-          [
-            msg.bank.msgSend({
-              fromAddress: account?.address,
-              toAddress: walletAddress,
-              amount: [
-                {
-                  denom: selectedToken.denom,
-                  amount: fromHumanString(depositAmount, 6).toString(),
-                },
-              ],
-            }),
-          ],
-          "Deposit to Kartel"
+      } else if (adapter === Adapter.Leap) {
+        const chainId = chainInfo.chainId;
+        const signed = await window.leap?.signArbitrary(
+          chainId,
+          account?.address ?? "",
+          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
         );
-        const depositParam = {
-          currency: selectedToken.name,
-          amount: Number(depositAmount),
-          txHash: hashTx.transactionHash,
-          address: account?.address,
-        };
-        const encryptedData = await aesWrapper.encryptMessage(
-          paymentState.admin.address,
-          JSON.stringify(depositParam)
-        );
-        dispatch(paymentActions.deposit(encryptedData));
-      } catch (err) {
-        console.warn("tx_error", err);
+        if (signed) {
+          signedTx = signed;
+        }
       }
+      if (!signedTx) {
+        toast.error("Reject deposit");
+        return;
+      }
+      if (
+        Number(depositAmount) >
+        Number(
+          toHuman(
+            BigNumber.from(
+              balances.find((item) => item.denom === selectedToken.denom)
+                ?.amount ?? 0
+            ),
+            6
+          )
+        )
+      ) {
+        toast.error(`Insufficient token in wallet`);
+        return;
+      }
+      if (account) {
+        try {
+          const kujiraBalance =
+            balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
+            0;
+          if (
+            Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() <
+            0.00055
+          ) {
+            toast.error(`Insufficient Kujira balance for Fee`);
+            return;
+          }
+          const hashTx = await signAndBroadcast(
+            [
+              msg.bank.msgSend({
+                fromAddress: account?.address,
+                toAddress: walletAddress,
+                amount: [
+                  {
+                    denom: selectedToken.denom,
+                    amount: fromHumanString(depositAmount, 6).toString(),
+                  },
+                ],
+              }),
+            ],
+            "Deposit to Kartel"
+          );
+          const depositParam = {
+            currency: selectedToken.name,
+            amount: Number(depositAmount),
+            txHash: hashTx.transactionHash,
+            address: account?.address,
+            signedTx,
+          };
+          const encryptedData = await aesWrapper.encryptMessage(
+            paymentState.admin.address1,
+            JSON.stringify(depositParam)
+          );
+          dispatch(paymentActions.deposit(encryptedData));
+        } catch (err) {
+          console.warn("tx_error", err);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Reject deposit");
     }
   };
 
@@ -288,7 +329,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
