@@ -39,7 +39,10 @@ export default function MobileSidebar({
   return (
     <>
       <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="w-72 border-none bg-dark !px-0 flex flex-col items-center">
+        <SheetContent
+          side="left"
+          className="flex w-72 flex-col items-center border-none bg-dark !px-0"
+        >
           <div className="flex w-full flex-col items-center gap-8 px-5">
             <Link to="/" className="py-2 text-2xl font-bold text-white ">
               <img src={Logo} alt="Logo" className="h-32 w-36" />
