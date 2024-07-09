@@ -13,7 +13,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const userData = useAppSelector((store: any) => store.user.userData);
     const { account } = useWallet();
 
-    if (userData.role !== "ADMIN" && !adminWallets.includes(account?.address || "")) {
+    if (userData?.role !== "ADMIN" && !adminWallets.includes(account?.address || "")) {
         return <Navigate to={"/"} replace />;
     }
     return (children);

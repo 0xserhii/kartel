@@ -31,7 +31,12 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
             }
             if (date === EFilterDate.hour) {
                 for (let i = 0; i < fetchedAdminBalance?.length; i++) {
-                    tempXData.unshift((`${(currentHour - i).toString().padStart(2, '0')}h`))
+                    const minutesAgo = i * 5;
+                    const date = new Date();
+                    date.setMinutes(date.getMinutes() - minutesAgo);
+                    const hours = date.getHours().toString().padStart(2, '0');
+                    const minutes = date.getMinutes().toString().padStart(2, '0');
+                    tempXData.unshift(`${hours}:${minutes}`);
                 }
             } else if (date === EFilterDate.day) {
                 for (let i = 0; i < fetchedAdminBalance?.length; i++) {
