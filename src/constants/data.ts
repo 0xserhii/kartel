@@ -8,14 +8,13 @@ export enum EFilterDate {
   year = "year",
 }
 
-
 export const dateFilter = [
-  { title: '1H', value: EFilterDate.hour },
-  { title: 'Day', value: EFilterDate.day },
-  { title: 'Week', value: EFilterDate.week },
-  { title: 'Month', value: EFilterDate.month },
-  { title: 'Year', value: EFilterDate.year },
-]
+  { title: "1H", value: EFilterDate.hour },
+  { title: "Day", value: EFilterDate.day },
+  { title: "Week", value: EFilterDate.week },
+  { title: "Month", value: EFilterDate.month },
+  { title: "Year", value: EFilterDate.year },
+];
 
 export const navItems: NavItemGroup[] = [
   {
@@ -195,31 +194,31 @@ export const crashInfoSections = [
     title: "1. Place Your Bet",
     steps: [
       "• Before the Crash Car gets rolling, enter the amount you want to bet in either USK or Kart.",
-      "• Confirm your bet and get ready for the launch!"
-    ]
+      "• Confirm your bet and get ready for the launch!",
+    ],
   },
   {
     title: "2. Watch the Crash Car",
     steps: [
       "• As the Car takes off from the starting line, the multiplier value (your potential winnings) will keep increasing.",
-      "• Watch as the multiplier climbs higher and higher."
-    ]
+      "• Watch as the multiplier climbs higher and higher.",
+    ],
   },
   {
     title: "3. Cash Out",
     steps: [
       "• Decide when to cash out by clicking the cash-out button.",
       "• If you cash out before the Car crashes, you win your bet multiplied by the current multiplier value.",
-      "• For example, if you bet $10 and cash out at a 3x multiplier, you’ll receive $30 (minus fees)"
-    ]
+      "• For example, if you bet $10 and cash out at a 3x multiplier, you’ll receive $30 (minus fees)",
+    ],
   },
   {
     title: "4. Crash",
     steps: [
       "• If the Car crashes before you cash out, you lose your bet.",
-      "• The key is to balance risk and reward—cash out too early, and you might miss bigger winnings; wait too long, and you risk losing it all."
-    ]
-  }
+      "• The key is to balance risk and reward—cash out too early, and you might miss bigger winnings; wait too long, and you risk losing it all.",
+    ],
+  },
 ];
 
 export const casinoGameSrc = [
@@ -243,14 +242,12 @@ export const casinoGameSrc = [
   },
 ];
 
-export const gameLists = [
-  { name: "crash", color: "#0BA544" }
-];
+export const gameLists = [{ name: "crash", color: "#0BA544" }];
 
 export const adminWallets = [
   "kujira1ag38aar8827lzt0mmfepxupdxtq244u4jvrlmc",
   "kujira12l49aetjg02uqzegkcvqej0vyxenvqfycd9cue",
   "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth",
   "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
-  "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky"
+  "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky",
 ];

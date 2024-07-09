@@ -14,6 +14,6 @@ export default function* rootSaga() {
     ...leaderboardSagas,
     ...coinflipSagas,
     ...minesSagas,
-    ...dashboardSagas
+    ...dashboardSagas,
   ]);
 }

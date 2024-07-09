@@ -1,7 +1,5 @@
 import LeaderboardSection from "@/section/main/leaderboard";
 
 export default function Leaderboard() {
-  return (
-    <LeaderboardSection />
-  );
+  return <LeaderboardSection />;
 }

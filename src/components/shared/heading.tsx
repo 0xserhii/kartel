@@ -18,14 +18,13 @@ export default function Heading({ className, userRole }: THeadingProps) {
     items = [
       { name: "home", path: "/" },
       { name: "leaderboard", path: "/leader-board" },
-      { name: 'dashboard', path: '/dashboard' }
-    ]
+      { name: "dashboard", path: "/dashboard" },
+    ];
   }
 
   return (
     <div className={className}>
       {items.map((item, index) => (
-
         <Link
           key={index}
           to={item.path}

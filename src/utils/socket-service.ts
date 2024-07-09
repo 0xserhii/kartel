@@ -68,7 +68,7 @@ const KartelSocket = {
   crash: crashSocket,
   payment: paymentSocket,
   mines: minesSocket,
-  dashboard: dashboardSocket
+  dashboard: dashboardSocket,
 };
 
 export default KartelSocket;

@@ -43,7 +43,14 @@ const DepositModal = () => {
   const [selectedFinance, setSelectedFinance] = useState("Deposit");
 
   const aesWrapper = AESWrapper.getInstance();
-  const { signAndBroadcast, account, balances, refreshBalances, adapter, chainInfo } = useWallet();
+  const {
+    signAndBroadcast,
+    account,
+    balances,
+    refreshBalances,
+    adapter,
+    chainInfo,
+  } = useWallet();
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -92,25 +99,25 @@ const DepositModal = () => {
         const signed = await window.keplr?.signArbitrary(
           chainId,
           account?.address ?? "",
-          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`,
+          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
         );
         if (signed) {
-          signedTx = signed
+          signedTx = signed;
         }
       } else if (adapter === Adapter.Leap) {
         const chainId = chainInfo.chainId;
         const signed = await window.leap?.signArbitrary(
           chainId,
           account?.address ?? "",
-          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`,
+          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
         );
         if (signed) {
-          signedTx = signed
+          signedTx = signed;
         }
       }
       if (!signedTx) {
-        toast.error("Reject deposit")
-        return
+        toast.error("Reject deposit");
+        return;
       }
       if (
         Number(depositAmount) >
@@ -133,7 +140,8 @@ const DepositModal = () => {
             balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
             0;
           if (
-            Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() < 0.00055
+            Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() <
+            0.00055
           ) {
             toast.error(`Insufficient Kujira balance for Fee`);
             return;
@@ -158,7 +166,7 @@ const DepositModal = () => {
             amount: Number(depositAmount),
             txHash: hashTx.transactionHash,
             address: account?.address,
-            signedTx
+            signedTx,
           };
           const encryptedData = await aesWrapper.encryptMessage(
             paymentState.admin.address1,
@@ -170,8 +178,8 @@ const DepositModal = () => {
         }
       }
     } catch (error) {
-      console.log(error)
-      toast.error("Reject deposit")
+      console.log(error);
+      toast.error("Reject deposit");
     }
   };
 
@@ -321,7 +329,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => { }}
+                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
@@ -345,4 +353,3 @@ const DepositModal = () => {
 };
 
 export default DepositModal;
-

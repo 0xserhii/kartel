@@ -21,7 +21,7 @@ const tokenList: ITokenList[] = [
   {
     name: "Leap",
     image: "/assets/tokens/leap.svg",
-  }
+  },
 ];
 
 const CWalletLink = {
