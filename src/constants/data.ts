@@ -197,6 +197,7 @@ export const denoms = {
   kart: isProduction
     ? "factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/ukart"
     : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+  kuji: "ukuji",
 };
 
 export const crashInfoSections = [

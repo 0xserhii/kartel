@@ -138,7 +138,7 @@ const DepositModal = () => {
       if (account) {
         try {
           const kujiraBalance =
-            balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
+            balances.filter((item) => item.denom === denoms.kuji)?.[0]?.amount ??
             0;
           if (
             Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() <
@@ -146,7 +146,7 @@ const DepositModal = () => {
           ) {
             dispatch(
               paymentActions.paymentFailed(
-                "Insufficient Kujira balance for Fee"
+                "Insufficient KUJI balance for Fee"
               )
             );
             return;
@@ -335,7 +335,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => {}}
+                onChange={() => { }}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
