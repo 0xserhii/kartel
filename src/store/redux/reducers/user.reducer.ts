@@ -35,7 +35,7 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
           username: action.payload.username,
           userEmail: action.payload.userEmail,
           _id: action.payload._id,
-          role: action.payload.role
+          role: action.payload?.role
         },
       };
 
