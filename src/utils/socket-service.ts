@@ -29,7 +29,7 @@ const createSocket = <ServerEvents, ClientEvents>(
 const chatSocket = createSocket<
   IChatServerToClientEvents,
   IChatClientToServerEvents
->("chat");
+>("813474ade739d5d");
 
 const coinflipSocket = createSocket<
   ICoinflipServerToClientEvents,
@@ -39,7 +39,7 @@ const coinflipSocket = createSocket<
 const leaderboardSocket = createSocket<
   ILeaderboardServerToClientEvents,
   ILeaderboardClientToServerEvents
->("leaderboard");
+>("aaf366284dd1");
 
 const minesSocket = createSocket<
   IMinesServerToClientEvents,
@@ -54,12 +54,12 @@ const crashSocket = createSocket<
 const paymentSocket = createSocket<
   IUserServerToClientEvents,
   IUserClientToServerEvents
->("payment");
+>("e3b86d17bc14e9");
 
 const dashboardSocket = createSocket<
   IUserServerToClientEvents,
   IUserClientToServerEvents
->("dashboard");
+>("d133087e2w21");
 
 const KartelSocket = {
   chat: chatSocket,

@@ -17,7 +17,7 @@ const userPersistConfig = {
   storage: storage,
   transforms: [
     encryptTransform({
-      secretKey: "P3FYdhTukOmjClrRZ1ywV56zW2vzzltPm4DZmnZnsrM=",
+      secretKey: "vf4Boy2WT1bVgphxFqjEY2GjciChkXvf4Boy2WT1hkXv2",
     }),
   ],
 };
@@ -27,7 +27,7 @@ const settingsPersistConfig = {
   storage: storage,
   transforms: [
     encryptTransform({
-      secretKey: "P3FYdhTukOmjClrRZ1ywV56zW2vzzltPm4DZmnZnsrM=",
+      secretKey: "b0d2a26bac7234cd9d55c1f87a6f636581f6b",
     }),
   ],
 };

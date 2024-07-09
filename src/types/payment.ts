@@ -1,8 +1,8 @@
 export enum EPaymentEvents {
-  login = "auth",
-  withdraw = "withdraw",
-  deposit = "deposit",
-  setAdminWallet = "set-admin-wallet",
+  login = "7234cd9d55",
+  withdraw = "6f6363325c",
+  deposit = "13474ade7",
+  setAdminWallet = "9a2d27683581f",
   paymentFailed = "payment-failed",
   updateBalance = "updateBalance",
 }
@@ -26,8 +26,8 @@ export type TSocketWithDrawParam = {
 };
 
 export type TAdminWallet = {
-  key: string;
-  address: string;
+  address1: string;
+  address2: string;
 };
 
 export interface IPaymentClientToServerEvents {
