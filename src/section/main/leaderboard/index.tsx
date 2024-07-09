@@ -117,7 +117,7 @@ export default function LeaderboardSection() {
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          <div className="flex flex-row gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <LeaderboardCard title="USK" dataKey="usk" />
             <LeaderboardCard title="KART" dataKey="kart" />
           </div>
@@ -143,59 +143,28 @@ export default function LeaderboardSection() {
                     />
                   </Link>
                 </div>
-                <div className="flex flex-col gap-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <LeaderboardCard title="USK" dataKey="usk" />
-                    <LeaderboardCard title="KART" dataKey="kart" />
-                  </div>
-                  <div className="">
-                    {active === "crash" && (
-                      <div className="flex transition-all ease-in-out">
-                        <div className="relative rounded-md">
-                          <img
-                            src={CrashBanner}
-                            alt="Crash Banner"
-                            className="aspect-auto h-full w-full rounded-md"
-                          />
-                          <img
-                            src={CrashTitle}
-                            alt="Crash Title"
-                            className="absolute right-2 top-2 mt-auto"
-                          />
-                          <Link to="/crash">
-                            <img
-                              src={PlayText}
-                              alt="Play Text"
-                              className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
-                            />
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                    {active === "coinflip" && (
-                      <div className="flex transition-all ease-in-out">
-                        <div className="relative rounded-md">
-                          <img
-                            src={CoinflipBanner}
-                            alt="Crash Banner"
-                            className="aspect-auto h-full w-full rounded-lg"
-                          />
-                          <img
-                            src={CoinflipTitle}
-                            alt="Crash Title"
-                            className="absolute right-2 top-2 mt-auto w-32"
-                          />
-                          <Link to="/coinflip">
-                            <img
-                              src={PlayText}
-                              alt="Play Text"
-                              className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
-                            />
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+              </div>
+            )}
+            {active === "coinflip" && (
+              <div className="flex transition-all ease-in-out">
+                <div className="relative rounded-md">
+                  <img
+                    src={CoinflipBanner}
+                    alt="Crash Banner"
+                    className="aspect-auto h-full w-full rounded-lg"
+                  />
+                  <img
+                    src={CoinflipTitle}
+                    alt="Crash Title"
+                    className="absolute right-2 top-2 mt-auto w-32"
+                  />
+                  <Link to="/coinflip">
+                    <img
+                      src={PlayText}
+                      alt="Play Text"
+                      className="absolute bottom-4 left-7 mt-auto cursor-pointer shadow-dark-blue-0.4 ease-in-out hover:shadow-lg hover:transition-all md:hover:scale-[1.3]"
+                    />
+                  </Link>
                 </div>
               </div>
             )}
