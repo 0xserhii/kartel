@@ -93,7 +93,7 @@ export default function Header() {
                 onClick={() => setOpen(!open)}
               >
                 <MessageSquareMore
-                  className={`text-${open ? "purple" : "white"}`}
+                  className={`hidden 2xl:flex text-${open ? "purple" : "white"}`}
                 />
               </Button>
               <UserNav />
