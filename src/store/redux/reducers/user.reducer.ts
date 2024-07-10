@@ -8,7 +8,7 @@ export const SET_CREDENTIALS = "SET_CREDENTIALS";
 export const REMOVE_CREDENTIALS = "REMOVE_CREDENTIALS";
 
 export interface UserState {
-  userData: { username: string; userEmail: string; _id: string; role: string };
+  userData: { username: string; _id: string; role: string };
   wallet: { value: number; denom: string };
   remember: boolean;
   credentials: { username: string; password: string };
@@ -20,7 +20,7 @@ interface UserAction {
 }
 
 const initialState: UserState = {
-  userData: { username: "", userEmail: "", _id: "", role: "" },
+  userData: { username: "", _id: "", role: "" },
   wallet: { value: 0, denom: "" },
   remember: false,
   credentials: { username: "", password: "" },
@@ -33,7 +33,6 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
         ...state,
         userData: {
           username: action.payload.username,
-          userEmail: action.payload.userEmail,
           _id: action.payload._id,
           role: action.payload?.role,
         },
@@ -42,7 +41,7 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
     case INIT_USER_DATA:
       return {
         ...state,
-        userData: { username: "", userEmail: "", _id: "", role: "" },
+        userData: { username: "", _id: "", role: "" },
         wallet: { value: 0, denom: "" },
       };
 

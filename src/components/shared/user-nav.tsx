@@ -66,9 +66,6 @@ export default function UserNav() {
             <p className="text-lg leading-none text-white">
               {userData?.username}
             </p>
-            <p className="text-xs leading-none text-white">
-              {userData?.userEmail}
-            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
