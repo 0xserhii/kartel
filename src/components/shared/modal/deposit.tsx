@@ -91,13 +91,15 @@ const DepositModal = () => {
 
   const handleDeposit = async () => {
     try {
-      dispatch(paymentActions.setTxProgress(true));
       dispatch(paymentActions.paymentFailed(""));
+      dispatch(paymentActions.setTxProgress(true));
 
       const walletAddress = await aesWrapper.decryptMessage(
         paymentState.admin.address1,
         paymentState.admin.address2
       );
+
+      console.log("walletAddress", walletAddress);
 
       if (
         Number(depositAmount) >
