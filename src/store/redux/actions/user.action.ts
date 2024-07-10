@@ -12,7 +12,6 @@ import {
 export type TUserData = {
   userData: {
     username: string;
-    userEmail: string;
     _id: string;
     role: string;
   };

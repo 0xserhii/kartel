@@ -195,8 +195,6 @@ export default function CrashGameSection() {
 
   useEffect(() => {
     const handleJoinSuccess = (data) => {
-      console.log(data);
-
       toast.success(data);
       if (data === game_error.autobet_canceled) {
         setAutoBet(true);
@@ -282,11 +280,17 @@ export default function CrashGameSection() {
         const playerData = data.gameStatus.players[playerID];
         setBetCashout((prev) => [...prev, playerData]);
       });
+
       if (user && user.betAmount) {
-        // setAutoBet(false);
+        const selectedTokenObj = token.find(t => t.name === user?.denom);
+        console.log({ user });
+        if (selectedTokenObj) {
+          setSelectedToken(selectedTokenObj);
+        }
         setBetAmount(Number(user?.betAmount));
         setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
       }
+
       const totals = calculateTotals(data.players);
       setTotalAmount((prevAmounts) => ({
         usk: (prevAmounts?.usk || 0) + totals.usk,
@@ -316,9 +320,19 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
-      if (data === game_error.autobet_reached_max) {
+      if (data === game_error.autobet_reached_max || data === game_error.autobet_not_enough_balance) {
         setAutoBet(true);
       }
+    });
+
+    crashSocket.on(ECrashSocketEvent.CRASH_AUTO_BET_COUNT_MAX, (data) => {
+      toast.error(data);
+      setAutoBet(true);
+    });
+
+    crashSocket.on(ECrashSocketEvent.CRASH_AUTO_BET_BALANCE_ERROR, (data) => {
+      toast.error(data);
+      setAutoBet(true);
     });
 
     crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, () => {
