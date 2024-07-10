@@ -92,7 +92,6 @@ const SignInModal = () => {
         modal.close(ModalType.LOGIN);
         return;
       }
-      toast.error("SignIn Failed");
     } catch (error: any) {
       console.error(error);
       toast.error(error?.error);
