@@ -138,7 +138,7 @@ const DepositModal = () => {
             const signed = await window.keplr?.signArbitrary(
               chainId,
               account?.address ?? "",
-              `Deposit ${depositAmount} ${selectedToken.name.toUpperCase()} to Kartel`
+              `Deposit ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} to Kartel`
             );
             if (signed) {
               signedTx = signed;
@@ -148,7 +148,7 @@ const DepositModal = () => {
             const signed = await window.leap?.signArbitrary(
               chainId,
               account?.address ?? "",
-              `Deposit ${depositAmount} ${selectedToken.name.toUpperCase()} to Kartel`
+              `Deposit ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} to Kartel`
             );
             if (signed) {
               signedTx = signed;
@@ -176,7 +176,7 @@ const DepositModal = () => {
           );
           const depositParam = {
             currency: selectedToken.name,
-            amount: Number(depositAmount),
+            amount: Number(depositAmount).valueOf(),
             txHash: hashTx.transactionHash,
             address: account?.address,
             signedTx,
