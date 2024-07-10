@@ -13,7 +13,6 @@ import {
   gameLists,
   initialBalance,
   token,
-  token_currency,
 } from "@/constants/data";
 import WinnerBoard from "./players-board/winner-board";
 import LoserBoard from "./players-board/loser-board";
@@ -29,8 +28,8 @@ export default function DashboardSection() {
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/admin-wallet`
       );
       const walletDataRes = {
-        usk: (response?.balance?.usk ?? 0) * token_currency.usk,
-        kart: (response?.balance?.kart ?? 0) * token_currency.kart,
+        usk: response?.balance?.usk ?? 0,
+        kart: response?.balance?.kart ?? 0,
       };
       setAdminWallet(walletDataRes);
     } catch (error) {

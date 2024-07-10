@@ -9,6 +9,8 @@ import {
 import { token_currency } from "@/constants/data";
 
 export default function WinnerBoard({ winners }: { winners: any }) {
+  console.log({ winners });
+
   return (
     <div className="flex w-full flex-col">
       <p className="p-3 text-xl font-semibold text-gray300">Top Winners</p>

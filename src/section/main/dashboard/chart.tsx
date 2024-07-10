@@ -2,7 +2,7 @@
 
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { EFilterDate, token_currency } from "@/constants/data";
+import { EFilterDate } from "@/constants/data";
 import { axiosPost } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { getMonthName, getDayName } from "@/utils/utils";
@@ -23,7 +23,7 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
 
       const fetchedKartBalance = response
         .filter((item) => item.denom === 'kart')
-        .map((item) => (item.lastBalance.toFixed(2) * token_currency.kart));
+        .map((item) => item.lastBalance.toFixed(2));
 
       const fetchedUskBalance = response
         .filter((item) => item.denom === 'usk')
