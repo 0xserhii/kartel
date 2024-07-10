@@ -268,3 +268,10 @@ export const game_error = {
   autobet_canceled: "Autobet has been canceled.",
   autobet_reached_max: "Autobet has reached the max number of bets! Autobet has canceled",
 };
+
+export const token_currency = {
+  kart: 0.016,
+  usk: 1,
+};
+
+export const prizeMultiple: number = 0.6
