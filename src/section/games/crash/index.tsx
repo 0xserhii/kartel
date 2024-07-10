@@ -195,8 +195,14 @@ export default function CrashGameSection() {
 
   useEffect(() => {
     const handleJoinSuccess = (data) => {
+      console.log(data);
+
       toast.success(data);
-      if (data === game_error.autobet_canceled || data === game_error.autobet_reached_max) {
+      if (data === game_error.autobet_canceled) {
+        setAutoBet(true);
+      }
+
+      if (data === game_error.autobet_running) {
         setAutoBet(false);
       }
     };
@@ -277,7 +283,7 @@ export default function CrashGameSection() {
         setBetCashout((prev) => [...prev, playerData]);
       });
       if (user && user.betAmount) {
-        setAutoBet(false);
+        // setAutoBet(false);
         setBetAmount(Number(user?.betAmount));
         setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
       }

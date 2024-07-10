@@ -264,6 +264,7 @@ export const adminWallets = [
 ];
 
 export const game_error = {
+  autobet_running: "Autobet is running.",
   autobet_canceled: "Autobet has been canceled.",
   autobet_reached_max: "Autobet has reached the max number of bets! Autobet has canceled",
 };
