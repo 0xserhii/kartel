@@ -15,13 +15,14 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { leaderboardActions } from "@/store/redux/actions";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
+import { prizeMultiple, token_currency } from "@/constants/data";
 
 const leaderboardTabs = [
   { title: "Crash", value: "crash" },
   // { title: 'Coinflip', value: 'coinflip' }
 ];
 
-const LeaderboardCard = ({ title, dataKey }) => {
+const LeaderboardCard = () => {
   const leaderboardState = useAppSelector((state: any) => state.leaderboard);
   const active = leaderboardTabs[0].value;
 
@@ -31,68 +32,65 @@ const LeaderboardCard = ({ title, dataKey }) => {
         <Table className="relative table-fixed border-separate border-spacing-y-3">
           <TableHeader>
             <TableRow className="!bg-transparent text-gray300">
-              <TableCell className="w-1/5 text-center">No.</TableCell>
-              <TableCell className="w-1/5">User</TableCell>
-              <TableCell className="w-1/5 text-center">{title} Bet</TableCell>
-              <TableCell className="w-1/5 text-center">{title} Win</TableCell>
-              <TableCell className="w-1/5 text-center">
-                {title} Profit
-              </TableCell>
+              <TableCell className="w-4/12 text-center">Rank</TableCell>
+              <TableCell className="w-4/12 text-center">User</TableCell>
+              <TableCell className="w-4/12 text-center">Played</TableCell>
+              <TableCell className="w-4/12 text-center">Prize</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {leaderboardState?.leaderboardHistory?.[active]?.[dataKey]
-              ?.map((score, index) => {
-                const betAmount =
-                  score.leaderboard?.[active]?.[dataKey]?.betAmount ?? 0;
-                const winAmount =
-                  score.leaderboard?.[active]?.[dataKey]?.winAmount ?? 0;
-                const profit = (winAmount - betAmount).toFixed(2);
-                return {
-                  ...score,
-                  profit: Number(profit),
-                  betAmount: Number(betAmount).toFixed(2),
-                  winAmount: Number(winAmount).toFixed(2),
-                };
-              })
-              .filter((score) => score.profit >= 0)
-              .sort((a, b) => b.profit - a.profit)
+            {leaderboardState?.leaderboardHistory?.[active]?.map((score, index) => {
+              const betAmount = ((score.leaderboard?.[active]?.kart?.betAmount ?? 0) * token_currency.kart) + (score.leaderboard?.[active]?.usk?.betAmount ?? 0);
+              const prize = (betAmount * prizeMultiple).toFixed(2);
+
+              return {
+                ...score,
+                prize: Number(prize).toFixed(2),
+                betAmount: Number(betAmount).toFixed(2),
+              };
+            })
               .map((score, index) => (
+
                 <TableRow
                   key={index}
                   className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
                 >
-                  <TableCell className="w-1/5 text-center">
+                  <TableCell className="w-4/12 text-center py-3">
                     <div className="flex items-center justify-center gap-2">
-                      {index + 1 <= 3 && (
+                      {index + 1 <= 3 ? (
                         <img
                           src={`/assets/medal/top${index + 1}.svg`}
                           className="h-5 w-5"
                         />
-                      )}
-                      <span>{index + 1}</span>
+                      ) : (
+                        <span>{index + 1 + "th"}</span>
+                      )
+                      }
                     </div>
                   </TableCell>
-                  <TableCell className="w-1/5 truncate">
+                  <TableCell className="w-4/12 truncate text-center">
                     {score.username}
                   </TableCell>
-                  <TableCell className="w-1/5 text-center">
-                    {score.betAmount}
-                  </TableCell>
-                  <TableCell className="w-1/5">
-                    <div className="flex items-center justify-center gap-1">
-                      {score.winAmount}
+                  <TableCell className="w-4/12">
+                    <div className="flex flex-row items-center justify-end gap-4 pr-[35%]">
+                      <span className="truncate">
+                        {score.betAmount}
+                      </span>
+                      <img
+                        src={`/assets/coin-icon.svg`}
+                        className="h-4 w-4"
+                      />
                     </div>
                   </TableCell>
-                  <TableCell className="w-1/5">
-                    <div className="flex items-center justify-center gap-1">
-                      <span
-                        className={
-                          score.profit >= 0 ? "text-white" : "text-purple"
-                        }
-                      >
-                        {score.profit.toFixed(2)}
+                  <TableCell className="w-4/12">
+                    <div className="flex flex-row items-center justify-end gap-4 pr-[35%]">
+                      <span className="truncate">
+                        {score.prize}
                       </span>
+                      <img
+                        src={`/assets/coin-icon.svg`}
+                        className="h-4 w-4"
+                      />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -131,9 +129,8 @@ export default function LeaderboardSection() {
           </div>
         </div>
         <div className="flex flex-col gap-3">
-          <div className="grid grid-cols-2 gap-3">
-            <LeaderboardCard title="USK" dataKey="usk" />
-            <LeaderboardCard title="KART" dataKey="kart" />
+          <div className="grid grid-cols-1 gap-3">
+            <LeaderboardCard />
           </div>
           <div className="">
             {active === "crash" && (
