@@ -261,12 +261,14 @@ export const adminWallets = [
   "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth",
   "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
   "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky",
+  "kujira1wwm2nlztj4nw0hpmln22ezvx33708pcemf6agd"
 ];
 
 export const game_error = {
   autobet_running: "Autobet is running.",
   autobet_canceled: "Autobet has been canceled.",
   autobet_reached_max: "Autobet has reached the max number of bets! Autobet has canceled",
+  autobet_not_enough_balance: "You can't afford this autobet! Autobet has canceled",
 };
 
 export const token_currency = {

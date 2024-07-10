@@ -41,9 +41,8 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
         }
       } else if (date === EFilterDate.day) {
         for (let i = 0; i < fetchedAdminBalance?.length; i++) {
-          tempXData.unshift(
-            `${(currentHour - i).toString().padStart(2, "0")}h`
-          );
+          const hour = (currentHour - i + 24) % 24;
+          tempXData.unshift(`${hour.toString().padStart(2, "0")}h`);
         }
       } else if (date === EFilterDate.week) {
         for (let i = 0; i < fetchedAdminBalance?.length; i++) {

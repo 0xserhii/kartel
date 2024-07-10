@@ -83,9 +83,9 @@ const SignUpModal = () => {
       modal.close(ModalType.SIGNUP);
       modal.open(ModalType.LOGIN);
       toast.success("SignUp Success");
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error("SignUp Failed");
+      toast.error(error?.error);
     }
   };
 
