@@ -27,10 +27,6 @@ import { useAppSelector } from "@/store/redux";
 const SignUpSchema = z
   .object({
     username: z.string().nonempty("Full Name is required"),
-    email: z
-      .string()
-      .nonempty("Email is required")
-      .email("Email must be a valid email address"),
     password: z
       .string()
       .nonempty("Password is required")
@@ -49,7 +45,6 @@ const SignUpSchema = z
 
 const SignUpDefaultValue = {
   username: "",
-  email: "",
   password: "",
   confirmPassword: "",
 };
@@ -79,7 +74,6 @@ const SignUpModal = () => {
     try {
       const signUpPayload = {
         username: data.username,
-        email: data.email,
         password: data.password,
       };
       await axiosPost([
@@ -107,7 +101,7 @@ const SignUpModal = () => {
           <form onSubmit={signUpForm.handleSubmit(handleSubmit)}>
             <div className="mt-3 flex flex-col items-center gap-7">
               <div className="flex w-full flex-col gap-3">
-                <div className="grid w-full flex-1 gap-1">
+                <div className="grid w-full flex-1 gap-2">
                   <p className="text-sm text-gray-300">Username</p>
                   <FormField
                     control={signUpForm.control}
@@ -127,27 +121,7 @@ const SignUpModal = () => {
                     )}
                   />
                 </div>
-                <div className="grid w-full flex-1 gap-1">
-                  <p className="text-sm text-gray-300">Email</p>
-                  <FormField
-                    control={signUpForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="email"
-                            className="border border-gray-700 text-white placeholder:text-gray-700"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="grid w-full flex-1 gap-1">
+                <div className="grid w-full flex-1 gap-2">
                   <p className="text-sm text-gray-300">Password</p>
                   <FormField
                     control={signUpForm.control}
@@ -167,7 +141,7 @@ const SignUpModal = () => {
                     )}
                   />
                 </div>
-                <div className="grid w-full flex-1 gap-1">
+                <div className="grid w-full flex-1 gap-2">
                   <p className="text-sm text-gray-300">Confirm Password</p>
                   <FormField
                     control={signUpForm.control}

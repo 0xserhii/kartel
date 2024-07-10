@@ -11,7 +11,7 @@ export interface UserState {
   userData: { username: string; userEmail: string; _id: string; role: string };
   wallet: { value: number; denom: string };
   remember: boolean;
-  credentials: { email: string; password: string };
+  credentials: { username: string; password: string };
 }
 
 interface UserAction {
@@ -23,7 +23,7 @@ const initialState: UserState = {
   userData: { username: "", userEmail: "", _id: "", role: "" },
   wallet: { value: 0, denom: "" },
   remember: false,
-  credentials: { email: "", password: "" },
+  credentials: { username: "", password: "" },
 };
 
 const userReducer = (state: any = initialState, action: UserAction): any => {
@@ -67,7 +67,7 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
     case REMOVE_CREDENTIALS:
       return {
         ...state,
-        credentials: { email: "", password: "" },
+        credentials: { username: "", password: "" },
       };
 
     default:

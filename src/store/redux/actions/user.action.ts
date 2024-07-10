@@ -40,7 +40,7 @@ export function rememberMe(remember: boolean) {
 }
 
 export function setCredential(credentials: {
-  email: string;
+  username: string;
   password: string;
 }) {
   return {
