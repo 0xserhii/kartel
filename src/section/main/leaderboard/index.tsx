@@ -27,12 +27,12 @@ const LeaderboardCard = ({ title, dataKey }) => {
 
   return (
     <ScrollArea className="h-88 w-full overflow-x-auto rounded-lg border border-purple-0.5 bg-dark bg-opacity-80 p-5 shadow-purple-0.5 drop-shadow-sm">
-      <div className="w-full min-w-[500px]">
+      <div className="w-full min-w-[400px]">
         <Table className="relative table-fixed border-separate border-spacing-y-3">
           <TableHeader>
             <TableRow className="!bg-transparent text-gray300">
               <TableCell className="w-1/5 text-center">No.</TableCell>
-              <TableCell className="w-2/5">User</TableCell>
+              <TableCell className="w-1/5">User</TableCell>
               <TableCell className="w-1/5 text-center">{title} Bet</TableCell>
               <TableCell className="w-1/5 text-center">{title} Win</TableCell>
               <TableCell className="w-1/5 text-center">
@@ -73,7 +73,7 @@ const LeaderboardCard = ({ title, dataKey }) => {
                       <span>{index + 1}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="w-2/5 truncate">
+                  <TableCell className="w-1/5 truncate">
                     {score.username}
                   </TableCell>
                   <TableCell className="w-1/5 text-center">
@@ -137,8 +137,8 @@ export default function LeaderboardSection() {
           </div>
           <div className="">
             {active === "crash" && (
-              <div className="flex transition-all ease-in-out">
-                <div className="relative rounded-md">
+              <div className="flex transition-all ease-in-out w-full">
+                <div className="relative rounded-md w-full">
                   <img
                     src={CrashBanner}
                     alt="Crash Banner"

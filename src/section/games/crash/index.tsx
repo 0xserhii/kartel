@@ -24,7 +24,7 @@ import { ECrashStatus } from "@/constants/status";
 import { getAccessToken } from "@/utils/axios";
 import useToast from "@/hooks/use-toast";
 import BetBoard from "./bet-board";
-import { multiplerArray, betMode, roundArray, token } from "@/constants/data";
+import { multiplerArray, betMode, roundArray, token, game_error } from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { userActions } from "@/store/redux/actions";
@@ -172,9 +172,10 @@ export default function CrashGameSection() {
           denom: selectedToken.name,
         };
         socket?.emit("auto-crashgame-bet", joinParams);
+        setAutoBet(false);
       } else {
         toast.error("Bet amount must be greater than 0");
-        setAutoBet(false);
+        setAutoBet(true);
       }
     } else {
       setAutoBet(true);
@@ -186,18 +187,6 @@ export default function CrashGameSection() {
     modal.open(ModalType.CRASH_INFO);
   };
 
-  const onAutoBetJoinSuccess = (data) => {
-    if (selectMode === betMode[0]) {
-      setSelectMode(betMode[1])
-    }
-    toast.success(data);
-    if (data === "Autobet has been canceled.") {
-      setAutoBet(true);
-    } else {
-      setAutoBet(false);
-    }
-  };
-
   useEffect(() => {
     if (socket) {
       socket.emit("auth", getAccessToken());
@@ -205,9 +194,17 @@ export default function CrashGameSection() {
   }, [getAccessToken()]);
 
   useEffect(() => {
-    socket?.on("auto-crashgame-join-success", onAutoBetJoinSuccess);
+    const handleJoinSuccess = (data) => {
+      toast.success(data);
+      if (data === game_error.autobet_canceled || data === game_error.autobet_reached_max) {
+        setAutoBet(false);
+      }
+    };
+
+    socket?.on("auto-crashgame-join-success", handleJoinSuccess);
+
     return () => {
-      socket?.off("auto-crashgame-join-success", onAutoBetJoinSuccess);
+      socket?.off("auto-crashgame-join-success", handleJoinSuccess);
     };
   }, [socket, toast]);
 
@@ -259,6 +256,7 @@ export default function CrashGameSection() {
       setAvaliableBet(false);
       crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
     });
+
     const calculateTotals = (bets) => {
       const totals = { usk: 0, kuji: 0, kart: 0 };
       bets.forEach((bet) => {
@@ -312,7 +310,9 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
-      setAutoBet(true);
+      if (data === game_error.autobet_reached_max) {
+        setAutoBet(true);
+      }
     });
 
     crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, () => {

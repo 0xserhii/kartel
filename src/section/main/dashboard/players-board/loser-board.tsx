@@ -12,12 +12,12 @@ export default function LoserBoard({ losers }: { losers: any }) {
     <div className="flex w-full flex-col">
       <p className="p-3 text-xl font-semibold text-gray300">Top Losers</p>
       <ScrollArea className="h-88 w-full overflow-x-auto rounded-lg border border-purple-0.5 bg-dark bg-opacity-80 shadow-purple-0.5 drop-shadow-sm">
-        <div className="w-full min-w-[500px] p-5">
+        <div className="w-full min-w-[400px] p-5">
           <Table className="relative table-fixed border-separate border-spacing-y-3">
             <TableHeader>
               <TableRow className="!bg-transparent text-gray300">
                 <TableCell className="w-1/5 text-center">No.</TableCell>
-                <TableCell className="w-2/5">User</TableCell>
+                <TableCell className="w-1/5">User</TableCell>
                 <TableCell className="w-1/5 text-center">Bet Amount</TableCell>
                 <TableCell className="w-1/5 text-center">Win Amount</TableCell>
                 <TableCell className="w-1/5 text-center">Loss</TableCell>
@@ -35,19 +35,19 @@ export default function LoserBoard({ losers }: { losers: any }) {
                         <span>{index + 1}</span>
                       </div>
                     </TableCell>
-                    <TableCell className="w-2/5">
+                    <TableCell className="w-1/5">
                       <span>{score.username}</span>
                     </TableCell>
                     <TableCell className="w-1/5 text-center">
                       {Number(
                         (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                          (score.leaderboard?.crash?.kart?.betAmount ?? 0)
+                        (score.leaderboard?.crash?.kart?.betAmount ?? 0)
                       ).toFixed(2)}
                     </TableCell>
                     <TableCell className="w-1/5 text-center">
                       {Number(
                         (score.leaderboard?.crash?.usk?.winAmount ?? 0) +
-                          (score.leaderboard?.crash?.kart?.winAmount ?? 0)
+                        (score.leaderboard?.crash?.kart?.winAmount ?? 0)
                       ).toFixed(2)}
                     </TableCell>
                     <TableCell className="w-1/5">
