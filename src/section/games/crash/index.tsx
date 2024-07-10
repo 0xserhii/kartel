@@ -24,7 +24,7 @@ import { ECrashStatus } from "@/constants/status";
 import { getAccessToken } from "@/utils/axios";
 import useToast from "@/hooks/use-toast";
 import BetBoard from "./bet-board";
-import { multiplerArray, betMode, roundArray, token } from "@/constants/data";
+import { multiplerArray, betMode, roundArray, token, game_error } from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { userActions } from "@/store/redux/actions";
@@ -172,9 +172,10 @@ export default function CrashGameSection() {
           denom: selectedToken.name,
         };
         socket?.emit("auto-crashgame-bet", joinParams);
+        setAutoBet(false);
       } else {
         toast.error("Bet amount must be greater than 0");
-        setAutoBet(false);
+        setAutoBet(true);
       }
     } else {
       setAutoBet(true);
@@ -195,28 +196,13 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === "Autobet has been canceled.") {
-        setAutoBet(true);
-      } else {
+      if (data === game_error.autobet_canceled || data === game_error.autobet_reached_max) {
         setAutoBet(false);
       }
     };
-    socket?.on("auto-crashgame-join-success", handleJoinSuccess);
-    return () => {
-      socket?.off("auto-crashgame-join-success", handleJoinSuccess);
-    };
-  }, [socket, toast]);
 
-  useEffect(() => {
-    const handleJoinSuccess = (data) => {
-      toast.success(data);
-      if (data === "Autobet has been canceled.") {
-        setAutoBet(true);
-      } else {
-        setAutoBet(false);
-      }
-    };
     socket?.on("auto-crashgame-join-success", handleJoinSuccess);
+
     return () => {
       socket?.off("auto-crashgame-join-success", handleJoinSuccess);
     };
@@ -270,6 +256,7 @@ export default function CrashGameSection() {
       setAvaliableBet(false);
       crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
     });
+
     const calculateTotals = (bets) => {
       const totals = { usk: 0, kuji: 0, kart: 0 };
       bets.forEach((bet) => {
@@ -323,7 +310,9 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
-      setAutoBet(true);
+      if (data === game_error.autobet_reached_max) {
+        setAutoBet(true);
+      }
     });
 
     crashSocket.on(ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS, () => {
@@ -392,22 +381,22 @@ export default function CrashGameSection() {
               </video>
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-                  <div
-                    className={cn(
-                      "text-6xl font-extrabold text-white",
-                      crashStatus === ECrashStatus.END && "crashed-value"
-                    )}
-                  >
-                    X <GrowingNumber start={crTick.prev} end={crTick.cur} />
+                  <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+                    <div
+                      className={cn(
+                        "text-6xl font-extrabold text-white",
+                        crashStatus === ECrashStatus.END && "crashed-value"
+                      )}
+                    >
+                      X <GrowingNumber start={crTick.prev} end={crTick.cur} />
+                    </div>
+                    <div className="font-semibold text-[#f5b95a]">
+                      {crashStatus === ECrashStatus.PROGRESS
+                        ? "CURRENT PAYOUT"
+                        : "ROUND OVER"}
+                    </div>
                   </div>
-                  <div className="font-semibold text-[#f5b95a]">
-                    {crashStatus === ECrashStatus.PROGRESS
-                      ? "CURRENT PAYOUT"
-                      : "ROUND OVER"}
-                  </div>
-                </div>
-              )}
+                )}
               {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
                 <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className="text-xl font-semibold uppercase text-white">
@@ -420,18 +409,18 @@ export default function CrashGameSection() {
               )}
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                <div className="crash-car car-moving absolute bottom-16">
-                  <img
-                    src={
-                      crashStatus === ECrashStatus.PROGRESS
-                        ? "/assets/games/crash/moving_car.gif"
-                        : "/assets/games/crash/explosion.gif"
-                    }
-                    className="w-64"
-                    alt="crash-car"
-                  />
-                </div>
-              )}
+                  <div className="crash-car car-moving absolute bottom-16">
+                    <img
+                      src={
+                        crashStatus === ECrashStatus.PROGRESS
+                          ? "/assets/games/crash/moving_car.gif"
+                          : "/assets/games/crash/explosion.gif"
+                      }
+                      className="w-64"
+                      alt="crash-car"
+                    />
+                  </div>
+                )}
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
@@ -468,7 +457,7 @@ export default function CrashGameSection() {
                         className={cn(
                           "min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white",
                           selectMode === item &&
-                            "border-purple bg-purple text-white hover:bg-purple"
+                          "border-purple bg-purple text-white hover:bg-purple"
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -487,11 +476,11 @@ export default function CrashGameSection() {
                           isAutoMode
                             ? false
                             : (crashStatus !== ECrashStatus.PREPARE &&
-                                !avaliableBet) ||
-                              (crashStatus !== ECrashStatus.PROGRESS &&
-                                avaliableBet) ||
-                              (crashStatus == ECrashStatus.PROGRESS &&
-                                avaliableAutoCashout)
+                              !avaliableBet) ||
+                            (crashStatus !== ECrashStatus.PROGRESS &&
+                              avaliableBet) ||
+                            (crashStatus == ECrashStatus.PROGRESS &&
+                              avaliableAutoCashout)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >

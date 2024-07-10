@@ -262,3 +262,8 @@ export const adminWallets = [
   "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
   "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky",
 ];
+
+export const game_error = {
+  autobet_canceled: "Autobet has been canceled.",
+  autobet_reached_max: "Autobet has reached the max number of bets! Autobet has canceled",
+};
