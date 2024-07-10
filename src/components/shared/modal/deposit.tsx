@@ -99,7 +99,6 @@ const DepositModal = () => {
         paymentState.admin.address2
       );
 
-      console.log("walletAddress", walletAddress);
 
       if (
         Number(depositAmount) >
