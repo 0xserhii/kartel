@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { token_currency } from "@/constants/data";
 
 export default function WinnerBoard({ winners }: { winners: any }) {
   return (
@@ -47,14 +48,14 @@ export default function WinnerBoard({ winners }: { winners: any }) {
                     <TableCell className="w-1/5 text-center">
                       {Number(
                         (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                        (score.leaderboard?.crash?.kart?.betAmount ?? 0)
+                        ((score.leaderboard?.crash?.kart?.betAmount ?? 0) * token_currency.kart)
                       ).toFixed(2)}
                     </TableCell>
                     <TableCell className="w-1/5">
                       <div className="flex items-center justify-center gap-1">
                         {Number(
                           (score.leaderboard?.crash?.usk?.winAmount ?? 0) +
-                          (score.leaderboard?.crash?.kart?.winAmount ?? 0)
+                          ((score.leaderboard?.crash?.kart?.winAmount ?? 0) * token_currency.kart)
                         ).toFixed(2)}
                       </div>
                     </TableCell>
@@ -63,13 +64,15 @@ export default function WinnerBoard({ winners }: { winners: any }) {
                         <span>
                           {(() => {
                             const winAmount =
-                              (score.leaderboard?.crash?.kart?.winAmount ?? 0) +
+                              ((score.leaderboard?.crash?.kart?.winAmount ?? 0) * token_currency.kart) +
                               (score.leaderboard?.crash?.usk?.winAmount ?? 0);
+
                             const betAmount =
-                              (score.leaderboard?.crash?.kart?.betAmount ?? 0) +
+                              ((score.leaderboard?.crash?.kart?.betAmount ?? 0) * token_currency.kart) +
                               (score.leaderboard?.crash?.usk?.betAmount ?? 0);
 
                             const profit = (winAmount - betAmount).toFixed(2);
+
                             return (
                               <span
                                 className={

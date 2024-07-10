@@ -283,7 +283,6 @@ export default function CrashGameSection() {
 
       if (user && user.betAmount) {
         const selectedTokenObj = token.find(t => t.name === user?.denom);
-        console.log({ user });
         if (selectedTokenObj) {
           setSelectedToken(selectedTokenObj);
         }
