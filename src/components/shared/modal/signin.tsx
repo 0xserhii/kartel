@@ -28,10 +28,7 @@ import { useAppSelector } from "@/store/redux";
 import { useEffect } from "react";
 
 const SignInSchema = z.object({
-  email: z
-    .string()
-    .nonempty("Email is required")
-    .email("Email must be a valid email address"),
+  username: z.string().nonempty("Full Name is required"),
   password: z
     .string()
     .nonempty("Password is required")
@@ -39,7 +36,7 @@ const SignInSchema = z.object({
 });
 
 const SignInDefaultValue = {
-  email: "",
+  username: "",
   password: "",
 };
 
@@ -57,7 +54,7 @@ const SignInModal = () => {
 
   const handleRememberMe = () => {
     if (
-      signInForm.getValues("email") === "" &&
+      signInForm.getValues("username") === "" &&
       signInForm.getValues("password") === "" &&
       !userState.remember
     ) {
@@ -81,7 +78,7 @@ const SignInModal = () => {
   const handleSubmit = async (data: z.infer<typeof SignInSchema>) => {
     try {
       const signInPayload = {
-        email: data.email,
+        username: data.username,
         password: data.password,
       };
       const resSignIn = await axiosPost([
@@ -106,27 +103,27 @@ const SignInModal = () => {
     if (userState.remember) {
       dispatch(
         userActions.setCredential({
-          email: userState.credentials.email,
+          username: userState.credentials.username,
           password: userState.credentials.password,
         })
       );
     }
-    const { email, password } = userState.remember
+    const { username, password } = userState.remember
       ? userState.credentials
-      : { email: "", password: "" };
-    signInForm.setValue("email", email);
+      : { username: "", password: "" };
+    signInForm.setValue("username", username);
     signInForm.setValue("password", password);
   }, []);
 
   useEffect(() => {
     if (
       userState.remember &&
-      signInForm.getValues("email") &&
+      signInForm.getValues("username") &&
       signInForm.getValues("password")
     ) {
       dispatch(
         userActions.setCredential({
-          email: signInForm.getValues("email"),
+          username: signInForm.getValues("username"),
           password: signInForm.getValues("password"),
         })
       );
@@ -147,17 +144,17 @@ const SignInModal = () => {
           <form onSubmit={signInForm.handleSubmit(handleSubmit)}>
             <div className="mt-3 flex flex-col items-center gap-7">
               <div className="flex w-full flex-col gap-5">
-                <div className="grid w-full flex-1 gap-3">
-                  <p className="text-gray-300">Email</p>
+                <div className="grid w-full flex-1 gap-2">
+                  <p className="text-sm text-gray-300">Username</p>
                   <FormField
                     control={signInForm.control}
-                    name="email"
+                    name="username"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
                           <Input
                             type="text"
-                            placeholder="email"
+                            placeholder="username"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
                           />
@@ -167,8 +164,8 @@ const SignInModal = () => {
                     )}
                   />
                 </div>
-                <div className="grid w-full flex-1 gap-3">
-                  <p className="text-gray-300">Password</p>
+                <div className="grid w-full flex-1 gap-2">
+                  <p className="text-sm text-gray-300">Password</p>
                   <FormField
                     control={signInForm.control}
                     name="password"
