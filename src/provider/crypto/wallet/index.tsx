@@ -224,7 +224,7 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const sonarRequest = (uri: string) => {
-    console.log(uri);
+    console.info(uri);
   };
 
   const connect = async (adapter: Adapter, chain?: NETWORK, auto?: boolean) => {

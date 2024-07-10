@@ -36,7 +36,7 @@ function subscribe(socket) {
       emit(chatActions.receiveError(error));
     });
 
-    return () => {};
+    return () => { };
   });
 }
 
@@ -66,7 +66,7 @@ function* getChatHistorySaga(action) {
     yield delay(200);
     yield fork(getChatHistory, KartelSocket.chat, action);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -75,7 +75,7 @@ function* subscribeSaga() {
     yield fork(read, KartelSocket.chat);
     yield delay(200);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -84,7 +84,7 @@ function* loginChanelSaga() {
     yield delay(500);
     socketTask = yield fork(login, KartelSocket.chat);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

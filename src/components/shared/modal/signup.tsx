@@ -90,7 +90,7 @@ const SignUpModal = () => {
       modal.open(ModalType.LOGIN);
       toast.success("SignUp Success");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("SignUp Failed");
     }
   };

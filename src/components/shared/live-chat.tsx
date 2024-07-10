@@ -84,7 +84,7 @@ const LiveChat = () => {
       dispatch(chatActions.sendMsg(message));
       setInputStr("");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
