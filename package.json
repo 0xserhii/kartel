@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format": "prettier . --write",
     "start": "npm run build && vite preview --port 3005",
-    "preview": "vite preview",
+    "preview": "vite preview --port 3005",
     "prepare": "husky"
   },
   "lint-staged": {
