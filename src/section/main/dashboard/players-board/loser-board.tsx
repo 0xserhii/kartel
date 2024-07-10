@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { token_currency } from "@/constants/data";
 
 export default function LoserBoard({ losers }: { losers: any }) {
   return (
@@ -41,13 +42,13 @@ export default function LoserBoard({ losers }: { losers: any }) {
                     <TableCell className="w-1/5 text-center">
                       {Number(
                         (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                        (score.leaderboard?.crash?.kart?.betAmount ?? 0)
+                        ((score.leaderboard?.crash?.kart?.betAmount ?? 0) * token_currency.kart)
                       ).toFixed(2)}
                     </TableCell>
                     <TableCell className="w-1/5 text-center">
                       {Number(
                         (score.leaderboard?.crash?.usk?.winAmount ?? 0) +
-                        (score.leaderboard?.crash?.kart?.winAmount ?? 0)
+                        ((score.leaderboard?.crash?.kart?.winAmount ?? 0) * token_currency.kart)
                       ).toFixed(2)}
                     </TableCell>
                     <TableCell className="w-1/5">
@@ -56,11 +57,14 @@ export default function LoserBoard({ losers }: { losers: any }) {
                           {(() => {
                             const winAmount =
                               (score.leaderboard?.crash?.usk?.winAmount ?? 0) +
-                              (score.leaderboard?.crash?.kart?.winAmount ?? 0);
+                              ((score.leaderboard?.crash?.kart?.winAmount ?? 0) * token_currency.kart);
+
                             const betAmount =
                               (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                              (score.leaderboard?.crash?.kart?.betAmount ?? 0);
+                              ((score.leaderboard?.crash?.kart?.betAmount ?? 0) * token_currency.kart);
+
                             const loss = (winAmount - betAmount).toFixed(2);
+
                             return (
                               <span
                                 className={
