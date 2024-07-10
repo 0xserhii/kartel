@@ -33,7 +33,7 @@ function subscribe(socket) {
       emit(minesActions.gameWon(data));
     });
 
-    return () => {};
+    return () => { };
   });
 }
 
@@ -55,7 +55,7 @@ function* subscribeSaga() {
     yield fork(read, KartelSocket.mines);
     yield delay(200);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -64,7 +64,7 @@ function* loginChanelSaga() {
     yield delay(500);
     socketTask = yield fork(login, KartelSocket.mines);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

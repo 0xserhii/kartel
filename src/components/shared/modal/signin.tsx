@@ -97,7 +97,7 @@ const SignInModal = () => {
       }
       toast.error("SignIn Failed");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("SignIn Failed");
     }
   };

@@ -187,6 +187,18 @@ export default function CrashGameSection() {
     modal.open(ModalType.CRASH_INFO);
   };
 
+  const onAutoBetJoinSuccess = (data) => {
+    if (selectMode === betMode[0]) {
+      setSelectMode(betMode[1])
+    }
+    toast.success(data);
+    if (data === "Autobet has been canceled.") {
+      setAutoBet(true);
+    } else {
+      setAutoBet(false);
+    }
+  };
+
   useEffect(() => {
     if (socket) {
       socket.emit("auth", getAccessToken());

@@ -68,6 +68,8 @@ const DepositModal = () => {
       dispatch(paymentActions.paymentFailed("Insufficient token"));
       return;
     }
+    dispatch(paymentActions.setTxProgress(true));
+    dispatch(paymentActions.paymentFailed(""));
     if (account) {
       try {
         const withdrawParam = {
@@ -82,44 +84,21 @@ const DepositModal = () => {
         dispatch(paymentActions.withDraw(encryptedParam));
       } catch (err) {
         dispatch(paymentActions.paymentFailed("Withdraw rejected"));
-        console.log(err);
+        console.error(err);
       }
     }
   };
 
   const handleDeposit = async () => {
     try {
+      dispatch(paymentActions.paymentFailed(""));
       dispatch(paymentActions.setTxProgress(true));
+
       const walletAddress = await aesWrapper.decryptMessage(
         paymentState.admin.address1,
         paymentState.admin.address2
       );
-      let signedTx: StdSignature | undefined = undefined;
-      if (adapter === Adapter.Keplr) {
-        const chainId = chainInfo.chainId;
-        const signed = await window.keplr?.signArbitrary(
-          chainId,
-          account?.address ?? "",
-          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
-        );
-        if (signed) {
-          signedTx = signed;
-        }
-      } else if (adapter === Adapter.Leap) {
-        const chainId = chainInfo.chainId;
-        const signed = await window.leap?.signArbitrary(
-          chainId,
-          account?.address ?? "",
-          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
-        );
-        if (signed) {
-          signedTx = signed;
-        }
-      }
-      if (!signedTx) {
-        dispatch(paymentActions.paymentFailed("Reject deposit"));
-        return;
-      }
+
       if (
         Number(depositAmount) >
         Number(
@@ -151,6 +130,35 @@ const DepositModal = () => {
             );
             return;
           }
+
+
+          let signedTx: StdSignature | undefined = undefined;
+          if (adapter === Adapter.Keplr) {
+            const chainId = chainInfo.chainId;
+            const signed = await window.keplr?.signArbitrary(
+              chainId,
+              account?.address ?? "",
+              `Deposit ${depositAmount} ${selectedToken.name.toUpperCase()} to Kartel`
+            );
+            if (signed) {
+              signedTx = signed;
+            }
+          } else if (adapter === Adapter.Leap) {
+            const chainId = chainInfo.chainId;
+            const signed = await window.leap?.signArbitrary(
+              chainId,
+              account?.address ?? "",
+              `Deposit ${depositAmount} ${selectedToken.name.toUpperCase()} to Kartel`
+            );
+            if (signed) {
+              signedTx = signed;
+            }
+          }
+          if (!signedTx) {
+            dispatch(paymentActions.paymentFailed("Reject deposit"));
+            return;
+          }
+
           const hashTx = await signAndBroadcast(
             [
               msg.bank.msgSend({
@@ -184,7 +192,7 @@ const DepositModal = () => {
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       dispatch(paymentActions.paymentFailed("Reject deposit"));
     }
   };
@@ -217,10 +225,13 @@ const DepositModal = () => {
   useEffect(() => {
     if (paymentState.error === "Withdraw Success") {
       toast.success("Withdraw Success");
+      dispatch(paymentActions.paymentFailed(""));
     } else if (paymentState.error === "Deposit Success") {
       toast.success("Deposit Success");
+      dispatch(paymentActions.paymentFailed(""));
     } else if (paymentState.error !== "") {
       toast.error(paymentState.error);
+      dispatch(paymentActions.paymentFailed(""));
     }
   }, [paymentState.error]);
 
