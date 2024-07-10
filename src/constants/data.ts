@@ -274,4 +274,4 @@ export const token_currency = {
   usk: 1,
 };
 
-export const prizeMultiple: number = 2
+export const prizeMultiple: number = 0.6

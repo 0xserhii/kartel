@@ -34,18 +34,18 @@ const LeaderboardCard = () => {
             <TableRow className="!bg-transparent text-gray300">
               <TableCell className="w-4/12 text-center">Rank</TableCell>
               <TableCell className="w-4/12 text-center">User</TableCell>
-              <TableCell className="w-4/12 text-center">Played</TableCell>
-              <TableCell className="w-4/12 text-center">Prize</TableCell>
+              <TableCell className="w-4/12 text-center">Wagered Amount</TableCell>
+              <TableCell className="w-4/12 text-center">Points</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>
             {leaderboardState?.leaderboardHistory?.[active]?.map((score, index) => {
               const betAmount = ((score.leaderboard?.[active]?.kart?.betAmount ?? 0) * token_currency.kart) + (score.leaderboard?.[active]?.usk?.betAmount ?? 0);
-              const prize = (betAmount * prizeMultiple).toFixed(2);
+              const points = (betAmount * prizeMultiple).toFixed(2);
 
               return {
                 ...score,
-                prize: Number(prize).toFixed(2),
+                points: Number(points).toFixed(2),
                 betAmount: Number(betAmount).toFixed(2),
               };
             })
@@ -71,27 +71,15 @@ const LeaderboardCard = () => {
                   <TableCell className="w-4/12 truncate text-center">
                     {score.username}
                   </TableCell>
-                  <TableCell className="w-4/12">
-                    <div className="flex flex-row items-center justify-end gap-4 pr-[35%]">
-                      <span className="truncate">
-                        {score.betAmount}
-                      </span>
-                      <img
-                        src={`/assets/coin-icon.svg`}
-                        className="h-4 w-4"
-                      />
-                    </div>
+                  <TableCell className="w-4/12 text-center">
+                    <span className="truncate">
+                      {score.betAmount}
+                    </span>
                   </TableCell>
-                  <TableCell className="w-4/12">
-                    <div className="flex flex-row items-center justify-end gap-4 pr-[35%]">
-                      <span className="truncate">
-                        {score.prize}
-                      </span>
-                      <img
-                        src={`/assets/coin-icon.svg`}
-                        className="h-4 w-4"
-                      />
-                    </div>
+                  <TableCell className="w-4/12 text-center">
+                    <span className="truncate">
+                      {score.points}
+                    </span>
                   </TableCell>
                 </TableRow>
               ))}
