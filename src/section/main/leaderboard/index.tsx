@@ -48,41 +48,40 @@ const LeaderboardCard = () => {
                 points: Number(points).toFixed(2),
                 betAmount: Number(betAmount).toFixed(2),
               };
-            })
-              .map((score, index) => (
+            })?.map((score, index) => (
 
-                <TableRow
-                  key={index}
-                  className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
-                >
-                  <TableCell className="w-4/12 text-center py-3">
-                    <div className="flex items-center justify-center gap-2">
-                      {index + 1 <= 3 ? (
-                        <img
-                          src={`/assets/medal/top${index + 1}.svg`}
-                          className="h-5 w-5"
-                        />
-                      ) : (
-                        <span>{index + 1 + "th"}</span>
-                      )
-                      }
-                    </div>
-                  </TableCell>
-                  <TableCell className="w-4/12 truncate text-center">
-                    {score.username}
-                  </TableCell>
-                  <TableCell className="w-4/12 text-center">
-                    <span className="truncate">
-                      {score.betAmount}
-                    </span>
-                  </TableCell>
-                  <TableCell className="w-4/12 text-center">
-                    <span className="truncate">
-                      {score.points}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow
+                key={index}
+                className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
+              >
+                <TableCell className="w-4/12 text-center py-3">
+                  <div className="flex items-center justify-center gap-2">
+                    {index + 1 <= 3 ? (
+                      <img
+                        src={`/assets/medal/top${index + 1}.svg`}
+                        className="h-5 w-5"
+                      />
+                    ) : (
+                      <span>{index + 1 + "th"}</span>
+                    )
+                    }
+                  </div>
+                </TableCell>
+                <TableCell className="w-4/12 truncate text-center">
+                  {score.username}
+                </TableCell>
+                <TableCell className="w-4/12 text-center">
+                  <span className="truncate">
+                    {score.betAmount}
+                  </span>
+                </TableCell>
+                <TableCell className="w-4/12 text-center">
+                  <span className="truncate">
+                    {score.points}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
@@ -105,7 +104,7 @@ export default function LeaderboardSection() {
         <div className="flex items-center justify-between">
           <div className="text-2xl font-semibold text-gray300">Leaderboard</div>
           <div className="flex items-center gap-2 bg-transparent">
-            {leaderboardTabs.map((item, index) => (
+            {leaderboardTabs?.map((item, index) => (
               <button
                 key={index}
                 onClick={() => setActive(item.value)}
