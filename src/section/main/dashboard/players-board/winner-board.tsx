@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { token_currency } from "@/constants/data";
 
 export default function WinnerBoard({ winners }: { winners: any }) {
   return (
@@ -43,48 +42,26 @@ export default function WinnerBoard({ winners }: { winners: any }) {
                       </div>
                     </TableCell>
                     <TableCell className="w-1/5">
-                      <span>{score.username}</span>
+                      <span className="truncate">{score.username}</span>
                     </TableCell>
                     <TableCell className="w-1/5 text-center">
-                      {Number(
-                        (score.leaderboard?.crash?.usk?.betAmount ?? 0) +
-                        ((score.leaderboard?.crash?.kart?.betAmount ?? 0) * token_currency.kart)
-                      ).toFixed(2)}
+                      {Number(score?.totalBetAmount).toFixed(2)}
                     </TableCell>
                     <TableCell className="w-1/5">
                       <div className="flex items-center justify-center gap-1">
-                        {Number(
-                          (score.leaderboard?.crash?.usk?.winAmount ?? 0) +
-                          ((score.leaderboard?.crash?.kart?.winAmount ?? 0) * token_currency.kart)
-                        ).toFixed(2)}
+                        {Number(score?.totalWinAmount).toFixed(2)}
                       </div>
                     </TableCell>
                     <TableCell className="w-1/5">
                       <div className="flex items-center justify-center gap-1">
-                        <span>
-                          {(() => {
-                            const winAmount =
-                              ((score.leaderboard?.crash?.kart?.winAmount ?? 0) * token_currency.kart) +
-                              (score.leaderboard?.crash?.usk?.winAmount ?? 0);
-
-                            const betAmount =
-                              ((score.leaderboard?.crash?.kart?.betAmount ?? 0) * token_currency.kart) +
-                              (score.leaderboard?.crash?.usk?.betAmount ?? 0);
-
-                            const profit = (winAmount - betAmount).toFixed(2);
-
-                            return (
-                              <span
-                                className={
-                                  Number(profit) >= 0
-                                    ? "text-white"
-                                    : "text-purple"
-                                }
-                              >
-                                {profit}
-                              </span>
-                            );
-                          })()}
+                        <span
+                          className={
+                            Number(score?.profit) >= 0
+                              ? "text-white"
+                              : "text-purple"
+                          }
+                        >
+                          {Number(score?.profit).toFixed(2)}
                         </span>
                       </div>
                     </TableCell>
@@ -93,7 +70,6 @@ export default function WinnerBoard({ winners }: { winners: any }) {
               })}
             </TableBody>
           </Table>
-          {/* </CardContent> */}
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
