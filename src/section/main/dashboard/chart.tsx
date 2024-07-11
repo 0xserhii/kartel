@@ -21,31 +21,29 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
         `${import.meta.env.VITE_SERVER_URL}/api/v1/dashboard/dashboard-update?date=${date}&eventType=3`
       );
 
-      const fetchedKartBalance = response
-        .filter((item) => item.denom === 'kart')
+      const fetchedKartBalance = response?.kartLogs
         .map((item) => item.lastBalance.toFixed(2));
 
-      const fetchedUskBalance = response
-        .filter((item) => item.denom === 'usk')
+      const fetchedUskBalance = response?.uskLogs
         .map((item) => item.lastBalance.toFixed(2));
-
-      if ((!fetchedKartBalance || fetchedKartBalance.length == 0) &&
-        (!fetchedUskBalance || fetchedUskBalance.length == 0)) {
+      if (fetchedKartBalance.length === 0 && fetchedUskBalance.length === 0) {
         return;
       }
 
       const tempXData: string[] = [];
 
-      if (fetchedKartBalance.length === 1) {
+      const maxLength = Math.max(fetchedKartBalance.length, fetchedUskBalance.length);
+
+      while (fetchedKartBalance.length < maxLength) {
         fetchedKartBalance.unshift(fetchedKartBalance[0]);
       }
 
-      if (fetchedUskBalance.length === 1) {
+      while (fetchedUskBalance.length < maxLength) {
         fetchedUskBalance.unshift(fetchedUskBalance[0]);
       }
 
       if (date === EFilterDate.hour) {
-        for (let i = 0; i < fetchedKartBalance?.length; i++) {
+        for (let i = 0; i < maxLength; i++) {
           const minutesAgo = i * 5;
           const date = new Date();
           date.setMinutes(date.getMinutes() - minutesAgo);
@@ -54,23 +52,24 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
           tempXData.unshift(`${hours}:${minutes}`);
         }
       } else if (date === EFilterDate.day) {
-        for (let i = 0; i < fetchedKartBalance?.length; i++) {
+        for (let i = 0; i < maxLength; i++) {
           const hour = (currentHour - i + 24) % 24;
           tempXData.unshift(`${hour.toString().padStart(2, "0")}h`);
         }
       } else if (date === EFilterDate.week) {
-        for (let i = 0; i < fetchedKartBalance?.length; i++) {
+        for (let i = 0; i < maxLength; i++) {
           tempXData.unshift(getDayName(currentDay - i));
         }
       } else if (date === EFilterDate.month) {
-        for (let i = 0; i < fetchedKartBalance?.length; i++) {
+        for (let i = 0; i < maxLength; i++) {
           tempXData.unshift(`${getMonthName(currentMonth)}/${currentDay - i}`);
         }
       } else {
-        for (let i = 0; i < fetchedKartBalance?.length; i++) {
+        for (let i = 0; i < maxLength; i++) {
           tempXData.unshift(`${getMonthName(currentMonth - i)}`);
         }
       }
+
       setAdminKartBalance(fetchedKartBalance);
       setAdminUSKBalance(fetchedUskBalance);
       setChartXData(tempXData);
@@ -151,7 +150,7 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
       {
         name: "USK",
         data: adminUSKBalance as any,
-      },
+      }
     ],
   };
 

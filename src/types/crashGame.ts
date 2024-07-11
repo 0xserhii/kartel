@@ -34,6 +34,7 @@ export interface BetType {
   forcedCashout?: boolean;
   createdAt?: Date;
   denom: string;
+  autobet?: boolean;
 }
 
 export interface PendingBetType {
@@ -54,6 +55,7 @@ export type FormattedPlayerBetType = Pick<
   | "stoppedAt"
   | "winningAmount"
   | "denom"
+  | "autobet"
 >;
 
 export interface FormattedGameHistoryType
@@ -65,7 +67,7 @@ export interface FormattedGameHistoryType
     | "publicSeed"
     | "crashPoint"
     | "createdAt"
-  > {}
+  > { }
 
 interface LevelInfo {
   name: string;

@@ -275,6 +275,8 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
+      const cashOutPoint = data?.gameStatus?.players[userData?._id]?.autoCashOut;
+
       setBetData(data.players);
       Object.keys(data.gameStatus.players).forEach((playerID) => {
         const playerData = data.gameStatus.players[playerID];
@@ -282,12 +284,15 @@ export default function CrashGameSection() {
       });
 
       if (user && user.betAmount) {
+        if (user?.autobet) {
+          setAutoBet(false)
+        }
         const selectedTokenObj = token.find(t => t.name === user?.denom);
         if (selectedTokenObj) {
           setSelectedToken(selectedTokenObj);
         }
         setBetAmount(Number(user?.betAmount));
-        setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
+        setAutoCashoutPoint(cashOutPoint / 100 ?? 1.05)
       }
 
       const totals = calculateTotals(data.players);
@@ -616,7 +621,7 @@ export default function CrashGameSection() {
                                 max={100}
                                 min={1}
                               />
-                              <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                              <span className="select-none absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                                 Cashout
                               </span>
                             </div>
