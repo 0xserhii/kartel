@@ -272,9 +272,13 @@ export default function CrashGameSection() {
     };
 
     crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
+      console.log(data);
+
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
+      const cashOutPoint = data?.gameStatus?.players[userData?._id]?.autoCashOut;
+
       setBetData(data.players);
       Object.keys(data.gameStatus.players).forEach((playerID) => {
         const playerData = data.gameStatus.players[playerID];
@@ -282,12 +286,26 @@ export default function CrashGameSection() {
       });
 
       if (user && user.betAmount) {
+        if (user?.autobet) {
+          setAutoBet(false)
+        }
+
+        if (user?.autobet === undefined) {
+          if (user?.winningAmount) {
+            setAvaliableBet(false)
+          }
+          else {
+            setAvaliableBet(true)
+          }
+        }
+
+
         const selectedTokenObj = token.find(t => t.name === user?.denom);
         if (selectedTokenObj) {
           setSelectedToken(selectedTokenObj);
         }
         setBetAmount(Number(user?.betAmount));
-        setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
+        setAutoCashoutPoint(cashOutPoint / 100 ?? 1.05)
       }
 
       const totals = calculateTotals(data.players);
@@ -340,6 +358,8 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
+      console.log(data);
+
     });
 
     crashSocket.emit("auth", getAccessToken());
@@ -616,7 +636,7 @@ export default function CrashGameSection() {
                                 max={100}
                                 min={1}
                               />
-                              <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                              <span className="select-none absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
                                 Cashout
                               </span>
                             </div>
