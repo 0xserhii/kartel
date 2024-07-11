@@ -275,8 +275,8 @@ export const game_error = {
 };
 
 export const token_currency = {
-  kart: 0.018,
   usk: 1,
+  kart: 0.016,
 };
 
 export const prizeMultiple: number = 0.6
