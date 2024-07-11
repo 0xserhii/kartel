@@ -272,6 +272,8 @@ export default function CrashGameSection() {
     };
 
     crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
+      console.log(data);
+
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
@@ -287,6 +289,17 @@ export default function CrashGameSection() {
         if (user?.autobet) {
           setAutoBet(false)
         }
+
+        if (user?.autobet === undefined) {
+          if (user?.winningAmount) {
+            setAvaliableBet(false)
+          }
+          else {
+            setAvaliableBet(true)
+          }
+        }
+
+
         const selectedTokenObj = token.find(t => t.name === user?.denom);
         if (selectedTokenObj) {
           setSelectedToken(selectedTokenObj);
@@ -345,6 +358,8 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
+      console.log(data);
+
     });
 
     crashSocket.emit("auth", getAccessToken());
