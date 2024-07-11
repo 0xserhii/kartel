@@ -2,12 +2,13 @@
 
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { EFilterDate } from "@/constants/data";
+import { EFilterDate, ERevenueType, token_currency } from "@/constants/data";
 import { axiosPost } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { getMonthName, getDayName } from "@/utils/utils";
 
-export default function DashboardChart({ date }: { date: EFilterDate }) {
+export default function DashboardChart({ date, revenueType }: { date: EFilterDate, revenueType: ERevenueType }) {
+
   const [adminUSKBalance, setAdminUSKBalance] = useState<number[]>([]);
   const [adminKartBalance, setAdminKartBalance] = useState<number[]>([]);
   const [chartXData, setChartXData] = useState<string[]>([]);
@@ -18,14 +19,14 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
       const currentDay = new Date().getDate();
       const currentMonth = new Date().getMonth() + 1;
       const response = await axiosPost(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/dashboard/dashboard-update?date=${date}&eventType=3`
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/dashboard/dashboard-history?date=${date}&revenueType=${revenueType}`
       );
 
       const fetchedKartBalance = response?.kartLogs
-        .map((item) => item.lastBalance.toFixed(2));
+        .map((item) => (item.lastBalance * token_currency.kart).toFixed(2));
 
       const fetchedUskBalance = response?.uskLogs
-        .map((item) => item.lastBalance.toFixed(2));
+        .map((item) => (item.lastBalance * token_currency.usk).toFixed(2));
       if (fetchedKartBalance.length === 0 && fetchedUskBalance.length === 0) {
         return;
       }
@@ -80,7 +81,7 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
 
   useEffect(() => {
     getDashboardData();
-  }, [date]);
+  }, [date, revenueType]);
 
   const chartData = {
     options: {
@@ -95,12 +96,6 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
       },
       yaxis: {
         labels: {
-          formatter: function (value) {
-            if (value !== undefined && value !== null) {
-              return value.toFixed(2);
-            }
-            return value;
-          },
           style: {
             colors: "#556987",
           },
@@ -141,15 +136,27 @@ export default function DashboardChart({ date }: { date: EFilterDate }) {
           fillColors: ["#0BA544", "#ff149d"],
         },
       },
+      tooltip: {
+        y: {
+          formatter: function (value, { seriesIndex }) {
+            if (seriesIndex === 0) {
+              return (Number(value) / token_currency.kart).toFixed(2);
+            } else if (seriesIndex === 1) {
+              return (Number(value) / token_currency.usk).toFixed(2);
+            }
+            return value;
+          },
+        },
+      },
     },
     series: [
       {
         name: "KART",
-        data: adminKartBalance as any,
+        data: adminKartBalance,
       },
       {
         name: "USK",
-        data: adminUSKBalance as any,
+        data: adminUSKBalance,
       }
     ],
   };
