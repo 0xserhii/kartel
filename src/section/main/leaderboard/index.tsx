@@ -25,7 +25,6 @@ const leaderboardTabs = [
 const LeaderboardCard = () => {
   const leaderboardState = useAppSelector((state: any) => state.leaderboard);
   const active = leaderboardTabs[0].value;
-  console.log(leaderboardState?.leaderboardHistory?.[active]);
 
   return (
     <ScrollArea className="h-88 w-full overflow-x-auto rounded-lg border border-purple-0.5 bg-dark bg-opacity-80 p-5 shadow-purple-0.5 drop-shadow-sm">
@@ -89,9 +88,6 @@ export default function LeaderboardSection() {
   useEffect(() => {
     dispatch(leaderboardActions.subscribeLeaderboardServer());
   }, []);
-
-  console.log();
-
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
