@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { leaderboardActions } from "@/store/redux/actions";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
-import { prizeMultiple, token_currency } from "@/constants/data";
+import { prizeMultiple } from "@/constants/data";
 
 const leaderboardTabs = [
   { title: "Crash", value: "crash" },
@@ -40,48 +40,39 @@ const LeaderboardCard = () => {
           </TableHeader>
           <TableBody>
             {leaderboardState?.leaderboardHistory?.[active]?.map((score, index) => {
-              const betAmount = ((score.leaderboard?.[active]?.kart?.betAmount ?? 0) * token_currency.kart) + (score.leaderboard?.[active]?.usk?.betAmount ?? 0);
-              const points = (betAmount * prizeMultiple).toFixed(2);
-
-              return {
-                ...score,
-                points: Number(points).toFixed(2),
-                betAmount: Number(betAmount).toFixed(2),
-              };
-            })?.map((score, index) => (
-
-              <TableRow
-                key={index}
-                className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
-              >
-                <TableCell className="w-4/12 text-center py-3">
-                  <div className="flex items-center justify-center gap-2">
-                    {index + 1 <= 3 ? (
-                      <img
-                        src={`/assets/medal/top${index + 1}.svg`}
-                        className="h-5 w-5"
-                      />
-                    ) : (
-                      <span>{index + 1 + "th"}</span>
-                    )
-                    }
-                  </div>
-                </TableCell>
-                <TableCell className="w-4/12 truncate text-center">
-                  {score.username}
-                </TableCell>
-                <TableCell className="w-4/12 text-center">
-                  <span className="truncate">
-                    {score.betAmount}
-                  </span>
-                </TableCell>
-                <TableCell className="w-4/12 text-center">
-                  <span className="truncate">
-                    {score.points}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
+              return (
+                <TableRow
+                  key={index}
+                  className="text-gray300 [&_td:first-child]:rounded-l-md [&_td:first-child]:border-l [&_td:first-child]:border-l-purple-0.5 [&_td:last-child]:rounded-r-md [&_td:last-child]:border-r [&_td:last-child]:border-r-purple-0.5 [&_td]:border-b [&_td]:border-t [&_td]:border-b-purple-0.5 [&_td]:border-t-purple-0.5 [&_td]:bg-dark-blue"
+                >
+                  <TableCell className="w-4/12 text-center py-3">
+                    <div className="flex items-center justify-center gap-2">
+                      {index + 1 <= 3 ? (
+                        <img
+                          src={`/assets/medal/top${index + 1}.svg`}
+                          className="h-5 w-5"
+                        />
+                      ) : (
+                        <span>{index + 1 + "th"}</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="w-4/12 truncate text-center">
+                    {score.username}
+                  </TableCell>
+                  <TableCell className="w-4/12 text-center">
+                    <span className="truncate">
+                      {Number(score?.totalBetAmount).toFixed(2)}
+                    </span>
+                  </TableCell>
+                  <TableCell className="w-4/12 text-center">
+                    <span className="truncate">
+                      {Number(score?.totalBetAmount * prizeMultiple).toFixed(2)}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
