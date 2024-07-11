@@ -253,7 +253,10 @@ export const casinoGameSrc = [
   },
 ];
 
-export const gameLists = [{ name: "crash", color: "#0BA544" }];
+export const gameLists = [
+  // { name: "total", color: "white" },
+  { name: "crash", color: "#0BA544", value: 2 }
+];
 
 export const adminWallets = [
   "kujira1ag38aar8827lzt0mmfepxupdxtq244u4jvrlmc",
@@ -272,8 +275,13 @@ export const game_error = {
 };
 
 export const token_currency = {
-  kart: 0.016,
+  kart: 0.018,
   usk: 1,
 };
 
 export const prizeMultiple: number = 0.6
+
+export enum ERevenueType {
+  // TOTAL = "total",
+  CRASH = 2,
+}

@@ -272,8 +272,6 @@ export default function CrashGameSection() {
     };
 
     crashSocket.on(ECrashSocketEvent.GAME_STATUS, (data) => {
-      console.log(data);
-
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
@@ -358,8 +356,6 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.BET_CASHOUT, (data) => {
       setBetCashout((prev) => [...prev, data?.userdata]);
-      console.log(data);
-
     });
 
     crashSocket.emit("auth", getAccessToken());
