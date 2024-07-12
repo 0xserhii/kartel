@@ -73,7 +73,7 @@ export default function Header() {
             {["usk", "kart"].map((token) => (
               <div key={token} className="flex flex-row items-center gap-2">
                 <img src={`/assets/tokens/${token}.png`} className="h-7 w-7" />
-                <span className="w-4/12 text-center text-gray-300">
+                <span className="w-4/12 text-center text-gray-300 text-lg font-medium">
                   {Number(
                     siteBalance?.denom === token
                       ? siteBalance.value

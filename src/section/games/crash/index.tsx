@@ -466,15 +466,15 @@ export default function CrashGameSection() {
               <div className="absolute left-0 top-0 flex flex-row items-center justify-around gap-6 py-5">
                 <div className="flex flex-row items-center justify-center gap-2">
                   <span className="ms-2 inline-flex h-3 w-3 items-center justify-center rounded-full bg-[#0BA544] text-xs font-semibold text-blue-800" />
-                  <p className="text-sm text-gray-300">Network status</p>
+                  <p className="text-sm text-white">Network status</p>
                 </div>
                 <div className="grid grid-cols-10 gap-2">
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
+                      className={`rounded-lg px-2 py-1 text-center text-[13px] text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
                     >
-                      x{(item.crashPoint / 100).toFixed(2)}
+                      x {(item.crashPoint / 100).toFixed(2)}
                     </span>
                   ))}
                 </div>
@@ -483,7 +483,7 @@ export default function CrashGameSection() {
             <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
               <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
                 <div className="flex flex-row items-center justify-between">
-                  <span className="text-lg uppercase text-gray-400">
+                  <span className="text-lg uppercase text-gray300 font-bold">
                     bet mode
                   </span>
                   <div className="flex flex-row items-center gap-3">
