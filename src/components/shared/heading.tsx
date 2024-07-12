@@ -29,7 +29,7 @@ export default function Heading({ className, userRole }: THeadingProps) {
           key={index}
           to={item.path}
           className={cn(
-            "min-h-full rounded-none border-b-2 border-b-transparent px-5 py-5 text-base text-gray-300 hover:bg-transparent transition-all duration-200 ease-in",
+            "min-h-full rounded-none border-b-2 border-b-transparent px-5 py-5 text-base text-gray-300 transition-all duration-200 ease-in hover:bg-transparent",
             pathname === item.path && "text-base font-semibold text-purple"
           )}
         >
