@@ -18,7 +18,7 @@ const BetBoard = ({
   return (
     <div className="flex w-full flex-col gap-5 md:w-7/12">
       <div className="flex flex-row items-center justify-between py-1.5">
-        <span className="text-lg uppercase text-gray300 font-bold">
+        <span className="text-lg capitalize text-gray300 font-bold">
           {betData.length} players
         </span>
         <div className="flex flex-row gap-5">

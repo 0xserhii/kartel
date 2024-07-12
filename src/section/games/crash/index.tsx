@@ -483,7 +483,7 @@ export default function CrashGameSection() {
             <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
               <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
                 <div className="flex flex-row items-center justify-between">
-                  <span className="text-lg uppercase text-gray300 font-bold">
+                  <span className="text-lg capitalize text-gray300 font-bold">
                     bet mode
                   </span>
                   <div className="flex flex-row items-center gap-3">

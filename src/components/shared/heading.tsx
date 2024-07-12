@@ -29,11 +29,11 @@ export default function Heading({ className, userRole }: THeadingProps) {
           key={index}
           to={item.path}
           className={cn(
-            "min-h-full rounded-none border-b-2 border-b-transparent px-6 py-5 text-gray-300 hover:bg-transparent",
-            pathname === item.path && "text-purple"
+            "min-h-full rounded-none border-b-2 border-b-transparent px-5 py-5 text-gray-300 hover:bg-transparent text-sm",
+            pathname === item.path && "text-purple text-lg font-semibold"
           )}
         >
-          <span className="text-lg font-semibold capitalize">{item.name}</span>
+          <span className="font-semibold capitalize">{item.name}</span>
         </Link>
       ))}
     </div>
