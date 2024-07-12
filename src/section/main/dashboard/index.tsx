@@ -72,7 +72,7 @@ export default function DashboardSection() {
                   src={`/assets/tokens/${token.name}.png`}
                   className="h-7 w-7"
                 />
-                <span className="w-4/12 text-center text-gray-300">
+                <span className="w-4/12 text-center text-gray-300 text-lg font-bold">
                   {Number(adminWallet[token.name]).toFixed(2) ?? 0}
                 </span>
               </div>

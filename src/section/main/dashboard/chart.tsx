@@ -128,7 +128,7 @@ export default function DashboardChart({ date, revenueType }: { date: EFilterDat
         show: true,
         position: "bottom",
         horizontalAlign: "right",
-        fontFamily: "Poppins",
+        fontFamily: "Montserrat",
         labels: {
           colors: ["#0BA544", "#ff149d"],
         },

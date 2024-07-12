@@ -264,7 +264,8 @@ export const adminWallets = [
   "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth",
   "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
   "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky",
-  "kujira1wwm2nlztj4nw0hpmln22ezvx33708pcemf6agd"
+  "kujira1wwm2nlztj4nw0hpmln22ezvx33708pcemf6agd",
+  "kujira1ku2fx6rx8l4t8jgzat9yqzhrr8zqlvms76qq82"
 ];
 
 export const game_error = {
