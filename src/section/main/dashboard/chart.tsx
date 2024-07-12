@@ -147,6 +147,10 @@ export default function DashboardChart({
         },
       },
       tooltip: {
+        marker: {
+          show: true,
+          fillColors: ["#0BA544", "#ff149d"],
+        },
         y: {
           formatter: function (value, { seriesIndex }) {
             if (seriesIndex === 0) {
