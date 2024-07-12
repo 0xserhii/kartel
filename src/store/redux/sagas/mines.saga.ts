@@ -33,7 +33,7 @@ function subscribe(socket) {
       emit(minesActions.gameWon(data));
     });
 
-    return () => { };
+    return () => {};
   });
 }
 

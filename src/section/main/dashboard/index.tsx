@@ -19,7 +19,9 @@ import { axiosGet } from "@/utils/axios";
 export default function DashboardSection() {
   const [adminWallet, setAdminWallet] = useState<TokenBalances>(initialBalance);
   const [filterDate, setFilterDate] = useState<EFilterDate>(EFilterDate.hour);
-  const [revenueType, setRevenueType] = useState<ERevenueType>(ERevenueType.CRASH);
+  const [revenueType, setRevenueType] = useState<ERevenueType>(
+    ERevenueType.CRASH
+  );
   const [topLosers, setTopLosers] = useState<any>();
   const [topWinners, setTopWinners] = useState<any>();
 
@@ -72,7 +74,7 @@ export default function DashboardSection() {
                   src={`/assets/tokens/${token.name}.png`}
                   className="h-7 w-7"
                 />
-                <span className="w-4/12 text-center text-gray-300 text-lg font-bold">
+                <span className="w-4/12 text-center text-lg font-bold text-gray-300">
                   {Number(adminWallet[token.name]).toFixed(2) ?? 0}
                 </span>
               </div>

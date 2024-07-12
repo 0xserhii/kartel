@@ -24,7 +24,13 @@ import { ECrashStatus } from "@/constants/status";
 import { getAccessToken } from "@/utils/axios";
 import useToast from "@/hooks/use-toast";
 import BetBoard from "./bet-board";
-import { multiplerArray, betMode, roundArray, token, game_error } from "@/constants/data";
+import {
+  multiplerArray,
+  betMode,
+  roundArray,
+  token,
+  game_error,
+} from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { userActions } from "@/store/redux/actions";
@@ -275,7 +281,8 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
-      const cashOutPoint = data?.gameStatus?.players[userData?._id]?.autoCashOut;
+      const cashOutPoint =
+        data?.gameStatus?.players[userData?._id]?.autoCashOut;
 
       setBetData(data.players);
       Object.keys(data.gameStatus.players).forEach((playerID) => {
@@ -285,25 +292,23 @@ export default function CrashGameSection() {
 
       if (user && user.betAmount) {
         if (user?.autobet) {
-          setAutoBet(false)
+          setAutoBet(false);
         }
 
         if (user?.autobet === undefined) {
           if (user?.winningAmount) {
-            setAvaliableBet(false)
-          }
-          else {
-            setAvaliableBet(true)
+            setAvaliableBet(false);
+          } else {
+            setAvaliableBet(true);
           }
         }
 
-
-        const selectedTokenObj = token.find(t => t.name === user?.denom);
+        const selectedTokenObj = token.find((t) => t.name === user?.denom);
         if (selectedTokenObj) {
           setSelectedToken(selectedTokenObj);
         }
         setBetAmount(Number(user?.betAmount));
-        setAutoCashoutPoint(cashOutPoint / 100 ?? 1.05)
+        setAutoCashoutPoint(cashOutPoint / 100 ?? 1.05);
       }
 
       const totals = calculateTotals(data.players);
@@ -335,7 +340,10 @@ export default function CrashGameSection() {
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
       toast.error(data);
-      if (data === game_error.autobet_reached_max || data === game_error.autobet_not_enough_balance) {
+      if (
+        data === game_error.autobet_reached_max ||
+        data === game_error.autobet_not_enough_balance
+      ) {
         setAutoBet(true);
       }
     });
@@ -416,22 +424,22 @@ export default function CrashGameSection() {
               </video>
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
-                    <div
-                      className={cn(
-                        "text-6xl font-extrabold text-white",
-                        crashStatus === ECrashStatus.END && "crashed-value"
-                      )}
-                    >
-                      X <GrowingNumber start={crTick.prev} end={crTick.cur} />
-                    </div>
-                    <div className="font-semibold text-[#f5b95a]">
-                      {crashStatus === ECrashStatus.PROGRESS
-                        ? "CURRENT PAYOUT"
-                        : "ROUND OVER"}
-                    </div>
+                <div className="crash-status-shadow absolute left-10 top-32 flex flex-col gap-2">
+                  <div
+                    className={cn(
+                      "text-6xl font-extrabold text-white",
+                      crashStatus === ECrashStatus.END && "crashed-value"
+                    )}
+                  >
+                    X <GrowingNumber start={crTick.prev} end={crTick.cur} />
                   </div>
-                )}
+                  <div className="font-semibold text-[#f5b95a]">
+                    {crashStatus === ECrashStatus.PROGRESS
+                      ? "CURRENT PAYOUT"
+                      : "ROUND OVER"}
+                  </div>
+                </div>
+              )}
               {crashStatus === ECrashStatus.PREPARE && prepareTime > 0 && (
                 <div className="crash-status-shadow absolute left-[20%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className="text-xl font-semibold uppercase text-white">
@@ -444,18 +452,18 @@ export default function CrashGameSection() {
               )}
               {(crashStatus === ECrashStatus.PROGRESS ||
                 crashStatus === ECrashStatus.END) && (
-                  <div className="crash-car car-moving absolute bottom-16">
-                    <img
-                      src={
-                        crashStatus === ECrashStatus.PROGRESS
-                          ? "/assets/games/crash/moving_car.gif"
-                          : "/assets/games/crash/explosion.gif"
-                      }
-                      className="w-64"
-                      alt="crash-car"
-                    />
-                  </div>
-                )}
+                <div className="crash-car car-moving absolute bottom-16">
+                  <img
+                    src={
+                      crashStatus === ECrashStatus.PROGRESS
+                        ? "/assets/games/crash/moving_car.gif"
+                        : "/assets/games/crash/explosion.gif"
+                    }
+                    className="w-64"
+                    alt="crash-car"
+                  />
+                </div>
+              )}
               {crashStatus === ECrashStatus.NONE && (
                 <div className="crash-status-shadow absolute left-[30%] top-[40%] flex flex-col items-center justify-center gap-5">
                   <div className=" text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
@@ -483,7 +491,7 @@ export default function CrashGameSection() {
             <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
               <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
                 <div className="flex flex-row items-center justify-between">
-                  <span className="text-lg capitalize text-gray300 font-bold">
+                  <span className="text-lg font-bold capitalize text-gray300">
                     bet mode
                   </span>
                   <div className="flex flex-row items-center gap-3">
@@ -492,7 +500,7 @@ export default function CrashGameSection() {
                         className={cn(
                           "min-h-full rounded-lg border border-[#1D1776] bg-dark-blue px-6 py-5 font-semibold uppercase text-gray500 hover:bg-dark-blue hover:text-white",
                           selectMode === item &&
-                          "border-purple bg-purple text-white hover:bg-purple"
+                            "border-purple bg-purple text-white hover:bg-purple"
                         )}
                         key={index}
                         onClick={() => setSelectMode(item)}
@@ -511,11 +519,11 @@ export default function CrashGameSection() {
                           isAutoMode
                             ? false
                             : (crashStatus !== ECrashStatus.PREPARE &&
-                              !avaliableBet) ||
-                            (crashStatus !== ECrashStatus.PROGRESS &&
-                              avaliableBet) ||
-                            (crashStatus == ECrashStatus.PROGRESS &&
-                              avaliableAutoCashout)
+                                !avaliableBet) ||
+                              (crashStatus !== ECrashStatus.PROGRESS &&
+                                avaliableBet) ||
+                              (crashStatus == ECrashStatus.PROGRESS &&
+                                avaliableAutoCashout)
                         }
                         onClick={isAutoMode ? handleAutoBet : handleStartBet}
                       >
@@ -632,7 +640,7 @@ export default function CrashGameSection() {
                                 max={100}
                                 min={1}
                               />
-                              <span className="select-none absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                              <span className="absolute right-4 top-0 flex h-full select-none items-center justify-center text-gray500">
                                 Cashout
                               </span>
                             </div>

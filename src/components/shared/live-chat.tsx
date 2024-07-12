@@ -26,7 +26,7 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
     <div className="flex items-center gap-1 px-3 py-1">
       <div className="relative"></div>
       <div className="flex flex-1 flex-col justify-between rounded-lg bg-[#4a278d4f] px-2 py-1">
-        <div className="flex flex-row gap-1 items-center">
+        <div className="flex flex-row items-center gap-1">
           <span className="text-sm font-medium text-gray300">
             {name ?? "user"}
           </span>

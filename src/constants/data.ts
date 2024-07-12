@@ -178,7 +178,7 @@ export const token: Array<IToken> = [
     denom: isProduction
       ? "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk"
       : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
-  }
+  },
 ];
 
 export type TokenBalances = {
@@ -255,7 +255,7 @@ export const casinoGameSrc = [
 
 export const gameLists = [
   // { name: "total", color: "white" },
-  { name: "crash", color: "#0BA544", value: 2 }
+  { name: "crash", color: "#0BA544", value: 2 },
 ];
 
 export const adminWallets = [
@@ -265,14 +265,16 @@ export const adminWallets = [
   "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
   "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky",
   "kujira1wwm2nlztj4nw0hpmln22ezvx33708pcemf6agd",
-  "kujira1ku2fx6rx8l4t8jgzat9yqzhrr8zqlvms76qq82"
+  "kujira1ku2fx6rx8l4t8jgzat9yqzhrr8zqlvms76qq82",
 ];
 
 export const game_error = {
   autobet_running: "Autobet is running.",
   autobet_canceled: "Autobet has been canceled.",
-  autobet_reached_max: "Autobet has reached the max number of bets! Autobet has canceled",
-  autobet_not_enough_balance: "You can't afford this autobet! Autobet has canceled",
+  autobet_reached_max:
+    "Autobet has reached the max number of bets! Autobet has canceled",
+  autobet_not_enough_balance:
+    "You can't afford this autobet! Autobet has canceled",
 };
 
 export const token_currency = {
@@ -280,7 +282,7 @@ export const token_currency = {
   kart: 0.016,
 };
 
-export const prizeMultiple: number = 0.6
+export const prizeMultiple: number = 0.6;
 
 export enum ERevenueType {
   // TOTAL = "total",
