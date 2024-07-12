@@ -7,8 +7,13 @@ import { axiosPost } from "@/utils/axios";
 import { useEffect, useState } from "react";
 import { getMonthName, getDayName } from "@/utils/utils";
 
-export default function DashboardChart({ date, revenueType }: { date: EFilterDate, revenueType: ERevenueType }) {
-
+export default function DashboardChart({
+  date,
+  revenueType,
+}: {
+  date: EFilterDate;
+  revenueType: ERevenueType;
+}) {
   const [adminUSKBalance, setAdminUSKBalance] = useState<number[]>([]);
   const [adminKartBalance, setAdminKartBalance] = useState<number[]>([]);
   const [chartXData, setChartXData] = useState<string[]>([]);
@@ -22,18 +27,23 @@ export default function DashboardChart({ date, revenueType }: { date: EFilterDat
         `${import.meta.env.VITE_SERVER_URL}/api/v1/dashboard/dashboard-history?date=${date}&revenueType=${revenueType}`
       );
 
-      const fetchedKartBalance = response?.kartLogs
-        .map((item) => (item.lastBalance * token_currency.kart).toFixed(2));
+      const fetchedKartBalance = response?.kartLogs.map((item) =>
+        (item.lastBalance * token_currency.kart).toFixed(2)
+      );
 
-      const fetchedUskBalance = response?.uskLogs
-        .map((item) => (item.lastBalance * token_currency.usk).toFixed(2));
+      const fetchedUskBalance = response?.uskLogs.map((item) =>
+        (item.lastBalance * token_currency.usk).toFixed(2)
+      );
       if (fetchedKartBalance.length === 0 && fetchedUskBalance.length === 0) {
         return;
       }
 
       const tempXData: string[] = [];
 
-      const maxLength = Math.max(fetchedKartBalance.length, fetchedUskBalance.length);
+      const maxLength = Math.max(
+        fetchedKartBalance.length,
+        fetchedUskBalance.length
+      );
 
       while (fetchedKartBalance.length < maxLength) {
         fetchedKartBalance.unshift(fetchedKartBalance[0]);
@@ -157,7 +167,7 @@ export default function DashboardChart({ date, revenueType }: { date: EFilterDat
       {
         name: "USK",
         data: adminUSKBalance,
-      }
+      },
     ],
   };
 

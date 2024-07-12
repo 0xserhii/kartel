@@ -22,7 +22,7 @@ input::-webkit-inner-spin-button {
   border-radius: 10px;
 }
 
-#scrollarea>div {
+#scrollarea > div {
   display: flex !important;
 }
 
@@ -91,10 +91,10 @@ input::-webkit-inner-spin-button {
 }
 
 @font-face {
-  font-family: 'Pricedown';
+  font-family: "Pricedown";
   font-style: thin;
   font-weight: thin;
-  src: url('/fonts/pricedown-bl.ttf');
+  src: url("/fonts/pricedown-bl.ttf");
 }
 
 @layer base {
@@ -109,23 +109,23 @@ input::-webkit-inner-spin-button {
 
 @layer base {
   html {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-weight: 400;
     font-style: normal;
   }
 
   p {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
   }
 
   button {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
   }
 
   a {
-    font-family: 'Montserrat', sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-style: normal;
   }
 }
@@ -146,7 +146,7 @@ input::-webkit-inner-spin-button {
 }
 
 .Toastify__toast--error::before {
-  content: url('/assets/toast/close.svg');
+  content: url("/assets/toast/close.svg");
   padding-left: 0.5rem;
   height: 21px;
   width: 2rem;
@@ -162,7 +162,7 @@ input::-webkit-inner-spin-button {
 }
 
 .Toastify__toast--success::before {
-  content: url('/assets/toast/check.svg');
+  content: url("/assets/toast/check.svg");
   height: 27px;
   width: 1.8rem;
 }
@@ -195,7 +195,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.Toastify__toast>button>svg {
+.Toastify__toast > button > svg {
   display: none;
 }
 
@@ -207,7 +207,7 @@ input::-webkit-inner-spin-button {
 
 .crash-status-shadow {
   text-shadow: rgba(14, 12, 50, 0.6) 0px 3px 0px;
-  font-family: 'Omar', sans-serif;
+  font-family: "Omar", sans-serif;
 }
 
 .car-moving {

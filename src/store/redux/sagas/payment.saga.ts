@@ -42,7 +42,7 @@ function subscribe(socket) {
       emit(paymentActions.paymentFailed(data));
     });
 
-    return () => { };
+    return () => {};
   });
 }
 

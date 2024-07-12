@@ -38,7 +38,9 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
       to={item.href}
     >
       <img src={item.icon} className="h-5 w-5" aria-hidden="true" />
-      <span className="ml-3 text-sm font-bold uppercase tracking-wide">{item.label}</span>
+      <span className="ml-3 text-sm font-bold uppercase tracking-wide">
+        {item.label}
+      </span>
     </Link>
   );
 };
