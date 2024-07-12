@@ -85,8 +85,8 @@ export const navItems: NavItemGroup[] = [
 ];
 
 export const tabItems = [
-  { name: "home", path: "/" },
-  { name: "leaderboard", path: "/leader-board" },
+  { name: "Home", path: "/" },
+  { name: "Leaderboard", path: "/leader-board" },
 ];
 
 export type Employee = {
