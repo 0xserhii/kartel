@@ -34,6 +34,10 @@ export default function UserNav() {
     }
   };
 
+  const handleResetPassword = async () => {
+    modal.open(ModalType.RESETPASSWORD);
+  };
+
   const toggleWalletConnection = async () => {
     if (account) {
       disconnect();
@@ -69,11 +73,22 @@ export default function UserNav() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={toggleWalletConnection}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={handleResetPassword}
+          >
+            Reset Password
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={toggleWalletConnection}
+          >
             {account ? "Disconnect Wallet" : "Connect Wallet"}
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
+          Log out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

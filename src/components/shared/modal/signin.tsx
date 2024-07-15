@@ -26,6 +26,7 @@ import { useDispatch } from "react-redux";
 import { userActions } from "@/store/redux/actions";
 import { useAppSelector } from "@/store/redux";
 import { useEffect } from "react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const SignInSchema = z.object({
   username: z.string().nonempty("Full Name is required"),
@@ -87,13 +88,14 @@ const SignInModal = () => {
       ]);
       if (resSignIn?.auth?.accessToken) {
         setAccessToken(resSignIn?.auth?.accessToken);
-        await dispatch(userActions.userData(resSignIn?.user));
+        await dispatch(
+          userActions.userData({ ...resSignIn?.user, password: data.password })
+        );
         toast.success("SignIn Success");
         modal.close(ModalType.LOGIN);
         return;
       }
     } catch (error: any) {
-      console.error(error);
       toast.error(error?.error);
     }
   };
@@ -171,8 +173,7 @@ const SignInModal = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input
-                            type="password"
+                          <PasswordInput
                             placeholder="*****"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
@@ -199,9 +200,6 @@ const SignInModal = () => {
                     Remember me
                   </label>
                 </div>
-                <a href="" className="text-sm font-semibold text-[#049DD9]">
-                  Forgot password?
-                </a>
               </div>
               <Button
                 className="w-full bg-purple py-5 capitalize hover:bg-purple"

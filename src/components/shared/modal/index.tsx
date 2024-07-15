@@ -4,6 +4,7 @@ import DepositModal from "./deposit";
 import SignInModal from "./signin";
 import SignUpModal from "./signup";
 import WalletDepositModal from "./wallet-connect";
+import ResetPasswordModal from "./reset-password";
 
 const Modal = () => {
   return (
@@ -14,6 +15,7 @@ const Modal = () => {
       <AddGoldModal />
       <CrashInfoModal />
       <WalletDepositModal />
+      <ResetPasswordModal />
     </>
   );
 };
