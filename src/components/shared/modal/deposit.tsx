@@ -64,6 +64,10 @@ const DepositModal = () => {
   };
 
   const handleWithdraw = async () => {
+    if (!userState?.userData?.signAddress || userState?.userData?.signAddress === "") {
+      dispatch(paymentActions.paymentFailed("Withdraw address is invalid"));
+      return;
+    }
     if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
       dispatch(paymentActions.paymentFailed("Insufficient token"));
       return;
@@ -341,9 +345,10 @@ const DepositModal = () => {
             <div className="mt-2 flex flex-col gap-1">
               <span className="text-xs text-white">Wallet Address</span>
               <Input
-                value={account?.address}
+                readOnly
+                contentEditable={false}
+                value={userState?.userData?.signAddress}
                 type="text"
-                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
