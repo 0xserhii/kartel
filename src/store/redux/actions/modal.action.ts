@@ -1,9 +1,12 @@
 import { ModalType } from "@/types/modal";
 
-export function openModal(modalType: ModalType) {
+export function openModal(payload: {
+  current: ModalType;
+  after: ModalType | null;
+}) {
   return {
     type: "OPEN_MODAL",
-    payload: modalType,
+    payload: payload,
   };
 }
 
