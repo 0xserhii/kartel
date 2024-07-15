@@ -5,13 +5,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ModalType } from "@/types/modal";
 import useModal from "@/hooks/use-modal";
-import useToast from "@/hooks/use-toast";
 import { z } from "zod";
+import useToast from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { axiosPost } from "@/utils/axios";
+import { BACKEND_API_ENDPOINT } from "@/utils/constant";
 import {
   Form,
   FormControl,
@@ -19,70 +20,70 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { axiosPost } from "@/utils/axios";
-import { BACKEND_API_ENDPOINT } from "@/utils/constant";
 import { useAppSelector } from "@/store/redux";
 import { PasswordInput } from "@/components/ui/password-input";
 
-const SignUpSchema = z
-  .object({
-    username: z.string().nonempty("Full Name is required"),
-    password: z
-      .string()
-      .nonempty("Password is required")
-      .min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().nonempty("Confirm Password is required"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.password !== data.confirmPassword) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Passwords must match",
-        path: ["confirmPassword"],
-      });
-    }
-  });
+const ResetPasswordSchema = z.object({
+  userId: z.string(),
+  oldPassword: z
+    .string()
+    .nonempty("Current Password is required")
+    .min(6, "Password must be at least 6 characters"),
+  newPassword: z
+    .string()
+    .nonempty("New Password is required")
+    .min(6, "Password must be at least 6 characters"),
+  confirmPassword: z
+    .string()
+    .nonempty("Confirm Password is required")
+    .min(6, "Password must be at least 6 characters"),
+});
 
-const SignUpDefaultValue = {
-  username: "",
-  password: "",
-  confirmPassword: "",
-};
-
-const SignUpModal = () => {
-  const { open, type } = useAppSelector((state: any) => state.modal);
-  const isOpen = open && type === ModalType.SIGNUP;
-  const modal = useModal();
+const ResetPasswordModal = () => {
   const toast = useToast();
+  const modal = useModal();
+  const modalState = useAppSelector((state: any) => state.modal);
+  const userState = useAppSelector((state: any) => state.user);
+  const isOpen = modalState.open && modalState.type === ModalType.RESETPASSWORD;
 
-  const signUpForm = useForm<z.infer<typeof SignUpSchema>>({
-    resolver: zodResolver(SignUpSchema),
-    defaultValues: SignUpDefaultValue,
+  const ResetPasswordDefaultValue = {
+    userId: "",
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  };
+
+  const resetPasswordForm = useForm<z.infer<typeof ResetPasswordSchema>>({
+    resolver: zodResolver(ResetPasswordSchema),
+    defaultValues: ResetPasswordDefaultValue,
   });
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
-      modal.close(ModalType.SIGNUP);
+      modal.close(ModalType.RESETPASSWORD);
     }
   };
 
-  const handleSignIn = async () => {
-    modal.open(ModalType.LOGIN);
-  };
-
-  const handleSubmit = async (data: z.infer<typeof SignUpSchema>) => {
+  const handleSubmit = async (data: z.infer<typeof ResetPasswordSchema>) => {
     try {
-      const signUpPayload = {
-        username: data.username,
-        password: data.password,
+      const resetPasswordPayload = {
+        userId: userState?.userData?._id,
+        oldPassword: data.oldPassword,
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword,
       };
-      await axiosPost([
-        BACKEND_API_ENDPOINT.auth.signUp,
-        { data: signUpPayload },
+
+      const resResetPassword = await axiosPost([
+        BACKEND_API_ENDPOINT.auth.resetPassword,
+        { data: resetPasswordPayload },
       ]);
-      modal.close(ModalType.SIGNUP);
-      modal.open(ModalType.LOGIN);
-      toast.success("SignUp Success");
+
+      if (resResetPassword) {
+        toast.success("Reset Password Success");
+        modal.close(ModalType.RESETPASSWORD);
+        resetPasswordForm.reset(ResetPasswordDefaultValue);
+        return;
+      }
     } catch (error: any) {
       toast.error(error?.error);
     }
@@ -92,25 +93,25 @@ const SignUpModal = () => {
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-center text-3xl text-white">
-            Register
+          <DialogTitle className="text-center text-xl text-white">
+            Reset Password
           </DialogTitle>
         </DialogHeader>
-        <Form {...signUpForm}>
-          <form onSubmit={signUpForm.handleSubmit(handleSubmit)}>
+        <Form {...resetPasswordForm}>
+          <form onSubmit={resetPasswordForm.handleSubmit(handleSubmit)}>
             <div className="mt-3 flex flex-col items-center gap-7">
-              <div className="flex w-full flex-col gap-3">
+              <div className="flex w-full flex-col gap-5">
                 <div className="grid w-full flex-1 gap-2">
-                  <p className="text-sm text-gray-300">Username</p>
+                  <p className="text-sm text-gray-300">Current Password</p>
                   <FormField
-                    control={signUpForm.control}
-                    name="username"
+                    control={resetPasswordForm.control}
+                    name="oldPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="username"
+                          <PasswordInput
+                            placeholder="Old Password"
+                            autoComplete="new-password"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
                           />
@@ -121,15 +122,15 @@ const SignUpModal = () => {
                   />
                 </div>
                 <div className="grid w-full flex-1 gap-2">
-                  <p className="text-sm text-gray-300">Password</p>
+                  <p className="text-sm text-gray-300">New Password</p>
                   <FormField
-                    control={signUpForm.control}
-                    name="password"
+                    control={resetPasswordForm.control}
+                    name="newPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
                           <PasswordInput
-                            placeholder="*****"
+                            placeholder="New Password"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
                           />
@@ -142,13 +143,13 @@ const SignUpModal = () => {
                 <div className="grid w-full flex-1 gap-2">
                   <p className="text-sm text-gray-300">Confirm Password</p>
                   <FormField
-                    control={signUpForm.control}
+                    control={resetPasswordForm.control}
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
                           <PasswordInput
-                            placeholder="*****"
+                            placeholder="Confirm New Password"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
                           />
@@ -160,21 +161,11 @@ const SignUpModal = () => {
                 </div>
               </div>
               <Button
+                className="w-full bg-purple py-5 capitalize hover:bg-purple"
                 type="submit"
-                className="w-full bg-purple py-5 hover:bg-purple"
               >
-                Register
+                Reset Password
               </Button>
-              <p className="flex text-sm text-gray-300">
-                Already have an account ?&nbsp;
-                <span
-                  className="cursor-pointer font-semibold text-[#049DD9]"
-                  onClick={handleSignIn}
-                >
-                  Login
-                </span>
-                &nbsp;to start
-              </p>
             </div>
           </form>
         </Form>
@@ -183,4 +174,4 @@ const SignUpModal = () => {
   );
 };
 
-export default SignUpModal;
+export default ResetPasswordModal;

@@ -5,4 +5,5 @@ export enum ModalType {
   ADDGOLD = "addGold",
   WALLETCONNECT = "wallectConnect",
   CRASH_INFO = "crashInfo",
+  RESETPASSWORD = "resetPassword",
 }
