@@ -64,29 +64,30 @@ const DepositModal = () => {
   };
 
   const handleWithdraw = async () => {
-    if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
-      dispatch(paymentActions.paymentFailed("Insufficient token"));
-      return;
-    }
-    dispatch(paymentActions.setTxProgress(true));
-    dispatch(paymentActions.paymentFailed(""));
-    if (account) {
-      try {
-        const withdrawParam = {
-          currency: selectedToken.name,
-          amount: Number(depositAmount),
-          address: account?.address,
-        };
-        const encryptedParam = await aesWrapper.encryptMessage(
-          paymentState.admin.address1,
-          JSON.stringify(withdrawParam)
-        );
-        dispatch(paymentActions.withDraw(encryptedParam));
-      } catch (err) {
-        dispatch(paymentActions.paymentFailed("Withdraw rejected"));
-        console.error(err);
-      }
-    }
+    dispatch(paymentActions.paymentFailed("Withdraw maintenance!"));
+    // if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
+    //   dispatch(paymentActions.paymentFailed("Insufficient token"));
+    //   return;
+    // }
+    // dispatch(paymentActions.setTxProgress(true));
+    // dispatch(paymentActions.paymentFailed(""));
+    // if (account) {
+    //   try {
+    //     const withdrawParam = {
+    //       currency: selectedToken.name,
+    //       amount: Number(depositAmount),
+    //       address: account?.address,
+    //     };
+    //     const encryptedParam = await aesWrapper.encryptMessage(
+    //       paymentState.admin.address1,
+    //       JSON.stringify(withdrawParam)
+    //     );
+    //     dispatch(paymentActions.withDraw(encryptedParam));
+    //   } catch (err) {
+    //     dispatch(paymentActions.paymentFailed("Withdraw rejected"));
+    //     console.error(err);
+    //   }
+    // }
   };
 
   const handleDeposit = async () => {
@@ -343,7 +344,7 @@ const DepositModal = () => {
               <Input
                 value={account?.address}
                 type="text"
-                onChange={() => {}}
+                onChange={() => { }}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />
