@@ -24,7 +24,7 @@ import { BACKEND_API_ENDPOINT } from "@/utils/constant";
 import { useAppSelector } from "@/store/redux";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useWallet } from "@/provider/crypto/wallet";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const SignUpSchema = z
   .object({
