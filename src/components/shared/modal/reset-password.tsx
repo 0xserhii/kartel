@@ -47,7 +47,7 @@ const ResetPasswordModal = () => {
   const isOpen = modalState.open && modalState.type === ModalType.RESETPASSWORD;
 
   const ResetPasswordDefaultValue = {
-    userId: userState?.userData?._id,
+    userId: "",
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
@@ -67,7 +67,7 @@ const ResetPasswordModal = () => {
   const handleSubmit = async (data: z.infer<typeof ResetPasswordSchema>) => {
     try {
       const resetPasswordPayload = {
-        userId: data.userId,
+        userId: userState?.userData?._id,
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
         confirmPassword: data.confirmPassword,
@@ -93,7 +93,7 @@ const ResetPasswordModal = () => {
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
       <DialogContent className="rounded-lg border-2 border-gray-900 bg-[#0D0B32] p-10 sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-center text-3xl text-white">
+          <DialogTitle className="text-center text-xl text-white">
             Reset Password
           </DialogTitle>
         </DialogHeader>
