@@ -18,6 +18,7 @@ export default function DashboardChart({
   const [adminKartBalance, setAdminKartBalance] = useState<number[]>([]);
   const [chartXData, setChartXData] = useState<string[]>([]);
   const [kart_currency, setKartCurrency] = useState<number>(0);
+
   const getDashboardData = async () => {
     try {
       const currentHour = new Date().getHours();
@@ -26,14 +27,17 @@ export default function DashboardChart({
       const response = await axiosPost(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/dashboard/dashboard-history?date=${date}&revenueType=${revenueType}`
       );
-      setKartCurrency(response?.kart_currency);
+
       const fetchedKartBalance = response?.kartLogs.map((item) =>
-        (item.lastBalance * kart_currency).toFixed(2)
+        (item.lastBalance * response?.kart_currency).toFixed(2)
       );
+
+      setKartCurrency(response?.kart_currency);
 
       const fetchedUskBalance = response?.uskLogs.map((item) =>
         (item.lastBalance * token_currency.usk).toFixed(2)
       );
+
       if (fetchedKartBalance.length === 0 && fetchedUskBalance.length === 0) {
         return;
       }
@@ -156,7 +160,7 @@ export default function DashboardChart({
             if (seriesIndex === 0) {
               return (Number(value) / kart_currency).toFixed(2);
             } else if (seriesIndex === 1) {
-              return (Number(value) / token_currency.usk).toFixed(2);
+              return Number(value).toFixed(2);
             }
             return value;
           },
