@@ -16,6 +16,7 @@ import { ModalType } from "@/types/modal";
 import { useDispatch } from "react-redux";
 import { userActions } from "@/store/redux/actions";
 import { useAppSelector } from "@/store/redux";
+import { useEffect } from "react";
 
 export default function UserNav() {
   const modal = useModal();
@@ -47,6 +48,14 @@ export default function UserNav() {
     }
   };
 
+  useEffect(() => {
+    if (token && !userData?.signAddress) {
+      dispatch(userActions.initUserData());
+      disconnect();
+      removeAllTokens();
+      toast.success("Logout Successfully");
+    }
+  }, [userData])
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
