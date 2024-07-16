@@ -64,7 +64,10 @@ const DepositModal = () => {
   };
 
   const handleWithdraw = async () => {
-    if (!userState?.userData?.signAddress || userState?.userData?.signAddress === "") {
+    if (
+      !userState?.userData?.signAddress ||
+      userState?.userData?.signAddress === ""
+    ) {
       dispatch(paymentActions.paymentFailed("Withdraw address is invalid"));
       return;
     }
@@ -72,14 +75,48 @@ const DepositModal = () => {
       dispatch(paymentActions.paymentFailed("Insufficient token"));
       return;
     }
+    if (userState?.userData?.signAddress !== account?.address) {
+      dispatch(paymentActions.paymentFailed("Connect withdraw wallet"));
+      return;
+    }
+
     dispatch(paymentActions.setTxProgress(true));
     dispatch(paymentActions.paymentFailed(""));
+
+    let signedTx: StdSignature | undefined = undefined;
+    if (adapter === Adapter.Keplr) {
+      const chainId = chainInfo.chainId;
+      const signed = await window.keplr?.signArbitrary(
+        chainId,
+        account?.address ?? "",
+        `Withdraw ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} from Kartel`
+      );
+      if (signed) {
+        signedTx = signed;
+      }
+    } else if (adapter === Adapter.Leap) {
+      const chainId = chainInfo.chainId;
+      const signed = await window.leap?.signArbitrary(
+        chainId,
+        account?.address ?? "",
+        `Withdraw ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} from Kartel`
+      );
+      if (signed) {
+        signedTx = signed;
+      }
+    }
+    if (!signedTx) {
+      dispatch(paymentActions.paymentFailed("Reject withdraw"));
+      return;
+    }
+
     if (account) {
       try {
         const withdrawParam = {
           currency: selectedToken.name,
           amount: Number(depositAmount),
           address: account?.address,
+          signedTx,
         };
         const encryptedParam = await aesWrapper.encryptMessage(
           paymentState.admin.address1,

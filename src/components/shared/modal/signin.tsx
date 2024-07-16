@@ -49,6 +49,7 @@ const SignInModal = () => {
   const [signedSig, setSignedSig] = useState<StdSignature | undefined>(
     undefined
   );
+  const [rememberMe, setRememberMe] = useState(true);
   const toast = useToast();
   const modal = useModal();
   const modalState = useAppSelector((state: any) => state.modal);
@@ -60,19 +61,6 @@ const SignInModal = () => {
     defaultValues: SignInDefaultValue,
   });
   const { account, disconnect, adapter, chainInfo } = useWallet();
-
-  const handleRememberMe = () => {
-    if (
-      signInForm.getValues("username") === "" &&
-      signInForm.getValues("password") === "" &&
-      !userState.remember
-    ) {
-      toast.error("Please fill the inputs");
-      return;
-    } else {
-      dispatch(userActions.rememberMe(!userState.remember));
-    }
-  };
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -117,6 +105,18 @@ const SignInModal = () => {
         BACKEND_API_ENDPOINT.auth.signIn,
         { data: signInPayload },
       ]);
+
+      if (rememberMe) {
+        dispatch(
+          userActions.setCredential({
+            username: signInForm.getValues("username"),
+            password: signInForm.getValues("password"),
+          })
+        );
+      } else {
+        dispatch(userActions.removeCredential());
+      }
+
       if (resSignIn?.auth?.accessToken) {
         setAccessToken(resSignIn?.auth?.accessToken);
         await dispatch(
@@ -168,15 +168,8 @@ const SignInModal = () => {
       toast.error("Please sign wallet");
     }
   };
+
   useEffect(() => {
-    if (userState.remember) {
-      dispatch(
-        userActions.setCredential({
-          username: userState.credentials.username,
-          password: userState.credentials.password,
-        })
-      );
-    }
     const { username, password } = userState.remember
       ? userState.credentials
       : { username: "", password: "" };
@@ -187,23 +180,6 @@ const SignInModal = () => {
   useEffect(() => {
     onChangeWalletAddress();
   }, [account?.address]);
-
-  useEffect(() => {
-    if (
-      userState.remember &&
-      signInForm.getValues("username") &&
-      signInForm.getValues("password")
-    ) {
-      dispatch(
-        userActions.setCredential({
-          username: signInForm.getValues("username"),
-          password: signInForm.getValues("password"),
-        })
-      );
-    } else {
-      dispatch(userActions.removeCredential());
-    }
-  }, [userState.remember]);
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
@@ -292,10 +268,10 @@ const SignInModal = () => {
               <div className="flex w-full flex-row justify-between">
                 <div className="flex items-center space-x-2">
                   <Checkbox
-                    checked={userState?.remember}
+                    checked={rememberMe}
                     id="terms"
                     className="text-[#049DD9]"
-                    onClick={handleRememberMe}
+                    onClick={() => setRememberMe((prev) => !prev)}
                   />
                   <label
                     htmlFor="terms"

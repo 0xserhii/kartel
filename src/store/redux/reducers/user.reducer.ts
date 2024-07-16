@@ -1,14 +1,19 @@
 export const USER_DATA = "USER_DATA";
 export const INIT_USER_DATA = "INIT_USER_DATA";
 export const SITE_BALANCE_UPDATE = "SITE_BALANCE_UPDATE";
-export const SUBSCRIBE_USER = "SUBSCRIBE_USER";
 export const DISCONNECT_USER = "DISCONNECT_USER";
 export const REMEMBERME = "REMEMBERME";
 export const SET_CREDENTIALS = "SET_CREDENTIALS";
 export const REMOVE_CREDENTIALS = "REMOVE_CREDENTIALS";
 
 export interface UserState {
-  userData: { username: string; _id: string; role: string; password: string; signAddress: string; };
+  userData: {
+    username: string;
+    _id: string;
+    role: string;
+    password: string;
+    signAddress: string;
+  };
   wallet: { value: number; denom: string };
   remember: boolean;
   credentials: { username: string; password: string };
@@ -43,7 +48,13 @@ const userReducer = (state: any = initialState, action: UserAction): any => {
     case INIT_USER_DATA:
       return {
         ...state,
-        userData: { username: "", _id: "", role: "", password: "", signAddress: "" },
+        userData: {
+          username: "",
+          _id: "",
+          role: "",
+          password: "",
+          signAddress: "",
+        },
         wallet: { value: 0, denom: "" },
       };
 

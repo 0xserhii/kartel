@@ -48,7 +48,9 @@ const WalletConnectModal = () => {
   const hanndleOpenChange = async () => {
     if (isOpen) {
       modal.close(ModalType.WALLETCONNECT);
-      modal.open(afterModal);
+      if (afterModal) {
+        modal.open(afterModal);
+      }
     }
   };
 

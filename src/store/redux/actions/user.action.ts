@@ -5,7 +5,6 @@ import {
   REMOVE_CREDENTIALS,
   SET_CREDENTIALS,
   SITE_BALANCE_UPDATE,
-  SUBSCRIBE_USER,
   USER_DATA,
 } from "../reducers/user.reducer";
 
@@ -59,13 +58,6 @@ export function siteBalanceUpdate(wallet: { value: number; denom: string }) {
   return {
     type: SITE_BALANCE_UPDATE,
     payload: wallet,
-  };
-}
-
-export function subscribeUserServer() {
-  return {
-    type: SUBSCRIBE_USER,
-    payload: null,
   };
 }
 

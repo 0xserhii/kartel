@@ -165,13 +165,11 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     setKujiraBalances([]);
     setBalances({});
     refreshBalances();
-  }, [wallet, query]);
-
-  useEffect(() => {
-    if (!wallet) return;
-    query?.auth
-      .account(wallet.account.address)
-      .then((account) => account && setKujiraAccount(account));
+    wallet &&
+      query?.auth
+        .account(wallet.account.address)
+        .then((account) => account && setKujiraAccount(account));
+    wallet && wallet.onChange(setWallet);
   }, [wallet, query]);
 
   const refreshDelegations = () => {
@@ -184,10 +182,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           delegationResponses && setDelegations(delegationResponses)
       );
   };
-
-  useEffect(() => {
-    refreshDelegations();
-  }, [wallet, query]);
 
   const balance = (denom: Denom): BigNumber =>
     balances[denom.reference] || BigNumber.from(0);
@@ -313,10 +307,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    wallet && wallet.onChange(setWallet);
-  }, [wallet]);
-
   const disconnect = () => {
     stored === Adapter.Passkey && selectSigner("");
     setStored("");
@@ -341,7 +331,6 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
     chainInfo,
     signer,
   };
-
   return (
     <Context.Provider key={network + wallet?.account.address} value={value}>
       {children}

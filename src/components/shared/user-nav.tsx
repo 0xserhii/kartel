@@ -55,7 +55,7 @@ export default function UserNav() {
       removeAllTokens();
       toast.success("Logout Successfully");
     }
-  }, [userData])
+  }, [userData]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
