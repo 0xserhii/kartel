@@ -171,6 +171,7 @@ const DepositModal = () => {
           }
 
           let signedTx: StdSignature | undefined = undefined;
+          console.log({ adapter });
           if (adapter === Adapter.Keplr) {
             const chainId = chainInfo.chainId;
             const signed = await window.keplr?.signArbitrary(
@@ -257,6 +258,8 @@ const DepositModal = () => {
   useEffect(() => {
     if (isOpen) {
       getSiteBalance();
+      dispatch(paymentActions.subscribePaymentServer());
+      dispatch(paymentActions.loginPaymentServer());
     }
   }, [isOpen]);
 

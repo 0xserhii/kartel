@@ -70,7 +70,9 @@ const LeaderboardCard = () => {
                     </TableCell>
                     <TableCell className="w-4/12 text-center">
                       <span className="truncate">
-                        {Number(score?.totalBetAmount * prizeMultiple).toFixed(2)}
+                        {Number(score?.totalBetAmount * prizeMultiple).toFixed(
+                          2
+                        )}
                       </span>
                     </TableCell>
                   </TableRow>
