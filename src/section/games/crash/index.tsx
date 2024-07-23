@@ -98,6 +98,16 @@ export default function CrashGameSection() {
     crashBgVideoPlayer?.current?.pause();
   };
 
+  const startTickInterval = () => {
+    tickIntervalRef.current = window.setInterval(() => {
+      elapsedRef.current += 100;
+      setTick((prev) => ({
+        cur: prev.next,
+        next: CalcTick(elapsedRef.current) / 100,
+      }));
+    }, 100);
+  };
+
   const handleBetAmountChange = (event) => {
     const inputValue = event.target.value;
     const reqTest = new RegExp(`^\\d*\\.?\\d{0,2}$`);
@@ -222,8 +232,14 @@ export default function CrashGameSection() {
 
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
-    crashSocket.on(ECrashSocketEvent.GAME_TICK, (tick) => {
-      setCrashStatus(ECrashStatus.PROGRESS);
+    crashSocket.on(ECrashSocketEvent.GAME_TICK, ({ tick, elapsed }) => {
+      console.log(tick, elapsed, crashStatus);
+      if (crashStatus !== ECrashStatus.PROGRESS) {
+        // setCrashStatus(ECrashStatus.PROGRESS);
+        // setTick({ cur: tick, next: tick });
+        // elapsedRef.current = elapsed;
+        // startTickInterval();
+      }
     });
 
     crashSocket.on(ECrashSocketEvent.GAME_STARTING, (data) => {
@@ -245,13 +261,7 @@ export default function CrashGameSection() {
       setTick({ cur: 1, next: 1 });
       playCrashBgVideo();
 
-      tickIntervalRef.current = window.setInterval(() => {
-        elapsedRef.current += 100;
-        setTick((prev) => ({
-          cur: prev.next,
-          next: CalcTick(elapsedRef.current) / 100,
-        }));
-      }, 100);
+      startTickInterval();
     });
 
     crashSocket.on(
@@ -457,7 +467,12 @@ export default function CrashGameSection() {
                       crashStatus === ECrashStatus.END && "crashed-value"
                     )}
                   >
-                    X <CountUpNumber start={tick.cur} end={tick.next} />
+                    X{" "}
+                    {crashStatus === ECrashStatus.PROGRESS ? (
+                      <CountUpNumber start={tick.cur} end={tick.next} />
+                    ) : (
+                      crashHistoryData[0].crashPoint / 100
+                    )}
                   </div>
                   <div className="font-semibold text-[#f5b95a]">
                     {crashStatus === ECrashStatus.PROGRESS
