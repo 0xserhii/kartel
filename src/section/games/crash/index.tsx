@@ -1,7 +1,7 @@
 import MovingBackgroundVideo from "/assets/games/crash/moving_background.mp4";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { cn, formatMillisecondsShort } from "@/utils/utils";
+import { cn } from "@/utils/utils";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -71,7 +71,6 @@ export default function CrashGameSection() {
   const [crashStatus, setCrashStatus] = useState<ECrashStatus>(
     ECrashStatus.NONE
   );
-  const [downIntervalId, setDownIntervalId] = useState(0);
   const [crashHistoryData, setCrashHistoryData] = useState<CrashHistoryData[]>(
     []
   );
@@ -85,10 +84,6 @@ export default function CrashGameSection() {
 
   const [playExplosion, { stop: stopExplosion, sound: explosionSound }] =
     useSound("/assets/audio/explosion.mp3", { volume: 0.25 });
-
-  const updatePrepareCountDown = () => {
-    setPrepareTime((prev) => prev - 100);
-  };
 
   const playCrashBgVideo = () => {
     crashBgVideoPlayer?.current?.play();
@@ -398,13 +393,6 @@ export default function CrashGameSection() {
   useEffect(() => {
     let intervalId: number | undefined;
 
-    if (crashStatus === ECrashStatus.PREPARE) {
-      intervalId = window.setInterval(updatePrepareCountDown, 100);
-      setDownIntervalId(intervalId);
-    } else {
-      clearInterval(downIntervalId);
-    }
-
     if (crashStatus === ECrashStatus.PROGRESS && settings.isSoundPlay) {
       if (!sound?.playing()) {
         play();
@@ -440,6 +428,21 @@ export default function CrashGameSection() {
     }, [start, end]);
 
     return <span ref={countUpRef}></span>;
+  };
+
+  const CountDownNumber = ({ start }) => {
+    const countDownRef = useRef(null);
+
+    useEffect(() => {
+      const countDown = new CountUp(countDownRef.current!, 0, {
+        startVal: start,
+        decimalPlaces: 2,
+        useEasing: false,
+        duration: start,
+      });
+      countDown.start();
+    }, [start]);
+    return <span ref={countDownRef}></span>;
   };
 
   return (
@@ -488,7 +491,7 @@ export default function CrashGameSection() {
                     preparing round
                   </div>
                   <div className="text-6xl font-extrabold uppercase text-[#f5b95a] delay-100">
-                    starting in {formatMillisecondsShort(prepareTime)}
+                    starting in <CountDownNumber start={prepareTime / 1000} />
                   </div>
                 </div>
               )}
