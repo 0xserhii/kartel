@@ -16,6 +16,7 @@ import { ModalType } from "@/types/modal";
 import { useDispatch } from "react-redux";
 import { userActions } from "@/store/redux/actions";
 import { useAppSelector } from "@/store/redux";
+import { useEffect } from "react";
 
 export default function UserNav() {
   const modal = useModal();
@@ -34,6 +35,10 @@ export default function UserNav() {
     }
   };
 
+  const handleResetPassword = async () => {
+    modal.open(ModalType.RESETPASSWORD);
+  };
+
   const toggleWalletConnection = async () => {
     if (account) {
       disconnect();
@@ -43,6 +48,14 @@ export default function UserNav() {
     }
   };
 
+  useEffect(() => {
+    if (token && !userData?.signAddress) {
+      dispatch(userActions.initUserData());
+      disconnect();
+      removeAllTokens();
+      toast.success("Logout Successfully");
+    }
+  }, [userData]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -66,17 +79,25 @@ export default function UserNav() {
             <p className="text-lg leading-none text-white">
               {userData?.username}
             </p>
-            <p className="text-xs leading-none text-white">
-              {userData?.userEmail}
-            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={toggleWalletConnection}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={handleResetPassword}
+          >
+            Reset Password
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={toggleWalletConnection}
+          >
             {account ? "Disconnect Wallet" : "Connect Wallet"}
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer" onClick={handleLogout}>
+          Log out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

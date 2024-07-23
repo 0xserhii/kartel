@@ -23,6 +23,8 @@ export enum ECrashSocketEvent {
   AUTO_CRASHGAME_JOIN_SUCCESS = "auto-crashgame-join-success",
   GAME_STATUS = "game-status",
   UPDATE_WALLET = "update-wallet",
+  CRASH_AUTO_BET_COUNT_MAX = "crash-autobet-count-max",
+  CRASH_AUTO_BET_BALANCE_ERROR = "crash-autobet-balance-error",
 }
 
 export interface ICrashServerToClientEvents {
@@ -52,6 +54,8 @@ export interface ICrashServerToClientEvents {
   ) => void;
   [ECrashSocketEvent.BET_CASHOUT_ERROR]: (data: string) => void;
   [ECrashSocketEvent.BET_CASHOUT_SUCCESS]: (result: any) => void;
+  [ECrashSocketEvent.CRASH_AUTO_BET_COUNT_MAX]: (data: string) => void;
+  [ECrashSocketEvent.CRASH_AUTO_BET_BALANCE_ERROR]: (data: string) => void;
   [ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY]: (count: number) => void;
   [ECrashSocketEvent.GAME_JOIN_ERROR]: (data: string) => void;
   [ECrashSocketEvent.JOIN_CRASH_GAME]: (

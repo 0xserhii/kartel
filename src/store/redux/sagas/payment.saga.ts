@@ -72,7 +72,7 @@ function* withdrawSaga(action) {
     yield delay(200);
     yield fork(withdraw, KartelSocket.payment, action);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -81,7 +81,7 @@ function* depositSaga(action) {
     yield delay(200);
     yield fork(deposit, KartelSocket.payment, action);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -90,7 +90,7 @@ function* subscribeSaga() {
     yield fork(read, KartelSocket.payment);
     yield delay(200);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -99,7 +99,7 @@ function* loginChanelSaga() {
     yield delay(500);
     socketTask = yield fork(login, KartelSocket.payment);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 }
 

@@ -1,5 +1,7 @@
 import { NavItemGroup } from "@/types";
 
+const isProduction = import.meta.env.VITE_KUJIRA_NETWORK === "mainnet";
+
 export enum EFilterDate {
   hour = "hour",
   day = "day",
@@ -83,8 +85,8 @@ export const navItems: NavItemGroup[] = [
 ];
 
 export const tabItems = [
-  { name: "home", path: "/" },
-  { name: "leaderboard", path: "/leader-board" },
+  { name: "Home", path: "/" },
+  { name: "Leaderboard", path: "/leader-board" },
 ];
 
 export type Employee = {
@@ -164,14 +166,18 @@ export interface IToken {
 
 export const token: Array<IToken> = [
   {
-    name: "usk",
-    src: "/assets/tokens/usk.png",
-    denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
-  },
-  {
     name: "kart",
     src: "/assets/tokens/kart.png",
-    denom: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+    denom: isProduction
+      ? "factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/ukart"
+      : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+  },
+  {
+    name: "usk",
+    src: "/assets/tokens/usk.png",
+    denom: isProduction
+      ? "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk"
+      : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
   },
 ];
 
@@ -185,8 +191,13 @@ export const initialBalance = { usk: 0, kart: 0 };
 export const finance = ["Deposit", "Withdraw"];
 
 export const denoms = {
-  usk: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
-  kart: "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+  usk: isProduction
+    ? "factory/kujira1qk00h5atutpsv900x202pxx42npjr9thg58dnqpa72f2p7m2luase444a7/uusk"
+    : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartelUSk",
+  kart: isProduction
+    ? "factory/kujira13x2l25mpkhwnwcwdzzd34cr8fyht9jlj7xu9g4uffe36g3fmln8qkvm3qn/ukart"
+    : "factory/kujira1sr9xfmzc8yy5gz00epspscxl0zu7ny02gv94rx/kartel",
+  kuji: "ukuji",
 };
 
 export const crashInfoSections = [
@@ -242,7 +253,10 @@ export const casinoGameSrc = [
   },
 ];
 
-export const gameLists = [{ name: "crash", color: "#0BA544" }];
+export const gameLists = [
+  // { name: "total", color: "white" },
+  { name: "crash", color: "#0BA544", value: 2 },
+];
 
 export const adminWallets = [
   "kujira1ag38aar8827lzt0mmfepxupdxtq244u4jvrlmc",
@@ -250,4 +264,27 @@ export const adminWallets = [
   "kujira1dvcmd9t4rdss8ng39j39k48t438uu3rhmtxsth",
   "kujira1npn709jxk2zswkd0aq0fj55vj44ep9qqcvhmrq",
   "kujira1q5er5ak8w7zflh5xrl9qcmzscayg0t52hj3pky",
+  "kujira1wwm2nlztj4nw0hpmln22ezvx33708pcemf6agd",
+  "kujira1ku2fx6rx8l4t8jgzat9yqzhrr8zqlvms76qq82",
 ];
+
+export const game_error = {
+  autobet_running: "Autobet is running.",
+  autobet_canceled: "Autobet has been canceled.",
+  autobet_reached_max:
+    "Autobet has reached the max number of bets! Autobet has canceled",
+  autobet_not_enough_balance:
+    "You can't afford this autobet! Autobet has canceled",
+};
+
+export const token_currency = {
+  usk: 1,
+  kart: 0.016,
+};
+
+export const prizeMultiple: number = 0.6;
+
+export enum ERevenueType {
+  // TOTAL = "total",
+  CRASH = 2,
+}

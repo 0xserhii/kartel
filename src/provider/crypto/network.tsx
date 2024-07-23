@@ -12,6 +12,7 @@ import {
   NETWORK,
   RPCS,
   kujiraQueryClient,
+  MAINNET,
 } from "kujira.js";
 import {
   Dispatch,
@@ -24,6 +25,8 @@ import {
   useMemo,
   useState,
 } from "react";
+
+const isProduction = import.meta.env.VITE_KUJIRA_NETWORK === "mainnet";
 
 interface RPCConnection {
   endpoint: string;
@@ -46,7 +49,7 @@ export type NetworkContext = {
 };
 
 const Context = createContext<NetworkContext>({
-  network: TESTNET,
+  network: isProduction ? MAINNET : TESTNET,
   setNetwork: () => {},
   tmClient: null,
   query: null,
@@ -94,7 +97,10 @@ export const NetworkContext: React.FC<
     onError?: (err: any) => void;
   }>
 > = ({ children, onError }) => {
-  const [network, setNetwork] = useLocalStorage("network", TESTNET);
+  const [network, setNetwork] = useLocalStorage(
+    "network",
+    isProduction ? MAINNET : TESTNET
+  );
   const [preferred, setPreferred] = useLocalStorage("rpc", "");
   const [tm, setTmClient] = useState<null | [Tendermint37Client, string]>();
   const [latencies, setLatencies] = useState<Record<string, RPCConnection>>({});
@@ -217,7 +223,9 @@ export const useNetwork = (): [
       chainInfo: CHAIN_INFO[network],
       tmClient,
       query,
-      rpc: "https://kujira-testnet-rpc.polkachu.com",
+      rpc: isProduction
+        ? "https://kujira-rpc.openbitlab.com"
+        : "https://kujira-testnet-rpc.polkachu.com",
       rpcs,
       setRpc,
       preferred,

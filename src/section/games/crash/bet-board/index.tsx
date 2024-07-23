@@ -18,20 +18,20 @@ const BetBoard = ({
   return (
     <div className="flex w-full flex-col gap-5 md:w-7/12">
       <div className="flex flex-row items-center justify-between py-1.5">
-        <span className="text-lg uppercase text-gray-400">
+        <span className="text-lg font-bold capitalize text-gray300">
           {betData.length} players
         </span>
-        <div className="flex flex-row gap-10">
+        <div className="flex flex-row gap-5">
           <span className="flex flex-row items-center gap-2">
-            <img src="/assets/tokens/usk.png" className="h-6 w-6" />
-            <p className="text-lg text-[#049DD9]">
-              {totalAmount?.usk.toFixed(3) ?? "0.000"}
+            <img src="/assets/tokens/usk.png" className="h-7 w-7" />
+            <p className="text-lg font-bold text-gray300">
+              {totalAmount?.usk.toFixed(2) ?? "0.00"}
             </p>
           </span>
           <span className="flex flex-row items-center gap-2">
-            <img src="/assets/tokens/kart.png" className="h-6 w-6" />
-            <p className="text-lg text-[#049DD9]">
-              {totalAmount?.kart.toFixed(3) ?? "0.000"}
+            <img src="/assets/tokens/kart.png" className="h-7 w-7" />
+            <p className="text-lg font-bold text-gray300">
+              {totalAmount?.kart.toFixed(2) ?? "0.00"}
             </p>
           </span>
         </div>
@@ -67,7 +67,9 @@ const BetBoard = ({
                             alt="User"
                             className="h-6 w-6 rounded-full"
                           />
-                          <span>{player.username}</span>
+                          <span className="font-primary">
+                            {player.username}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell className="w-1/6 text-center">

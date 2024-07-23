@@ -39,13 +39,18 @@ const WalletConnectModal = () => {
   const modal = useModal();
   const [loading, setLoading] = useState(defaultLoading);
   const toast = useToast();
-  const { open, type } = useAppSelector((state: any) => state.modal);
+  const { open, type, afterModal } = useAppSelector(
+    (state: any) => state.modal
+  );
   const isOpen = open && type === ModalType.WALLETCONNECT;
   const { connect } = useWallet();
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
       modal.close(ModalType.WALLETCONNECT);
+      if (afterModal) {
+        modal.open(afterModal);
+      }
     }
   };
 
@@ -71,8 +76,7 @@ const WalletConnectModal = () => {
         default:
           break;
       }
-      modal.close(ModalType.WALLETCONNECT);
-      modal.open(ModalType.DEPOSIT);
+      hanndleOpenChange();
       setLoading(defaultLoading);
     } catch (error) {
       toast.error("User rejected");

@@ -5,7 +5,6 @@ import { encryptTransform } from "redux-persist-transform-encrypt";
 import chatReducer from "./chat.reducer";
 import paymentReducer from "./payment.reducer";
 import leaderboardReducer from "./leaderboard.reducer";
-import dashboardReducer from "./dashboard.reducer";
 import coinflipReducer from "./coinflip.reducer";
 import modalReducer from "./modal.reducer";
 import userReducer from "./user.reducer";
@@ -38,7 +37,6 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   payment: paymentReducer,
   leaderboard: leaderboardReducer,
-  dashboard: dashboardReducer,
   coinflip: coinflipReducer,
   mines: minesReducer,
   modal: modalReducer,

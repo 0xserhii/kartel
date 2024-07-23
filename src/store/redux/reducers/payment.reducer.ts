@@ -51,7 +51,7 @@ export default function chatReducer(
     case EPaymentSocketAction.SET_TXPROGRESS:
       return {
         ...state,
-        txProgress: true,
+        txProgress: action.payload,
       };
 
     case EPaymentSocketAction.UPDATE_BALANCE:

@@ -4,7 +4,7 @@ const SuccessToast = ({ content }: { content: string }) => {
   return (
     <div className="flex-row gap-2">
       <div
-        className="d-flex align-items-center whitespace-nowrap text-nowrap px-2 text-sm text-white"
+        className="d-flex align-items-center whitespace-nowrap text-nowrap px-2 font-primary text-sm text-white"
         style={{ fontSize: ".9rem" }}
       >
         {content}
@@ -16,7 +16,7 @@ const SuccessToast = ({ content }: { content: string }) => {
 const ErrorToast = ({ content }: { content: string }) => (
   <div className="flex-row gap-2">
     <div
-      className="d-flex align-items-center whitespace-nowrap text-nowrap px-2 text-sm text-white"
+      className="d-flex align-items-center whitespace-nowrap text-nowrap px-2 font-primary text-sm text-white"
       style={{ fontSize: ".9rem" }}
     >
       {content}

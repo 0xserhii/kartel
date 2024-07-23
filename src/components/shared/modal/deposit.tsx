@@ -64,16 +64,62 @@ const DepositModal = () => {
   };
 
   const handleWithdraw = async () => {
-    if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
-      toast.error(`Insufficient token`);
+    if (
+      !userState?.userData?.signAddress ||
+      userState?.userData?.signAddress === ""
+    ) {
+      dispatch(paymentActions.paymentFailed("Withdraw address is invalid"));
       return;
     }
+    if (
+      Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0) ||
+      Number(depositAmount) <= 0
+    ) {
+      dispatch(paymentActions.paymentFailed("Insufficient token"));
+      return;
+    }
+    if (userState?.userData?.signAddress !== account?.address) {
+      dispatch(paymentActions.paymentFailed("Connect withdraw wallet"));
+      return;
+    }
+
+    dispatch(paymentActions.setTxProgress(true));
+    dispatch(paymentActions.paymentFailed(""));
+
+    let signedTx: StdSignature | undefined = undefined;
+    if (adapter === Adapter.Keplr) {
+      const chainId = chainInfo.chainId;
+      const signed = await window.keplr?.signArbitrary(
+        chainId,
+        account?.address ?? "",
+        `Withdraw ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} from Kartel`
+      );
+      if (signed) {
+        signedTx = signed;
+      }
+    } else if (adapter === Adapter.Leap) {
+      const chainId = chainInfo.chainId;
+      const signed = await window.leap?.signArbitrary(
+        chainId,
+        account?.address ?? "",
+        `Withdraw ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} from Kartel`
+      );
+      if (signed) {
+        signedTx = signed;
+      }
+    }
+    if (!signedTx) {
+      dispatch(paymentActions.paymentFailed("Reject withdraw"));
+      return;
+    }
+
     if (account) {
       try {
         const withdrawParam = {
           currency: selectedToken.name,
           amount: Number(depositAmount),
           address: account?.address,
+          signedTx,
         };
         const encryptedParam = await aesWrapper.encryptMessage(
           paymentState.admin.address1,
@@ -81,71 +127,81 @@ const DepositModal = () => {
         );
         dispatch(paymentActions.withDraw(encryptedParam));
       } catch (err) {
-        console.log(err);
+        dispatch(paymentActions.paymentFailed("Withdraw rejected"));
+        console.error(err);
       }
     }
   };
 
   const handleDeposit = async () => {
     try {
+      dispatch(paymentActions.paymentFailed(""));
       dispatch(paymentActions.setTxProgress(true));
+
       const walletAddress = await aesWrapper.decryptMessage(
         paymentState.admin.address1,
         paymentState.admin.address2
       );
-      let signedTx: StdSignature | undefined = undefined;
-      if (adapter === Adapter.Keplr) {
-        const chainId = chainInfo.chainId;
-        const signed = await window.keplr?.signArbitrary(
-          chainId,
-          account?.address ?? "",
-          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
-        );
-        if (signed) {
-          signedTx = signed;
-        }
-      } else if (adapter === Adapter.Leap) {
-        const chainId = chainInfo.chainId;
-        const signed = await window.leap?.signArbitrary(
-          chainId,
-          account?.address ?? "",
-          `Deposit ${selectedToken.name} ${depositAmount} to Kartel`
-        );
-        if (signed) {
-          signedTx = signed;
-        }
-      }
-      if (!signedTx) {
-        toast.error("Reject deposit");
-        return;
-      }
+
       if (
         Number(depositAmount) >
-        Number(
-          toHuman(
-            BigNumber.from(
-              balances.find((item) => item.denom === selectedToken.denom)
-                ?.amount ?? 0
-            ),
-            6
-          )
-        )
+          Number(
+            toHuman(
+              BigNumber.from(
+                balances.find((item) => item.denom === selectedToken.denom)
+                  ?.amount ?? 0
+              ),
+              6
+            )
+          ) ||
+        Number(depositAmount) <= 0
       ) {
-        toast.error(`Insufficient token in wallet`);
+        dispatch(paymentActions.paymentFailed("Insufficient token"));
         return;
       }
       if (account) {
         try {
           const kujiraBalance =
-            balances.filter((item) => item.denom === denoms.usk)?.[0]?.amount ??
-            0;
+            balances.filter((item) => item.denom === denoms.kuji)?.[0]
+              ?.amount ?? 0;
           if (
             Number(toHuman(BigNumber.from(kujiraBalance), 6)).valueOf() <
             0.00055
           ) {
-            toast.error(`Insufficient Kujira balance for Fee`);
+            dispatch(
+              paymentActions.paymentFailed("Insufficient KUJI balance for Fee")
+            );
             return;
           }
+
+          let signedTx: StdSignature | undefined = undefined;
+          console.log({ adapter });
+          if (adapter === Adapter.Keplr) {
+            const chainId = chainInfo.chainId;
+            const signed = await window.keplr?.signArbitrary(
+              chainId,
+              account?.address ?? "",
+              `Deposit ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} to Kartel`
+            );
+            if (signed) {
+              signedTx = signed;
+            }
+          } else if (adapter === Adapter.Leap) {
+            const chainId = chainInfo.chainId;
+            const signed = await window.leap?.signArbitrary(
+              chainId,
+              account?.address ?? "",
+              `Deposit ${Number(depositAmount).valueOf()} ${selectedToken.name.toUpperCase()} to Kartel`
+            );
+            if (signed) {
+              signedTx = signed;
+            }
+          }
+          if (!signedTx) {
+            dispatch(paymentActions.paymentFailed("Reject deposit"));
+            return;
+          }
+
           const hashTx = await signAndBroadcast(
             [
               msg.bank.msgSend({
@@ -163,7 +219,7 @@ const DepositModal = () => {
           );
           const depositParam = {
             currency: selectedToken.name,
-            amount: Number(depositAmount),
+            amount: Number(depositAmount).valueOf(),
             txHash: hashTx.transactionHash,
             address: account?.address,
             signedTx,
@@ -174,12 +230,13 @@ const DepositModal = () => {
           );
           dispatch(paymentActions.deposit(encryptedData));
         } catch (err) {
+          dispatch(paymentActions.paymentFailed("Reject deposit"));
           console.warn("tx_error", err);
         }
       }
     } catch (error) {
-      console.log(error);
-      toast.error("Reject deposit");
+      console.error(error);
+      dispatch(paymentActions.paymentFailed("Reject deposit"));
     }
   };
 
@@ -205,16 +262,21 @@ const DepositModal = () => {
   useEffect(() => {
     if (isOpen) {
       getSiteBalance();
+      dispatch(paymentActions.subscribePaymentServer());
+      dispatch(paymentActions.loginPaymentServer());
     }
   }, [isOpen]);
 
   useEffect(() => {
     if (paymentState.error === "Withdraw Success") {
       toast.success("Withdraw Success");
+      dispatch(paymentActions.paymentFailed(""));
     } else if (paymentState.error === "Deposit Success") {
       toast.success("Deposit Success");
+      dispatch(paymentActions.paymentFailed(""));
     } else if (paymentState.error !== "") {
       toast.error(paymentState.error);
+      dispatch(paymentActions.paymentFailed(""));
     }
   }, [paymentState.error]);
 
@@ -327,9 +389,10 @@ const DepositModal = () => {
             <div className="mt-2 flex flex-col gap-1">
               <span className="text-xs text-white">Wallet Address</span>
               <Input
-                value={account?.address}
+                readOnly
+                contentEditable={false}
+                value={userState?.userData?.signAddress}
                 type="text"
-                onChange={() => {}}
                 placeholder="e.g. kujira158m5u3na7d6ksr07a6yctphjjrhdcuxu0wmy2h"
                 className="border border-purple-0.5 text-white placeholder:text-gray-700"
               />

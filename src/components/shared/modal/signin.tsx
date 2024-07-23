@@ -25,13 +25,14 @@ import {
 import { useDispatch } from "react-redux";
 import { userActions } from "@/store/redux/actions";
 import { useAppSelector } from "@/store/redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Adapter, useWallet } from "@/provider/crypto/wallet";
+import { StdSignature } from "@keplr-wallet/types";
 
 const SignInSchema = z.object({
-  email: z
-    .string()
-    .nonempty("Email is required")
-    .email("Email must be a valid email address"),
+  username: z.string().nonempty("Full Name is required"),
+  wallet: z.string().nonempty("Wallet is required"),
   password: z
     .string()
     .nonempty("Password is required")
@@ -39,11 +40,16 @@ const SignInSchema = z.object({
 });
 
 const SignInDefaultValue = {
-  email: "",
+  username: "",
   password: "",
+  wallet: "",
 };
 
 const SignInModal = () => {
+  const [signedSig, setSignedSig] = useState<StdSignature | undefined>(
+    undefined
+  );
+  const [rememberMe, setRememberMe] = useState(true);
   const toast = useToast();
   const modal = useModal();
   const modalState = useAppSelector((state: any) => state.modal);
@@ -54,19 +60,7 @@ const SignInModal = () => {
     resolver: zodResolver(SignInSchema),
     defaultValues: SignInDefaultValue,
   });
-
-  const handleRememberMe = () => {
-    if (
-      signInForm.getValues("email") === "" &&
-      signInForm.getValues("password") === "" &&
-      !userState.remember
-    ) {
-      toast.error("Please fill the inputs");
-      return;
-    } else {
-      dispatch(userActions.rememberMe(!userState.remember));
-    }
-  };
+  const { account, disconnect, adapter, chainInfo } = useWallet();
 
   const hanndleOpenChange = async () => {
     if (isOpen) {
@@ -78,62 +72,114 @@ const SignInModal = () => {
     modal.open(ModalType.SIGNUP);
   };
 
+  const handleConnectWallet = async () => {
+    try {
+      if (account?.address && signedSig) {
+        disconnect();
+        setSignedSig(undefined);
+        return;
+      } else if (account?.address) {
+        onChangeWalletAddress();
+        return;
+      } else {
+        modal.open(ModalType.WALLETCONNECT, ModalType.LOGIN);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleSubmit = async (data: z.infer<typeof SignInSchema>) => {
+    if (!signedSig) {
+      toast.error("Please sign in with wallet");
+      return;
+    }
     try {
       const signInPayload = {
-        email: data.email,
+        username: data.username,
         password: data.password,
+        signAddress: data.wallet,
+        signedSig,
       };
       const resSignIn = await axiosPost([
         BACKEND_API_ENDPOINT.auth.signIn,
         { data: signInPayload },
       ]);
+
+      if (rememberMe) {
+        dispatch(
+          userActions.setCredential({
+            username: signInForm.getValues("username"),
+            password: signInForm.getValues("password"),
+          })
+        );
+      } else {
+        dispatch(userActions.removeCredential());
+      }
+
       if (resSignIn?.auth?.accessToken) {
         setAccessToken(resSignIn?.auth?.accessToken);
-        await dispatch(userActions.userData(resSignIn?.user));
+        await dispatch(
+          userActions.userData({ ...resSignIn?.user, password: data.password })
+        );
         toast.success("SignIn Success");
         modal.close(ModalType.LOGIN);
         return;
       }
-      toast.error("SignIn Failed");
+    } catch (error: any) {
+      toast.error(error?.error);
+    }
+  };
+
+  const onChangeWalletAddress = async () => {
+    try {
+      if (account?.address && !signedSig && isOpen) {
+        let signedTx: StdSignature | undefined = undefined;
+        if (adapter === Adapter.Keplr) {
+          const chainId = chainInfo.chainId;
+          const signed = await window.keplr?.signArbitrary(
+            chainId,
+            account?.address ?? "",
+            "Sign in to Kartel Project"
+          );
+          if (signed) {
+            signedTx = signed;
+          }
+        } else if (adapter === Adapter.Leap) {
+          const chainId = chainInfo.chainId;
+          const signed = await window.leap?.signArbitrary(
+            chainId,
+            account?.address ?? "",
+            "Sign in to Kartel Project"
+          );
+          if (signed) {
+            signedTx = signed;
+          }
+        }
+        if (!signedTx) {
+          toast.error("Please sign wallet");
+          return;
+        }
+        setSignedSig(signedTx);
+        signInForm.setValue("wallet", account.address);
+      }
     } catch (error) {
-      console.log(error);
-      toast.error("SignIn Failed");
+      console.error(error);
+      toast.error("Please sign wallet");
     }
   };
 
   useEffect(() => {
-    if (userState.remember) {
-      dispatch(
-        userActions.setCredential({
-          email: userState.credentials.email,
-          password: userState.credentials.password,
-        })
-      );
-    }
-    const { email, password } = userState.remember
+    const { username, password } = userState.remember
       ? userState.credentials
-      : { email: "", password: "" };
-    signInForm.setValue("email", email);
+      : { username: "", password: "" };
+    signInForm.setValue("username", username);
     signInForm.setValue("password", password);
   }, []);
 
   useEffect(() => {
-    if (
-      userState.remember &&
-      signInForm.getValues("email") &&
-      signInForm.getValues("password")
-    ) {
-      dispatch(
-        userActions.setCredential({
-          email: signInForm.getValues("email"),
-          password: signInForm.getValues("password"),
-        })
-      );
-    } else {
-      dispatch(userActions.removeCredential());
-    }
-  }, [userState.remember]);
+    onChangeWalletAddress();
+  }, [account?.address]);
 
   return (
     <Dialog open={isOpen} onOpenChange={hanndleOpenChange}>
@@ -147,17 +193,17 @@ const SignInModal = () => {
           <form onSubmit={signInForm.handleSubmit(handleSubmit)}>
             <div className="mt-3 flex flex-col items-center gap-7">
               <div className="flex w-full flex-col gap-5">
-                <div className="grid w-full flex-1 gap-3">
-                  <p className="text-gray-300">Email</p>
+                <div className="grid w-full flex-1 gap-2">
+                  <p className="text-sm text-gray-300">Username</p>
                   <FormField
                     control={signInForm.control}
-                    name="email"
+                    name="username"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
                           <Input
                             type="text"
-                            placeholder="email"
+                            placeholder="username"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
                           />
@@ -167,16 +213,15 @@ const SignInModal = () => {
                     )}
                   />
                 </div>
-                <div className="grid w-full flex-1 gap-3">
-                  <p className="text-gray-300">Password</p>
+                <div className="grid w-full flex-1 gap-2">
+                  <p className="text-sm text-gray-300">Password</p>
                   <FormField
                     control={signInForm.control}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input
-                            type="password"
+                          <PasswordInput
                             placeholder="*****"
                             className="border border-gray-700 text-white placeholder:text-gray-700"
                             {...field}
@@ -187,14 +232,46 @@ const SignInModal = () => {
                     )}
                   />
                 </div>
+                <div className="grid w-full flex-1 gap-2">
+                  <p className="text-sm text-gray-300">Wallet Address</p>
+                  <FormField
+                    control={signInForm.control}
+                    name="wallet"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            readOnly
+                            contentEditable={false}
+                            type="text"
+                            placeholder="kujira1*****"
+                            className="border border-gray-700 text-white placeholder:text-gray-700"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="flex w-full justify-end">
+                    <span
+                      className="cursor-pointer text-sm font-semibold text-[#049DD9] hover:underline hover:underline-offset-4"
+                      onClick={handleConnectWallet}
+                    >
+                      {account?.address && signedSig
+                        ? "Disconnect"
+                        : "Connect Wallet"}
+                    </span>
+                  </div>
+                </div>
               </div>
               <div className="flex w-full flex-row justify-between">
                 <div className="flex items-center space-x-2">
                   <Checkbox
-                    checked={userState?.remember}
+                    checked={rememberMe}
                     id="terms"
                     className="text-[#049DD9]"
-                    onClick={handleRememberMe}
+                    onClick={() => setRememberMe((prev) => !prev)}
                   />
                   <label
                     htmlFor="terms"
@@ -203,9 +280,6 @@ const SignInModal = () => {
                     Remember me
                   </label>
                 </div>
-                <a href="" className="text-sm font-semibold text-[#049DD9]">
-                  Forgot password?
-                </a>
               </div>
               <Button
                 className="w-full bg-purple py-5 capitalize hover:bg-purple"

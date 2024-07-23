@@ -26,15 +26,15 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
     <div className="flex items-center gap-1 px-3 py-1">
       <div className="relative"></div>
       <div className="flex flex-1 flex-col justify-between rounded-lg bg-[#4a278d4f] px-2 py-1">
-        <div>
+        <div className="flex flex-row items-center gap-1">
           <span className="text-sm font-medium text-gray300">
-            {name ?? "User:"}
+            {name ?? "user"}
           </span>
-          <span className="text-xs font-medium text-gray500"> {time}</span>
+          <span className="text-xs font-medium text-gray500">{time}</span>
         </div>
-        <div className="max-w-[234px] rounded-sm text-[12px] font-medium text-gray200">
+        <p className="max-w-[234px] text-[13px] font-medium text-gray200">
           {message}
-        </div>
+        </p>
       </div>
     </div>
   );
@@ -84,7 +84,7 @@ const LiveChat = () => {
       dispatch(chatActions.sendMsg(message));
       setInputStr("");
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -125,7 +125,7 @@ const LiveChat = () => {
   return (
     <div className="flex h-[calc(100vh-64px)] max-h-full w-[278px] flex-col items-stretch gap-0 bg-dark bg-opacity-80">
       <div className="flex items-center gap-3 p-3">
-        <span className="text-base font-medium text-gray300">LIVE CHAT</span>
+        <span className="text-base font-bold text-gray300">LIVE CHAT</span>
         <div
           className="h-2 w-2 rounded-full bg-purple"
           style={{

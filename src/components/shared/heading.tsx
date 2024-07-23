@@ -16,9 +16,9 @@ export default function Heading({ className, userRole }: THeadingProps) {
 
   if (userRole === "ADMIN" || adminWallets.includes(account?.address || "")) {
     items = [
-      { name: "home", path: "/" },
-      { name: "leaderboard", path: "/leader-board" },
-      { name: "dashboard", path: "/dashboard" },
+      { name: "Home", path: "/" },
+      { name: "Leaderboard", path: "/leader-board" },
+      { name: "Dashboard", path: "/dashboard" },
     ];
   }
 
@@ -29,11 +29,11 @@ export default function Heading({ className, userRole }: THeadingProps) {
           key={index}
           to={item.path}
           className={cn(
-            "min-h-full rounded-none border-b-2 border-b-transparent px-6 py-5 font-semibold uppercase text-gray-300 hover:bg-transparent",
-            pathname === item.path && "text-purple"
+            "min-h-full rounded-none border-b-2 border-b-transparent px-5 py-5 text-base text-gray-300 transition-all duration-200 ease-in hover:bg-transparent",
+            pathname === item.path && "text-base font-semibold text-purple"
           )}
         >
-          {item.name}
+          <span className="font-semibold uppercase">{item.name}</span>
         </Link>
       ))}
     </div>

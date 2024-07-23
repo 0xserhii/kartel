@@ -24,7 +24,13 @@ import { ECrashStatus } from "@/constants/status";
 import { getAccessToken } from "@/utils/axios";
 import useToast from "@/hooks/use-toast";
 import BetBoard from "./bet-board";
-import { multiplerArray, betMode, roundArray, token } from "@/constants/data";
+import {
+  multiplerArray,
+  betMode,
+  roundArray,
+  token,
+  game_error,
+} from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAppDispatch, useAppSelector } from "@/store/redux";
 import { userActions } from "@/store/redux/actions";
@@ -119,17 +125,26 @@ export default function CrashGameSection() {
   };
 
   const handleStartBet = async () => {
-    if (betAmount > 0 && !avaliableBet) {
-      const joinParams = {
-        target: avaliableAutoCashout
-          ? Number(autoCashoutAmount) * 100
-          : 1000000,
-        betAmount: Number(betAmount).valueOf(),
-        denom: selectedToken.name,
-      };
-      socket?.emit("join-crash-game", joinParams);
-    }
-    if (!(betAmount > 0)) {
+    if (betAmount > 0) {
+      if (selectedToken.name === "usk" && betAmount > 20) {
+        toast.error("Bet amount for USK cannot exceed 20");
+        return;
+      }
+      if (selectedToken.name === "kart" && betAmount > 2000) {
+        toast.error("Bet amount for KART cannot exceed 2000");
+        return;
+      }
+      if (!avaliableBet) {
+        const joinParams = {
+          target: avaliableAutoCashout
+            ? Number(autoCashoutAmount) * 100
+            : 1000000,
+          betAmount: Number(betAmount).valueOf(),
+          denom: selectedToken.name,
+        };
+        socket?.emit("join-crash-game", joinParams);
+      }
+    } else {
       toast.error("Bet amount must be greater than 0");
       return;
     }
@@ -142,6 +157,16 @@ export default function CrashGameSection() {
   const handleAutoBet = async () => {
     if (autoBet) {
       if (betAmount > 0) {
+        if (selectedToken.name === "usk" && betAmount > 20) {
+          toast.error("Bet amount for USK cannot exceed 20");
+          setAutoBet(true);
+          return;
+        }
+        if (selectedToken.name === "kart" && betAmount > 2000) {
+          toast.error("Bet amount for KART cannot exceed 2000");
+          setAutoBet(true);
+          return;
+        }
         const joinParams = {
           cashoutPoint: Number(autoCashoutPoint).valueOf() * 100,
           count: Number(round).valueOf(),
@@ -149,8 +174,10 @@ export default function CrashGameSection() {
           denom: selectedToken.name,
         };
         socket?.emit("auto-crashgame-bet", joinParams);
-      } else {
         setAutoBet(false);
+      } else {
+        toast.error("Bet amount must be greater than 0");
+        setAutoBet(true);
       }
     } else {
       setAutoBet(true);
@@ -171,28 +198,17 @@ export default function CrashGameSection() {
   useEffect(() => {
     const handleJoinSuccess = (data) => {
       toast.success(data);
-      if (data === "Autobet has been canceled.") {
+      if (data === game_error.autobet_canceled) {
         setAutoBet(true);
-      } else {
-        setAutoBet(false);
       }
-    };
-    socket?.on("auto-crashgame-join-success", handleJoinSuccess);
-    return () => {
-      socket?.off("auto-crashgame-join-success", handleJoinSuccess);
-    };
-  }, [socket, toast]);
 
-  useEffect(() => {
-    const handleJoinSuccess = (data) => {
-      toast.success(data);
-      if (data === "Autobet has been canceled.") {
-        setAutoBet(true);
-      } else {
+      if (data === game_error.autobet_running) {
         setAutoBet(false);
       }
     };
+
     socket?.on("auto-crashgame-join-success", handleJoinSuccess);
+
     return () => {
       socket?.off("auto-crashgame-join-success", handleJoinSuccess);
     };
@@ -256,6 +272,7 @@ export default function CrashGameSection() {
         tickIntervalRef.current = null;
       }
     });
+
     const calculateTotals = (bets) => {
       const totals = { usk: 0, kuji: 0, kart: 0 };
       bets.forEach((bet) => {
@@ -270,16 +287,36 @@ export default function CrashGameSection() {
       const user = data.players.find(
         (player) => player?.playerID === userData._id
       );
+      const cashOutPoint =
+        data?.gameStatus?.players[userData?._id]?.autoCashOut;
+
       setBetData(data.players);
       Object.keys(data.gameStatus.players).forEach((playerID) => {
         const playerData = data.gameStatus.players[playerID];
         setBetCashout((prev) => [...prev, playerData]);
       });
+
       if (user && user.betAmount) {
-        setAutoBet(false);
+        if (user?.autobet) {
+          setAutoBet(false);
+        }
+
+        if (user?.autobet === undefined) {
+          if (user?.winningAmount) {
+            setAvaliableBet(false);
+          } else {
+            setAvaliableBet(true);
+          }
+        }
+
+        const selectedTokenObj = token.find((t) => t.name === user?.denom);
+        if (selectedTokenObj) {
+          setSelectedToken(selectedTokenObj);
+        }
         setBetAmount(Number(user?.betAmount));
-        setAutoCashoutPoint((Number(user?.stoppedAt) / 100).toString());
+        setAutoCashoutPoint(cashOutPoint / 100 ?? 1.05);
       }
+
       const totals = calculateTotals(data.players);
       setTotalAmount((prevAmounts) => ({
         usk: (prevAmounts?.usk || 0) + totals.usk,
@@ -308,6 +345,21 @@ export default function CrashGameSection() {
     );
 
     crashSocket.on(ECrashSocketEvent.GAME_JOIN_ERROR, (data) => {
+      toast.error(data);
+      if (
+        data === game_error.autobet_reached_max ||
+        data === game_error.autobet_not_enough_balance
+      ) {
+        setAutoBet(true);
+      }
+    });
+
+    crashSocket.on(ECrashSocketEvent.CRASH_AUTO_BET_COUNT_MAX, (data) => {
+      toast.error(data);
+      setAutoBet(true);
+    });
+
+    crashSocket.on(ECrashSocketEvent.CRASH_AUTO_BET_BALANCE_ERROR, (data) => {
       toast.error(data);
       setAutoBet(true);
     });
@@ -448,15 +500,15 @@ export default function CrashGameSection() {
               <div className="absolute left-0 top-0 flex flex-row items-center justify-around gap-6 py-5">
                 <div className="flex flex-row items-center justify-center gap-2">
                   <span className="ms-2 inline-flex h-3 w-3 items-center justify-center rounded-full bg-[#0BA544] text-xs font-semibold text-blue-800" />
-                  <p className="text-sm text-gray-300">Network status</p>
+                  <p className="text-sm text-white">Network status</p>
                 </div>
                 <div className="grid grid-cols-10 gap-2">
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center text-xs text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
+                      className={`rounded-lg px-2 py-1 text-center text-[13px] text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
                     >
-                      x{(item.crashPoint / 100).toFixed(2)}
+                      x {(item.crashPoint / 100).toFixed(2)}
                     </span>
                   ))}
                 </div>
@@ -465,7 +517,7 @@ export default function CrashGameSection() {
             <div className="flex w-full flex-col gap-7 p-8 md:flex-row">
               <div className="flex h-full w-full flex-col gap-5 md:w-5/12">
                 <div className="flex flex-row items-center justify-between">
-                  <span className="text-lg uppercase text-gray-400">
+                  <span className="text-lg font-bold capitalize text-gray300">
                     bet mode
                   </span>
                   <div className="flex flex-row items-center gap-3">
@@ -614,7 +666,7 @@ export default function CrashGameSection() {
                                 max={100}
                                 min={1}
                               />
-                              <span className="absolute right-4 top-0 flex h-full items-center justify-center text-gray500">
+                              <span className="absolute right-4 top-0 flex h-full select-none items-center justify-center text-gray500">
                                 Cashout
                               </span>
                             </div>

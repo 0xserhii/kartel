@@ -6,10 +6,9 @@ import authBtn from "/assets/auth-btn.svg";
 import useModal from "@/hooks/use-modal";
 import { ModalType } from "@/types/modal";
 import { useOpen } from "@/provider/chat-provider";
-import { useAppDispatch, useAppSelector } from "@/store/redux";
+import { useAppSelector } from "@/store/redux";
 import { useEffect, useState } from "react";
 import { initialBalance } from "@/constants/data";
-import { subscribeUserServer } from "@/store/redux/actions/user.action";
 import { axiosGet, getAccessToken } from "@/utils/axios";
 import useSound from "use-sound";
 import ToggleButton from "./toggle-button";
@@ -20,7 +19,6 @@ export default function Header() {
   const userData = useAppSelector((store: any) => store.user.userData);
   const siteBalance = useAppSelector((store: any) => store.user.wallet);
   const settings = useAppSelector((store: any) => store.settings);
-  const dispatch = useAppDispatch();
   const [walletData, setWalletData] = useState(initialBalance);
   const [play, { stop }] = useSound("/assets/audio/background_audio.mp3", {
     volume: 0.25,
@@ -53,10 +51,6 @@ export default function Header() {
   }, [siteBalance, getAccessToken()]);
 
   useEffect(() => {
-    dispatch(subscribeUserServer());
-  }, []);
-
-  useEffect(() => {
     if (settings.isMusicPlay) {
       play();
     } else {
@@ -73,7 +67,7 @@ export default function Header() {
             {["usk", "kart"].map((token) => (
               <div key={token} className="flex flex-row items-center gap-2">
                 <img src={`/assets/tokens/${token}.png`} className="h-7 w-7" />
-                <span className="w-4/12 text-center text-gray-300">
+                <span className="w-4/12 text-center text-lg font-medium text-gray-300">
                   {Number(
                     siteBalance?.denom === token
                       ? siteBalance.value
@@ -93,7 +87,7 @@ export default function Header() {
                 onClick={() => setOpen(!open)}
               >
                 <MessageSquareMore
-                  className={`text-${open ? "purple" : "white"}`}
+                  className={`hidden 2xl:flex text-${open ? "purple" : "white"}`}
                 />
               </Button>
               <UserNav />

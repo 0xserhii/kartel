@@ -38,13 +38,15 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
       to={item.href}
     >
       <img src={item.icon} className="h-5 w-5" aria-hidden="true" />
-      <span className="ml-3 text-sm font-medium uppercase">{item.label}</span>
+      <span className="ml-3 text-sm font-bold uppercase tracking-wide">
+        {item.label}
+      </span>
     </Link>
   );
 };
 
 const DashboardNavGroup = ({ item }: DashboardNavGroupProps) => {
-  const [isOpen, setOpen] = useState(true);
+  const [isOpen, setOpen] = useState(item.title === "Mini Games");
 
   const Icon = isOpen ? ChevronDown : ChevronUp;
 
@@ -56,7 +58,7 @@ const DashboardNavGroup = ({ item }: DashboardNavGroupProps) => {
     >
       <CollapsibleTrigger asChild>
         <div className=" flex  w-full cursor-pointer select-none items-center justify-between text-sm font-medium text-gray500">
-          <div className="text-sm font-medium uppercase">{item.title}</div>
+          <p className="text-sm font-bold uppercase">{item.title}</p>
           <Icon className="h-4 w-4" />
         </div>
       </CollapsibleTrigger>
