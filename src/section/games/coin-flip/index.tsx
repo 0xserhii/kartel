@@ -182,9 +182,6 @@ const CoinFlipSection = () => {
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
-      <div className="absolute z-20 flex h-full w-full items-center justify-center backdrop-blur-lg">
-        <p className="text-center text-2xl font-bold text-white">Coming Soon</p>
-      </div>
       {isEarned && (
         <Confetti
           width={width}
