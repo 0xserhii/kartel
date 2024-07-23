@@ -233,13 +233,14 @@ export default function CrashGameSection() {
     crashSocket.emit(ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY, 10 as any);
 
     crashSocket.on(ECrashSocketEvent.GAME_TICK, ({ tick, elapsed }) => {
-      console.log(tick, elapsed, crashStatus);
-      if (crashStatus !== ECrashStatus.PROGRESS) {
-        // setCrashStatus(ECrashStatus.PROGRESS);
-        // setTick({ cur: tick, next: tick });
-        // elapsedRef.current = elapsed;
-        // startTickInterval();
-      }
+      setCrashStatus((prevStatus) => {
+        if (prevStatus !== ECrashStatus.PROGRESS) {
+          setTick({ cur: tick, next: tick });
+          elapsedRef.current = elapsed;
+          startTickInterval();
+        }
+        return ECrashStatus.PROGRESS;
+      });
     });
 
     crashSocket.on(ECrashSocketEvent.GAME_STARTING, (data) => {
