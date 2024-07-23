@@ -71,7 +71,10 @@ const DepositModal = () => {
       dispatch(paymentActions.paymentFailed("Withdraw address is invalid"));
       return;
     }
-    if (Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0)) {
+    if (
+      Number(depositAmount) > Number(walletData[selectedToken.name] ?? 0) ||
+      Number(depositAmount) <= 0
+    ) {
       dispatch(paymentActions.paymentFailed("Insufficient token"));
       return;
     }
@@ -142,17 +145,18 @@ const DepositModal = () => {
 
       if (
         Number(depositAmount) >
-        Number(
-          toHuman(
-            BigNumber.from(
-              balances.find((item) => item.denom === selectedToken.denom)
-                ?.amount ?? 0
-            ),
-            6
-          )
-        )
+          Number(
+            toHuman(
+              BigNumber.from(
+                balances.find((item) => item.denom === selectedToken.denom)
+                  ?.amount ?? 0
+              ),
+              6
+            )
+          ) ||
+        Number(depositAmount) <= 0
       ) {
-        dispatch(paymentActions.paymentFailed("Insufficient token in wallet"));
+        dispatch(paymentActions.paymentFailed("Insufficient token"));
         return;
       }
       if (account) {
