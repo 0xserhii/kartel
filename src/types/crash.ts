@@ -48,7 +48,10 @@ export interface ICrashServerToClientEvents {
   [ECrashSocketEvent.GAME_END]: (data: {
     game: FormattedGameHistoryType;
   }) => void;
-  [ECrashSocketEvent.GAME_TICK]: (data: number) => void;
+  [ECrashSocketEvent.GAME_TICK]: (data: {
+    tick: number;
+    elapsed: number;
+  }) => void;
   [ECrashSocketEvent.CRASHGAME_JOIN_SUCCESS]: (
     data: FormattedPlayerBetType
   ) => void;
