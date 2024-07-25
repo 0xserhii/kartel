@@ -2,7 +2,7 @@ import { navItems } from "@/constants/data";
 import DashboardNav from "./dashboard-nav";
 import { Link } from "react-router-dom";
 import Logo from "/assets/logo.png";
-import Deposit from "/assets/deposit-icon.svg";
+import Deposit from "/assets/deposit.png";
 import { ScrollArea } from "../ui/scroll-area";
 import useModal from "@/hooks/use-modal";
 import { ModalType } from "@/types/modal";
@@ -43,7 +43,7 @@ export default function Sidebar() {
               className="flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white"
               onClick={handleDeposit}
             >
-              <img src={Deposit} />
+              <img src={Deposit} className="w-10 h-10" />
               <div className="flex flex-col items-stretch gap-1">
                 <span className="text-base font-semibold text-gray50">
                   Deposit Now

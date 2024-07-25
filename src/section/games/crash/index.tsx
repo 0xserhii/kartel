@@ -130,12 +130,12 @@ export default function CrashGameSection() {
 
   const handleStartBet = async () => {
     if (betAmount > 0) {
-      if (selectedToken.name === "usk" && betAmount > 20) {
-        toast.error("Bet amount for USK cannot exceed 20");
+      if (selectedToken.name === "usk" && betAmount > 40) {
+        toast.error("Bet amount for USK cannot exceed 40");
         return;
       }
-      if (selectedToken.name === "kart" && betAmount > 2000) {
-        toast.error("Bet amount for KART cannot exceed 2000");
+      if (selectedToken.name === "kart" && betAmount > 4000) {
+        toast.error("Bet amount for KART cannot exceed 4000");
         return;
       }
       if (!avaliableBet) {
@@ -161,13 +161,13 @@ export default function CrashGameSection() {
   const handleAutoBet = async () => {
     if (autoBet) {
       if (betAmount > 0) {
-        if (selectedToken.name === "usk" && betAmount > 20) {
-          toast.error("Bet amount for USK cannot exceed 20");
+        if (selectedToken.name === "usk" && betAmount > 40) {
+          toast.error("Bet amount for USK cannot exceed 40");
           setAutoBet(true);
           return;
         }
-        if (selectedToken.name === "kart" && betAmount > 2000) {
-          toast.error("Bet amount for KART cannot exceed 2000");
+        if (selectedToken.name === "kart" && betAmount > 4000) {
+          toast.error("Bet amount for KART cannot exceed 4000");
           setAutoBet(true);
           return;
         }
@@ -487,7 +487,7 @@ export default function CrashGameSection() {
                   {[...crashHistoryData].reverse()?.map((item, index) => (
                     <span
                       key={index}
-                      className={`rounded-lg px-2 py-1 text-center text-[13px] text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
+                      className={`rounded-lg px-1 py-1 text-center text-xs text-gray-300 ${item.crashPoint / 100 > 20 ? "bg-purple-light" : "bg-dark-blue"}`}
                     >
                       x {(item.crashPoint / 100).toFixed(2)}
                     </span>
