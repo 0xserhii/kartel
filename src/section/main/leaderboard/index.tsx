@@ -35,7 +35,7 @@ const LeaderboardCard = () => {
               <TableCell className="w-4/12 text-center">Rank</TableCell>
               <TableCell className="w-4/12 text-center">User</TableCell>
               <TableCell className="w-4/12 text-center">
-                Wagered Amount
+                Wagered Amount ($)
               </TableCell>
               <TableCell className="w-4/12 text-center">Points</TableCell>
             </TableRow>
@@ -65,7 +65,7 @@ const LeaderboardCard = () => {
                     </TableCell>
                     <TableCell className="w-4/12 text-center">
                       <span className="truncate">
-                        {Number(score?.totalBetAmount).toFixed(2) + " $"}
+                        {Number(score?.totalBetAmount).toFixed(2)}
                       </span>
                     </TableCell>
                     <TableCell className="w-4/12 text-center">
