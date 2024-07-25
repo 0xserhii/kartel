@@ -32,7 +32,7 @@ const HistoryItem = ({ name, message, avatar, time }: HistoryItemProps) => {
           </span>
           <span className="text-xs font-medium text-gray500">{time}</span>
         </div>
-        <p className="max-w-[234px] text-[13px] font-medium text-gray200">
+        <p className="max-w-[234px] text-[13px] overflow-hidden text-ellipsis font-medium text-gray200">
           {message}
         </p>
       </div>
