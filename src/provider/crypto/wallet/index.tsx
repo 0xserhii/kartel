@@ -35,6 +35,10 @@ import { useNetwork } from "../network";
 import { usePasskeys } from "../passkey";
 import { Passkey } from "./passkey-class";
 import { useLocalStorage } from "@/hooks";
+import SonarModal from "@/components/shared/modal/sonar-modal";
+import { QR } from "react-qr-rounded";
+import { IconAngleRight, IconSonar } from "@/components/icons";
+import { Link } from "react-router-dom";
 
 export enum Adapter {
   Sonar = "sonar",
@@ -74,18 +78,18 @@ const Context = createContext<IWallet>({
   account: null,
   getBalance: async () => BigNumber.from(0),
   balance: () => BigNumber.from(0),
-  connect: async () => {},
-  disconnect: () => {},
+  connect: async () => { },
+  disconnect: () => { },
   kujiraAccount: null,
   balances: [],
   signAndBroadcast: async () => {
     throw new Error("Not Implemented");
   },
   delegations: null,
-  refreshBalances: () => {},
-  refreshDelegations: () => {},
+  refreshBalances: () => { },
+  refreshDelegations: () => { },
   feeDenom: "ukuji",
-  setFeeDenom: () => {},
+  setFeeDenom: () => { },
   chainInfo: {} as ChainInfo,
   adapter: null,
   signer: undefined,
@@ -120,7 +124,8 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
 
   const [feeDenom, setFeeDenom] = useLocalStorage("feeDenom", "ukuji");
   const [balances, setBalances] = useState<Record<string, BigNumber>>({});
-
+  const [modal, setModal] = useState(false);
+  const [link, setLink] = useState("");
   const [kujiraBalances, setKujiraBalances] = useState<Coin[]>([]);
 
   const [{ network, chainInfo, query, rpc }] = useNetwork();
@@ -152,9 +157,9 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
           setBalances((prev) =>
             b.denom
               ? {
-                  ...prev,
-                  [b.denom]: BigNumber.from(b.amount),
-                }
+                ...prev,
+                [b.denom]: BigNumber.from(b.amount),
+              }
               : prev
           );
         });
@@ -218,7 +223,8 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const sonarRequest = (uri: string) => {
-    console.info(uri);
+    setLink(uri);
+    setModal(true);
   };
 
   const connect = async (adapter: Adapter, chain?: NETWORK, auto?: boolean) => {
@@ -334,6 +340,39 @@ export const WalletContext: FC<PropsWithChildren> = ({ children }) => {
   return (
     <Context.Provider key={network + wallet?.account.address} value={value}>
       {children}
+      <SonarModal
+        open={modal}
+        setOpen={setModal}
+        close={() => {
+          setStored("");
+          setModal(false);
+        }}
+      >
+        <div className="flex items-center justify-center">
+          <QR
+            height={230}
+            width={230}
+            color="#000"
+            backgroundColor="transparent"
+            rounding={50}
+            errorCorrectionLevel="M">
+            {link}
+          </QR>
+        </div>
+        <div className="flex flex-col">
+          <IconSonar
+            className="h-32 w-56 text-primary/50"
+          />
+          <h3 className="text-start text-lg">Scan this code using the Sonar Mobile App.</h3>
+          <Link
+            to="https://sonar.kujira.network"
+            target="_blank"
+            className="mt-2 flex w-fit items-center gap-x-2 rounded-sm bg-[#D1F5FC] px-4 py-2 outline-none">
+            <span>Download Sonar</span>
+            <IconAngleRight className="w-3" />
+          </Link>
+        </div>
+      </SonarModal>
     </Context.Provider>
   );
 };

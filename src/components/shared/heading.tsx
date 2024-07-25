@@ -33,7 +33,7 @@ export default function Heading({ className, userRole }: THeadingProps) {
             pathname === item.path && "text-base font-semibold text-purple"
           )}
         >
-          <span className="font-semibold uppercase">{item.name}</span>
+          <span className="text-xl font-bold tracking-wide font-secondary capitalize">{item.name}</span>
         </Link>
       ))}
     </div>

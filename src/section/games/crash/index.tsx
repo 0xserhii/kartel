@@ -253,6 +253,7 @@ export default function CrashGameSection() {
       playCrashBgVideo();
     });
 
+
     crashSocket.on(
       ECrashSocketEvent.PREVIOUS_CRASHGAME_HISTORY,
       (historyData: any) => {
@@ -308,7 +309,7 @@ export default function CrashGameSection() {
           setSelectedToken(selectedTokenObj);
         }
         setBetAmount(Number(user?.betAmount));
-        setAutoCashoutPoint(cashOutPoint / 100 ?? 1.05);
+        setAutoCashoutPoint(cashOutPoint ? cashOutPoint / 100 : 1.05);
       }
 
       const totals = calculateTotals(data.players);
@@ -431,14 +432,7 @@ export default function CrashGameSection() {
                         crashStatus === ECrashStatus.END && "crashed-value"
                       )}
                     >
-                      X{" "}
-                      {
-                        crashStatus === ECrashStatus.PROGRESS ? (
-                          <GrowingNumber start={crTick.prev} end={crTick.cur} />
-                        ) : (
-                          crashHistoryData[0].crashPoint / 100
-                        )
-                      }
+                      X{" "}<GrowingNumber start={crTick.prev} end={crTick.cur} />
                     </div>
                     <div className="font-semibold text-[#f5b95a]">
                       {crashStatus === ECrashStatus.PROGRESS

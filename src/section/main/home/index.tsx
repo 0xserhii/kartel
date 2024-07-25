@@ -67,9 +67,7 @@ export default function HomeSection() {
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="flex flex-col items-stretch gap-8 p-12">
         <div className="flex flex-col items-stretch gap-5">
-          <p className="text-2xl font-semibold capitalize text-gray300">
-            games
-          </p>
+          <img src="/assets/headings/games.png" alt="games_title" className="w-32" />
           <div className="flex h-full w-full flex-row justify-between gap-8">
             {casinoGameSrc.map((item, index) => {
               return (
@@ -98,9 +96,7 @@ export default function HomeSection() {
             </div>
           </div>
           <div className="flex flex-col gap-6">
-            <p className="text-2xl font-semibold capitalize text-gray300">
-              casino
-            </p>
+            <img src="/assets/headings/casino.png" alt="casino_title" className="w-32" />
             <div className="flex h-full w-full flex-row justify-between gap-6">
               <div className="relative w-6/12">
                 <img

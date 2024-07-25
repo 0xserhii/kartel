@@ -1,4 +1,4 @@
-import Deposit from "/assets/deposit-icon.svg";
+import Deposit from "/assets/deposit.png";
 import DashboardNav from "@/components/shared/dashboard-nav";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { navItems } from "@/constants/data";
@@ -45,7 +45,7 @@ export default function MobileSidebar({
         >
           <div className="flex w-full flex-col items-center gap-8 px-5">
             <Link to="/" className="py-2 text-2xl font-bold text-white ">
-              <img src={Logo} alt="Logo" className="h-32 w-36" />
+              <img src={Logo} alt="Logo" className="h-32 w-32" />
             </Link>
             <div className="w-full space-y-1 px-2">
               <DashboardNav items={navItems} setOpen={setSidebarOpen} />
@@ -56,12 +56,10 @@ export default function MobileSidebar({
               className="flex items-center gap-2 rounded-lg bg-blue1 px-5 py-3 text-white"
               onClick={handleDeposit}
             >
-              <img src={Deposit} />
-              <div className="flex flex-col items-stretch gap-1">
-                <span className="text-base font-semibold text-gray50">
-                  Deposit Now
-                </span>
-              </div>
+              <img src={Deposit} className="w-10 h-10" />
+              <span className="text-3xl text-gray50 font-secondary uppercase leading-normal tracking-wide">
+                Deposit
+              </span>
             </button>
           </div>
         </SheetContent>

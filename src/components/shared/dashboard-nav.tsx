@@ -32,15 +32,17 @@ const DashboardNavItem = ({ item, setOpen }: DashboardNavItemProps) => {
       key={item.href}
       target={item.href.includes("https://") ? "_blank" : undefined}
       className={cn(
-        "flex transform items-center rounded-[6px] bg-dark-blue px-6 py-[10.5px] text-gray300 transition-colors duration-300 hover:bg-purple hover:text-gray100",
+        "flex transform items-center rounded-[6px] bg-dark-blue px-5 py-[6px] text-gray300 transition-colors duration-300 hover:bg-purple hover:text-gray100",
         isActive && "bg-purple text-white"
       )}
       to={item.href}
     >
       <img src={item.icon} className="h-5 w-5" aria-hidden="true" />
-      <span className="ml-3 text-sm font-bold uppercase tracking-wide">
-        {item.label}
-      </span>
+      <div className="flex items-center w-full justify-center">
+        <span className="text-xl tracking-wide text-gray-200 font-secondary whitespace-nowrap">
+          {item.label}
+        </span>
+      </div>
     </Link>
   );
 };
@@ -57,9 +59,9 @@ const DashboardNavGroup = ({ item }: DashboardNavGroupProps) => {
       onOpenChange={setOpen}
     >
       <CollapsibleTrigger asChild>
-        <div className=" flex  w-full cursor-pointer select-none items-center justify-between text-sm font-medium text-gray500">
-          <p className="text-sm font-bold uppercase">{item.title}</p>
-          <Icon className="h-4 w-4" />
+        <div className=" flex  w-full cursor-pointer select-none items-center justify-between">
+          <span className="text-xl font-bold tracking-wide font-secondary text-gray500 lowercase">{item.title}</span>
+          <Icon className="h-4 w-4 text-gray500" />
         </div>
       </CollapsibleTrigger>
       <CollapsibleContent className="mt-6 flex flex-col gap-2 transition-transform duration-100 ease-out">
