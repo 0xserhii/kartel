@@ -22,7 +22,7 @@ input::-webkit-inner-spin-button {
   border-radius: 10px;
 }
 
-#scrollarea > div {
+#scrollarea>div {
   display: flex !important;
 }
 
@@ -92,9 +92,9 @@ input::-webkit-inner-spin-button {
 
 @font-face {
   font-family: "Pricedown";
-  font-style: thin;
-  font-weight: thin;
-  src: url("/fonts/pricedown-bl.ttf");
+  font-style: normal;
+  font-weight: normal;
+  src: url("/fonts/pricedown bl.otf") format("opentype");
 }
 
 @layer base {
@@ -195,7 +195,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-.Toastify__toast > button > svg {
+.Toastify__toast>button>svg {
   display: none;
 }
 

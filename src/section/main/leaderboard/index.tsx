@@ -99,7 +99,7 @@ export default function LeaderboardSection() {
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="flex flex-col items-stretch gap-8 p-12">
         <div className="flex items-center justify-between">
-          <div className="text-2xl font-semibold text-gray300">Leaderboard</div>
+          <img src="/assets/headings/leaderboard.png" alt="leaderboard_title" className="w-52" />
           <div className="flex items-center gap-2 bg-transparent">
             {leaderboardTabs?.map((item, index) => (
               <button

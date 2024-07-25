@@ -8,6 +8,11 @@ import useToast from "@/hooks/use-toast";
 import { useAppSelector } from "@/store/redux";
 import LoadingIcon from "../loading-icon";
 
+declare global {
+  interface Window {
+    sonar?: any;
+  }
+}
 interface ITokenList {
   name: string;
   image: string;
@@ -22,6 +27,10 @@ const tokenList: ITokenList[] = [
     name: "Leap",
     image: "/assets/tokens/leap.svg",
   },
+  {
+    name: "Sonar",
+    image: "/assets/tokens/sonar.svg",
+  },
 ];
 
 const CWalletLink = {
@@ -33,6 +42,7 @@ const defaultLoading = {
   keplr: false,
   cosmostation: false,
   leap: false,
+  sonar: false,
 };
 
 const WalletConnectModal = () => {
@@ -57,6 +67,10 @@ const WalletConnectModal = () => {
   const handleConnectWalet = async (walletType: string) => {
     try {
       switch (walletType) {
+        case "Sonar":
+          setLoading((prev) => ({ ...prev, sonar: true }));
+          await connect(Adapter.Sonar);
+          break;
         case "Keplr":
           if (!window.keplr) {
             window.open(CWalletLink.keplr, "_blank");
@@ -98,11 +112,16 @@ const WalletConnectModal = () => {
               key={index}
             >
               <div className="flex flex-row items-center gap-5">
-                <img src={item.image} className="h-8 w-8" />
+                <img src={item.image} className={`${item.name === "Sonar" ? "w-[7rem] h-8" : "w-8 h-8"}`} />
                 <span className="text-start text-lg text-white">
-                  {item.name}
+                  {item.name !== "Sonar" && item.name}
                 </span>
               </div>
+              {item.name === "Sonar" &&
+                !loading.sonar &&
+                (!window.sonar && (
+                  <ChevronRight className="h-5 w-5 text-white" />
+                ))}
               {item.name === "Keplr" &&
                 !loading.keplr &&
                 (window.keplr ? (
@@ -119,6 +138,7 @@ const WalletConnectModal = () => {
                 ))}
               {item.name === "Keplr" && loading.keplr && <LoadingIcon />}
               {item.name === "Leap" && loading.leap && <LoadingIcon />}
+              {item.name === "Sonar" && loading.sonar && <LoadingIcon />}
             </button>
           ))}
         </div>

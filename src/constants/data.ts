@@ -32,7 +32,7 @@ export const navItems: NavItemGroup[] = [
         title: "Coin Flip",
         href: "/coin-flip",
         icon: "/assets/icons/coins.svg",
-        label: "coin flip",
+        label: "coinflip",
       },
       {
         title: "Mines",
