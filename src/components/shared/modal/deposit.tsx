@@ -17,6 +17,7 @@ import { Adapter, useWallet } from "@/provider/crypto/wallet";
 import { fromHumanString, msg, toHuman } from "kujira.js";
 import AESWrapper from "@/lib/encryption/aes-wrapper";
 import {
+  CONETIME_LIMIT,
   TokenBalances,
   denoms,
   finance,
@@ -78,8 +79,19 @@ const DepositModal = () => {
       dispatch(paymentActions.paymentFailed("Insufficient token"));
       return;
     }
+
     if (userState?.userData?.signAddress !== account?.address) {
       dispatch(paymentActions.paymentFailed("Connect withdraw wallet"));
+      return;
+    }
+
+    if ((selectedToken.name === token[0].name) && (Number(depositAmount) > CONETIME_LIMIT.kart)) {
+      dispatch(paymentActions.paymentFailed(`One time KART limit is ${CONETIME_LIMIT.kart}`));
+      return;
+    }
+
+    if ((selectedToken.name === token[1].name) && (Number(depositAmount) > CONETIME_LIMIT.usk)) {
+      dispatch(paymentActions.paymentFailed(`One time USK limit is ${CONETIME_LIMIT.usk}`));
       return;
     }
 
@@ -145,15 +157,15 @@ const DepositModal = () => {
 
       if (
         Number(depositAmount) >
-          Number(
-            toHuman(
-              BigNumber.from(
-                balances.find((item) => item.denom === selectedToken.denom)
-                  ?.amount ?? 0
-              ),
-              6
-            )
-          ) ||
+        Number(
+          toHuman(
+            BigNumber.from(
+              balances.find((item) => item.denom === selectedToken.denom)
+                ?.amount ?? 0
+            ),
+            6
+          )
+        ) ||
         Number(depositAmount) <= 0
       ) {
         dispatch(paymentActions.paymentFailed("Insufficient token"));

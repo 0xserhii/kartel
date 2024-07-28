@@ -288,3 +288,8 @@ export enum ERevenueType {
   // TOTAL = "total",
   CRASH = 2,
 }
+
+export const CONETIME_LIMIT = {
+  usk: 48,
+  kart: 1800
+}
