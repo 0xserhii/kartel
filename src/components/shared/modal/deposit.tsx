@@ -86,12 +86,12 @@ const DepositModal = () => {
     }
 
     if ((selectedToken.name === token[0].name) && (Number(depositAmount) > CONETIME_LIMIT.kart)) {
-      dispatch(paymentActions.paymentFailed(`One time KART limit is ${CONETIME_LIMIT.kart}`));
+      dispatch(paymentActions.paymentFailed(`Exceed withdraw limit: ${CONETIME_LIMIT.kart}`));
       return;
     }
 
     if ((selectedToken.name === token[1].name) && (Number(depositAmount) > CONETIME_LIMIT.usk)) {
-      dispatch(paymentActions.paymentFailed(`One time USK limit is ${CONETIME_LIMIT.usk}`));
+      dispatch(paymentActions.paymentFailed(`Exceed withdraw limit: ${CONETIME_LIMIT.usk}`));
       return;
     }
 
