@@ -290,6 +290,6 @@ export enum ERevenueType {
 }
 
 export const CONETIME_LIMIT = {
-  usk: 48,
-  kart: 1800
+  usk: 100,
+  kart: 3000
 }
